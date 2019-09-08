@@ -8,6 +8,8 @@ public class HelloAction extends AnAction {
     }
 
     public void actionPerformed(AnActionEvent event) {
+        System.out.println("greetingEvent");
+
         Project project = event.getProject();
         Messages.showMessageDialog(project, "Hello world!", "Greeting", Messages.getInformationIcon());
     }

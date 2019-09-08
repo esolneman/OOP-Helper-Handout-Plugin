@@ -14,6 +14,9 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
+    // https://mvnrepository.com/artifact/org.eclipse.jgit/org.eclipse.jgit
+    compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '2.2.0.201212191850-r'
+
 }
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
@@ -25,5 +28,3 @@ patchPluginXml {
       Add change notes here.<br>
       <em>most HTML tags may be used</em>"""
 }
-// https://mvnrepository.com/artifact/org.eclipse.jgit/org.eclipse.jgit
-compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '2.2.0.201212191850-r'
