@@ -1,16 +1,19 @@
-package services;
+package services.impl;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import services.ContentService;
+import com.intellij.openapi.project.Project;
 
 import java.io.File;
-import java.nio.file.Paths;
 import java.util.Arrays;
 
-public class HandoutService {
+public class ContentServiceImpl implements ContentService {
+    public ContentServiceImpl(Project project) {
+    }
 
-    public void cloneContentBranch(){
-        System.out.print("start cloning branch");
+    public ContentServiceImpl(){
+    System.out.print("start cloning branch");
 
         String repoUrl = "https://github.com/esolneman/OOP-Helper-Handout-Template.git";
         String cloneDirectoryPath = "refs/heads/test";
@@ -30,7 +33,4 @@ public class HandoutService {
             }
         }
     }
-
-
-
 }

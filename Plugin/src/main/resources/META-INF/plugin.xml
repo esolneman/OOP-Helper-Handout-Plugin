@@ -16,7 +16,9 @@
 
    <extensions defaultExtensionNs="com.intellij">
         <toolWindow id="MyPlugin.SampleWindow" anchor="right" factoryClass="myToolWindow.ToolWindowTestFactory"/>
-    </extensions>
+       <projectService serviceInterface="services.ContentService"
+                       serviceImplementation="services.impl.ContentServiceImpl"/>
+   </extensions>
 
     <actions>
         <group id="MyPlugin.SampleMenu" text="Greeting" description="Greeting menu">
