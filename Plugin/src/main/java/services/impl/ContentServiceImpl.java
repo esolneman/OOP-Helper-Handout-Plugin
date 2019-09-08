@@ -12,8 +12,8 @@ public class ContentServiceImpl implements ContentService {
     public ContentServiceImpl(Project project) {
     }
 
-    public ContentServiceImpl(){
-    System.out.print("start cloning branch");
+    public void cloneBranch(){
+    System.out.println("start cloning branch");
 
         String repoUrl = "https://github.com/esolneman/OOP-Helper-Handout-Template.git";
         String cloneDirectoryPath = "refs/heads/test";

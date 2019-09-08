@@ -15,7 +15,7 @@ public class MyToolWindowTest {
     private JPanel myToolWindowContent;
 
     public MyToolWindowTest(ToolWindow toolWindow) {
-        hideToolWindowButton.addActionListener(e -> toolWindow.hide(null));
+        //hideToolWindowButton.addActionListener(e -> toolWindow.hide(null));
     }
 
     public JPanel getContent() {

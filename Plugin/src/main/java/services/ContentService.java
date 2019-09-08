@@ -9,5 +9,5 @@ public interface ContentService {
         return ServiceManager.getService(project, ContentService.class);
     }
 
-    static void cloneBranch() {}
+    public void cloneBranch();
 }
