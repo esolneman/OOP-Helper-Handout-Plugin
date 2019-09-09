@@ -10,4 +10,6 @@ public interface ContentService {
     }
 
     public void cloneBranch();
+    public void updateBranch();
+    //void getLocalRepository();
 }

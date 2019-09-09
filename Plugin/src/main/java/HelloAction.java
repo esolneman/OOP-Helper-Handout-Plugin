@@ -1,11 +1,11 @@
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
-import static java.lang.System.out;
 
 public class HelloAction extends AnAction {
     public HelloAction() {
-        super("Hello");
+        super("Help");
     }
 
     public void actionPerformed(AnActionEvent event) {

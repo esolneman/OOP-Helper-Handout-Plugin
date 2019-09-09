@@ -11,6 +11,7 @@ public class ToolWindowTestFactory implements ToolWindowFactory {
         // Create the tool window content.
         public void createToolWindowContent(Project project, ToolWindow toolWindow) {
             ContentService contentService = ServiceManager.getService(project, ContentService.class);
+            contentService.cloneBranch();
             myToolWindow.MyToolWindowTest myToolWindow = new myToolWindow.MyToolWindowTest(toolWindow);
             ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
             Content content = contentFactory.createContent(myToolWindow.getContent(), "", false);
