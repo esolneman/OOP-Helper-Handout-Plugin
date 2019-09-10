@@ -15,15 +15,15 @@
     -->
 
    <extensions defaultExtensionNs="com.intellij">
-       <toolWindow id="MyPlugin.SampleWindow" anchor="right" factoryClass="myToolWindow.ToolWindowTestFactory"/>
-       <projectService serviceInterface="services.ContentService"
-                       serviceImplementation="services.impl.ContentServiceImpl"/>
+       <toolWindow id="MyPlugin.SampleWindow" anchor="right" factoryClass="ToolWindow.HandoutToolWindowFactory"/>
+       <projectService serviceInterface="services.HandoutDataProvider"
+                       serviceImplementation="services.impl.HandoutDataProviderImpl"/>
    </extensions>
 
     <actions>
         <group id="MyPlugin.SampleMenu" text="OOP-Helper-Handout" description="Plugin menu">
             <add-to-group group-id="MainMenu" anchor="last"/>
-            <action id="Myplugin.Textboxes" class="HelloAction" text="Help" description="Start Tutorial"/>
+            <action id="Myplugin.Textboxes" class="Actions.HelperHandoutAction" text="Help" description="Start Tutorial"/>
         </group>
     </actions>
 
