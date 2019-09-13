@@ -1,25 +1,22 @@
 package services.impl;
 
+import Controller.HandoutPluginController;
 import Listener.OnEventListener;
-import com.intellij.util.Url;
 import org.apache.commons.io.FileUtils;
-import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.lib.TextProgressMonitor;
 import services.HandoutDataProvider;
 import com.intellij.openapi.project.Project;
-import org.eclipse.jgit.api.Git;
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class HandoutDataProviderImpl implements HandoutDataProvider{
+    private List<OnEventListener> listeners = new ArrayList<OnEventListener>();
     private OnEventListener eventListener;
 
     // TODO: get RepoURL from jar file
@@ -35,24 +32,13 @@ public class HandoutDataProviderImpl implements HandoutDataProvider{
     public HandoutDataProviderImpl(Project project) {
         this.project = project;
         projectDirectory = project.getBasePath();
-        //ModuleRootManager.getInstance(ModuleManager.getInstance(project).getModules()[0]).getContentRoots()[0]
         contentRepoPath = projectDirectory + CONTENT_FILE_NAME;
         contentRepoFile = new File (contentRepoPath);
         System.out.println(contentRepoPath);
-
     }
 
-    /*public static void main(String[] args)
-    {
-        HandoutDataProviderImpl obj = new HandoutDataProviderImpl();
-        OnEventListener eventListener = new HandoutDataProviderImpl();
-        obj.registerOnEventListener(eventListener);
-        obj.updateHandoutData();
-    }*/
-
     // setting the listener
-    public void registerOnEventListener(OnEventListener eventListener)
-    {
+    public void registerOnEventListener(OnEventListener eventListener) {
         this.eventListener = eventListener;
     }
 
@@ -65,6 +51,11 @@ public class HandoutDataProviderImpl implements HandoutDataProvider{
             System.out.println("repo exist");
             //updateBranch() check;
         }
+    }
+
+
+    public void addListener(OnEventListener listener) {
+        listeners.add(listener);
     }
 
     private void cloneRepository() {
@@ -98,10 +89,12 @@ public class HandoutDataProviderImpl implements HandoutDataProvider{
                         //check if listener is registered.
                         if (eventListener != null) {
                             // invoke the callback method of class A
-                            eventListener.onCloningRepositoryEvent(contentRepoPath + "handout.md");
+                            eventListener.onCloningRepositoryEvent(contentRepoFile);
                         }else{
                             System.out.println("event Listener null");
-
+                        }
+                        for(OnEventListener listener : listeners){
+                            listener.onCloningRepositoryEvent(contentRepoFile);
                         }
                     }
 

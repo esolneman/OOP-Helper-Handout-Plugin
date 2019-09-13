@@ -1,5 +1,7 @@
 package Listener;
 
+import java.io.File;
+
 public interface OnEventListener {
-    void onCloningRepositoryEvent(String repoPath);
+    void onCloningRepositoryEvent(File repoFile);
 }
