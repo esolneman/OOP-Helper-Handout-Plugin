@@ -3,12 +3,14 @@ package services.impl;
 import Listener.OnEventListener;
 import com.intellij.util.Url;
 import org.apache.commons.io.FileUtils;
+import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.TextProgressMonitor;
 import services.HandoutDataProvider;
 import com.intellij.openapi.project.Project;
-
+import org.eclipse.jgit.api.Git;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -27,6 +29,7 @@ public class HandoutDataProviderImpl implements HandoutDataProvider{
     Project project;
     String projectDirectory;
     String contentRepoPath;
+    File contentRepoFile;
 
 
     public HandoutDataProviderImpl(Project project) {
@@ -34,6 +37,7 @@ public class HandoutDataProviderImpl implements HandoutDataProvider{
         projectDirectory = project.getBasePath();
         //ModuleRootManager.getInstance(ModuleManager.getInstance(project).getModules()[0]).getContentRoots()[0]
         contentRepoPath = projectDirectory + CONTENT_FILE_NAME;
+        contentRepoFile = new File (contentRepoPath);
         System.out.println(contentRepoPath);
 
     }
@@ -55,39 +59,53 @@ public class HandoutDataProviderImpl implements HandoutDataProvider{
     public void updateHandoutData() {
         //TODO check internet connection first
         //https://stackoverflow.com/a/15571626
-        if (Files.exists(Paths.get(contentRepoPath))) {
-            System.out.println("repo exist");
-        } else {
+        if (!contentRepoFile.exists()) {
             cloneRepository();
-            //updateBranch();
+        } else {
+            System.out.println("repo exist");
+            //updateBranch() check;
         }
     }
 
     private void cloneRepository() {
         System.out.println("start cloning branch");
+
         new Thread(new Runnable() {
             @Override
             public void run() {
                 //https://www.vogella.com/tutorials/JGit/article.html#example-for-using-jgit
-                Git git;
+                Git clone = null;
                 {
                     try {
-                        git = Git.cloneRepository()
+                        clone  = Git.cloneRepository()
                                 .setURI(repoUrl)
-                                .setDirectory(new File(contentRepoPath))
+                                .setDirectory(contentRepoFile)
                                 .setBranchesToClone(Arrays.asList(CLONE_DIRECTORY_PATH))
                                 .setBranch(CLONE_DIRECTORY_PATH)
                                 .call();
                     } catch (GitAPIException e) {
-                        //FileUtils.deleteDirectory(new File(contentRepoPath));
+                        try {
+                            FileUtils.deleteDirectory(contentRepoFile);
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
                         System.out.print(e);
+                        //throw e;
+                    } finally {
+                        System.out.println("end cloning branch");
+                        clone.getRepository().close();
+                        //clone.close();
+                        //check if listener is registered.
+                        if (eventListener != null) {
+                            // invoke the callback method of class A
+                            eventListener.onCloningRepositoryEvent(contentRepoPath + "handout.md");
+                        }else{
+                            System.out.println("event Listener null");
+
+                        }
                     }
 
-                    // check if listener is registered.
-                    if (eventListener != null) {
-                        // invoke the callback method of class A
-                        eventListener.onCloningRepositoryEvent(contentRepoPath + "handout.md");
-                    }
+
                 }
             }
         }).start();

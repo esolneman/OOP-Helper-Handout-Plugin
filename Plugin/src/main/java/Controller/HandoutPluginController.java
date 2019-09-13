@@ -22,7 +22,6 @@ public class HandoutPluginController implements OnEventListener {
 
     public void updateHandoutContent() {
         handoutDataProvider.updateHandoutData();
-
     }
 
     @Override
