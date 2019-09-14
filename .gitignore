@@ -48,4 +48,7 @@ gradle-app.setting
 
 
 Plugin/.gradle
-Plugin/build
+Plugin/.idea/
+Plugin/build/
+Plugin/build.properties
+

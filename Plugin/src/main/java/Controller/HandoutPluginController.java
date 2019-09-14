@@ -41,5 +41,6 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
             System.out.print(e);
         }
         System.out.println("RepoFile hidden: "+ repoFile.isHidden());
+        //JSLibraryManager.getInstance(project).createLibrary()
     }
 }
