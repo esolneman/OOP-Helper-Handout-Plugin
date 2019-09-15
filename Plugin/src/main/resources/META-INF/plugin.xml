@@ -14,14 +14,26 @@
     <depends>com.intellij.modules.lang</depends>
     -->
 
+    <!-- Plugin's application components -->
+    <!--<application-components>
+        <component>
+            <interface-class>Controller.HandoutPluginControllerInterface</interface-class>
+            <implementation-class>Controller.HandoutPluginController</implementation-class>
+        </component>
+    </application-components>-->
+
    <extensions defaultExtensionNs="com.intellij">
-        <toolWindow id="MyPlugin.SampleWindow" anchor="right" factoryClass="myToolWindow.ToolWindowTestFactory"/>
-    </extensions>
+       <toolWindow id="handoutToolWindow" anchor="right" factoryClass="ToolWindow.HandoutToolWindowFactory"/>
+       <projectService serviceInterface="services.HandoutDataProvider"
+                       serviceImplementation="services.impl.HandoutDataProviderImpl"/>
+   </extensions>
 
     <actions>
-        <group id="MyPlugin.SampleMenu" text="Greeting" description="Greeting menu">
+        <group id="MyPlugin.SampleMenu" text="OOP-Helper-Handout" description="Plugin menu">
             <add-to-group group-id="MainMenu" anchor="last"/>
-            <action id="Myplugin.Textboxes" class="HelloAction" text="Hello" description="Says hello"/>
+            <action id="Myplugin.Textboxes.Tutorial" class="Actions.HelperHandoutActionTutorial" text="Tutorial" description="Start Tutorial"/>
+            <!--<action id="Myplugin.Textboxes.Reset" class="Actions.HelperHandoutActionReset" text="Reset" description="Start Tutorial"/>-->
+            <action id="Myplugin.Textboxes.Export" class="Actions.HelperHandoutActionExport" text="Export" description="Start Tutorial"/>
         </group>
     </actions>
 
