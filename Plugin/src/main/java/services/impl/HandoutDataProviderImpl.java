@@ -2,6 +2,7 @@ package services.impl;
 
 import Controller.HandoutPluginController;
 import Listener.OnEventListener;
+import de.ur.mi.pluginhelper.TaskConfiguration;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -38,7 +39,13 @@ public class HandoutDataProviderImpl implements HandoutDataProvider{
         projectDirectory = project.getBasePath();
         contentRepoPath = projectDirectory + CONTENT_FILE_NAME;
         contentRepoFile = new File (contentRepoPath);
+        getRepoUrl();
         System.out.println(contentRepoPath);
+    }
+
+    private void getRepoUrl() {
+        System.out.println("getRepoUrl");
+        System.out.println(TaskConfiguration.loadFrom());
     }
 
     public void updateHandoutData() {
