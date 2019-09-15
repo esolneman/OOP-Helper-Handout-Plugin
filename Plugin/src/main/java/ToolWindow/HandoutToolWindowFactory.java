@@ -13,6 +13,7 @@ public class HandoutToolWindowFactory implements ToolWindowFactory {
         public void createToolWindowContent(Project project, ToolWindow toolWindow) {
             //HandoutDataProvider handoutDataProvider = ServiceManager.getService(project, HandoutDataProvider.class);
             //handoutDataProvider.updateHandoutData();
+            System.out.println("createToolWindowContent");
             HandoutToolWindow handoutToolWindow = new HandoutToolWindow(toolWindow);
             HandoutPluginController handoutPluginController = new HandoutPluginController(toolWindow, project);
             ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
