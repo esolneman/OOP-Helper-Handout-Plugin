@@ -10,22 +10,21 @@
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
-    <!-- uncomment to enable plugin in all products
+    <!-- uncomment to enable plugin in all products    -->
     <depends>com.intellij.modules.lang</depends>
-    -->
+
 
     <!-- Plugin's application components -->
-    <!--<application-components>
+    <!--<project-components>
         <component>
             <interface-class>Controller.HandoutPluginControllerInterface</interface-class>
             <implementation-class>Controller.HandoutPluginController</implementation-class>
         </component>
-    </application-components>-->
-   <!-- <depends>com.your.company.unique.plugin.id</depends>-->
+    </project-components>
+    -->
     <extensions defaultExtensionNs="com.intellij">
        <toolWindow id="handoutToolWindow" anchor="right" factoryClass="ToolWindow.HandoutToolWindowFactory"/>
-       <projectService serviceInterface="services.HandoutDataProvider"
-                       serviceImplementation="services.impl.HandoutDataProviderImpl"/>
+       <projectService serviceInterface="services.HandoutDataProvider" serviceImplementation="services.impl.HandoutDataProviderImpl"/>
    </extensions>
 
     <actions>
