@@ -16,7 +16,7 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
     HandoutDataProvider handoutDataProvider;
     Project project;
 
-    public HandoutPluginController(ToolWindow toolWindow, Project project) {
+    public HandoutPluginController(Project project) {
         handoutDataProvider = ServiceManager.getService(project, HandoutDataProvider.class);
         handoutDataProvider.addListener(this);
         updateHandoutContent();

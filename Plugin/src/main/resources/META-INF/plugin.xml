@@ -10,12 +10,12 @@
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
-    <!-- uncomment to enable plugin in all products    -->
-    <depends>com.intellij.modules.lang</depends>
+    <!-- uncomment to enable plugin in all products
+    <depends>com.intellij.modules.lang</depends> -->
 
 
     <!-- Plugin's application components -->
-    <!--<project-components>
+    <project-components>
         <component>
             <interface-class>Controller.HandoutPluginControllerInterface</interface-class>
             <implementation-class>Controller.HandoutPluginController</implementation-class>
