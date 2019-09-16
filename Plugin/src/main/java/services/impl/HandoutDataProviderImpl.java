@@ -1,23 +1,19 @@
 package services.impl;
 
-import Controller.HandoutPluginController;
 import Listener.OnEventListener;
-import de.ur.mi.pluginhelper.TaskConfiguration;
+import com.intellij.openapi.project.Project;
+//import de.ur.mi.pluginhelper.TaskConfiguration;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import services.AsyncExecutor;
 import services.HandoutDataProvider;
-import com.intellij.openapi.project.Project;
+
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 public class HandoutDataProviderImpl implements HandoutDataProvider{
     private List<OnEventListener> listeners = new ArrayList<OnEventListener>();
@@ -39,13 +35,13 @@ public class HandoutDataProviderImpl implements HandoutDataProvider{
         projectDirectory = project.getBasePath();
         contentRepoPath = projectDirectory + CONTENT_FILE_NAME;
         contentRepoFile = new File (contentRepoPath);
-        getRepoUrl();
+        //getRepoUrl();
         System.out.println(contentRepoPath);
     }
 
     private void getRepoUrl() {
         System.out.println("getRepoUrl");
-        System.out.println(TaskConfiguration.loadFrom());
+       // System.out.println(TaskConfiguration.loadFrom());
     }
 
     public void updateHandoutData() {

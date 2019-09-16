@@ -21,8 +21,8 @@
             <implementation-class>Controller.HandoutPluginController</implementation-class>
         </component>
     </application-components>-->
-
-   <extensions defaultExtensionNs="com.intellij">
+   <!-- <depends>com.your.company.unique.plugin.id</depends>-->
+    <extensions defaultExtensionNs="com.intellij">
        <toolWindow id="handoutToolWindow" anchor="right" factoryClass="ToolWindow.HandoutToolWindowFactory"/>
        <projectService serviceInterface="services.HandoutDataProvider"
                        serviceImplementation="services.impl.HandoutDataProviderImpl"/>
