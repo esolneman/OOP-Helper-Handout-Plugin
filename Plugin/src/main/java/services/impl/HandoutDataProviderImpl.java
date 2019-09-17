@@ -87,7 +87,7 @@ public class HandoutDataProviderImpl implements HandoutDataProvider{
                     //throw e;
                 } finally {
                     System.out.println("end cloning branch");
-                    clone.getRepository().close();
+                    clone.close();
                     //check if listener is registered.
                     if (listeners != null) {
                         for(OnEventListener listener : listeners){
