@@ -2,7 +2,7 @@ package services.impl;
 
 import Listener.OnEventListener;
 import com.intellij.openapi.project.Project;
-import de.ur.mi.pluginhelper.TaskConfiguration;
+import de.ur.mi.pluginhelper.tasks.TaskConfiguration;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -42,6 +42,7 @@ public class HandoutDataProviderImpl implements HandoutDataProvider{
     private void getRepoUrl() {
         System.out.println("getRepoUrl");
         System.out.println(TaskConfiguration.loadFrom());
+        //repoUrl = TaskConfiguration.loadFrom().getHandoutURL();
     }
 
     public void updateHandoutData() {
