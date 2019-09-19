@@ -16,7 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class HandoutDataProviderImpl implements HandoutDataProvider{
-    private List<OnEventListener> listeners = new ArrayList<OnEventListener>();
+    private List<OnEventListener> listeners = new ArrayList<>();
     private AsyncExecutor asyncExecutor = new AsyncExecutor();
     //private OnEventListener eventListener;
 
