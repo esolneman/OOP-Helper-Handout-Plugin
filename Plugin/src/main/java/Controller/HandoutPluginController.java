@@ -30,7 +30,7 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
     @Override
     public void onCloningRepositoryEvent(File repoFile) {
         System.out.println("Performing callback after Asynchronous Task");
-        repoFile.setExecutable(false);
+        /*repoFile.setExecutable(false);
         repoFile.setReadable(true);
         repoFile.setWritable(false);
         repoFile.setReadOnly();
@@ -40,7 +40,6 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
         } catch (IOException e) {
             System.out.print(e);
         }
-        System.out.println("RepoFile hidden: "+ repoFile.isHidden());
-        //JSLibraryManager.getInstance(project).createLibrary()
+        System.out.println("RepoFile hidden: "+ repoFile.isHidden());*/
     }
 }

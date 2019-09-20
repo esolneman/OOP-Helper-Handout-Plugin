@@ -4,18 +4,14 @@ import com.intellij.openapi.wm.ToolWindow;
 
 import javax.swing.*;
 
+public class ChecklistScreen {
+    //private JButton hideToolWindowButton;
+    private JPanel checklistContent;
 
-public class HandoutToolWindow {
-
-    private JButton hideToolWindowButton;
-    private JPanel myToolWindowContent;
-
-    public HandoutToolWindow(ToolWindow toolWindow) {
+    public ChecklistScreen(ToolWindow toolWindow) {
         //hideToolWindowButton.addActionListener(e -> toolWindow.hide(null));
     }
-
     public JPanel getContent() {
-        return myToolWindowContent;
+        return checklistContent;
     }
-
 }

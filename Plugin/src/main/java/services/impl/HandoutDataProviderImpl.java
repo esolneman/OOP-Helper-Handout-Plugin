@@ -65,8 +65,6 @@ public class HandoutDataProviderImpl implements HandoutDataProvider{
 
     private void cloneRepository() {
         System.out.println("start cloning branch");
-        //Runnable cloningRunnable
-        //asyncExecutor.runAsyncClone();
         Runnable cloneTask = () -> {
             Git clone = null;
             {
@@ -87,7 +85,8 @@ public class HandoutDataProviderImpl implements HandoutDataProvider{
                     //throw e;
                 } finally {
                     System.out.println("end cloning branch");
-                    clone.close();
+                    //clone.close();
+                    //clone.getRepository().close();
                     //check if listener is registered.
                     if (listeners != null) {
                         for(OnEventListener listener : listeners){
