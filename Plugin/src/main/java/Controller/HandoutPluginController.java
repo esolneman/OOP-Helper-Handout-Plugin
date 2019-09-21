@@ -4,19 +4,20 @@ import Listener.OnEventListener;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
+import com.intellij.openapi.wm.ToolWindowFactory;
+import org.jetbrains.annotations.NotNull;
 import services.HandoutDataProvider;
-
+import ToolWindow.HandoutContentScreen;
+import ToolWindow.HandoutToolWindowFactory;
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class HandoutPluginController implements HandoutPluginControllerInterface, OnEventListener {
     HandoutDataProvider handoutDataProvider;
     Project project;
+    ToolWindowFactory toolWindowFactory;
 
     public HandoutPluginController(Project project) {
+        //toolWindowFactory =
         handoutDataProvider = ServiceManager.getService(project, HandoutDataProvider.class);
         handoutDataProvider.addListener(this);
         updateHandoutContent();
@@ -30,16 +31,23 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
     @Override
     public void onCloningRepositoryEvent(File repoFile) {
         System.out.println("Performing callback after Asynchronous Task");
-        /*repoFile.setExecutable(false);
+        System.out.println(repoFile.toString());
+
+        repoFile.setExecutable(false);
         repoFile.setReadable(true);
         repoFile.setWritable(false);
         repoFile.setReadOnly();
-        Path file = Paths.get(repoFile.getAbsolutePath());
+
+        //toolWindowFactory.
+        /*Path file = Paths.get(repoFile.getAbsolutePath());
         try {
             Files.setAttribute(file, "dos:hidden", true);
         } catch (IOException e) {
             System.out.print(e);
         }
         System.out.println("RepoFile hidden: "+ repoFile.isHidden());*/
+    }
+
+    private void updateContent(){
     }
 }
