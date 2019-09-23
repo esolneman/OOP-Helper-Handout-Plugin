@@ -4,11 +4,11 @@ import com.intellij.openapi.wm.ToolWindow;
 
 import javax.swing.*;
 
-public class CommonAssessmentCriteria {
+public class CommonAssessmentCriteriaScreen {
 
     private JPanel commonAssessmentCriteriaContent;
 
-    public CommonAssessmentCriteria(ToolWindow toolWindow) {
+    public CommonAssessmentCriteriaScreen(ToolWindow toolWindow) {
     }
 
     public JPanel getContent() {

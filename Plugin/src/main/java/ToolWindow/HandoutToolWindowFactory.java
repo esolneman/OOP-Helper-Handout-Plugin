@@ -1,12 +1,9 @@
 package ToolWindow;
 
-import Controller.HandoutPluginController;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.*;
 import com.intellij.ui.content.*;
 import org.jetbrains.annotations.NotNull;
-import services.HandoutDataProvider;
 
 
 public class HandoutToolWindowFactory implements ToolWindowFactory {
@@ -20,7 +17,7 @@ public class HandoutToolWindowFactory implements ToolWindowFactory {
     ChecklistScreen checklistScreen;
     ShortcutScreen shortcutScreen;
     SpecificAssessmentCriteria specificAssessmentCriteria;
-    CommonAssessmentCriteria commonAssessmentCriteria;
+    CommonAssessmentCriteriaScreen commonAssessmentCriteriaScreen;
     ContentFactory contentFactory;
 
     // Create the tool window content.
@@ -49,7 +46,7 @@ public class HandoutToolWindowFactory implements ToolWindowFactory {
         checklistScreen = new ChecklistScreen(toolWindow);
         shortcutScreen = new ShortcutScreen(toolWindow);
         specificAssessmentCriteria = new SpecificAssessmentCriteria(toolWindow);
-        commonAssessmentCriteria = new CommonAssessmentCriteria(toolWindow);
+        commonAssessmentCriteriaScreen = new CommonAssessmentCriteriaScreen(toolWindow);
         updateScreenContent();
     }
 
@@ -58,7 +55,7 @@ public class HandoutToolWindowFactory implements ToolWindowFactory {
         checklistContent = contentFactory.createContent(checklistScreen.getContent(), "Checklist", false);
         shortcutContent = contentFactory.createContent(shortcutScreen.getContent(), "Shortcut", false);
         specificCriteriaContent = contentFactory.createContent(specificAssessmentCriteria.getContent(), "Specific Assessment Criteria", false);
-        commonAssessmentCriteriaContent = contentFactory.createContent(commonAssessmentCriteria.getContent(), "Common Assessment Criteria", false);
+        commonAssessmentCriteriaContent = contentFactory.createContent(commonAssessmentCriteriaScreen.getContent(), "Common Assessment Criteria", false);
 
         toolWindow.getContentManager().addContent(handoutContent);
         toolWindow.getContentManager().addContent(checklistContent);
