@@ -3,7 +3,7 @@ plugins {
     id 'org.jetbrains.intellij' version '0.4.10'
 }
 
-group 'com.OOP-Helper-Handout'
+//group 'com.OOP-Helper-Handout'
 version '0.1'
 
 sourceCompatibility = 1.8
