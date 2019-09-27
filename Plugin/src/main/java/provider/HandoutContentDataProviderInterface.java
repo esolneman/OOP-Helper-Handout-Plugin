@@ -1,0 +1,19 @@
+package provider;
+
+import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.project.Project;
+import listener.OnEventListener;
+import org.jetbrains.annotations.NotNull;
+
+public interface HandoutContentDataProviderInterface {
+    static HandoutContentDataProviderInterface getInstance(@NotNull Project project) {
+        return ServiceManager.getService(project, HandoutContentDataProviderInterface.class);
+    }
+
+    public void updateHandoutData();
+
+    void addListener(OnEventListener listener);
+    //public void cloneRepository();
+    //public void updateRepossitory();
+    //void getLocalRepository();
+}

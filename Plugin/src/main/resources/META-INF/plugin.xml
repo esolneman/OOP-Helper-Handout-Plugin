@@ -22,16 +22,16 @@
     </project-components>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow id="handoutToolWindow" anchor="right" factoryClass="ToolWindow.HandoutToolWindowFactory"/>
-        <projectService serviceInterface="services.HandoutDataProvider" serviceImplementation="services.impl.HandoutDataProviderImpl"/>
+        <toolWindow id="handoutToolWindow" anchor="right" factoryClass="toolWindow.HandoutToolWindowFactory"/>
+        <projectService serviceInterface="provider.HandoutContentDataProviderInterface" serviceImplementation="provider.HandoutContentDataProvider"/>
     </extensions>
 
     <actions>
         <group id="MyPlugin.SampleMenu" text="OOP-Helper-Handout" description="Plugin menu">
             <add-to-group group-id="MainMenu" anchor="last"/>
-            <action id="Myplugin.Textboxes.Tutorial" class="Actions.HelperHandoutActionTutorial" text="Tutorial" description="Start Tutorial"/>
-            <!--<action id="Myplugin.Textboxes.Reset" class="Actions.HelperHandoutActionReset" text="Reset" description="Start Tutorial"/>-->
-            <action id="Myplugin.Textboxes.Export" class="Actions.HelperHandoutActionExport" text="Export" description="Start Tutorial"/>
+            <action id="Myplugin.Textboxes.Tutorial" class="handoutMenu.HandoutMenuTutorial" text="Tutorial" description="Start Tutorial"/>
+            <!--<action id="Myplugin.Textboxes.Reset" class="handoutMenu.HandoutMenuReset" text="Reset" description="Start Tutorial"/>-->
+            <action id="Myplugin.Textboxes.Export" class="handoutMenu.HandoutMenuExport" text="Export" description="Start Tutorial"/>
         </group>
     </actions>
 </idea-plugin>

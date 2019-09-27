@@ -4,17 +4,17 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindowFactory;
 import listener.OnEventListener;
-import services.HandoutDataProvider;
+import provider.HandoutContentDataProviderInterface;
 import java.io.File;
 
-public class HandoutPluginController implements HandoutPluginControllerInterface {
-    HandoutDataProvider handoutDataProvider;
+public class HandoutPluginController implements HandoutPluginControllerInterface, OnEventListener{
+    HandoutContentDataProviderInterface handoutDataProvider;
     Project project;
     ToolWindowFactory toolWindowFactory;
 
     public HandoutPluginController(Project project) {
         //toolWindowFactory =
-        handoutDataProvider = ServiceManager.getService(project, HandoutDataProvider.class);
+        handoutDataProvider = ServiceManager.getService(project, HandoutContentDataProviderInterface.class);
         handoutDataProvider.addListener(this);
         updateHandoutContent();
         this.project = project;
@@ -25,7 +25,6 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
         handoutDataProvider.updateHandoutData();
     }
 
-    @Override
     public void onCloningRepositoryEvent(File repoFile) {
         System.out.println("Performing callback after Asynchronous Task");
         System.out.println(repoFile.toString());

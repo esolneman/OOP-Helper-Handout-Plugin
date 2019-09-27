@@ -17,7 +17,7 @@ dependencies {
     compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '2.2.0.201212191850-r'
     // Todo: Update to newest gradle version
     //compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '5.5.0.2019091s10433-r'
-    implementation files('libs/PluginHelper-Core.jar')
+    //implementation files('libs/PluginHelper-Core.jar')
 }
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
