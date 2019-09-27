@@ -4,7 +4,7 @@ plugins {
 }
 
 //group 'com.OOP-Helper-Handout'
-version '0.1'
+//version '0.1'
 
 sourceCompatibility = 1.8
 
@@ -18,13 +18,7 @@ dependencies {
     compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '2.2.0.201212191850-r'
     // Todo: Update to newest gradle version
     //compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '5.5.0.2019091s10433-r'
-    //implementation files('libs/PluginHelper-Core.jar')
-
-    //Java FX
-    /*compile "org.openjfx:javafx-base:11:${platform}"
-    compile "org.openjfx:javafx-graphics:11:${platform}"
-    compile "org.openjfx:javafx-controls:11:${platform}"
-    compile "org.openjfx:javafx-fxml:11:${platform}"*/
+    implementation files('libs/PluginHelper-Core.jar')
 }
 
 
@@ -32,6 +26,7 @@ dependencies {
 intellij {
     version '2019.2.2'
 }
+
 patchPluginXml {
     changeNotes """
       Add change notes here.<br>

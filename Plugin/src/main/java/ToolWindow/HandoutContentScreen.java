@@ -15,7 +15,7 @@ import java.io.IOException;
 public class HandoutContentScreen {
     private JPanel handoutContent;
     private JTextPane assignmentDescription;
-    private JFXPanelWrapper jfxWrapper;
+    //private JFXPanelWrapper jfxWrapper;
     private String assignmentDescriptionString;
     public HandoutContentScreen(ToolWindow toolWindow){
 
