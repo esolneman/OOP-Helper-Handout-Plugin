@@ -1,6 +1,6 @@
 <idea-plugin>
-    <id>com.OOP-Helper-Handout.OOP-Helper-Handout-Plugin</id>
-    <name>OOP-Helper-Handout</name>
+    <id>oop_helper_handout</id>
+    <name>oop_helper_handout</name>
     <vendor email="marlena.wolfes@stud.uni-regensburg.de" url="http://www.company.com">Company</vendor>
 
     <description><![CDATA[
@@ -11,9 +11,8 @@
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
     <!-- uncomment to enable plugin in all products
-    <depends>com.intellij.modules.lang</depends> -->
-
-
+    <depends>com.intellij.modules.lang</depends>
+    -->
     <!-- Plugin's application components -->
     <project-components>
         <component>
@@ -23,9 +22,9 @@
     </project-components>
 
     <extensions defaultExtensionNs="com.intellij">
-       <toolWindow id="handoutToolWindow" anchor="right" factoryClass="ToolWindow.HandoutToolWindowFactory"/>
-       <projectService serviceInterface="services.HandoutDataProvider" serviceImplementation="services.impl.HandoutDataProviderImpl"/>
-   </extensions>
+        <toolWindow id="handoutToolWindow" anchor="right" factoryClass="ToolWindow.HandoutToolWindowFactory"/>
+        <projectService serviceInterface="services.HandoutDataProvider" serviceImplementation="services.impl.HandoutDataProviderImpl"/>
+    </extensions>
 
     <actions>
         <group id="MyPlugin.SampleMenu" text="OOP-Helper-Handout" description="Plugin menu">
@@ -35,5 +34,4 @@
             <action id="Myplugin.Textboxes.Export" class="Actions.HelperHandoutActionExport" text="Export" description="Start Tutorial"/>
         </group>
     </actions>
-
 </idea-plugin>

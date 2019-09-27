@@ -1,11 +1,13 @@
 package controller;
 
+import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.wm.ToolWindowFactory;
 import listener.OnEventListener;
 import services.HandoutDataProvider;
-
 import java.io.File;
 
-public class HandoutPluginController implements HandoutPluginControllerInterface, OnEventListener {
+public class HandoutPluginController implements HandoutPluginControllerInterface {
     HandoutDataProvider handoutDataProvider;
     Project project;
     ToolWindowFactory toolWindowFactory;
