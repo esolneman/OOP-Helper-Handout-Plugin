@@ -1,6 +1,6 @@
 package services.impl;
 
-import Listener.OnEventListener;
+import listener.OnEventListener;
 import com.intellij.openapi.project.Project;
 //import de.ur.mi.pluginhelper.tasks.TaskConfiguration;
 import org.apache.commons.io.FileUtils;
@@ -23,7 +23,8 @@ public class HandoutDataProviderImpl implements HandoutDataProvider{
     // TODO: get RepoURL from jar file
     String repoUrl = "https://github.com/esolneman/OOP-Helper-Handout-Template.git";
     String CLONE_DIRECTORY_PATH = "refs/heads/test";
-    String CONTENT_FILE_NAME = "/RepoTEST";
+
+    String CONTENT_FILE_NAME = "/HelperHandoutPluginContentData/RepoLocalStorage";
     Project project;
     String projectDirectory;
     String contentRepoPath;

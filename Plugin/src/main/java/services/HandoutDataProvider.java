@@ -1,7 +1,6 @@
 package services;
 
-import Controller.HandoutPluginController;
-import Listener.OnEventListener;
+import listener.OnEventListener;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;

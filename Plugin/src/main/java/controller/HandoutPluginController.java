@@ -1,14 +1,11 @@
-package Controller;
+package controller;
 
-import Listener.OnEventListener;
+import listener.OnEventListener;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
-import org.jetbrains.annotations.NotNull;
 import services.HandoutDataProvider;
-import ToolWindow.HandoutContentScreen;
-import ToolWindow.HandoutToolWindowFactory;
+
 import java.io.File;
 
 public class HandoutPluginController implements HandoutPluginControllerInterface, OnEventListener {
@@ -23,6 +20,7 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
         updateHandoutContent();
         this.project = project;
     }
+
 
     public void updateHandoutContent() {
         handoutDataProvider.updateHandoutData();

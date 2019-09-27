@@ -17,8 +17,8 @@
     <!-- Plugin's application components -->
     <project-components>
         <component>
-            <interface-class>Controller.HandoutPluginControllerInterface</interface-class>
-            <implementation-class>Controller.HandoutPluginController</implementation-class>
+            <interface-class>controller.HandoutPluginControllerInterface</interface-class>
+            <implementation-class>controller.HandoutPluginController</implementation-class>
         </component>
     </project-components>
 

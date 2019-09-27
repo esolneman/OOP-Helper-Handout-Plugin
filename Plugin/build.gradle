@@ -1,7 +1,6 @@
 plugins {
     id 'java'
     id 'org.jetbrains.intellij' version '0.4.10'
-
 }
 
 group 'com.OOP-Helper-Handout'
@@ -18,8 +17,14 @@ dependencies {
     // https://mvnrepository.com/artifact/org.eclipse.jgit/org.eclipse.jgit
     compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '2.2.0.201212191850-r'
     // Todo: Update to newest gradle version
-    //compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '5.5.0.201909110433-r'
+    //compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '5.5.0.2019091s10433-r'
     //implementation files('libs/PluginHelper-Core.jar')
+
+    //Java FX
+    /*compile "org.openjfx:javafx-base:11:${platform}"
+    compile "org.openjfx:javafx-graphics:11:${platform}"
+    compile "org.openjfx:javafx-controls:11:${platform}"
+    compile "org.openjfx:javafx-fxml:11:${platform}"*/
 }
 
 

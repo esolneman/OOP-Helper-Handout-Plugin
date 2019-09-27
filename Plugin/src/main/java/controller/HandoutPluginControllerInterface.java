@@ -1,5 +1,4 @@
-package Controller;
-import Listener.OnEventListener;
+package controller;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;

@@ -2,13 +2,15 @@ package ToolWindow;
 
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.ui.javafx.JFXPanelWrapper;
-//import javafx.embed.swing.JFXPanel;
 
 import javax.swing.*;
 import java.io.DataInputStream;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+
+//import jdk.tools.jlink.internal.Platform;
+//import javafx.embed.swing.JFXPanel;
+//import javafx.embed.swing.JFXPanel;
 
 public class HandoutContentScreen {
     private JPanel handoutContent;
@@ -16,6 +18,15 @@ public class HandoutContentScreen {
     private JFXPanelWrapper jfxWrapper;
     private String assignmentDescriptionString;
     public HandoutContentScreen(ToolWindow toolWindow){
+
+/*        JFXPanel jfxPanel = new JFXPanel();
+        jFrame.add(jfxPanel);
+
+        Platform.runLater(() -> {
+            WebView webView = new WebView();
+            jfxPanel.setScene(new Scene(webView));
+            webView.getEngine().load("http://www.stackoverflow.com/");
+        });*/
         //JFrame frame = new JFrame("FX");
         //JFXPanel fxPanel = new JFXPanel();
         //frame.add(fxPanel);
@@ -32,7 +43,7 @@ public class HandoutContentScreen {
         //ToDo: add repoFile as paramter
         //String expectedValue = "Hello";
         //String file = repoFile.toString();
-        String file = "C:/Masterarbeit/Starterpaket Beispiel/OOP-18WS-CoreDefense-Starter/RepoTEST/handout.md";
+        String file = "C:/Masterarbeit/Starterpaket Beispiel/OOP-18WS-CoreDefense-Starter/HelperHandoutPluginContentData/RepoLocalStorage/handout.md";
 
         try {
             DataInputStream reader = new DataInputStream(new FileInputStream(file));
