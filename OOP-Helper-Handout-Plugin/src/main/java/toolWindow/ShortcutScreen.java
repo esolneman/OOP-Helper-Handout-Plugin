@@ -1,4 +1,4 @@
-package toolWindow.shortcutScreen;
+package toolWindow;
 
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.ui.javafx.JFXPanelWrapper;

@@ -1,4 +1,4 @@
-package toolWindow.checklistScreen;
+package toolWindow;
 
 import com.intellij.openapi.wm.ToolWindow;
 

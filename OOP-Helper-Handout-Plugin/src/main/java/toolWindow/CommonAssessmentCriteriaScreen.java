@@ -1,4 +1,4 @@
-package toolWindow.commonAssmentCriteriaScreen;
+package toolWindow;
 
 import com.intellij.openapi.wm.ToolWindow;
 

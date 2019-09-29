@@ -1,4 +1,4 @@
-package toolWindow.specificAssessmentCriteria;
+package toolWindow;
 
 import com.intellij.openapi.wm.ToolWindow;
 

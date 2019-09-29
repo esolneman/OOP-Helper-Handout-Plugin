@@ -1,4 +1,4 @@
-package toolWindow.handoutContentScreen;
+package toolWindow;
 
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.ui.javafx.JFXPanelWrapper;
@@ -43,9 +43,9 @@ public class HandoutContentScreen {
         //ToDo: add repoFile as paramter
         //String expectedValue = "Hello";
         //String file = repoFile.toString();
-        String file = "C:/Masterarbeit/Starterpaket Beispiel/OOP-18WS-CoreDefense-Starter/HelperHandoutPluginContentData/RepoLocalStorage/handout.md";
+        String file = "C:/Masterarbeit/TestProjekt/OOP-18WS-CoreDefense-Starter/HelperHandoutPluginContentData/RepoLocalStorage/handout.md";
 
-        try {
+       try {
             DataInputStream reader = new DataInputStream(new FileInputStream(file));
             String contentToDisplay = null;
             contentToDisplay = reader.readUTF();

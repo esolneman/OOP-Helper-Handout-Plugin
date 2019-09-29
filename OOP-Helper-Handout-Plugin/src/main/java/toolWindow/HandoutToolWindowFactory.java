@@ -4,11 +4,6 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.*;
 import com.intellij.ui.content.*;
 import org.jetbrains.annotations.NotNull;
-import toolWindow.checklistScreen.ChecklistScreen;
-import toolWindow.commonAssmentCriteriaScreen.CommonAssessmentCriteriaScreen;
-import toolWindow.handoutContentScreen.HandoutContentScreen;
-import toolWindow.shortcutScreen.ShortcutScreen;
-import toolWindow.specificAssessmentCriteria.SpecificAssessmentCriteria;
 
 
 public class HandoutToolWindowFactory implements ToolWindowFactory {
