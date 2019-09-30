@@ -12,6 +12,7 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 import java.util.ArrayList;
 
+
 public class HandoutContentDataProvider implements HandoutContentDataProviderInterface {
     private List<OnEventListener> listeners = new ArrayList<>();
     private AsyncExecutor asyncExecutor = new AsyncExecutor();
@@ -33,7 +34,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         projectDirectory = project.getBasePath();
         contentRepoPath = projectDirectory + CONTENT_FILE_NAME;
         contentRepoFile = new File (contentRepoPath);
-        //getRepoUrl();
+        getRepoUrl();
         System.out.println(contentRepoPath);
     }
 

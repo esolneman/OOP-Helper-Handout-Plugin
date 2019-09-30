@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'org.jetbrains.intellij' version '0.4.10'
+    id 'org.openjfx.javafxplugin' version '0.0.8'
 }
 
 version '1.0'
@@ -18,6 +19,11 @@ dependencies {
     // Todo: Update to newest gradle version
     //compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '5.5.0.2019091s10433-r'
     //implementation files('libs/PluginHelper-Core.jar')
+}
+
+javafx {
+    version = "13"
+    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.web', 'javafx.swing' ]
 }
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/

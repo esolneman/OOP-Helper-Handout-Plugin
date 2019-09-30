@@ -2,6 +2,10 @@ package toolWindow;
 
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.ui.javafx.JFXPanelWrapper;
+import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.Scene;
+import javafx.scene.web.WebView;
 
 import javax.swing.*;
 import java.io.DataInputStream;
@@ -10,7 +14,6 @@ import java.io.IOException;
 
 //import jdk.tools.jlink.internal.Platform;
 //import javafx.embed.swing.JFXPanel;
-//import javafx.embed.swing.JFXPanel;
 
 public class HandoutContentScreen {
     private JPanel handoutContent;
@@ -18,11 +21,15 @@ public class HandoutContentScreen {
     //private JFXPanelWrapper jfxWrapper;
     private String assignmentDescriptionString;
     public HandoutContentScreen(ToolWindow toolWindow){
+        JFrame jFrame = new JFrame("FX");
 
-/*        JFXPanel jfxPanel = new JFXPanel();
-        jFrame.add(jfxPanel);
-
-        Platform.runLater(() -> {
+        JFXPanel jfxPanel = new JFXPanel();
+        //jFrame.add(jfxPanel);
+        //handoutContent.add(jFrame);
+        //jFrame.setBounds(200, 100, 800, 250);
+        jFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        jFrame.setVisible(true);
+       /* Platform.runLater(() -> {
             WebView webView = new WebView();
             jfxPanel.setScene(new Scene(webView));
             webView.getEngine().load("http://www.stackoverflow.com/");
