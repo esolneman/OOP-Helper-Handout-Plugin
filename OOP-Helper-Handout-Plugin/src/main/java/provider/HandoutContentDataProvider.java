@@ -12,6 +12,8 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 import java.util.ArrayList;
 
+import static environment.Constants.*;
+
 
 public class HandoutContentDataProvider implements HandoutContentDataProviderInterface {
     private List<OnEventListener> listeners = new ArrayList<>();
@@ -20,9 +22,10 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
 
     // TODO: get RepoURL from jar file
     String repoUrl = "https://github.com/esolneman/OOP-Helper-Handout-Template.git";
-    String CLONE_DIRECTORY_PATH = "refs/heads/test";
-
-    String CONTENT_FILE_NAME = "/HelperHandoutPluginContentData/RepoLocalStorage";
+    //String CLONE_DIRECTORY_PATH = "refs/heads/test";
+    //String CONTENT_FILE_NAME = "/HelperHandoutPluginContentData/RepoLocalStorage";
+    String repoFileName;
+    String branchPath;
     Project project;
     String projectDirectory;
     String contentRepoPath;
@@ -32,9 +35,13 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
     public HandoutContentDataProvider(Project project) {
         this.project = project;
         projectDirectory = project.getBasePath();
-        contentRepoPath = projectDirectory + CONTENT_FILE_NAME;
+        //contentRepoPath = projectDirectory + CONTENT_FILE_NAME;
+        contentRepoPath = projectDirectory + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE;
         contentRepoFile = new File (contentRepoPath);
-        getRepoUrl();
+        //getRepoUrl();
+        //getBranchName();
+        // ToDo: get BranchName
+        branchPath = REPO_PATH_TO_BRANCH + "test";
         System.out.println(contentRepoPath);
     }
 
@@ -72,8 +79,8 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
                     clone  = Git.cloneRepository()
                             .setURI(repoUrl)
                             .setDirectory(contentRepoFile)
-                            .setBranchesToClone(Arrays.asList(CLONE_DIRECTORY_PATH))
-                            .setBranch(CLONE_DIRECTORY_PATH)
+                            .setBranchesToClone(Arrays.asList(branchPath))
+                            .setBranch(branchPath)
                             .call();
                 } catch (GitAPIException e) {
                     try {
