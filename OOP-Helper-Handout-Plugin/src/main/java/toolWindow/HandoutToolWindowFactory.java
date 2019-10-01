@@ -9,11 +9,15 @@ import org.jetbrains.annotations.NotNull;
 public class HandoutToolWindowFactory implements ToolWindowFactory {
     ToolWindow toolWindow;
     Content handoutContent;
+    Content handoutContent2;
+
     Content checklistContent;
     Content shortcutContent;
     Content specificCriteriaContent;
     Content commonAssessmentCriteriaContent;
     HandoutContentScreen handoutContentScreen;
+    Handout2 handoutContentScreen2;
+
     ChecklistScreen checklistScreen;
     ShortcutScreen shortcutScreen;
     SpecificAssessmentCriteria specificAssessmentCriteria;
@@ -43,6 +47,8 @@ public class HandoutToolWindowFactory implements ToolWindowFactory {
 
     private void initScreens() {
         handoutContentScreen = new HandoutContentScreen(toolWindow);
+        handoutContentScreen2 = new Handout2(toolWindow);
+
         checklistScreen = new ChecklistScreen(toolWindow);
         shortcutScreen = new ShortcutScreen(toolWindow);
         specificAssessmentCriteria = new SpecificAssessmentCriteria(toolWindow);
@@ -51,13 +57,17 @@ public class HandoutToolWindowFactory implements ToolWindowFactory {
     }
 
     public void updateScreenContent() {
-        handoutContent = contentFactory.createContent(handoutContentScreen.getContent(), "Handout", false);
+        handoutContent = contentFactory.createContent(handoutContentScreen.getContent(), "HandoutHTML", false);
+        handoutContent2 = contentFactory.createContent(handoutContentScreen2.getContent(), "HandoutMD", false);
+
         checklistContent = contentFactory.createContent(checklistScreen.getContent(), "Checklist", false);
         shortcutContent = contentFactory.createContent(shortcutScreen.getContent(), "Shortcut", false);
         specificCriteriaContent = contentFactory.createContent(specificAssessmentCriteria.getContent(), "Specific Assessment Criteria", false);
         commonAssessmentCriteriaContent = contentFactory.createContent(commonAssessmentCriteriaScreen.getContent(), "Common Assessment Criteria", false);
 
         toolWindow.getContentManager().addContent(handoutContent);
+        toolWindow.getContentManager().addContent(handoutContent2);
+
         toolWindow.getContentManager().addContent(checklistContent);
         toolWindow.getContentManager().addContent(shortcutContent);
         toolWindow.getContentManager().addContent(specificCriteriaContent);
