@@ -1,5 +1,7 @@
 package environment;
 
+import com.intellij.openapi.project.Project;
+
 public class Constants {
 
     //prevent instantiation
@@ -10,8 +12,7 @@ public class Constants {
     public static final String USER_LOCAL_STORAGE_FILE = "/UserLocalStorage";
     public static final String REPO_PATH_TO_BRANCH = "refs/heads/";
 
+    public void setUserProjectDirectory(Project project){
 
-
-
-
+    }
 }

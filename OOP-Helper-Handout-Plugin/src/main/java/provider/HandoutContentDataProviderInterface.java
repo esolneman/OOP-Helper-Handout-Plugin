@@ -10,7 +10,7 @@ public interface HandoutContentDataProviderInterface {
         return ServiceManager.getService(project, HandoutContentDataProviderInterface.class);
     }
 
-    public void updateHandoutData();
+    void updateHandoutData();
 
     void addListener(OnEventListener listener);
     //public void cloneRepository();

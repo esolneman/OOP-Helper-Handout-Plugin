@@ -33,6 +33,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
 
 
     public HandoutContentDataProvider(Project project) {
+
         this.project = project;
         projectDirectory = project.getBasePath();
         //contentRepoPath = projectDirectory + CONTENT_FILE_NAME;
