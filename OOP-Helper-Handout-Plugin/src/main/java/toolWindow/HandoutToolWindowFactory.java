@@ -41,6 +41,8 @@ public class HandoutToolWindowFactory implements ToolWindowFactory {
             }
             @Override
             public void selectionChanged(@NotNull ContentManagerEvent event) {
+                System.out.println("Selection changed to " + event.getContent().getTabName());
+                toolWindow.getContentManager().addContent(event.getContent());
             }
         });
     }
