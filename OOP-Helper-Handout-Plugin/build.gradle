@@ -1,7 +1,6 @@
 plugins {
     id 'java'
     id 'org.jetbrains.intellij' version '0.4.10'
-    id 'org.openjfx.javafxplugin' version '0.0.8'
 }
 
 version '1.0'
@@ -21,10 +20,6 @@ dependencies {
     //implementation files('libs/PluginHelper-Core.jar')
 }
 
-javafx {
-    version = "13"
-    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.web', 'javafx.swing', 'javafx.graphics' ]
-}
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
