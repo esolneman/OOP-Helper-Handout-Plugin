@@ -9,4 +9,9 @@ public class RepoLocalStorageDataProvider implements RepoLocalStorageDataProvide
         File content = new File(file);
         return content;
     }
+
+    public static String getHandoutHtmlString(){
+        String file = "C:/Masterarbeit/TestProjekt/OOP-18WS-CoreDefense-Starter/HelperHandoutPluginContentData/RepoLocalStorage/index.html";
+        return file;
+    }
 }

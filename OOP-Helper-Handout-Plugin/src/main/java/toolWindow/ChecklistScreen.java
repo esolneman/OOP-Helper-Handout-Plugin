@@ -24,7 +24,18 @@ import java.net.URL;
 public class ChecklistScreen {
 
 
+    private JPanel checklistContent;
+    private JTextPane textPane1;
+
     public ChecklistScreen(ToolWindow toolWindow) {
+        File file = new File("C:/Masterarbeit/TestProjekt/OOP-18WS-CoreDefense-Starter/HelperHandoutPluginContentData/RepoLocalStorage/checklist.md");
+        textPane1.setText(file.getName());
+    }
+
+    public JPanel getContent() {
+        System.out.println("Getting Content for checklist");
+
+        return checklistContent;
     }
 
 

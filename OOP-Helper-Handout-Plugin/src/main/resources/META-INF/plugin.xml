@@ -1,11 +1,11 @@
 <idea-plugin>
     <id>oop_helper_handout</id>
     <name>oop_helper_handout</name>
-    <vendor email="marlena.wolfes@stud.uni-regensburg.de" url="http://www.company.com">Company</vendor>
+    <vendor email="marlena.wolfes@stud.uni-regensburg.de" url="http://www.company.com">Marlena Wolfes</vendor>
 
     <description><![CDATA[
-    description <br>
-    <em>keine Ahnung was hier rein soll</em>
+    Unterstützt die Studenten des OOP-Kurses der Univerität Regensburg bei der Bearbeitung von Studienleistung und Übungsaufgben<br>
+    <em>Mehr erklärung folgt</em>
     ]]></description>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
@@ -29,9 +29,13 @@
     <actions>
         <group id="MyPlugin.SampleMenu" text="OOP-Helper-Handout" description="Plugin menu">
             <add-to-group group-id="MainMenu" anchor="last"/>
-            <action id="Myplugin.Textboxes.Tutorial" class="handoutMenu.HandoutMenuTutorial" text="Tutorial" description="Start Tutorial"/>
-            <!--<action id="Myplugin.Textboxes.Reset" class="handoutMenu.HandoutMenuReset" text="Reset" description="Start Tutorial"/>-->
-            <action id="Myplugin.Textboxes.Export" class="handoutMenu.HandoutMenuExport" text="Export" description="Start Tutorial"/>
+            <action id="Myplugin.Textboxes.Tutorial" class="handoutMenu.HandoutMenuTutorial" text="Tutorial" description="Start Tutorial" icon="/icons/contextHelp.svg"/>
+            <action id="Myplugin.Textboxes.Export" class="handoutMenu.HandoutMenuExport" text="Export" description="Start Export" icon="/icons/export.svg"/>
         </group>
+        <group id="HandoutToolWindow" text="test" description="test menu"> </group>
+        <action  id="Handout.Download" class="toolWindow.actions.HandoutContentAction" text="D"
+                 description="Download" icon="/icons/download.svg">
+            <add-to-group group-id="HandoutToolWindow" />
+        </action>
     </actions>
 </idea-plugin>

@@ -1,5 +1,6 @@
 package handoutMenu;
 
+import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
@@ -10,10 +11,8 @@ public class HandoutMenuExport extends AnAction {
         super("Export");
     }
 
-
     public void actionPerformed(AnActionEvent event) {
         System.out.println("Export Started");
-
         Project project = event.getProject();
         Messages.showMessageDialog(project, "Hello Export!", "Export", Messages.getInformationIcon());
     }
