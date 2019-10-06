@@ -1,29 +1,22 @@
 package toolWindow;
 
 import com.intellij.ide.BrowserUtil;
-import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.actionSystem.ex.AnActionListener;
-import com.intellij.openapi.extensions.PluginId;
-import com.intellij.openapi.util.ActionCallback;
 import com.intellij.openapi.wm.ToolWindow;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.concurrent.Worker;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
 import javafx.scene.web.WebView;
-import org.apache.commons.httpclient.URI;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.events.EventListener;
+import org.w3c.dom.events.EventTarget;
+import org.w3c.dom.html.HTMLAnchorElement;
 import provider.RepoLocalStorageDataProvider;
 
-import javax.swing.*;
-import javax.swing.text.Document;
-import javax.swing.text.html.HTMLEditorKit;
-import javax.swing.text.html.StyleSheet;
 import java.awt.*;
-import java.awt.event.InputEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -41,7 +34,6 @@ public class HandoutContentScreen {
         handoutToolWindow = toolWindow;
         initToolWindowMenu();
         createContent();
-        //setOnLinkListener();
     }
 
     private void initToolWindowMenu() {
@@ -89,10 +81,11 @@ public class HandoutContentScreen {
                 //webEngine.load(url.toExternalForm());
                 webView.getEngine().setJavaScriptEnabled(true);
                 handoutContent.setScene(new Scene(webView));
+                //setOnLinkListener();
+
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
-
         });
     }
 
@@ -123,6 +116,27 @@ public class HandoutContentScreen {
                 }
             }
         });
+        //https://stackoverflow.com/questions/15555510/javafx-stop-opening-url-in-webview-open-in-browser-instead
+       /* Document document = webView.getEngine().getDocument();
+        NodeList nodeList = document.getElementsByTagName("a");
+        for (int i = 0; i < nodeList.getLength(); i++)
+        {
+            Node node= nodeList.item(i);
+            EventTarget eventTarget = (EventTarget) node;
+            eventTarget.addEventListener("click", new EventListener()
+            {
+                @Override
+                public void handleEvent(org.w3c.dom.events.Event event)
+                {
+                    EventTarget target = event.getCurrentTarget();
+                    HTMLAnchorElement anchorElement = (HTMLAnchorElement) target;
+                    String href = anchorElement.getHref();
+                    //handle opening URL outside JavaFX WebView
+                    System.out.println(href);
+                    event.preventDefault();
+                }
+            }, false);
+        }*/
     }
 
 
