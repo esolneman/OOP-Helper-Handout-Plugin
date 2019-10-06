@@ -65,7 +65,7 @@ public class HandoutContentScreen {
 
     private void createContent() {
         handoutContent = new JFXPanel();
-/*        //JPanel panel = new JPanel();
+/*      //JPanel panel = new JPanel();
 
         // JButton mit Text "Drück mich" wird erstellt
         JButton button = new JButton("Drück mich");
@@ -76,16 +76,23 @@ public class HandoutContentScreen {
         File content = RepoLocalStorageDataProvider.getHandoutHtmlFormat();
         String htmlString = RepoLocalStorageDataProvider.getHandoutHtmlString();
         final String url = "file:///" + htmlString;
+
         //URL url = getClass().getResource("C:/Masterarbeit/TestProjekt/OOP-18WS-CoreDefense-Starter/HelperHandoutPluginContentData/RepoLocalStorage/index.html");
         //String url = WebView.class.getResource(file).toExternalForm();
-        webView = new WebView();
         Platform.runLater(() -> {
-            webView.getEngine().load(url);
-            //webView.getEngine().load(url.toExternalForm());
-            //URL url = getClass().getResource("index.html");
-            //webEngine.load(url.toExternalForm());
-            webView.getEngine().setJavaScriptEnabled(true);
-            handoutContent.setScene(new Scene(webView));
+            try {
+                final String urlString = content.toURI().toURL().toString();
+                webView = new WebView();
+                webView.getEngine().load(urlString);
+                //webView.getEngine().load(url.toExternalForm());
+                //URL url = getClass().getResource("index.html");
+                //webEngine.load(url.toExternalForm());
+                webView.getEngine().setJavaScriptEnabled(true);
+                handoutContent.setScene(new Scene(webView));
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+
         });
     }
 
@@ -100,17 +107,15 @@ public class HandoutContentScreen {
                 System.out.println("tobeopen: " + toBeopen);
                 if (toBeopen.contains("http://") || toBeopen.contains("https://")) {
                     try {
-                        URI address = new URI(newValue);
-                        if ((address.getQuery() + "").indexOf("_openmodal=true") > -1) {
-                            Platform.runLater(() -> {
-                                webView = new WebView();
-                                String htmlString = RepoLocalStorageDataProvider.getHandoutHtmlString();
-                                final String url = "file:///" + htmlString;
-                                webView.getEngine().load(url);
-                                handoutContent.setScene(new Scene(webView));
-                            });
-                            d.browse(new URL(toBeopen).toURI());
-                        }
+                        Platform.runLater(() -> {
+                            webView = new WebView();
+                            String htmlString = RepoLocalStorageDataProvider.getHandoutHtmlString();
+                            final String url = "file:///" + htmlString;
+                            webView.getEngine().load(url);
+                            handoutContent.setScene(new Scene(webView));
+                        });
+                        d.browse(new URL(toBeopen).toURI());
+                        //BrowserUtil.browse(new URL(toBeopen).toURI());
                     }
                     catch (IOException | URISyntaxException e) {
                         System.out.println(e);
@@ -123,13 +128,13 @@ public class HandoutContentScreen {
 
     public JFXPanel getContent() {
         System.out.println("Getting Content for Handout");
-        if(webView != null) {
+        /*if(webView != null) {
             System.out.println("webview not null");
             System.out.println(webView.getEngine().getDocument().getDocumentURI());
             Platform.runLater(() -> {
                 webView.getEngine().reload();
             });
-        }
+        }*/
         return handoutContent;
     }
 
@@ -138,17 +143,16 @@ public class HandoutContentScreen {
         if(webView != null) {
             System.out.println("webview not null");
             System.out.println(webView.getEngine().getDocument().getDocumentURI());
-            Platform.runLater(() -> {
+/*            Platform.runLater(() -> {
                 System.out.println("run later");
                 String htmlString = RepoLocalStorageDataProvider.getHandoutHtmlString();
                 final String url = "file:///" + htmlString;
                 webView.getEngine().load(url);
-            });
+            });*/
         }
     }
 
     public void linkListenter(){
-
         BrowserUtil.browse("https://stackoverflow.com/questions/ask");
         String url;
         //BrowserUtil.browse(url);
