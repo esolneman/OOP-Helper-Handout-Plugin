@@ -3,6 +3,7 @@ package toolWindow;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.*;
 import com.intellij.ui.content.*;
+import environment.HandoutPluginFXPanel;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -46,6 +47,10 @@ public class HandoutToolWindowFactory implements ToolWindowFactory {
                 System.out.println(event.getContent().getDisplayName());
                 if (event.getContent().getDisplayName() == "HandoutHTML") {
                     updateScreenContent();
+                }
+                if (event.getContent().getDisplayName() == "Shortcut") {
+                    System.out.println("Switching to Shortcut-Screen");
+                    ((HandoutPluginFXPanel) event.getContent().getComponent()).showContent();
                 }
             }
         });

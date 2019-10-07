@@ -1,48 +1,35 @@
 package toolWindow;
 
 import com.intellij.ide.BrowserUtil;
-import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.actionSystem.ActionToolbar;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
+import environment.HandoutPluginFXPanel;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
 import javafx.scene.web.WebView;
-import org.jetbrains.annotations.NotNull;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.events.EventListener;
-import org.w3c.dom.events.EventTarget;
-import org.w3c.dom.html.HTMLAnchorElement;
 import provider.RepoLocalStorageDataProvider;
 
-import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.List;
 
-//import jdk.tools.jlink.internal.Platform;
 //import javafx.embed.swing.JFXPanel;
 
 public class HandoutContentScreen {
-    private JFXPanel handoutContent;
+    private HandoutPluginFXPanel handoutContent;
     private WebView webView;
     private ToolWindow handoutToolWindow;
+
     public HandoutContentScreen(ToolWindow toolWindow){
         handoutToolWindow = toolWindow;
         createContent();
         initToolWindowMenu();
-
     }
 
     private void initToolWindowMenu() {
@@ -71,7 +58,7 @@ public class HandoutContentScreen {
     }
 
     private void createContent() {
-        handoutContent = new JFXPanel();
+        handoutContent = new HandoutPluginFXPanel();
 /*      //JPanel panel = new JPanel();
 
         // JButton mit Text "Drück mich" wird erstellt
@@ -111,24 +98,34 @@ public class HandoutContentScreen {
             @Override
             public void changed(ObservableValue<? extends String> observable, final String oldValue, String newValue) {
                 Desktop d = Desktop.getDesktop();
+                System.out.println("message: " + webView.getEngine().getLoadWorker().getMessage());
                 String toBeopen = webView.getEngine().getLoadWorker().getMessage().trim();
                 System.out.println("tobeopen: " + toBeopen);
-                if (toBeopen.contains("http://") || toBeopen.contains("https://")) {
-                    try {
-                        Platform.runLater(() -> {
-                            webView = new WebView();
-                            String htmlString = RepoLocalStorageDataProvider.getHandoutHtmlString();
-                            final String url = "file:///" + htmlString;
-                            webView.getEngine().load(url);
-                            handoutContent.setScene(new Scene(webView));
-                        });
-                        //d.browse(new URL(toBeopen).toURI());
-                        BrowserUtil.browse(new URL(toBeopen).toURI());
+                try {
+                    URI address = new URI(observable.getValue());
+                    System.out.println("address: " + address);
+                    if (toBeopen.contains("http://") || toBeopen.contains("https://")) {
+                        System.out.println("load nwe page ");
+                        try {
+                            Platform.setImplicitExit(false);
+                            Platform.runLater(() -> {
+                                String htmlString = RepoLocalStorageDataProvider.getHandoutHtmlString();
+                                final String url = "file:///" + htmlString;
+                                webView.getEngine().load(url);
+                            });
+                            System.out.println("BrowserUtil");
+
+                            d.browse(address);
+                            //BrowserUtil.browse((address.toURL());
+                        }
+                        catch (IOException e) {
+                            System.out.println(e);
+                        }
                     }
-                    catch (IOException | URISyntaxException e) {
-                        System.out.println(e);
-                    }
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
                 }
+
             }
         });
         //https://stackoverflow.com/questions/15555510/javafx-stop-opening-url-in-webview-open-in-browser-instead
@@ -168,12 +165,5 @@ public class HandoutContentScreen {
                 webView.getEngine().load(url);
             });
         }
-    }
-
-    public void linkListenter(){
-        BrowserUtil.browse("https://stackoverflow.com/questions/ask");
-        String url;
-        //BrowserUtil.browse(url);
-
     }
 }

@@ -19,6 +19,10 @@ public class HandoutPluginFXPanel extends JFXPanel {
             });
         }
 
+        public void setWebView() {
+
+        }
+
         public void sayName() {
             System.out.println("I am a MyJFXPanel");
         }
