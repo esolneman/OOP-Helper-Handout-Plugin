@@ -157,7 +157,7 @@ public class HandoutContentScreen {
         System.out.println("updateContent");
         if(webView != null) {
             System.out.println("webview not null");
-            System.out.println(webView.getEngine().getDocument().getDocumentURI());
+            //System.out.println(webView.getEngine().getDocument().getDocumentURI());
             Platform.runLater(() -> {
                 System.out.println("run later");
                 String htmlString = RepoLocalStorageDataProvider.getHandoutHtmlString();

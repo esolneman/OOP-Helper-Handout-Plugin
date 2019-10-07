@@ -63,7 +63,7 @@ public class HandoutToolWindowFactory implements ToolWindowFactory {
     public void addScreenContent() {
         handoutContent = contentFactory.createContent(handoutContentScreen.getContent(), "HandoutHTML", false);
         handoutContent.setPreferredFocusableComponent(handoutContentScreen.getContent());
-        checklistContent = contentFactory.createContent(checklistScreen.getChecklits(), "Checklist", false);
+        checklistContent = contentFactory.createContent(checklistScreen.getContent(), "Checklist", false);
         shortcutContent = contentFactory.createContent(shortcutScreen.getContent(), "Shortcut", false);
         specificCriteriaContent = contentFactory.createContent(specificAssessmentCriteria.getContent(), "Specific Assessment Criteria", false);
         commonAssessmentCriteriaContent = contentFactory.createContent(commonAssessmentCriteriaScreen.getContent(), "Common Assessment Criteria", false);
