@@ -29,13 +29,14 @@
     <actions>
         <group id="MyPlugin.SampleMenu" text="OOP-Helper-Handout" description="Plugin menu">
             <add-to-group group-id="MainMenu" anchor="last"/>
-            <action id="Myplugin.Textboxes.Tutorial" class="handoutMenu.HandoutMenuTutorial" text="Tutorial" description="Start Tutorial" icon="/icons/contextHelp.svg"/>
-            <action id="Myplugin.Textboxes.Export" class="handoutMenu.HandoutMenuExport" text="Export" description="Start Export" icon="/icons/export.svg"/>
+            <action id="Myplugin.Textboxes.Tutorial" class="handoutMenuActions.HandoutMenuTutorial" text="Tutorial" description="Start Tutorial" icon="/icons/contextHelp.svg"/>
+            <action id="Myplugin.Textboxes.Export" class="handoutMenuActions.HandoutMenuExport" text="Export" description="Start Export" icon="/icons/export.svg"/>
         </group>
-        <group id="HandoutToolWindow" text="test" description="test menu"> </group>
-        <action  id="Handout.Download" class="toolWindow.actions.HandoutContentAction" text="D"
-                 description="Download" icon="/icons/download.svg">
-            <add-to-group group-id="HandoutToolWindow" />
-        </action>
+        <group id="HandoutToolWindow" text="test" description="test menu">
+            <!--<add-to-group group-id="" />-->
+            <action id="Handout.Download" class="toolWindow.actions.HandoutDownloadAction" text="Download" description="Download" icon="/icons/download.svg"> </action>
+            <action id="Handout.TableOfContents" class="toolWindow.actions.HandoutTableOfContentsAction" text="tableOfConntents" description="content" icon="/icons/download.svg"> </action>
+        </group>
+
     </actions>
 </idea-plugin>

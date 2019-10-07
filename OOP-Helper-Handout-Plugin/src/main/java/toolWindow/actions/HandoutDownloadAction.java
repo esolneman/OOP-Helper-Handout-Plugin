@@ -5,9 +5,9 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 
-public class HandoutContentAction extends AnAction {
-    public HandoutContentAction() {
-        super("Tutorial");
+public class HandoutDownloadAction extends AnAction {
+    public HandoutDownloadAction() {
+        super("Download");
     }
 
     public void actionPerformed(AnActionEvent event) {

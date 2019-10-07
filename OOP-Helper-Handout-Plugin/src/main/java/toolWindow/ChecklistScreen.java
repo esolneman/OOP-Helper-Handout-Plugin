@@ -25,6 +25,10 @@ public class ChecklistScreen {
 
 
     private JPanel checklistContent;
+    private JPanel toolbar;
+    private JPanel checklits;
+    private JPanel repoChecklist;
+    private JPanel userCheklist;
     private JTextPane textPane1;
 
     public ChecklistScreen(ToolWindow toolWindow) {
@@ -32,7 +36,7 @@ public class ChecklistScreen {
         textPane1.setText(file.getName());
     }
 
-    public JPanel getContent() {
+    public JPanel getChecklits() {
         System.out.println("Getting Content for checklist");
 
         return checklistContent;

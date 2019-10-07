@@ -1,6 +1,7 @@
 package toolWindow;
 
 import com.intellij.ide.BrowserUtil;
+import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.wm.ToolWindow;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -37,7 +38,7 @@ public class HandoutContentScreen {
     }
 
     private void initToolWindowMenu() {
-        //ActionManager.createActionToolbar();
+         //ActionManager.getInstance().createActionToolbar();
         //com.intellij.openapi.actionSystem.ActionManager.createActionToolbar ` and add AnAction on it via ActionGroup.
         //ToolWindowActionMAnager
         /*ActionGroup handoutActionGroup = new ActionGroup() {
@@ -81,7 +82,7 @@ public class HandoutContentScreen {
                 //webEngine.load(url.toExternalForm());
                 webView.getEngine().setJavaScriptEnabled(true);
                 handoutContent.setScene(new Scene(webView));
-                //setOnLinkListener();
+                setOnLinkListener();
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();
@@ -107,8 +108,8 @@ public class HandoutContentScreen {
                             webView.getEngine().load(url);
                             handoutContent.setScene(new Scene(webView));
                         });
-                        d.browse(new URL(toBeopen).toURI());
-                        //BrowserUtil.browse(new URL(toBeopen).toURI());
+                        //d.browse(new URL(toBeopen).toURI());
+                        BrowserUtil.browse(new URL(toBeopen).toURI());
                     }
                     catch (IOException | URISyntaxException e) {
                         System.out.println(e);
@@ -157,12 +158,12 @@ public class HandoutContentScreen {
         if(webView != null) {
             System.out.println("webview not null");
             System.out.println(webView.getEngine().getDocument().getDocumentURI());
-/*            Platform.runLater(() -> {
+            Platform.runLater(() -> {
                 System.out.println("run later");
                 String htmlString = RepoLocalStorageDataProvider.getHandoutHtmlString();
                 final String url = "file:///" + htmlString;
                 webView.getEngine().load(url);
-            });*/
+            });
         }
     }
 

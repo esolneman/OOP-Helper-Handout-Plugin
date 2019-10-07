@@ -1,20 +1,20 @@
-package handoutMenu;
+package handoutMenuActions;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 
-public class HandoutMenuReset extends AnAction {
-    public HandoutMenuReset() {
-        super("Reset");
+public class HandoutMenuTutorial extends AnAction {
+    public HandoutMenuTutorial() {
+        super("Tutorial");
     }
 
 
     public void actionPerformed(AnActionEvent event) {
-        System.out.println("Reset Started");
+        System.out.println("greetingEvent");
 
         Project project = event.getProject();
-        Messages.showMessageDialog(project, "Hello Reset!", "Reset", Messages.getInformationIcon());
+        Messages.showMessageDialog(project, "Hello world!", "Greeting", Messages.getInformationIcon());
     }
 }
