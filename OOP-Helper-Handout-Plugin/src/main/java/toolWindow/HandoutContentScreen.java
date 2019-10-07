@@ -2,6 +2,10 @@ package toolWindow;
 
 import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.actionSystem.ActionManager;
+import com.intellij.openapi.actionSystem.ActionToolbar;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -9,6 +13,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
 import javafx.scene.web.WebView;
+import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -17,12 +22,14 @@ import org.w3c.dom.events.EventTarget;
 import org.w3c.dom.html.HTMLAnchorElement;
 import provider.RepoLocalStorageDataProvider;
 
+import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.List;
 
 //import jdk.tools.jlink.internal.Platform;
 //import javafx.embed.swing.JFXPanel;
@@ -33,11 +40,18 @@ public class HandoutContentScreen {
     private ToolWindow handoutToolWindow;
     public HandoutContentScreen(ToolWindow toolWindow){
         handoutToolWindow = toolWindow;
-        initToolWindowMenu();
         createContent();
+        initToolWindowMenu();
+
     }
 
     private void initToolWindowMenu() {
+       /* ActionToolbar toolbar;
+        ActionToolbar handoutToolbar;
+        SimpleToolWindowPanel panel = new SimpleToolWindowPanel(true) ;
+        handoutToolbar.setTargetComponent(panel);
+        panel.setToolbar(handoutToolbar.getComponent());
+        handoutContent.add(panel);*/
          //ActionManager.getInstance().createActionToolbar();
         //com.intellij.openapi.actionSystem.ActionManager.createActionToolbar ` and add AnAction on it via ActionGroup.
         //ToolWindowActionMAnager
@@ -142,24 +156,13 @@ public class HandoutContentScreen {
 
 
     public JFXPanel getContent() {
-        System.out.println("Getting Content for Handout");
-        /*if(webView != null) {
-            System.out.println("webview not null");
-            System.out.println(webView.getEngine().getDocument().getDocumentURI());
-            Platform.runLater(() -> {
-                webView.getEngine().reload();
-            });
-        }*/
         return handoutContent;
     }
 
     public void updateContent(){
-        System.out.println("updateContent");
         if(webView != null) {
-            System.out.println("webview not null");
-            //System.out.println(webView.getEngine().getDocument().getDocumentURI());
+            Platform.setImplicitExit(false);
             Platform.runLater(() -> {
-                System.out.println("run later");
                 String htmlString = RepoLocalStorageDataProvider.getHandoutHtmlString();
                 final String url = "file:///" + htmlString;
                 webView.getEngine().load(url);
