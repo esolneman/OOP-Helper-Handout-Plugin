@@ -18,6 +18,8 @@ import org.w3c.dom.html.HTMLAnchorElement;
 import provider.RepoLocalStorageDataProvider;
 
 import java.awt.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -69,6 +71,18 @@ public class HandoutContentScreen {
         File content = RepoLocalStorageDataProvider.getHandoutHtmlFormat();
         String htmlString = RepoLocalStorageDataProvider.getHandoutHtmlString();
         final String url = "file:///" + htmlString;
+
+        handoutContent.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent focusEvent) {
+                System.out.println("in: focusGained");
+            }
+
+            @Override
+            public void focusLost(FocusEvent focusEvent) {
+                System.out.println("in: focusLost");
+            }
+        });
 
         //URL url = getClass().getResource("C:/Masterarbeit/TestProjekt/OOP-18WS-CoreDefense-Starter/HelperHandoutPluginContentData/RepoLocalStorage/index.html");
         //String url = WebView.class.getResource(file).toExternalForm();
@@ -158,10 +172,11 @@ public class HandoutContentScreen {
         if(webView != null) {
             System.out.println("webview not null");
             //System.out.println(webView.getEngine().getDocument().getDocumentURI());
+            Platform.setImplicitExit(false);
             Platform.runLater(() -> {
                 System.out.println("run later");
                 String htmlString = RepoLocalStorageDataProvider.getHandoutHtmlString();
-                final String url = "file:///" + htmlString;
+                final String url = "https://www.google.de";
                 webView.getEngine().load(url);
             });
         }

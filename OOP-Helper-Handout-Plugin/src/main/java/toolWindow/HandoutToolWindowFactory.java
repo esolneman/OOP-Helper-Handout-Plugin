@@ -32,20 +32,25 @@ public class HandoutToolWindowFactory implements ToolWindowFactory {
             public void contentAdded(@NotNull ContentManagerEvent event) {
                 System.out.println("contentAdded");
             }
+
             @Override
             public void contentRemoved(@NotNull ContentManagerEvent event) {
                 System.out.println("contentRemoved");
             }
+
             @Override
             public void contentRemoveQuery(@NotNull ContentManagerEvent event) {
                 System.out.println("contentRemoveQuery");
             }
+
             @Override
             public void selectionChanged(@NotNull ContentManagerEvent event) {
-                System.out.println("selectionChanged");
-                System.out.println(event.getContent().getDisplayName());
-                if (event.getContent().getDisplayName() == "HandoutHTML") {
-                    updateScreenContent();
+                System.out.println("in: selectionChanged");
+                System.out.println("Current Component: \"" + event.getContent().getDisplayName() + "\"");
+                System.out.println("Component object: " + event.getContent().getComponent());
+                if (event.getContent().getDisplayName() == "Shortcut") {
+                    System.out.println("Switching to Shortcut-Screen");
+                    ((MyJFXPanel) event.getContent().getComponent()).showContent();
                 }
             }
         });
@@ -67,6 +72,9 @@ public class HandoutToolWindowFactory implements ToolWindowFactory {
         shortcutContent = contentFactory.createContent(shortcutScreen.getContent(), "Shortcut", false);
         specificCriteriaContent = contentFactory.createContent(specificAssessmentCriteria.getContent(), "Specific Assessment Criteria", false);
         commonAssessmentCriteriaContent = contentFactory.createContent(commonAssessmentCriteriaScreen.getContent(), "Common Assessment Criteria", false);
+
+
+
 
         toolWindow.getContentManager().addContent(handoutContent);
         toolWindow.getContentManager().addContent(checklistContent);
