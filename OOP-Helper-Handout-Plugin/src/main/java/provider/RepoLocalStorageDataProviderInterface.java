@@ -6,4 +6,5 @@ public interface RepoLocalStorageDataProviderInterface {
     static File getHandoutHtmlFormat() {
         return null;
     }
+
 }

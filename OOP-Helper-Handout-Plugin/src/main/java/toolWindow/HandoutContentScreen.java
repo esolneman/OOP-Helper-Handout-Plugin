@@ -1,6 +1,5 @@
 package toolWindow;
 
-import com.intellij.ide.BrowserUtil;
 import com.intellij.openapi.wm.ToolWindow;
 import environment.HandoutPluginFXPanel;
 import javafx.application.Platform;
@@ -9,7 +8,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
 import javafx.scene.web.WebView;
-import provider.RepoLocalStorageDataProvider;
+import provider.LocalStorageDataProvider;
 
 import java.awt.*;
 import java.io.File;
@@ -32,7 +31,7 @@ public class HandoutContentScreen {
         handoutToolWindow = toolWindow;
         createContent();
         initToolWindowMenu();
-        content = RepoLocalStorageDataProvider.getHandoutHtmlFormat();
+        content = LocalStorageDataProvider.getHandoutFileDirectory();
         try {
             urlString = content.toURI().toURL().toString();
         } catch (MalformedURLException e) {

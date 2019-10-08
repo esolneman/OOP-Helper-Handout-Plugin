@@ -18,16 +18,13 @@ public class RepoLocalStorageDataProvider implements RepoLocalStorageDataProvide
         return projectDirectory;
     }
 
-    public static File getHandoutHtmlFormat(){
-        //String file = "C:/Masterarbeit/TestProjekt/OOP-18WS-CoreDefense-Starter/HelperHandoutPluginContentData/RepoLocalStorage/index.html";
+    public static File getHandoutHtmlFile(){
         File handoutFile = new File(getHandoutHtmlString());
         return handoutFile;
     }
 
     public static String getHandoutHtmlString(){
         String handoutDataDirectoryPath = getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE + HANDOUT_FILE_NAME;
-        System.out.println(handoutDataDirectoryPath);
-
         return handoutDataDirectoryPath;
     }
 
