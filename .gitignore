@@ -35,58 +35,58 @@ hs_err_pid*
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 # User-specific stuff
-Plugin/.idea/**/workspace.xml
-Plugin/.idea/**/tasks.xml
-Plugin/.idea/**/usage.statistics.xml
-Plugin/.idea/**/dictionaries
-Plugin/.idea/**/shelf
+OOP-Helper-Handout-Plugin/.idea/**/workspace.xml
+OOP-Helper-Handout-Plugin/.idea/**/tasks.xml
+OOP-Helper-Handout-Plugin/.idea/**/usage.statistics.xml
+OOP-Helper-Handout-Plugin/.idea/**/dictionaries
+OOP-Helper-Handout-Plugin/.idea/**/shelf
 
 # Generated files
-Plugin/.idea/**/contentModel.xml
+OOP-Helper-Handout-Plugin/.idea/**/contentModel.xml
 
 # Sensitive or high-churn files
-Plugin/.idea/**/dataSources/
-Plugin/.idea/**/dataSources.ids
-Plugin/.idea/**/dataSources.local.xml
-Plugin/.idea/**/sqlDataSources.xml
-Plugin/.idea/**/dynamic.xml
-Plugin/.idea/**/uiDesigner.xml
-Plugin/.idea/**/dbnavigator.xml
+OOP-Helper-Handout-Plugin/.idea/**/dataSources/
+OOP-Helper-Handout-Plugin/.idea/**/dataSources.ids
+OOP-Helper-Handout-Plugin/.idea/**/dataSources.local.xml
+OOP-Helper-Handout-Plugin/.idea/**/sqlDataSources.xml
+OOP-Helper-Handout-Plugin/.idea/**/dynamic.xml
+OOP-Helper-Handout-Plugin/.idea/**/uiDesigner.xml
+OOP-Helper-Handout-Plugin/.idea/**/dbnavigator.xml
 
 # Gradle
-Plugin/.idea/**/gradle.xml
-Plugin/.idea/**/libraries
+OOP-Helper-Handout-Plugin/.idea/**/gradle.xml
+OOP-Helper-Handout-Plugin/.idea/**/libraries
 
 # Gradle and Maven with auto-import
 # When using Gradle or Maven with auto-import, you should exclude module files,
 # since they will be recreated, and may cause churn.  Uncomment if using
 # auto-import.
-# Plugin/.idea/modules.xml
-# Plugin/.idea/*.iml
-# Plugin/.idea/modules
+# OOP-Helper-Handout-Plugin/.idea/modules.xml
+# OOP-Helper-Handout-Plugin/.idea/*.iml
+# OOP-Helper-Handout-Plugin/.idea/modules
 # *.iml
 # *.ipr
 
 # CMake
-Plugin/cmake-build-*/
+OOP-Helper-Handout-Plugin/cmake-build-*/
 
 # Mongo Explorer plugin
-Plugin/.idea/**/mongoSettings.xml
+OOP-Helper-Handout-Plugin/.idea/**/mongoSettings.xml
 
 # File-based project format
 *.iws
 
 # IntelliJ
-Plugin/out/
+OOP-Helper-Handout-Plugin/out/
 
 # mpeltonen/sbt-idea plugin
-Plugin/.idea_modules/
+OOP-Helper-Handout-Plugin/.idea_modules/
 
 # JIRA plugin
 atlassian-ide-plugin.xml
 
 # Cursive Clojure plugin
-Plugin/.idea/replstate.xml
+OOP-Helper-Handout-Plugin/.idea/replstate.xml
 
 # Crashlytics plugin (for Android Studio and IntelliJ)
 com_crashlytics_export_strings.xml
@@ -95,10 +95,10 @@ crashlytics-build.properties
 fabric.properties
 
 # Editor-based Rest Client
-Plugin/.idea/httpRequests
+OOP-Helper-Handout-Plugin/.idea/httpRequests
 
 # Android studio 3.1+ serialized cache file
-Plugin/.idea/caches/build_file_checksums.ser
+OOP-Helper-Handout-Plugin/.idea/caches/build_file_checksums.ser
 
 ### Intellij Patch ###
 # Comment Reason: https://github.com/joeblau/gitignore.io/issues/186#issuecomment-215987721
@@ -137,18 +137,18 @@ Plugin/.idea/caches/build_file_checksums.ser
 hs_err_pid*
 
 ### Gradle ###
-Plugin/.gradle
-Plugin/build/
+OOP-Helper-Handout-Plugin/.gradle
+OOP-Helper-Handout-Plugin/build/
 
 # Ignore Gradle GUI config
-Plugin/gradle-app.setting
+OOP-Helper-Handout-Plugin/gradle-app.setting
 
 # Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
 !gradle-wrapper.jar
 !PluginHelper-Core.jar
 
 # Cache of project
-Plugin/.gradletasknamecache
+OOP-Helper-Handout-Plugin/.gradletasknamecache
 
 # # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
 # gradle/wrapper/gradle-wrapper.properties
@@ -158,9 +158,8 @@ Plugin/.gradletasknamecache
 
 # End of https://www.gitignore.io/api/java,gradle,intellij
 
-
-!Plugin/libs/
-Plugin/.gradle
-Plugin/.idea/
-Plugin/build/
-Plugin/build.properties
+!OOP-Helper-Handout-Plugin/libs/
+OOP-Helper-Handout-Plugin/.gradle
+OOP-Helper-Handout-Plugin/.idea/
+OOP-Helper-Handout-Plugin/build/
+OOP-Helper-Handout-Plugin/build.properties
