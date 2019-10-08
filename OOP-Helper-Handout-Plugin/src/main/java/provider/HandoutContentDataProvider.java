@@ -36,8 +36,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
 
         this.project = project;
         projectDirectory = project.getBasePath();
-        //contentRepoPath = projectDirectory + CONTENT_FILE_NAME;
-        contentRepoPath = projectDirectory + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE;
+        contentRepoPath = RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE;
         contentRepoFile = new File (contentRepoPath);
         //getRepoUrl();
         //getBranchName();
@@ -46,6 +45,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         System.out.println(contentRepoPath);
     }
 
+    //ToDo getRepo Url
     private void getRepoUrl() {
         System.out.println("getRepoUrl");
         //System.out.println(TaskConfiguration.loadFrom());
@@ -56,6 +56,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         System.out.println("updateHandoutData");
 
         //TODO check internet connection first
+
         //https://stackoverflow.com/a/15571626
         if (!contentRepoFile.exists()) {
             cloneRepository();

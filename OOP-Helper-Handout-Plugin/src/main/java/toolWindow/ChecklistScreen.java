@@ -14,6 +14,7 @@ public class ChecklistScreen {
     private JButton button2;
     private JTextPane repoChecklist;
 
+
     public ChecklistScreen(ToolWindow toolWindow) {
         File file = new File("C:/Masterarbeit/TestProjekt/OOP-18WS-CoreDefense-Starter/HelperHandoutPluginContentData/RepoLocalStorage/checklist.md");
         repoChecklist.setText(file.getName());

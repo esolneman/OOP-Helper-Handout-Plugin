@@ -5,6 +5,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindowFactory;
 import listener.OnEventListener;
 import provider.HandoutContentDataProviderInterface;
+import provider.RepoLocalStorageDataProvider;
+
 import java.io.File;
 
 public class HandoutPluginController implements HandoutPluginControllerInterface, OnEventListener{
@@ -14,6 +16,7 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
 
     public HandoutPluginController(Project project) {
         //toolWindowFactory =
+        RepoLocalStorageDataProvider.setUserProjectDirectory(project);
         handoutDataProvider = ServiceManager.getService(project, HandoutContentDataProviderInterface.class);
         handoutDataProvider.addListener(this);
         updateHandoutContent();

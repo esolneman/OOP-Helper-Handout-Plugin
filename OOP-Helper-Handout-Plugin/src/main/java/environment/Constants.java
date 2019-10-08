@@ -12,7 +12,5 @@ public class Constants {
     public static final String USER_LOCAL_STORAGE_FILE = "/UserLocalStorage";
     public static final String REPO_PATH_TO_BRANCH = "refs/heads/";
 
-    public void setUserProjectDirectory(Project project){
-
-    }
+    public static final String HANDOUT_FILE_NAME = "/index.html";
 }

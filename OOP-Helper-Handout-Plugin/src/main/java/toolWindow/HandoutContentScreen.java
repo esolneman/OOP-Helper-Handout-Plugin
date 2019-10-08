@@ -25,11 +25,19 @@ public class HandoutContentScreen {
     private HandoutPluginFXPanel handoutContent;
     private WebView webView;
     private ToolWindow handoutToolWindow;
+    private static File content;
+    private String urlString;
 
     public HandoutContentScreen(ToolWindow toolWindow){
         handoutToolWindow = toolWindow;
         createContent();
         initToolWindowMenu();
+        content = RepoLocalStorageDataProvider.getHandoutHtmlFormat();
+        try {
+            urlString = content.toURI().toURL().toString();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
     }
 
     private void initToolWindowMenu() {
@@ -67,27 +75,18 @@ public class HandoutContentScreen {
         // JButton wird dem Panel hinzugefügt
         handoutContent.add(button);*/
 
-        File content = RepoLocalStorageDataProvider.getHandoutHtmlFormat();
-        String htmlString = RepoLocalStorageDataProvider.getHandoutHtmlString();
-        final String url = "file:///" + htmlString;
 
         //URL url = getClass().getResource("C:/Masterarbeit/TestProjekt/OOP-18WS-CoreDefense-Starter/HelperHandoutPluginContentData/RepoLocalStorage/index.html");
         //String url = WebView.class.getResource(file).toExternalForm();
         Platform.runLater(() -> {
-            try {
-                final String urlString = content.toURI().toURL().toString();
-                webView = new WebView();
-                webView.getEngine().load(urlString);
-                //webView.getEngine().load(url.toExternalForm());
-                //URL url = getClass().getResource("index.html");
-                //webEngine.load(url.toExternalForm());
-                webView.getEngine().setJavaScriptEnabled(true);
-                handoutContent.setScene(new Scene(webView));
-                setOnLinkListener();
-
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
+            webView = new WebView();
+            webView.getEngine().load(urlString);
+            //webView.getEngine().load(url.toExternalForm());
+            //URL url = getClass().getResource("index.html");
+            //webEngine.load(url.toExternalForm());
+            webView.getEngine().setJavaScriptEnabled(true);
+            handoutContent.setScene(new Scene(webView));
+            setOnLinkListener();
         });
     }
 
@@ -109,9 +108,7 @@ public class HandoutContentScreen {
                         try {
                             Platform.setImplicitExit(false);
                             Platform.runLater(() -> {
-                                String htmlString = RepoLocalStorageDataProvider.getHandoutHtmlString();
-                                final String url = "file:///" + htmlString;
-                                webView.getEngine().load(url);
+                                webView.getEngine().load(urlString);
                             });
                             System.out.println("BrowserUtil");
 
@@ -160,9 +157,7 @@ public class HandoutContentScreen {
         if(webView != null) {
             Platform.setImplicitExit(false);
             Platform.runLater(() -> {
-                String htmlString = RepoLocalStorageDataProvider.getHandoutHtmlString();
-                final String url = "file:///" + htmlString;
-                webView.getEngine().load(url);
+                webView.getEngine().load(urlString);
             });
         }
     }
