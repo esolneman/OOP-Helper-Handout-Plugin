@@ -102,7 +102,7 @@ public class HandoutContentScreen {
                 try {
                     URI address = new URI(observable.getValue());
                     System.out.println("address: " + address);
-                    if (toBeopen.contains("http://") || toBeopen.contains("https://")) {
+                    if (toBeopen.contains("http://") || toBeopen.contains("https://") || toBeopen.contains("mailto")) {
                         System.out.println("load nwe page ");
                         try {
                             Platform.setImplicitExit(false);
