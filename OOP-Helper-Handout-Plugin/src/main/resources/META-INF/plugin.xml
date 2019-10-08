@@ -1,0 +1,42 @@
+<idea-plugin>
+    <id>oop_helper_handout</id>
+    <name>oop_helper_handout</name>
+    <vendor email="marlena.wolfes@stud.uni-regensburg.de" url="http://www.company.com">Marlena Wolfes</vendor>
+
+    <description><![CDATA[
+    Unterstützt die Studenten des OOP-Kurses der Univerität Regensburg bei der Bearbeitung von Studienleistung und Übungsaufgben<br>
+    <em>Mehr erklärung folgt</em>
+    ]]></description>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <!-- uncomment to enable plugin in all products
+    <depends>com.intellij.modules.lang</depends>
+    -->
+    <!-- Plugin's application components -->
+    <project-components>
+        <component>
+            <interface-class>controller.HandoutPluginControllerInterface</interface-class>
+            <implementation-class>controller.HandoutPluginController</implementation-class>
+        </component>
+    </project-components>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <toolWindow id="handoutToolWindow" anchor="right" factoryClass="toolWindow.HandoutToolWindowFactory"/>
+        <projectService serviceInterface="provider.HandoutContentDataProviderInterface" serviceImplementation="provider.HandoutContentDataProvider"/>
+    </extensions>
+
+    <actions>
+        <group id="MyPlugin.SampleMenu" text="OOP-Helper-Handout" description="Plugin menu">
+            <add-to-group group-id="MainMenu" anchor="last"/>
+            <action id="Myplugin.Textboxes.Tutorial" class="handoutMenuActions.HandoutMenuTutorial" text="Tutorial" description="Start Tutorial" icon="/icons/contextHelp.svg"/>
+            <action id="Myplugin.Textboxes.Export" class="handoutMenuActions.HandoutMenuExport" text="Export" description="Start Export" icon="/icons/export.svg"/>
+        </group>
+        <group id="HandoutToolWindow" text="test" description="test menu">
+            <!--<add-to-group group-id="" />-->
+            <action id="Handout.Download" class="toolWindow.actions.HandoutDownloadAction" text="Download" description="Download" icon="/icons/download.svg"> </action>
+            <action id="Handout.TableOfContents" class="toolWindow.actions.HandoutTableOfContentsAction" text="tableOfConntents" description="content" icon="/icons/download.svg"> </action>
+        </group>
+
+    </actions>
+</idea-plugin>

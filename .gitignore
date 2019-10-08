@@ -158,7 +158,6 @@ OOP-Helper-Handout-Plugin/.gradletasknamecache
 
 # End of https://www.gitignore.io/api/java,gradle,intellij
 
-
 !OOP-Helper-Handout-Plugin/libs/
 OOP-Helper-Handout-Plugin/.gradle
 OOP-Helper-Handout-Plugin/.idea/
