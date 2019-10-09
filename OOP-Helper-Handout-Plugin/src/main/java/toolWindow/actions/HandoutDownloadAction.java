@@ -2,19 +2,14 @@ package toolWindow.actions;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.Messages;
-import com.sun.org.apache.xpath.internal.operations.Div;
 import io.woo.htmltopdf.HtmlToPdf;
 import io.woo.htmltopdf.HtmlToPdfObject;
-import org.jsoup.Jsoup;
 import provider.LocalStorageDataProvider;
 import provider.RepoLocalStorageDataProvider;
 
-import java.io.*;
-
+import javax.swing.*;
+import java.io.File;
 import java.net.MalformedURLException;
-import java.net.URL;
 
 import static environment.Constants.LOCAL_STORAGE_FILE;
 import static environment.Constants.REPO_LOCAL_STORAGE_FILE;
@@ -34,6 +29,7 @@ public class HandoutDownloadAction extends AnAction {
         create (handoutHTMLDirectory, handoutPDFDirectory);
     }
 
+    //https://github.com/wooio/htmltopdf-java
     private void create(String handoutHTMLDirectory, String handoutPDFDirectory) {
         System.out.println(handoutHTMLDirectory);
         File content = LocalStorageDataProvider.getHandoutFileDirectory();
@@ -47,9 +43,5 @@ public class HandoutDownloadAction extends AnAction {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-
-
     }
-
-
 }

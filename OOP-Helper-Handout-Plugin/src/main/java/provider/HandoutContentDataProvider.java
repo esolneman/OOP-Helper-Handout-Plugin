@@ -33,7 +33,6 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
 
 
     public HandoutContentDataProvider(Project project) {
-
         this.project = project;
         projectDirectory = project.getBasePath();
         contentRepoPath = RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE;

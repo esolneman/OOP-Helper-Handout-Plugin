@@ -30,6 +30,7 @@ public class HandoutContentScreen {
     }
 
     private void initToolWindowMenu() {
+
        /* ActionToolbar toolbar;
         ActionToolbar handoutToolbar;
         SimpleToolWindowPanel panel = new SimpleToolWindowPanel(true) ;
