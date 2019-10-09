@@ -18,7 +18,6 @@ public class ChecklistScreen extends SimpleToolWindowPanel{
     private JTextPane repoChecklist;
 
     private SimpleToolWindowPanel toolWindowPanel;
-    private HandoutDownloadAction handoutDownloadAction;
 
 
     public ChecklistScreen(ToolWindow toolWindow) {
@@ -34,14 +33,10 @@ public class ChecklistScreen extends SimpleToolWindowPanel{
     private JComponent createToolbarPanel() {
         final DefaultActionGroup checklistActionGroup = new DefaultActionGroup();
         final DefaultActionGroup newGroup;
-        handoutDownloadAction = new HandoutDownloadAction();
         checklistActionGroup.add(ActionManager.getInstance().getAction("Handout.Download"));
+        checklistActionGroup.add(ActionManager.getInstance().getAction("Handout.TableOfContents"));
         final ActionToolbar checklistActionToolbar = ActionManager.getInstance().createActionToolbar("Checklisttool", checklistActionGroup, true);
         return checklistActionToolbar.getComponent();
-    }
-
-    private SimpleToolWindowPanel createContentPanel() {
-        return toolWindowPanel;
     }
 
     public JPanel getContent() {
