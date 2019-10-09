@@ -16,6 +16,7 @@ import java.net.URISyntaxException;
 public class HandoutPluginFXPanel extends JFXPanel {
 
     public void showHandoutWebView(String urlString) {
+        //Platform.setImplicitExit(false);
         Platform.runLater(() -> {
             WebView webView = new WebView();
             webView.getEngine().load(urlString);
@@ -32,12 +33,9 @@ public class HandoutPluginFXPanel extends JFXPanel {
             @Override
             public void changed(ObservableValue<? extends String> observable, final String oldValue, String newValue) {
                 Desktop d = Desktop.getDesktop();
-                System.out.println("message: " + webView.getEngine().getLoadWorker().getMessage());
                 String toBeopen = webView.getEngine().getLoadWorker().getMessage().trim();
-                System.out.println("tobeopen: " + toBeopen);
                 try {
                     URI address = new URI(observable.getValue());
-                    System.out.println("address: " + address);
                     if (toBeopen.contains("http://") || toBeopen.contains("https://") || toBeopen.contains("mailto")) {
                         Platform.setImplicitExit(false);
                         Platform.runLater(() -> {

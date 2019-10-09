@@ -20,10 +20,8 @@ public class HandoutContentScreen {
     public HandoutContentScreen(ToolWindow toolWindow){
         handoutToolWindow = toolWindow;
         content = LocalStorageDataProvider.getHandoutFileDirectory();
-        System.out.println("content: " + content);
         try {
             urlString = content.toURI().toURL().toString();
-            System.out.println("urlStringIniz: " + urlString);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -63,12 +61,12 @@ public class HandoutContentScreen {
 
 
     public void updateContent(){
-        if(webView != null) {
+    /*    if(webView != null) {
             Platform.setImplicitExit(false);
             Platform.runLater(() -> {
-                webView.getEngine().load(urlString);
+                //webView.getEngine().load(urlString);
             });
-        }
+        }*/
     }
 
     public JFXPanel getContent() {

@@ -82,7 +82,7 @@ public class HandoutToolWindowFactory implements ToolWindowFactory {
     }
 
     public void updateScreenContent() {
-        handoutContentScreen.updateContent();
+        //handoutContentScreen.updateContent();
     }
 
 }

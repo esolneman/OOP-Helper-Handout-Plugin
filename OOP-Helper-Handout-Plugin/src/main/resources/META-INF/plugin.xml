@@ -31,6 +31,8 @@
             <add-to-group group-id="MainMenu" anchor="last"/>
             <action id="Myplugin.Textboxes.Tutorial" class="handoutMenuActions.HandoutMenuTutorial" text="Tutorial" description="Start Tutorial" icon="/icons/contextHelp.svg"/>
             <action id="Myplugin.Textboxes.Export" class="handoutMenuActions.HandoutMenuExport" text="Export" description="Start Export" icon="/icons/export.svg"/>
+            <action id="Myplugin.Textboxes.Download" class="toolWindow.actions.HandoutDownloadAction" text="Download" description="Start Export" icon="/icons/download.svg"/>
+
         </group>
         <group id="HandoutToolWindow" text="test" description="test menu">
             <!--<add-to-group group-id="" />-->
