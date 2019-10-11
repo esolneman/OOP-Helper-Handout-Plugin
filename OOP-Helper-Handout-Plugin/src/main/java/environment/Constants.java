@@ -19,4 +19,5 @@ public class Constants {
     public static final String SPECIFIC_ASSESSMENT_CRITERIA_FILE_NAME = "/specific-assesement-criteria.md";
 
     public static final String HANDOUT_PDF_FILE_NAME = "/handout.pdf";
+    public static final String URL_BEGIN_FOR_FILE = "file:///";
 }

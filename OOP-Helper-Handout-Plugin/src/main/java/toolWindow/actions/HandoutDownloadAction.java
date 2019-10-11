@@ -11,12 +11,12 @@ import io.woo.htmltopdf.HtmlToPdf;
 import io.woo.htmltopdf.HtmlToPdfObject;
 import provider.LocalStorageDataProvider;
 import provider.RepoLocalStorageDataProvider;
-
-import javax.swing.*;
 import java.io.File;
 import java.net.MalformedURLException;
 
 import static environment.Constants.*;
+import static environment.Messages.FILES_SELECTING_DESCRIPTION;
+import static environment.Messages.FILES_SELECTING_TEXT;
 
 public class HandoutDownloadAction extends AnAction {
 
@@ -28,32 +28,37 @@ public class HandoutDownloadAction extends AnAction {
     }
 
     public void actionPerformed(AnActionEvent event) {
-        System.out.println("DownloadAction started");
-        System.out.println(event.getPlace());
         project = event.getProject();
         String handoutHTMLDirectory = RepoLocalStorageDataProvider.getHandoutHtmlString();
         create (handoutHTMLDirectory);
     }
 
     //https://github.com/wooio/htmltopdf-java
+    /*
+
+     */
     private void create(String handoutHTMLDirectory) {
         System.out.println(handoutHTMLDirectory);
         File content = LocalStorageDataProvider.getHandoutFileDirectory();
         try {
             String urlString = content.toURI().toURL().toString();
             System.out.println(urlString);
+            //https://www.programcreek.com/java-api-examples/?api=com.intellij.openapi.fileChooser.FileChooserDescriptor
             final FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
-            descriptor.setTitle("Choose location for PDF");
-            descriptor.setDescription("Description for Downloading PDF");
+            descriptor.setTitle(FILES_SELECTING_TEXT);
+            descriptor.setDescription(FILES_SELECTING_DESCRIPTION);
             descriptor.setForcedToUseIdeaFileChooser(true);
-            VirtualFile file = FileChooser
-                    .chooseFile(descriptor, project, null);
+            VirtualFile file = FileChooser.chooseFile(descriptor, project, null);
             String handoutPDFDirectory = file.getPath() + HANDOUT_PDF_FILE_NAME;
-            System.out.println("handoutPDFDirectory: " + handoutPDFDirectory);
             boolean success = HtmlToPdf.create()
-                    .object(HtmlToPdfObject.forUrl("file:///" + handoutHTMLDirectory))
+                    .object(HtmlToPdfObject.forUrl(URL_BEGIN_FOR_FILE + handoutHTMLDirectory))
                     .convert(handoutPDFDirectory);
-            System.out.println(success);
+            // TODO POPUP NOTIFICATION
+            if(success){
+
+            }else{
+
+            }
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
