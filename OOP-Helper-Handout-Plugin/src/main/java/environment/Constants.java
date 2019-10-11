@@ -17,4 +17,6 @@ public class Constants {
     public static final String SHORTCUT_FILE_NAME = "/shortcut.md";
     public static final String COMMON_ASSESSMENT_CRITERIA_FILE_NAME = "/common-assesement-criteria.md";
     public static final String SPECIFIC_ASSESSMENT_CRITERIA_FILE_NAME = "/specific-assesement-criteria.md";
+
+    public static final String HANDOUT_PDF_FILE_NAME = "/handout.pdf";
 }

@@ -16,8 +16,7 @@ import javax.swing.*;
 import java.io.File;
 import java.net.MalformedURLException;
 
-import static environment.Constants.LOCAL_STORAGE_FILE;
-import static environment.Constants.REPO_LOCAL_STORAGE_FILE;
+import static environment.Constants.*;
 
 public class HandoutDownloadAction extends AnAction {
 
@@ -49,7 +48,7 @@ public class HandoutDownloadAction extends AnAction {
             descriptor.setForcedToUseIdeaFileChooser(true);
             VirtualFile file = FileChooser
                     .chooseFile(descriptor, project, null);
-            String handoutPDFDirectory = file.getPath() + "/handout.pdf";
+            String handoutPDFDirectory = file.getPath() + HANDOUT_PDF_FILE_NAME;
             System.out.println("handoutPDFDirectory: " + handoutPDFDirectory);
             boolean success = HtmlToPdf.create()
                     .object(HtmlToPdfObject.forUrl("file:///" + handoutHTMLDirectory))
