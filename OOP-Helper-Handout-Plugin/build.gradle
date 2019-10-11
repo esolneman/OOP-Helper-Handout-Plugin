@@ -18,6 +18,7 @@ dependencies {
     // Todo: Update to newest gradle version
     //compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '5.5.0.2019091s10433-r'
     //implementation files('libs/PluginHelper-Core.jar')
+    compile 'io.woo:htmltopdf:1.0.8'
 }
 
 

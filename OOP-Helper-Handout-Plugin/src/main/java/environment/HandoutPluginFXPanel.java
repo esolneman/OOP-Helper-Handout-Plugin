@@ -1,30 +1,71 @@
 package environment;
 
-import javafx.embed.swing.JFXPanel;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.web.WebView;
+
+import java.awt.*;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 public class HandoutPluginFXPanel extends JFXPanel {
 
-        public void showContent() {
-            System.out.println("in: showContent");
-            Platform.setImplicitExit(false);
-            Platform.runLater(() -> {
-                System.out.println("in: showContent (RunLater-Part)");
-                Label helloWord = new Label();
-                helloWord.setText("Hello World");
-                this.setScene(new Scene(helloWord, 50, 50));
-            });
-        }
+    public void showHandoutWebView(String urlString) {
+        //Platform.setImplicitExit(false);
+        Platform.runLater(() -> {
+            WebView webView = new WebView();
+            webView.getEngine().load(urlString);
+            webView.getEngine().setJavaScriptEnabled(true);
+            this.setScene(new Scene(webView));
+            setOnLinkListener(webView, urlString);
+        });
+    }
 
-        public void setWebView() {
+    //https://stackoverflow.com/questions/15555510/javafx-stop-opening-url-in-webview-open-in-browser-instead
+    //https://stackoverflow.com/questions/31909455/open-hyperlinks-in-javafx-webview-with-default-browser
+    private void setOnLinkListener(WebView webView, String urlString) {
+        webView.getEngine().locationProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, final String oldValue, String newValue) {
+                Desktop d = Desktop.getDesktop();
+                String toBeopen = webView.getEngine().getLoadWorker().getMessage().trim();
+                try {
+                    URI address = new URI(observable.getValue());
+                    if (toBeopen.contains("http://") || toBeopen.contains("https://") || toBeopen.contains("mailto")) {
+                        Platform.setImplicitExit(false);
+                        Platform.runLater(() -> {
+                            webView.getEngine().load(urlString);
+                        });
+                        d.browse(address);
+                    }
+                } catch (URISyntaxException | IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
 
-        }
+    public void showContent() {
+        System.out.println("in: showContent");
+        Platform.setImplicitExit(false);
+        Platform.runLater(() -> {
+            System.out.println("in: showContent (RunLater-Part)");
+            Label helloWord = new Label();
+            helloWord.setText("Hello World");
+            this.setScene(new Scene(helloWord, 50, 50));
+        });
+    }
 
-        public void sayName() {
+    public void setWebView() {
+    }
+
+    //public void
+    public void sayName() {
             System.out.println("I am a MyJFXPanel");
         }
-
 }
