@@ -7,6 +7,7 @@ import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.web.WebView;
+import toolWindow.HandoutContentScreen;
 
 import java.awt.*;
 import java.io.IOException;
@@ -23,6 +24,7 @@ public class HandoutPluginFXPanel extends JFXPanel {
             webView.getEngine().setJavaScriptEnabled(true);
             this.setScene(new Scene(webView));
             setOnLinkListener(webView, urlString);
+            HandoutContentScreen.setWebView(webView);
         });
     }
 
@@ -59,9 +61,6 @@ public class HandoutPluginFXPanel extends JFXPanel {
             helloWord.setText("Hello World");
             this.setScene(new Scene(helloWord, 50, 50));
         });
-    }
-
-    public void setWebView() {
     }
 
     //public void

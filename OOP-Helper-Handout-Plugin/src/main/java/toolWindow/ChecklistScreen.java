@@ -32,9 +32,7 @@ public class ChecklistScreen extends SimpleToolWindowPanel{
 
     private JComponent createToolbarPanel() {
         final DefaultActionGroup checklistActionGroup = new DefaultActionGroup();
-        final DefaultActionGroup newGroup;
-        checklistActionGroup.add(ActionManager.getInstance().getAction("Handout.Download"));
-        checklistActionGroup.add(ActionManager.getInstance().getAction("Handout.TableOfContents"));
+        //checklistActionGroup.add(ActionManager.getInstance().getAction("Handout.Download"));
         final ActionToolbar checklistActionToolbar = ActionManager.getInstance().createActionToolbar("Checklisttool", checklistActionGroup, true);
         return checklistActionToolbar.getComponent();
     }

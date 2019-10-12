@@ -12,9 +12,11 @@ import java.lang.reflect.Field;
 
 public class HandoutTableOfContentsAction extends AnAction {
 
+    private HandoutContentScreen handoutContentScreen;
+
     @Override
     public void actionPerformed(@NotNull AnActionEvent anActionEvent) {
-        HandoutContentScreen handoutContentScreen = new HandoutContentScreen();
+        handoutContentScreen = new HandoutContentScreen();
         handoutContentScreen.goToLocation("#Bewertungskriterien");
         displayTableOfContents();
     }

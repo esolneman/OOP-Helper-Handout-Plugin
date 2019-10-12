@@ -37,6 +37,10 @@
             <action id="Handout.Download" class="toolWindow.actions.HandoutDownloadAction" text="Download" description="Download" icon="/icons/download.svg"> </action>
             <action id="Handout.TableOfContents" class="toolWindow.actions.HandoutTableOfContentsAction" text="tableOfConntents" description="content" icon="/icons/tableofcontents-instance.svg"> </action>
         </group>
+        <group id="TableOfContentsGroup" text="headings" >
+            <!--<add-to-group group-id="HandoutContentActionGroup" />-->
+        </group>
+
 
     </actions>
 </idea-plugin>
