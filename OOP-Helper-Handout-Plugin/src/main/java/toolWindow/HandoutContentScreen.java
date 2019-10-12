@@ -6,11 +6,14 @@ import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
 import environment.HandoutPluginFXPanel;
+import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import provider.LocalStorageDataProvider;
 
 import javax.swing.*;
 import java.io.File;
+import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 
 public class HandoutContentScreen extends SimpleToolWindowPanel {
@@ -21,6 +24,10 @@ public class HandoutContentScreen extends SimpleToolWindowPanel {
     private String urlString;
 
     private SimpleToolWindowPanel toolWindowPanel;
+
+    public HandoutContentScreen(){
+        super(true);
+    };
 
 
     public HandoutContentScreen(ToolWindow toolWindow){
@@ -46,7 +53,7 @@ public class HandoutContentScreen extends SimpleToolWindowPanel {
 
     private JComponent createToolbarPanel() {
         final DefaultActionGroup checklistActionGroup = new DefaultActionGroup();
-        final DefaultActionGroup newGroup;
+
         checklistActionGroup.add(ActionManager.getInstance().getAction("Handout.Download"));
         checklistActionGroup.add(ActionManager.getInstance().getAction("Handout.TableOfContents"));
         final ActionToolbar checklistActionToolbar = ActionManager.getInstance().createActionToolbar("Checklisttool", checklistActionGroup, true);
@@ -58,14 +65,18 @@ public class HandoutContentScreen extends SimpleToolWindowPanel {
         handoutContent.showHandoutWebView(urlString);
     }
 
-
-    public void updateContent(){
-    /*    if(webView != null) {
-            Platform.setImplicitExit(false);
-            Platform.runLater(() -> {
-                //webView.getEngine().load(urlString);
-            });
-        }*/
+    public void goToLocation(String heading){
+        Field locationField = null;
+        try {
+            System.out.println(webView.getEngine().getDocument().getDocumentURI());
+            locationField = WebEngine.class.getDeclaredField(heading);
+            locationField.setAccessible(true);
+            ReadOnlyStringWrapper location = (ReadOnlyStringWrapper) locationField.get(webView.getEngine());
+            location.set("local");
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+            System.out.println(e);
+        }
     }
 
     public JPanel getContent() {
