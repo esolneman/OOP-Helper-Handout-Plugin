@@ -14,10 +14,17 @@ public class HandoutTableOfContentsAction extends AnAction {
 
     private HandoutContentScreen handoutContentScreen;
 
+    public HandoutTableOfContentsAction(String text) {
+        super(text);
+    }
+
     @Override
     public void actionPerformed(@NotNull AnActionEvent anActionEvent) {
+        System.out.println(anActionEvent);
+        System.out.println(anActionEvent.getPresentation().getText());
+        String heading = anActionEvent.getPresentation().getText();
         handoutContentScreen = new HandoutContentScreen();
-        handoutContentScreen.goToLocation("#Bewertungskriterien");
+        handoutContentScreen.goToLocation(heading);
         displayTableOfContents();
     }
 
