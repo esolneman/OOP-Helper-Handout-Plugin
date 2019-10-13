@@ -20,15 +20,8 @@ public class HandoutTableOfContentsAction extends AnAction {
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent anActionEvent) {
-        System.out.println(anActionEvent);
-        System.out.println(anActionEvent.getPresentation().getText());
         String heading = anActionEvent.getPresentation().getText();
         handoutContentScreen = new HandoutContentScreen();
         handoutContentScreen.goToLocation(heading);
-        displayTableOfContents();
-    }
-
-    private void displayTableOfContents() {
-
     }
 }

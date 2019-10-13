@@ -1,6 +1,9 @@
 package toolWindow;
 
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.ActionManager;
+import com.intellij.openapi.actionSystem.ActionToolbar;
+import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import com.intellij.openapi.actionSystem.Separator;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
 import environment.HandoutPluginFXPanel;
@@ -8,7 +11,6 @@ import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import provider.LocalStorageDataProvider;
-import toolWindow.actionGroups.HandoutContentActionGroup;
 
 import javax.swing.*;
 import java.io.File;
