@@ -28,32 +28,6 @@ public class HandoutToolWindowFactory implements ToolWindowFactory {
         this.toolWindow = toolWindow;
         contentFactory = ContentFactory.SERVICE.getInstance();
         initScreens();
-        toolWindow.getContentManager().addContentManagerListener(new ContentManagerListener() {
-            @Override
-            public void contentAdded(@NotNull ContentManagerEvent event) {
-                System.out.println("contentAdded");
-            }
-            @Override
-            public void contentRemoved(@NotNull ContentManagerEvent event) {
-                System.out.println("contentRemoved");
-            }
-            @Override
-            public void contentRemoveQuery(@NotNull ContentManagerEvent event) {
-                System.out.println("contentRemoveQuery");
-            }
-            @Override
-            public void selectionChanged(@NotNull ContentManagerEvent event) {
-                System.out.println("selectionChanged");
-                System.out.println(event.getContent().getDisplayName());
-                if (event.getContent().getDisplayName() == "HandoutHTML") {
-                    updateScreenContent();
-                }
-                if (event.getContent().getDisplayName() == "Shortcut") {
-                    System.out.println("Switching to Shortcut-Screen");
-                    ((HandoutPluginFXPanel) event.getContent().getComponent()).showContent();
-                }
-            }
-        });
     }
 
     private void initScreens() {

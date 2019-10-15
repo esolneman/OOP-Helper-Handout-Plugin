@@ -16,15 +16,13 @@ import java.net.URISyntaxException;
 
 public class HandoutPluginFXPanel extends JFXPanel {
 
-    public void showHandoutWebView(String urlString) {
+    public void showHandoutWebView(String urlString, WebView webView) {
         //Platform.setImplicitExit(false);
         Platform.runLater(() -> {
-            WebView webView = new WebView();
             webView.getEngine().load(urlString);
             webView.getEngine().setJavaScriptEnabled(true);
-            this.setScene(new Scene(webView));
+            setScene(new Scene(webView));
             setOnLinkListener(webView, urlString);
-            HandoutContentScreen.setWebView(webView);
         });
     }
 

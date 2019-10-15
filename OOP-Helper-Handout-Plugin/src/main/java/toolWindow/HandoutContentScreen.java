@@ -7,17 +7,23 @@ import com.intellij.openapi.actionSystem.Separator;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
 import environment.HandoutPluginFXPanel;
-import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.scene.web.WebEngine;
+import javafx.application.Platform;
 import javafx.scene.web.WebView;
+import org.apache.commons.lang.StringUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import provider.LocalStorageDataProvider;
+import toolWindow.actionGroups.HandoutContentActionGroup;
 
 import javax.swing.*;
 import java.io.File;
-import java.lang.reflect.Field;
+import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 
-public class HandoutContentScreen extends SimpleToolWindowPanel {
+public class HandoutContentScreen extends SimpleToolWindowPanel{
     private HandoutPluginFXPanel handoutContent;
     private ToolWindow handoutToolWindow;
     private static File content;
@@ -25,10 +31,6 @@ public class HandoutContentScreen extends SimpleToolWindowPanel {
     private static WebView webView;
 
     private SimpleToolWindowPanel toolWindowPanel;
-
-    public HandoutContentScreen(){
-        super(true);
-    };
 
     public HandoutContentScreen(ToolWindow toolWindow){
         super(true, true);
@@ -44,10 +46,6 @@ public class HandoutContentScreen extends SimpleToolWindowPanel {
         initToolWindowMenu();
     }
 
-    public static WebView getWebView() {
-        return webView;
-    }
-
     public static void setWebView(WebView webView) {
         HandoutContentScreen.webView = webView;
     }
@@ -60,35 +58,44 @@ public class HandoutContentScreen extends SimpleToolWindowPanel {
 
     private JComponent createToolbarPanel() {
         final DefaultActionGroup handoutActionGroup = new DefaultActionGroup();
-
-        /*checklistActionGroup.add(ActionManager.getInstance().getAction("Handout.TableOfContents"));
-        checklistActionGroup.addSeparator();*/
-        handoutActionGroup.add(ActionManager.getInstance().getAction("Handout.TableOfContents"));
+        HandoutContentActionGroup handoutContentActionGroup = (HandoutContentActionGroup) ActionManager.getInstance().getAction("Handout.TableOfContents");
+        handoutContentActionGroup.setHandoutContentScreen(this);
+        handoutActionGroup.add(handoutContentActionGroup);
         handoutActionGroup.add(new Separator());
         handoutActionGroup.add(ActionManager.getInstance().getAction("Handout.Download"));
-
         final ActionToolbar checklistActionToolbar = ActionManager.getInstance().createActionToolbar("HandoutTool", handoutActionGroup, true);
         return checklistActionToolbar.getComponent();
     }
 
     private void createContent() {
         handoutContent = new HandoutPluginFXPanel();
-        handoutContent.showHandoutWebView(urlString);
+        Platform.setImplicitExit(false);
+        Platform.runLater(() -> {
+            webView = new WebView();
+            handoutContent.showHandoutWebView(urlString, webView);
+
+        });
     }
 
+    //https://stackoverflow.com/questions/49070734/javafx-webview-link-to-anchor-in-document-doesnt-work-using-loadcontent
     public void goToLocation(String heading){
-        Field locationField = null;
-        //WebView webView = handoutToolWindow.getComponent();
-        try {
-            System.out.println(webView.getEngine().getDocument().getDocumentURI());
-            locationField = WebEngine.class.getDeclaredField(heading);
-            locationField.setAccessible(true);
-            ReadOnlyStringWrapper location = (ReadOnlyStringWrapper) locationField.get(webView.getEngine());
-            location.set("local");
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
-            System.out.println(e);
-        }
+        //ToDO remove whitespaces from string
+        System.out.println("goToLocation: " + heading);
+        /*if(heading.contains(" ")){
+            StringUtils.capitalize(heading);
+            System.out.println("Capitalized: " + heading);
+
+            //https://stackoverflow.com/a/15633284
+            heading = heading.replaceAll("\\s+","");
+            System.out.println("removedWhitespace: " + heading);
+        }*/
+        //String newLocation = urlString + "#" + heading;
+        String newLocation = urlString  + heading;
+
+        Platform.setImplicitExit(false);
+        Platform.runLater(() -> {
+            webView.getEngine().load(newLocation);
+        });
     }
 
     public JComponent getToolbar(){
@@ -99,5 +106,28 @@ public class HandoutContentScreen extends SimpleToolWindowPanel {
         return toolWindowPanel;
     }
 
+    //
+    public ArrayList<String> getNavHeadings() {
+        ArrayList<String> headings = new ArrayList<>();
+        Document doc = null;
+        File htmlFile = LocalStorageDataProvider.getHandoutFileDirectory();
+        Document yourPage = null;
+        try {
+            //https://stackoverflow.com/a/9611720
+            yourPage = Jsoup.parse(htmlFile, null);
+            //https://stackoverflow.com/questions/34392919/find-href-link-from-webpage-using-java
+            Elements aElement = yourPage.select("a[href]");
+            for (Element link : aElement) {
+                if(link.attr("href").contains("#")){
+                    System.out.println(link.attr("href"));
+                    // headings.add(link.text());
+                    headings.add(link.attr("href"));
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
+        return headings;
+    }
 }
