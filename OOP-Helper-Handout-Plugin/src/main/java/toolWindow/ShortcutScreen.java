@@ -1,11 +1,8 @@
 package toolWindow;
 
 import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.ui.javafx.JFXPanelWrapper;
 import environment.HandoutPluginFXPanel;
 import javafx.embed.swing.JFXPanel;
-
-import javax.swing.*;
 
 public class ShortcutScreen {
 
@@ -17,7 +14,6 @@ public class ShortcutScreen {
     }
 
     public void reloadScreen() {
-
     }
 
     public JFXPanel getContent() {

@@ -1,163 +1,125 @@
 package toolWindow;
 
+import com.intellij.openapi.actionSystem.ActionManager;
+import com.intellij.openapi.actionSystem.ActionToolbar;
+import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import com.intellij.openapi.actionSystem.Separator;
+import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
 import environment.HandoutPluginFXPanel;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.embed.swing.JFXPanel;
-import javafx.scene.Scene;
 import javafx.scene.web.WebView;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.WordUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import provider.LocalStorageDataProvider;
+import toolWindow.actionGroups.HandoutContentActionGroup;
 
-import java.awt.*;
+import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.util.ArrayList;
 
-//import javafx.embed.swing.JFXPanel;
-
-public class HandoutContentScreen {
+public class HandoutContentScreen extends SimpleToolWindowPanel{
     private HandoutPluginFXPanel handoutContent;
-    private WebView webView;
     private ToolWindow handoutToolWindow;
     private static File content;
     private String urlString;
+    private static WebView webView;
+
+    private SimpleToolWindowPanel toolWindowPanel;
 
     public HandoutContentScreen(ToolWindow toolWindow){
+        super(true, true);
+        toolWindowPanel = new SimpleToolWindowPanel(true);
         handoutToolWindow = toolWindow;
-        createContent();
-        initToolWindowMenu();
         content = LocalStorageDataProvider.getHandoutFileDirectory();
         try {
             urlString = content.toURI().toURL().toString();
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
+        createContent();
+        initToolWindowMenu();
+    }
+
+    public static void setWebView(WebView webView) {
+        HandoutContentScreen.webView = webView;
     }
 
     private void initToolWindowMenu() {
-       /* ActionToolbar toolbar;
-        ActionToolbar handoutToolbar;
-        SimpleToolWindowPanel panel = new SimpleToolWindowPanel(true) ;
-        handoutToolbar.setTargetComponent(panel);
-        panel.setToolbar(handoutToolbar.getComponent());
-        handoutContent.add(panel);*/
-         //ActionManager.getInstance().createActionToolbar();
-        //com.intellij.openapi.actionSystem.ActionManager.createActionToolbar ` and add AnAction on it via ActionGroup.
-        //ToolWindowActionMAnager
-        /*ActionGroup handoutActionGroup = new ActionGroup() {
-            @NotNull
-            @Override
-            public AnAction[] getChildren(@Nullable AnActionEvent anActionEvent) {
-                return new AnAction[0];
-            }
-        };
-        ActionManager actionManager = ActionManager.getInstance();
-        actionManager.createButtonToolbar("help", handoutActionGroup );*/
-        /*ActionToolbar actionToolbar = (ActionToolbar) this.handoutContent;
-        actionToolbar.setOrientation(SwingConstants.HORIZONTAL);
-        //handoutContent.remove();
-        handoutContent.add(actionToolbar.getComponent(), BorderLayout.PAGE_START);*/
+        //http://androhi.hatenablog.com/entry/2015/07/23/233932
+        toolWindowPanel.setToolbar(createToolbarPanel());
+        toolWindowPanel.setContent(handoutContent);
+    }
+
+    private JComponent createToolbarPanel() {
+        final DefaultActionGroup handoutActionGroup = new DefaultActionGroup();
+        HandoutContentActionGroup handoutContentActionGroup = (HandoutContentActionGroup) ActionManager.getInstance().getAction("Handout.TableOfContents");
+        handoutContentActionGroup.setHandoutContentScreen(this);
+        handoutActionGroup.add(handoutContentActionGroup);
+        handoutActionGroup.add(new Separator());
+        handoutActionGroup.add(ActionManager.getInstance().getAction("Handout.Download"));
+        final ActionToolbar checklistActionToolbar = ActionManager.getInstance().createActionToolbar("HandoutTool", handoutActionGroup, true);
+        return checklistActionToolbar.getComponent();
     }
 
     private void createContent() {
         handoutContent = new HandoutPluginFXPanel();
-/*      //JPanel panel = new JPanel();
-
-        // JButton mit Text "Drück mich" wird erstellt
-        JButton button = new JButton("Drück mich");
-
-        // JButton wird dem Panel hinzugefügt
-        handoutContent.add(button);*/
-
-
-        //URL url = getClass().getResource("C:/Masterarbeit/TestProjekt/OOP-18WS-CoreDefense-Starter/HelperHandoutPluginContentData/RepoLocalStorage/index.html");
-        //String url = WebView.class.getResource(file).toExternalForm();
+        Platform.setImplicitExit(false);
         Platform.runLater(() -> {
             webView = new WebView();
-            webView.getEngine().load(urlString);
-            //webView.getEngine().load(url.toExternalForm());
-            //URL url = getClass().getResource("index.html");
-            //webEngine.load(url.toExternalForm());
-            webView.getEngine().setJavaScriptEnabled(true);
-            handoutContent.setScene(new Scene(webView));
-            setOnLinkListener();
+            handoutContent.showHandoutWebView(urlString, webView);
+
         });
     }
 
-    //https://stackoverflow.com/questions/15555510/javafx-stop-opening-url-in-webview-open-in-browser-instead
-    //https://stackoverflow.com/questions/31909455/open-hyperlinks-in-javafx-webview-with-default-browser
-    public void setOnLinkListener() {
-        webView.getEngine().locationProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, final String oldValue, String newValue) {
-                Desktop d = Desktop.getDesktop();
-                System.out.println("message: " + webView.getEngine().getLoadWorker().getMessage());
-                String toBeopen = webView.getEngine().getLoadWorker().getMessage().trim();
-                System.out.println("tobeopen: " + toBeopen);
-                try {
-                    URI address = new URI(observable.getValue());
-                    System.out.println("address: " + address);
-                    if (toBeopen.contains("http://") || toBeopen.contains("https://") || toBeopen.contains("mailto")) {
-                        System.out.println("load nwe page ");
-                        try {
-                            Platform.setImplicitExit(false);
-                            Platform.runLater(() -> {
-                                webView.getEngine().load(urlString);
-                            });
-                            System.out.println("BrowserUtil");
-
-                            d.browse(address);
-                            //BrowserUtil.browse((address.toURL());
-                        }
-                        catch (IOException e) {
-                            System.out.println(e);
-                        }
-                    }
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        });
-        //https://stackoverflow.com/questions/15555510/javafx-stop-opening-url-in-webview-open-in-browser-instead
-       /* Document document = webView.getEngine().getDocument();
-        NodeList nodeList = document.getElementsByTagName("a");
-        for (int i = 0; i < nodeList.getLength(); i++)
-        {
-            Node node= nodeList.item(i);
-            EventTarget eventTarget = (EventTarget) node;
-            eventTarget.addEventListener("click", new EventListener()
-            {
-                @Override
-                public void handleEvent(org.w3c.dom.events.Event event)
-                {
-                    EventTarget target = event.getCurrentTarget();
-                    HTMLAnchorElement anchorElement = (HTMLAnchorElement) target;
-                    String href = anchorElement.getHref();
-                    //handle opening URL outside JavaFX WebView
-                    System.out.println(href);
-                    event.preventDefault();
-                }
-            }, false);
-        }*/
-    }
-
-
-    public JFXPanel getContent() {
-        return handoutContent;
-    }
-
-    public void updateContent(){
-        if(webView != null) {
-            Platform.setImplicitExit(false);
-            Platform.runLater(() -> {
-                webView.getEngine().load(urlString);
-            });
+    //https://stackoverflow.com/questions/49070734/javafx-webview-link-to-anchor-in-document-doesnt-work-using-loadcontent
+    public void goToLocation(String heading){
+        if(heading.contains(" ")){
+            //https://stackoverflow.com/a/1892778
+            heading = WordUtils.capitalize(heading);
+            //https://stackoverflow.com/a/15633284
+            heading = heading.replaceAll("\\s+","");
         }
+        String newLocation = urlString + "#" + heading;
+        Platform.setImplicitExit(false);
+        Platform.runLater(() -> {
+            webView.getEngine().load(newLocation);
+        });
+    }
+
+    public JComponent getToolbar(){
+        return toolWindowPanel.getToolbar();
+    }
+
+    public JPanel getContent() {
+        return toolWindowPanel;
+    }
+
+    //
+    public ArrayList<String> getNavHeadings() {
+        ArrayList<String> headings = new ArrayList<>();
+        Document doc = null;
+        File htmlFile = LocalStorageDataProvider.getHandoutFileDirectory();
+        Document yourPage = null;
+        try {
+            //https://stackoverflow.com/a/9611720
+            yourPage = Jsoup.parse(htmlFile, null);
+            //https://stackoverflow.com/questions/34392919/find-href-link-from-webpage-using-java
+            Elements aElement = yourPage.select("a[href]");
+            for (Element link : aElement) {
+                if(link.attr("href").contains("#")){
+                    headings.add(link.text());
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return headings;
     }
 }
