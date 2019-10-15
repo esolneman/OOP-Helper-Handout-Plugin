@@ -10,6 +10,7 @@ import environment.HandoutPluginFXPanel;
 import javafx.application.Platform;
 import javafx.scene.web.WebView;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.WordUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -79,19 +80,13 @@ public class HandoutContentScreen extends SimpleToolWindowPanel{
 
     //https://stackoverflow.com/questions/49070734/javafx-webview-link-to-anchor-in-document-doesnt-work-using-loadcontent
     public void goToLocation(String heading){
-        //ToDO remove whitespaces from string
-        System.out.println("goToLocation: " + heading);
-        /*if(heading.contains(" ")){
-            StringUtils.capitalize(heading);
-            System.out.println("Capitalized: " + heading);
-
+        if(heading.contains(" ")){
+            //https://stackoverflow.com/a/1892778
+            heading = WordUtils.capitalize(heading);
             //https://stackoverflow.com/a/15633284
             heading = heading.replaceAll("\\s+","");
-            System.out.println("removedWhitespace: " + heading);
-        }*/
-        //String newLocation = urlString + "#" + heading;
-        String newLocation = urlString  + heading;
-
+        }
+        String newLocation = urlString + "#" + heading;
         Platform.setImplicitExit(false);
         Platform.runLater(() -> {
             webView.getEngine().load(newLocation);
@@ -119,15 +114,12 @@ public class HandoutContentScreen extends SimpleToolWindowPanel{
             Elements aElement = yourPage.select("a[href]");
             for (Element link : aElement) {
                 if(link.attr("href").contains("#")){
-                    System.out.println(link.attr("href"));
-                    // headings.add(link.text());
-                    headings.add(link.attr("href"));
+                    headings.add(link.text());
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return headings;
     }
 }

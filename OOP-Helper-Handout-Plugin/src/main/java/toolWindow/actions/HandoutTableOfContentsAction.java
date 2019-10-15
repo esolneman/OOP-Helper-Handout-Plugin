@@ -32,14 +32,6 @@ public class HandoutTableOfContentsAction extends AnAction {
         String heading = anActionEvent.getPresentation().getText();
         System.out.println(heading);
         this.handoutContentScreen.goToLocation(heading);
-       /* if (listeners != null) {
-            for(OnInternLinkClickedListener listener : listeners){
-                listener.onInternLinkClickedEvent(heading);
-            }
-        }else{
-            System.out.println("event Listener null");
-        } */
-
     }
 
     public void addListener(OnInternLinkClickedListener listener) {
