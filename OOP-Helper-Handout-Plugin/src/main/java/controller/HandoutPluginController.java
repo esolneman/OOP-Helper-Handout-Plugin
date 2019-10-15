@@ -15,7 +15,6 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
     ToolWindowFactory toolWindowFactory;
 
     public HandoutPluginController(Project project) {
-        //toolWindowFactory =
         RepoLocalStorageDataProvider.setUserProjectDirectory(project);
         handoutDataProvider = ServiceManager.getService(project, HandoutContentDataProviderInterface.class);
         handoutDataProvider.addListener(this);

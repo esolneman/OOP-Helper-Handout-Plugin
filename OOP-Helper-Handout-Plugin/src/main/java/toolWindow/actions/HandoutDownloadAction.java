@@ -30,7 +30,6 @@ import static environment.Messages.FILES_SELECTING_TEXT;
 
 public class HandoutDownloadAction extends AnAction {
 
-    public static final String DEST = "target/results/sample.pdf";
     private Project project;
 
     public HandoutDownloadAction() {

@@ -9,5 +9,5 @@ public interface HandoutPluginControllerInterface {
         return ServiceManager.getService(project, HandoutPluginControllerInterface.class);
     }
 
-    public void updateHandoutContent ();
+    void updateHandoutContent();
 }

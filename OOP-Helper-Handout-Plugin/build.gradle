@@ -19,6 +19,9 @@ dependencies {
     //compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '5.5.0.2019091s10433-r'
     //implementation files('libs/PluginHelper-Core.jar')
     compile 'io.woo:htmltopdf:1.0.8'
+    // https://mvnrepository.com/artifact/org.bitbucket.leito/sqlformatter
+    compile group: 'org.bitbucket.leito', name: 'sqlformatter', version: '1.1.0'
+    compile 'org.jsoup:jsoup:1.12.1'
 }
 
 
