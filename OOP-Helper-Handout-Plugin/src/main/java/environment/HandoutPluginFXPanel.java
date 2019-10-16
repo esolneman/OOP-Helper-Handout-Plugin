@@ -34,23 +34,25 @@ public class HandoutPluginFXPanel extends JFXPanel {
             public void changed(ObservableValue<? extends String> observable, final String oldValue, String newValue) {
                 Desktop d = Desktop.getDesktop();
                 String toBeopen = webView.getEngine().getLoadWorker().getMessage().trim();
-                try {
-                    URI address = new URI(observable.getValue());
-                    if (toBeopen.contains("http://") || toBeopen.contains("https://") || toBeopen.contains("mailto")) {
-                        Platform.setImplicitExit(false);
-                        Platform.runLater(() -> {
-                            webView.getEngine().load(urlString);
-                        });
-                        d.browse(address);
-                    } else if (toBeopen.contains(".class")) {
-                        System.out.println("Link to class");
-
-                    } else if (toBeopen.contains(".method")) {
-                        System.out.println("Link to class");
-
+                System.out.println(toBeopen);
+                if (toBeopen.contains("class.")) {
+                    System.out.println("Link to class");
+                } else if (toBeopen.contains("method.")) {
+                    System.out.println("Link to class");
+                } else {
+                    try {
+                        System.out.println(observable);
+                        URI address = new URI(observable.getValue());
+                        if (toBeopen.contains("http://") || toBeopen.contains("https://") || toBeopen.contains("mailto")) {
+                            Platform.setImplicitExit(false);
+                            Platform.runLater(() -> {
+                                webView.getEngine().load(urlString);
+                            });
+                            d.browse(address);
+                        }
+                    } catch (URISyntaxException | IOException e) {
+                        e.printStackTrace();
                     }
-                } catch (URISyntaxException | IOException e) {
-                    e.printStackTrace();
                 }
             }
         });
