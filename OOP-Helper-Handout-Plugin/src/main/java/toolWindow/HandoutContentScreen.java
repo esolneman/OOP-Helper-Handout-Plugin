@@ -9,7 +9,6 @@ import com.intellij.openapi.wm.ToolWindow;
 import environment.HandoutPluginFXPanel;
 import javafx.application.Platform;
 import javafx.scene.web.WebView;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -101,7 +100,12 @@ public class HandoutContentScreen extends SimpleToolWindowPanel{
         return toolWindowPanel;
     }
 
-    //
+    /*
+    * @link HandoutContentScreen#goToLocation
+    */
+    /*
+    @see HandoutContentScreen#goToLocation
+     */
     public ArrayList<String> getNavHeadings() {
         ArrayList<String> headings = new ArrayList<>();
         Document doc = null;

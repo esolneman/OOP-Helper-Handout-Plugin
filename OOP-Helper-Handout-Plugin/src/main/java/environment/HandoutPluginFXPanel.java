@@ -42,6 +42,12 @@ public class HandoutPluginFXPanel extends JFXPanel {
                             webView.getEngine().load(urlString);
                         });
                         d.browse(address);
+                    } else if (toBeopen.contains(".class")) {
+                        System.out.println("Link to class");
+
+                    } else if (toBeopen.contains(".method")) {
+                        System.out.println("Link to class");
+
                     }
                 } catch (URISyntaxException | IOException e) {
                     e.printStackTrace();
