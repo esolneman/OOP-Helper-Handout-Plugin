@@ -29,8 +29,6 @@ import static environment.Messages.FILES_SELECTING_TEXT;
 
 public class HandoutPluginController implements HandoutPluginControllerInterface, OnEventListener{
     HandoutContentDataProviderInterface handoutDataProvider;
-    Project project;
-    ToolWindowFactory toolWindowFactory;
 
     public HandoutPluginController(Project project) {
         RepoLocalStorageDataProvider.setUserProjectDirectory(project);
@@ -46,14 +44,11 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
 
     public void onCloningRepositoryEvent(File repoFile) {
         System.out.println("Performing callback after Asynchronous Task");
-        System.out.println(repoFile.toString());
-
         repoFile.setExecutable(false);
         repoFile.setReadable(true);
         repoFile.setWritable(false);
         repoFile.setReadOnly();
 
-        //toolWindowFactory.
         /*Path file = Paths.get(repoFile.getAbsolutePath());
         try {
             Files.setAttribute(file, "dos:hidden", true);
