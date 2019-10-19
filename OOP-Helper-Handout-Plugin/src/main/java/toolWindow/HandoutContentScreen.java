@@ -148,10 +148,14 @@ public class HandoutContentScreen extends SimpleToolWindowPanel{
             @Override
             public void changed(ObservableValue<? extends String> observable, final String oldValue, String newValue) {
                 Desktop d = Desktop.getDesktop();
-                String toBeopen = webView.getEngine().getLoadWorker().getMessage().trim();
-                if (toBeopen.contains("class.")) {
-                    System.out.println("Link to class");
-                    VirtualFile newFile = LocalFileSystem.getInstance().findFileByPath(RepoLocalStorageDataProvider.getUserProjectDirectory() + "/src/world/Player.java");
+                //String toBeopen = webView.getEngine().getLoadWorker().getMessage().trim();
+                String toBeopen = observable.getValue();
+                if (toBeopen.contains("class/")) {
+                    System.out.println("Link to class: " + observable.getValue());
+                    String classDirectory = toBeopen.split("(?<=class)")[1];
+                    System.out.println("classDirectory: " + classDirectory);
+
+                    VirtualFile newFile = LocalFileSystem.getInstance().findFileByPath(RepoLocalStorageDataProvider.getUserProjectDirectory() + classDirectory);
                     System.out.println("newFilePath: " + newFile.getPath());
                     Project project = RepoLocalStorageDataProvider.getProject();
                     OpenFileDescriptor descriptor = new OpenFileDescriptor(project, newFile);
@@ -160,6 +164,7 @@ public class HandoutContentScreen extends SimpleToolWindowPanel{
                         System.out.println("openFile For Each: " + openFile.getPath());
                     }
                     ApplicationManager.getApplication().invokeLater(() -> {
+                        //https://intellij-support.jetbrains.com/hc/en-us/community/posts/206113019-Open-a-Class-programmatically-in-a-new-Editor
                         FileEditorManager.getInstance(project).openFile(newFile, true, true);
                     });
                 } else if (toBeopen.contains("method.")) {
