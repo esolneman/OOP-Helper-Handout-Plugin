@@ -5,9 +5,13 @@ import com.intellij.openapi.actionSystem.ActionToolbar;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.actionSystem.Separator;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.LogicalPosition;
+import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
+import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.vfs.LocalFileSystem;
@@ -150,25 +154,46 @@ public class HandoutContentScreen extends SimpleToolWindowPanel{
                 Desktop d = Desktop.getDesktop();
                 //String toBeopen = webView.getEngine().getLoadWorker().getMessage().trim();
                 String toBeopen = observable.getValue();
+                Project project = RepoLocalStorageDataProvider.getProject();
+
                 if (toBeopen.contains("class/")) {
-                    System.out.println("Link to class: " + observable.getValue());
+                    //https://stackoverflow.com/a/17113365
                     String classDirectory = toBeopen.split("(?<=class)")[1];
                     System.out.println("classDirectory: " + classDirectory);
 
                     VirtualFile newFile = LocalFileSystem.getInstance().findFileByPath(RepoLocalStorageDataProvider.getUserProjectDirectory() + classDirectory);
-                    System.out.println("newFilePath: " + newFile.getPath());
-                    Project project = RepoLocalStorageDataProvider.getProject();
-                    OpenFileDescriptor descriptor = new OpenFileDescriptor(project, newFile);
-                    System.out.println("openFile Editor Single: " + FileEditorManager.getInstance(project).getSelectedEditor());
-                    for (VirtualFile openFile : FileEditorManager.getInstance(project).getOpenFiles()) {
-                        System.out.println("openFile For Each: " + openFile.getPath());
-                    }
                     ApplicationManager.getApplication().invokeLater(() -> {
                         //https://intellij-support.jetbrains.com/hc/en-us/community/posts/206113019-Open-a-Class-programmatically-in-a-new-Editor
                         FileEditorManager.getInstance(project).openFile(newFile, true, true);
                     });
-                } else if (toBeopen.contains("method.")) {
-                    System.out.println("Link to method");
+                } else if (toBeopen.contains("method/")) {
+                    System.out.println("Link to method: " + toBeopen);
+                    String classDirectory = toBeopen.split("(?<=method)")[1];
+                    System.out.println("classDirectory: " + classDirectory);
+                    Integer findLastSlash = classDirectory.lastIndexOf("/");
+                    classDirectory = classDirectory.substring(0, findLastSlash);
+                    System.out.println("classDirectory: " + classDirectory);
+                    String methodName = toBeopen.split("(?<=/)")[toBeopen.split("(?<=/)").length -1];
+                    System.out.println("methodName: " + methodName);
+                    VirtualFile newFile = LocalFileSystem.getInstance().findFileByPath(RepoLocalStorageDataProvider.getUserProjectDirectory() + classDirectory);
+                    ApplicationManager.getApplication().invokeLater(() -> {
+                        //https://intellij-support.jetbrains.com/hc/en-us/community/posts/206113019-Open-a-Class-programmatically-in-a-new-Editor
+                        //FileEditorManager.getInstance(project).openFile(newFile, true, true);
+
+
+                        //https://www.codota.com/code/java/methods/com.intellij.openapi.fileEditor.FileEditorManager/openFile?snippet=5ce6acf17e03440004e29f2f
+                        final FileEditorManager fileEditorManager = FileEditorManager.getInstance(project);
+                        final FileEditor[] editor = fileEditorManager.openFile(
+                                newFile, true);
+                        final LogicalPosition problemPos = new LogicalPosition(20, 0);
+
+                        final Editor textEditor = ((TextEditor) editor[0]).getEditor();
+                        textEditor.
+                        textEditor.getCaretModel().moveToLogicalPosition(problemPos);
+                        textEditor.getScrollingModel().scrollToCaret(ScrollType.CENTER);
+                    });
+
+
                 } else {
                     try {
                         System.out.println(observable);
