@@ -214,14 +214,10 @@ public class HandoutContentScreen extends SimpleToolWindowPanel{
                         final FileEditor[] editor = fileEditorManager.openFile(newFile, true);
                         final Editor textEditor = ((TextEditor) editor[0]).getEditor();
                         final CaretModel caretModel = textEditor.getCaretModel();
-                        final Caret primaryCaret = caretModel.getPrimaryCaret();
-
                         final LogicalPosition problemPos = new LogicalPosition(finalMethodLineNumber - 1, 0);
                         textEditor.getCaretModel().moveToLogicalPosition(problemPos);
-                        textEditor.getSelectionModel().sele
+                        textEditor.getSelectionModel().selectLineAtCaret();
                         textEditor.getScrollingModel().scrollToCaret(ScrollType.CENTER);
-
-
                         //showMessage("Unable to find " + filename);
 
 
