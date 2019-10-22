@@ -21,9 +21,6 @@ dependencies {
     compile 'io.woo:htmltopdf:1.0.8'
     // https://mvnrepository.com/artifact/org.bitbucket.leito/sqlformatter
     compile group: 'org.bitbucket.leito', name: 'sqlformatter', version: '1.1.0'
-    compile 'org.jsoup:jsoup:1.12.1'
-    // https://mvnrepository.com/artifact/org.javassist/javassist
-    compile group: 'org.javassist', name: 'javassist', version: '3.15.0-GA'
 }
 
 
