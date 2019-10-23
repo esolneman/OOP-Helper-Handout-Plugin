@@ -36,17 +36,10 @@ public class WebViewLinkListener {
         createListener();
     }
 
-    //TODO: depractaion!!!
-    //https://stackoverflow.com/questions/15555510/javafx-stop-opening-url-in-webview-open-in-browser-instead
-    //https://stackoverflow.com/questions/31909455/open-hyperlinks-in-javafx-webview-with-default-browser
     private void createListener() {
-
-
+        //https://github.com/CodeFX-org/LibFX/wiki/WebViewHyperlinkListener
         WebViewHyperlinkListener eventPrintingListener = event -> {
-            System.out.println("TRY: " + WebViews.hyperlinkEventToString(event));
             //TODO: Refactor variable name
-            System.out.println("listenerNEW url: " + event.getURL());
-
             String toBeopen = event.getURL().toString();
             Project project = RepoLocalStorageDataProvider.getProject();
             if ((toBeopen.contains("class/") || (toBeopen.contains("method/")))) {
@@ -60,21 +53,6 @@ public class WebViewLinkListener {
         WebViews.addHyperlinkListener(
                 webView, eventPrintingListener,
                 HyperlinkEvent.EventType.ACTIVATED);
-
-
-       /* webView.getEngine().locationProperty().addListener((observable, oldValue, newValue) -> {
-            //TODO: Refactor variable name
-            System.out.println("listener url: " + observable.getValue());
-
-            String toBeopen = observable.getValue();
-            Project project = RepoLocalStorageDataProvider.getProject();
-            if ((toBeopen.contains("class/") || (toBeopen.contains("method/")))) {
-                handleLinkToCode(toBeopen, project);
-            } else {
-                handleLinkToExternalWebpage(toBeopen);
-            }
-        });*/
-
 
     }
 
@@ -94,7 +72,6 @@ public class WebViewLinkListener {
         }
     }
 
-
     private void handleLinkToCode(String toBeopen, Project project) {
         int finalMethodLineNumber = 1;
         VirtualFile newFile = null;
@@ -108,7 +85,6 @@ public class WebViewLinkListener {
             newFile = LocalFileSystem.getInstance().findFileByPath(RepoLocalStorageDataProvider.getUserProjectDirectory() + classDirectory);
             pathToClass = RepoLocalStorageDataProvider.getUserProjectDirectory() + classDirectory;
             lineToSelect = newFile.getName().substring(0,newFile.getName().indexOf("."));
-            System.out.println(lineToSelect);
             //TODO: ADD Ballon for unable to find class
         } else if (toBeopen.contains("method/")) {
             classDirectory = toBeopen.split("(?<=method)")[1];
@@ -132,6 +108,7 @@ public class WebViewLinkListener {
                 }
             }
         } catch(FileNotFoundException e) {
+            //TODO HAndle Expetion
             //handle this
         }
         VirtualFile finalNewFile = newFile;
