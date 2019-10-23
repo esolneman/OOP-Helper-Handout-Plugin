@@ -1,6 +1,9 @@
 plugins {
     id 'java'
-    id 'org.jetbrains.intellij' version '0.4.10'
+    //id 'org.jetbrains.intellij' version '0.4.10'
+    //https://intellij-support.jetbrains.com/hc/en-us/community/posts/360004401620-Error-in-buildPlugin-execution-time
+    // https://youtrack.jetbrains.com/issue/KT-32401
+    id 'org.jetbrains.intellij' version '0.4.1'
 }
 
 version '1.0'
@@ -14,13 +17,13 @@ repositories {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     // https://mvnrepository.com/artifact/org.eclipse.jgit/org.eclipse.jgit
-    compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '2.2.0.201212191850-r'
+   // compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '2.2.0.201212191850-r'
     // Todo: Update to newest gradle version
-    //compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '5.5.0.2019091s10433-r'
+    // https://mvnrepository.com/artifact/org.eclipse.jgit/org.eclipse.jgit
+    //compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '5.4.0.201906121030-r'
+    compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '5.5.0.201909110433-r'
     //implementation files('libs/PluginHelper-Core.jar')
     compile 'io.woo:htmltopdf:1.0.8'
-    // https://mvnrepository.com/artifact/org.bitbucket.leito/sqlformatter
-    compile group: 'org.bitbucket.leito', name: 'sqlformatter', version: '1.1.0'
 }
 
 

@@ -44,6 +44,8 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
 
     public void onCloningRepositoryEvent(File repoFile) {
         System.out.println("Performing callback after Asynchronous Task");
+        System.out.println(repoFile.getAbsolutePath());
+
         repoFile.setExecutable(false);
         repoFile.setReadable(true);
         repoFile.setWritable(false);
