@@ -62,13 +62,11 @@ public class HandoutDownloadAction extends AnAction {
             boolean success = HtmlToPdf.create()
                     .object(HtmlToPdfObject.forUrl(URL_BEGIN_FOR_FILE + handoutHTMLDirectory))
                     .convert(handoutPDFDirectory);
-            //JComponent handoutContentScreenToolbar = new HandoutContentScreen().getToolbar();
             JComponent handoutContentScreen = ToolWindowManager.getActiveToolWindow().getComponent();
-            BalloonPopupController test = new BalloonPopupController();
             if(success){
-                test.createBalloonNotification(handoutContentScreen, Balloon.Position.above, "Downloading was successfully", MessageType.INFO);
+                BalloonPopupController.createBalloonNotification(handoutContentScreen, Balloon.Position.above, "Downloading was successfully", MessageType.INFO);
             }else{
-                test.createBalloonNotification(handoutContentScreen, Balloon.Position.above, "Error while downloading the handout. Please try again.", MessageType.ERROR);
+                BalloonPopupController.createBalloonNotification(handoutContentScreen, Balloon.Position.above, "Error while downloading the handout. Please try again.", MessageType.ERROR);
             }
         } catch (MalformedURLException e) {
             e.printStackTrace();
