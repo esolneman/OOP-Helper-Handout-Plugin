@@ -6,11 +6,9 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
 import java.io.File;
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.apache.commons.io.FileUtils;
-import java.util.ArrayList;
 
 import static environment.Constants.*;
 
@@ -40,6 +38,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         //getRepoUrl();
         //getBranchName();
         // ToDo: get BranchName
+        //TODO get RepoName
         branchPath = REPO_PATH_TO_BRANCH + "test";
         System.out.println(contentRepoPath);
     }
@@ -64,8 +63,6 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
             //updateBranch() check;
         }
     }
-
-
     public void addListener(OnEventListener listener) {
         listeners.add(listener);
     }
@@ -73,31 +70,54 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
     private void cloneRepository() {
         System.out.println("start cloning branch");
         //https://www.vogella.com/tutorials/JGit/article.html#example-for-using-jgit
-        Runnable cloneTask = () -> {
+
+        Runnable cloneTask = () -> {};
+        Git git = null;
+        try {
+            git = Git.cloneRepository()
+                    .setURI(repoUrl)
+                    .setDirectory(contentRepoFile)
+                    .setBranchesToClone(Arrays.asList(branchPath))
+                    .setBranch(branchPath)
+                    .call();
+        } catch (GitAPIException e) {
+            e.printStackTrace();
+        } finally {
+            git.close();
+        }
+
+        /*Runnable cloneTask = () -> {
             Git clone = null;
             {
                 try {
-                    clone  = Git.cloneRepository()
+                    clone = Git.cloneRepository()
                             .setURI(repoUrl)
                             .setDirectory(contentRepoFile)
                             .setBranchesToClone(Arrays.asList(branchPath))
                             .setBranch(branchPath)
                             .call();
+                    System.out.println("clone run");
+
                 } catch (GitAPIException e) {
                     try {
                         FileUtils.deleteDirectory(contentRepoFile);
                     } catch (IOException ex) {
                         ex.printStackTrace();
+                        System.out.println(ex);
+
                     }
-                    System.out.print(e);
+                    System.out.println(e);
                     //throw e;
                 } finally {
                     System.out.println("end cloning branch");
                     //clone.close();
-                    clone.getRepository().close();
+                    //clone.getRepository().close();
                     //check if listener is registered.
                     if (listeners != null) {
+                        System.out.println("listener not null");
+
                         for(OnEventListener listener : listeners){
+                            System.out.println("listener: " + listener.toString());
                             listener.onCloningRepositoryEvent(contentRepoFile);
                         }
                     }else{
@@ -106,40 +126,9 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
                 }
             }
         };
-/*        new Thread(() -> {
-            Git clone = null;
-            {
-                try {
-                    clone  = Git.cloneRepository()
-                            .setURI(repoUrl)
-                            .setDirectory(contentRepoFile)
-                            .setBranchesToClone(Arrays.asList(CLONE_DIRECTORY_PATH))
-                            .setBranch(CLONE_DIRECTORY_PATH)
-                            .call();
-                } catch (GitAPIException e) {
-                    try {
-                        FileUtils.deleteDirectory(contentRepoFile);
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
-                    System.out.print(e);
-                    //throw e;
-                } finally {
-                    System.out.println("end cloning branch");
-                    clone.getRepository().close();
-                    //check if listener is registered.
-                    if (listeners != null) {
-                        for(OnEventListener listener : listeners){
-                            listener.onCloningRepositoryEvent(contentRepoFile);
-                        }
-                    }else{
-                        System.out.println("event Listener null");
-                    }
-                }
-            }
-        };
-        }).start();*/
         asyncExecutor.runAsyncClone(cloneTask);
+         */
+
     }
 
     private void updateBranch(){}

@@ -9,13 +9,19 @@ import static environment.Constants.*;
 public class RepoLocalStorageDataProvider implements RepoLocalStorageDataProviderInterface {
 
     private static String projectDirectory;
+    private static Project handoutProject;
 
     public static void setUserProjectDirectory(Project project){
         projectDirectory = project.getBasePath();
+        handoutProject = project;
     }
 
     public static String getUserProjectDirectory() {
         return projectDirectory;
+    }
+
+    public static Project getProject(){
+        return handoutProject;
     }
 
     public static File getHandoutHtmlFile(){

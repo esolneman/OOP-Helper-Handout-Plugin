@@ -5,17 +5,16 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import provider.HandoutContentHandler;
 import toolWindow.HandoutContentScreen;
 import toolWindow.actions.HandoutTableOfContentsAction;
 
 import java.util.ArrayList;
 
 //https://intellij-support.jetbrains.com/hc/en-us/community/posts/360000105804-Adding-PopupMenu-to-ActionBarButton
-//
 public class HandoutContentActionGroup extends ActionGroup {
 
     private static HandoutContentScreen handoutContentScreen;
-
 
     @NotNull
     @Override
@@ -33,8 +32,7 @@ public class HandoutContentActionGroup extends ActionGroup {
     }
 
     private ArrayList<String> getHeadings() {
-        //TODO getHeadings from html file with nav element -> name ?
-        return handoutContentScreen.getNavHeadings();
+        return HandoutContentHandler.getNavHeadings();
     }
 
     @Override
