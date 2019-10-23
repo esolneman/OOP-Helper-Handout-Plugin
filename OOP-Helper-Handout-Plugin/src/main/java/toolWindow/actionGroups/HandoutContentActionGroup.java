@@ -5,6 +5,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import provider.HandoutContentHandler;
 import toolWindow.HandoutContentScreen;
 import toolWindow.actions.HandoutTableOfContentsAction;
 
@@ -33,8 +34,7 @@ public class HandoutContentActionGroup extends ActionGroup {
     }
 
     private ArrayList<String> getHeadings() {
-        //TODO getHeadings from html file with nav element -> name ?
-        return handoutContentScreen.getNavHeadings();
+        return HandoutContentHandler.getNavHeadings();
     }
 
     @Override

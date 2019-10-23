@@ -17,7 +17,6 @@ public class HandoutTableOfContentsAction extends AnAction {
     public void actionPerformed(@NotNull AnActionEvent anActionEvent) {
         String heading = anActionEvent.getPresentation().getText();
         this.handoutContentScreen.goToLocation(heading);
-
     }
 
 }

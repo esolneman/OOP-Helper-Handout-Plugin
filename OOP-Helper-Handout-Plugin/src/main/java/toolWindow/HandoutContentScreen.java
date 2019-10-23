@@ -82,43 +82,7 @@ public class HandoutContentScreen extends SimpleToolWindowPanel{
         return toolWindowPanel;
     }
 
-    //TODO: Create class HandleHandoutFile
-    public ArrayList<String> getNavHeadings() {
-        ArrayList<String> headings = new ArrayList<>();
-        File htmlFile = LocalStorageDataProvider.getHandoutFileDirectory();
-        Document yourPage;
-        try {
-            //https://stackoverflow.com/a/9611720
-            yourPage = Jsoup.parse(htmlFile, null);
-            //https://stackoverflow.com/questions/34392919/find-href-link-from-webpage-using-java
-            Elements aElement = yourPage.select("a[href]");
-            for (Element link : aElement) {
-                if(link.attr("href").contains("#")){
-                    headings.add(link.text());
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return headings;
-    }
-
-    //https://stackoverflow.com/questions/49070734/javafx-webview-link-to-anchor-in-document-doesnt-work-using-loadcontent
-    public void goToLocation(String heading){
-        if(heading.contains(" ")){
-            //https://stackoverflow.com/a/1892778
-            heading = WordUtils.capitalize(heading);
-            //https://stackoverflow.com/a/15633284
-            heading = heading.replaceAll("\\s+","");
-        }
-        String newLocation = urlString + "#" + heading;
-        Platform.setImplicitExit(false);
-        Platform.runLater(() -> {
-            webView.getEngine().load(newLocation);
-        });
-    }
-
-    private void setOnLinkListener() {
-        //TODO
+    public void goToLocation(String heading) {
+        webViewController.goToLocation(heading);
     }
 }
