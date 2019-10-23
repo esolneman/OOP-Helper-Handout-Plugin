@@ -12,11 +12,9 @@ import toolWindow.actions.HandoutTableOfContentsAction;
 import java.util.ArrayList;
 
 //https://intellij-support.jetbrains.com/hc/en-us/community/posts/360000105804-Adding-PopupMenu-to-ActionBarButton
-//
 public class HandoutContentActionGroup extends ActionGroup {
 
     private static HandoutContentScreen handoutContentScreen;
-
 
     @NotNull
     @Override

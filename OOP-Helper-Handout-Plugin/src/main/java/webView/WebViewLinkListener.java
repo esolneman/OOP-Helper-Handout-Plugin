@@ -41,61 +41,8 @@ public class WebViewLinkListener {
             //String toBeopen = webView.getEngine().getLoadWorker().getMessage().trim();
             String toBeopen = observable.getValue();
             Project project = RepoLocalStorageDataProvider.getProject();
-            if (toBeopen.contains("class/")) {
-                //https://stackoverflow.com/a/17113365
-                String classDirectory = toBeopen.split("(?<=class)")[1];
-                VirtualFile newFile = LocalFileSystem.getInstance().findFileByPath(RepoLocalStorageDataProvider.getUserProjectDirectory() + classDirectory);
-                ApplicationManager.getApplication().invokeLater(() -> {
-                    //https://intellij-support.jetbrains.com/hc/en-us/community/posts/206113019-Open-a-Class-programmatically-in-a-new-Editor
-                    FileEditorManager.getInstance(project).openFile(newFile, true, true);
-                    final FileEditorManager fileEditorManager = FileEditorManager.getInstance(project);
-                    final FileEditor[] editor = fileEditorManager.openFile(newFile, true);
-                    final Editor textEditor = ((TextEditor) editor[0]).getEditor();
-                    final LogicalPosition problemPos = new LogicalPosition(4 - 1, 0);
-                    textEditor.getCaretModel().moveToLogicalPosition(problemPos);
-                    textEditor.getSelectionModel().selectLineAtCaret();
-                    textEditor.getScrollingModel().scrollToCaret(ScrollType.CENTER);
-                });
-                //TODO: ADD Ballon for unable to find class
-            } else if (toBeopen.contains("method/")) {
-                String classDirectory = toBeopen.split("(?<=method)")[1];
-                Integer findLastSlash = classDirectory.lastIndexOf("/");
-                classDirectory = classDirectory.substring(0, findLastSlash);
-                String methodName = toBeopen.split("(?<=/)")[toBeopen.split("(?<=/)").length -1];
-                String pathToClass = RepoLocalStorageDataProvider.getUserProjectDirectory() + classDirectory;
-                VirtualFile newFile = LocalFileSystem.getInstance().findFileByPath(pathToClass);
-                File file = new File(pathToClass);
-                //https://stackoverflow.com/a/5600442
-                int methodLineNumber = 0;
-                try {
-                    Scanner scanner = new Scanner(file);
-                    int lineNum = 0;
-                    while (scanner.hasNextLine()) {
-                        String line = scanner.nextLine();
-                        lineNum++;
-                        if(line.contains( " " + methodName + "()")) {
-                            System.out.println(lineNum);
-                            methodLineNumber = lineNum;
-                            //break;
-                        }
-                    }
-                } catch(FileNotFoundException e) {
-                    //handle this
-                }
-                int finalMethodLineNumber = methodLineNumber;
-                ApplicationManager.getApplication().invokeLater(() -> {
-                    //https://intellij-support.jetbrains.com/hc/en-us/community/posts/206113019-Open-a-Class-programmatically-in-a-new-Editor
-                    //https://www.codota.com/code/java/methods/com.intellij.openapi.fileEditor.FileEditorManager/openFile?snippet=5ce6acf17e03440004e29f2f
-                    final FileEditorManager fileEditorManager = FileEditorManager.getInstance(project);
-                    final FileEditor[] editor = fileEditorManager.openFile(newFile, true);
-                    final Editor textEditor = ((TextEditor) editor[0]).getEditor();
-                    final LogicalPosition problemPos = new LogicalPosition(finalMethodLineNumber - 1, 0);
-                    textEditor.getCaretModel().moveToLogicalPosition(problemPos);
-                    textEditor.getSelectionModel().selectLineAtCaret();
-                    textEditor.getScrollingModel().scrollToCaret(ScrollType.CENTER);
-                    //TODO: ADD Ballon for unable to find class
-                    //showMessage("Unable to find " + filename);
-                });
+            if ((toBeopen.contains("class/") || (toBeopen.contains("method/")))) {
+                handleLinkToCode(toBeopen, project);
             } else {
                 try {
                     Desktop desktop = Desktop.getDesktop();
@@ -113,6 +60,62 @@ public class WebViewLinkListener {
             }
         });
     }
+
+
+    private void handleLinkToCode(String toBeopen, Project project) {
+        int finalMethodLineNumber = 1;
+        VirtualFile newFile = null;
+        String classDirectory;
+        //TODO: other name for var:
+        String lineToSelect = "";
+        String pathToClass = "";
+        if (toBeopen.contains("class/")) {
+            //https://stackoverflow.com/a/17113365
+            classDirectory = toBeopen.split("(?<=class)")[1];
+            newFile = LocalFileSystem.getInstance().findFileByPath(RepoLocalStorageDataProvider.getUserProjectDirectory() + classDirectory);
+            pathToClass = RepoLocalStorageDataProvider.getUserProjectDirectory() + classDirectory;
+            lineToSelect = newFile.getName().substring(0,newFile.getName().indexOf("."));
+            System.out.println(lineToSelect);
+            //TODO: ADD Ballon for unable to find class
+        } else if (toBeopen.contains("method/")) {
+            classDirectory = toBeopen.split("(?<=method)")[1];
+            Integer findLastSlash = classDirectory.lastIndexOf("/");
+            classDirectory = classDirectory.substring(0, findLastSlash);
+            lineToSelect = toBeopen.split("(?<=/)")[toBeopen.split("(?<=/)").length -1];
+            pathToClass = RepoLocalStorageDataProvider.getUserProjectDirectory() + classDirectory;
+            newFile = LocalFileSystem.getInstance().findFileByPath(pathToClass);
+        }
+        File file = new File(pathToClass);
+        //https://stackoverflow.com/a/5600442
+        try {
+            Scanner scanner = new Scanner(file);
+            int lineNum = 0;
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                lineNum++;
+                if(line.contains( " " + lineToSelect)) {
+                    finalMethodLineNumber = lineNum;
+                    break;
+                }
+            }
+        } catch(FileNotFoundException e) {
+            //handle this
+        }
+        VirtualFile finalNewFile = newFile;
+        int finalMethodLineNumber1 = finalMethodLineNumber;
+        ApplicationManager.getApplication().invokeLater(() -> {
+            //https://intellij-support.jetbrains.com/hc/en-us/community/posts/206113019-Open-a-Class-programmatically-in-a-new-Editor
+            FileEditorManager.getInstance(project).openFile(finalNewFile, true, true);
+            final FileEditorManager fileEditorManager = FileEditorManager.getInstance(project);
+            final FileEditor[] editor = fileEditorManager.openFile(finalNewFile, true);
+            final Editor textEditor = ((TextEditor) editor[0]).getEditor();
+            final LogicalPosition problemPos = new LogicalPosition(finalMethodLineNumber1 - 1, 0);
+            textEditor.getCaretModel().moveToLogicalPosition(problemPos);
+            textEditor.getSelectionModel().selectLineAtCaret();
+            textEditor.getScrollingModel().scrollToCaret(ScrollType.CENTER);
+        });
+    }
+
 
 
 
