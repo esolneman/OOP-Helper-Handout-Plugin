@@ -12,8 +12,11 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import javafx.application.Platform;
 import javafx.scene.web.WebView;
+import org.codefx.libfx.control.webview.WebViewHyperlinkListener;
+import org.codefx.libfx.control.webview.WebViews;
 import provider.RepoLocalStorageDataProvider;
 
+import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -37,28 +40,58 @@ public class WebViewLinkListener {
     //https://stackoverflow.com/questions/15555510/javafx-stop-opening-url-in-webview-open-in-browser-instead
     //https://stackoverflow.com/questions/31909455/open-hyperlinks-in-javafx-webview-with-default-browser
     private void createListener() {
-        webView.getEngine().locationProperty().addListener((observable, oldValue, newValue) -> {
-            //String toBeopen = webView.getEngine().getLoadWorker().getMessage().trim();
+
+
+        WebViewHyperlinkListener eventPrintingListener = event -> {
+            System.out.println("TRY: " + WebViews.hyperlinkEventToString(event));
+            //TODO: Refactor variable name
+            System.out.println("listenerNEW url: " + event.getURL());
+
+            String toBeopen = event.getURL().toString();
+            Project project = RepoLocalStorageDataProvider.getProject();
+            if ((toBeopen.contains("class/") || (toBeopen.contains("method/")))) {
+                handleLinkToCode(toBeopen, project);
+            } else {
+                handleLinkToExternalWebpage(toBeopen);
+            }
+            return false;
+        };
+
+        WebViews.addHyperlinkListener(
+                webView, eventPrintingListener,
+                HyperlinkEvent.EventType.ACTIVATED);
+
+
+       /* webView.getEngine().locationProperty().addListener((observable, oldValue, newValue) -> {
+            //TODO: Refactor variable name
+            System.out.println("listener url: " + observable.getValue());
+
             String toBeopen = observable.getValue();
             Project project = RepoLocalStorageDataProvider.getProject();
             if ((toBeopen.contains("class/") || (toBeopen.contains("method/")))) {
                 handleLinkToCode(toBeopen, project);
             } else {
-                try {
-                    Desktop desktop = Desktop.getDesktop();
-                    URI address = new URI(observable.getValue());
-                    if (toBeopen.contains("http://") || toBeopen.contains("https://") || toBeopen.contains("mailto")) {
-                        Platform.setImplicitExit(false);
-                        Platform.runLater(() -> {
-                            webView.getEngine().load(urlString);
-                        });
-                        desktop.browse(address);
-                    }
-                } catch (URISyntaxException | IOException e) {
-                    e.printStackTrace();
-                }
+                handleLinkToExternalWebpage(toBeopen);
             }
-        });
+        });*/
+
+
+    }
+
+    private void handleLinkToExternalWebpage(String toBeopen) {
+        try {
+            Desktop desktop = Desktop.getDesktop();
+            URI address = new URI(toBeopen);
+            if (toBeopen.contains("http://") || toBeopen.contains("https://") || toBeopen.contains("mailto")) {
+                Platform.setImplicitExit(false);
+                Platform.runLater(() -> {
+                    webView.getEngine().load(urlString);
+                });
+                desktop.browse(address);
+            }
+        } catch (URISyntaxException | IOException e) {
+            e.printStackTrace();
+        }
     }
 
 

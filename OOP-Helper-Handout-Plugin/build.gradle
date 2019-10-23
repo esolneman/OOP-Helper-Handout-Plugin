@@ -24,6 +24,7 @@ dependencies {
     compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '5.5.0.201909110433-r'
     //implementation files('libs/PluginHelper-Core.jar')
     compile 'io.woo:htmltopdf:1.0.8'
+    compile 'org.codefx.libfx:LibFX:0.3.0'
 }
 
 
