@@ -12,6 +12,8 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import javafx.application.Platform;
 import javafx.scene.web.WebView;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.codefx.libfx.control.webview.WebViewHyperlinkListener;
 import org.codefx.libfx.control.webview.WebViews;
 import provider.RepoLocalStorageDataProvider;
@@ -23,6 +25,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
+import java.util.List;
 import java.util.Scanner;
 
 public class WebViewLinkListener {
@@ -42,18 +46,16 @@ public class WebViewLinkListener {
             //TODO: Refactor variable name
             String toBeopen = event.getURL().toString();
             Project project = RepoLocalStorageDataProvider.getProject();
-            if ((toBeopen.contains("class/") || (toBeopen.contains("method/")))) {
+            if (toBeopen.contains("LinkToCode")) {
                 handleLinkToCode(toBeopen, project);
             } else {
                 handleLinkToExternalWebpage(toBeopen);
             }
             return false;
         };
-
         WebViews.addHyperlinkListener(
                 webView, eventPrintingListener,
                 HyperlinkEvent.EventType.ACTIVATED);
-
     }
 
     private void handleLinkToExternalWebpage(String toBeopen) {
@@ -75,25 +77,40 @@ public class WebViewLinkListener {
     private void handleLinkToCode(String toBeopen, Project project) {
         int finalMethodLineNumber = 1;
         VirtualFile newFile = null;
-        String classDirectory;
+        String className = "";
         //TODO: other name for var:
         String lineToSelect = "";
         String pathToClass = "";
-        if (toBeopen.contains("class/")) {
-            //https://stackoverflow.com/a/17113365
-            classDirectory = toBeopen.split("(?<=class)")[1];
-            newFile = LocalFileSystem.getInstance().findFileByPath(RepoLocalStorageDataProvider.getUserProjectDirectory() + classDirectory);
-            pathToClass = RepoLocalStorageDataProvider.getUserProjectDirectory() + classDirectory;
-            lineToSelect = newFile.getName().substring(0,newFile.getName().indexOf("."));
-            //TODO: ADD Ballon for unable to find class
-        } else if (toBeopen.contains("method/")) {
-            classDirectory = toBeopen.split("(?<=method)")[1];
-            Integer findLastSlash = classDirectory.lastIndexOf("/");
-            classDirectory = classDirectory.substring(0, findLastSlash);
-            lineToSelect = toBeopen.split("(?<=/)")[toBeopen.split("(?<=/)").length -1];
-            pathToClass = RepoLocalStorageDataProvider.getUserProjectDirectory() + classDirectory;
-            newFile = LocalFileSystem.getInstance().findFileByPath(pathToClass);
+
+        //https://stackoverflow.com/a/13592324
+        List<org.apache.http.NameValuePair> params = null;
+        try {
+            params = URLEncodedUtils.parse(new URI(toBeopen), Charset.forName("UTF-8"));
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
         }
+        for (NameValuePair param : params) {
+            System.out.println(param.getName() + " : " + param.getValue());
+            switch(param.getName()) {
+                case "class":
+                    className = param.getValue();
+                    break;
+                case "path":
+                    pathToClass = param.getValue();
+                    break;
+                case "function":
+                    lineToSelect = param.getValue();
+                    break;
+                default:
+                    // TODO: I have a Problem if this happens
+            }
+        }
+
+        newFile = LocalFileSystem.getInstance().findFileByPath(RepoLocalStorageDataProvider.getUserProjectDirectory() + pathToClass + className);
+        pathToClass = RepoLocalStorageDataProvider.getUserProjectDirectory() + pathToClass + className;
+
+        //TODO: ADD Ballon for unable to find class
+
         File file = new File(pathToClass);
         //https://stackoverflow.com/a/5600442
         try {
@@ -102,7 +119,7 @@ public class WebViewLinkListener {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 lineNum++;
-                if(line.contains( " " + lineToSelect)) {
+                if(line.contains(lineToSelect)) {
                     finalMethodLineNumber = lineNum;
                     break;
                 }
@@ -125,9 +142,4 @@ public class WebViewLinkListener {
             textEditor.getScrollingModel().scrollToCaret(ScrollType.CENTER);
         });
     }
-
-
-
-
-
 }
