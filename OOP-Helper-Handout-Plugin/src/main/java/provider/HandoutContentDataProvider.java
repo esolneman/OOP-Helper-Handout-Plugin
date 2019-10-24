@@ -2,10 +2,12 @@ package provider;
 
 import com.intellij.openapi.project.Project;
 import listener.OnEventListener;
+import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -71,7 +73,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         System.out.println("start cloning branch");
         //https://www.vogella.com/tutorials/JGit/article.html#example-for-using-jgit
 
-        Runnable cloneTask = () -> {};
+/*        Runnable cloneTask = () -> {};
         Git git = null;
         try {
             git = Git.cloneRepository()
@@ -83,10 +85,11 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         } catch (GitAPIException e) {
             e.printStackTrace();
         } finally {
+            assert git != null;
             git.close();
-        }
+        }*/
 
-        /*Runnable cloneTask = () -> {
+        Runnable cloneTask = () -> {
             Git clone = null;
             {
                 try {
@@ -127,8 +130,6 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
             }
         };
         asyncExecutor.runAsyncClone(cloneTask);
-         */
-
     }
 
     private void updateBranch(){}
