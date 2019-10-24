@@ -5,11 +5,10 @@ import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.event.*;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
-import listener.OnEditorClickedListener;
 import org.jetbrains.annotations.NotNull;
 import toolWindow.HandoutContentScreen;
 
-public class LinkToHandoutController implements OnEditorClickedListener {
+public class LinkToHandoutController{
 
     private Project project;
     private HandoutContentScreen handoutContentScreen;
@@ -78,10 +77,5 @@ public class LinkToHandoutController implements OnEditorClickedListener {
 
         handoutContentScreen.goToLocation(functionAnchor);
 
-    }
-
-    @Override
-    public void onFunctionClickedEvent(String functionName, String className, String path) {
-        System.out.println(functionName);
     }
 }
