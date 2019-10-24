@@ -24,6 +24,7 @@ public class WebViewController {
 
     //https://stackoverflow.com/questions/49070734/javafx-webview-link-to-anchor-in-document-doesnt-work-using-loadcontent
     public void goToLocation(String heading){
+        //TODO: check or if (class ref)
         if(heading.contains(" ")){
             //https://stackoverflow.com/a/1892778
             heading = WordUtils.capitalize(heading);

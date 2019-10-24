@@ -1,5 +1,6 @@
 package controller;
 
+import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.event.*;
@@ -12,6 +13,7 @@ public class LinkToHandoutController{
 
     private Project project;
     private HandoutContentScreen handoutContentScreen;
+    private String functionAnchor;
 
     public LinkToHandoutController(Project project, HandoutContentScreen handoutContentScreen){
         this.project = project;
@@ -45,37 +47,41 @@ public class LinkToHandoutController{
             EditorFactory.getInstance().addEditorFactoryListener(editorFactoryListener, disposable);*/
 
 
-            EditorEventMulticaster editorEventMulticaster = EditorFactory.getInstance().getEventMulticaster();
-            editorEventMulticaster.addEditorMouseListener(new EditorMouseListener() {
-                @Override
-                public void mousePressed(@NotNull EditorMouseEvent event) {
-                    System.out.println("addEditorMouseListener: " + event.toString());
-                }
-            });
-            editorEventMulticaster.addSelectionListener(new SelectionListener() {
+           EditorEventMulticaster editorEventMulticaster = EditorFactory.getInstance().getEventMulticaster();
+
+           editorEventMulticaster.addSelectionListener(new SelectionListener() {
                 @Override
                 public void selectionChanged(@NotNull SelectionEvent e) {
-                    System.out.println("SelectionEvent: " + e.toString());
                     String selectedText = e.getEditor().getSelectionModel().getSelectedText();
                     String className = FileEditorManager.getInstance(project).getSelectedEditor().getFile().getPresentableName();
                     System.out.println("selectedText: " + selectedText);
                     System.out.println("className: " + className);
                     if(selectedText != null) {
-                        String functionAnchor = className + "/" + selectedText;
-                        openHandoutOnPosition(functionAnchor);
+                        functionAnchor = className + "/" + selectedText;
+                        System.out.println("functionAnchorSelect: " + functionAnchor);
+
+                    } else {
+                        functionAnchor = null;
+                        System.out.println("functionAnchorSelect: " + null);
+
                     }
                 }
             });
-
             //TODO: check Disposable
-
+           editorEventMulticaster.addEditorMouseListener(new EditorMouseListener() {
+               @Override
+               public void mouseClicked(@NotNull EditorMouseEvent event) {
+                   System.out.println("addEditorMouseListener: " + event.toString());
+                   if(event.getMouseEvent().getClickCount() == 2){
+                       openHandoutOnPosition();
+                   }
+               }
+           });
         });
     }
 
-    private void openHandoutOnPosition(String functionAnchor) {
-        System.out.println("functionAnchor: " + functionAnchor);
-
-        handoutContentScreen.goToLocation(functionAnchor);
-
+    private void openHandoutOnPosition() {
+        System.out.println(" openHandoutOnPosition functionAnchor: " + functionAnchor);
+        if (functionAnchor != null) {handoutContentScreen.goToLocation(functionAnchor);}
     }
 }
