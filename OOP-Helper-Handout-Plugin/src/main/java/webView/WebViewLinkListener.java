@@ -12,6 +12,8 @@ import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import javafx.application.Platform;
 import javafx.scene.web.WebView;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.codefx.libfx.control.webview.WebViewHyperlinkListener;
 import org.codefx.libfx.control.webview.WebViews;
 import provider.RepoLocalStorageDataProvider;
@@ -23,6 +25,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
+import java.util.List;
 import java.util.Scanner;
 
 public class WebViewLinkListener {
@@ -40,7 +44,25 @@ public class WebViewLinkListener {
         //https://github.com/CodeFX-org/LibFX/wiki/WebViewHyperlinkListener
         WebViewHyperlinkListener eventPrintingListener = event -> {
             //TODO: Refactor variable name
+            System.out.println(event.getDescription());
+            String query = event.getURL().getQuery();
+
+            System.out.println(query);
             String toBeopen = event.getURL().toString();
+            System.out.println(toBeopen);
+
+            //https://stackoverflow.com/a/13592324
+            List<org.apache.http.NameValuePair> params = null;
+            try {
+                params = URLEncodedUtils.parse(new URI(event.getURL().toString()), Charset.forName("UTF-8"));
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+            for (NameValuePair param : params) {
+
+                System.out.println(param.getName() + " : " + param.getValue());
+            }
+
             Project project = RepoLocalStorageDataProvider.getProject();
             if ((toBeopen.contains("class/") || (toBeopen.contains("method/")))) {
                 handleLinkToCode(toBeopen, project);
