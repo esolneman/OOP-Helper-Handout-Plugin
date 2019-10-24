@@ -28,30 +28,6 @@ public class HandoutToolWindowFactory implements ToolWindowFactory {
         this.toolWindow = toolWindow;
         contentFactory = ContentFactory.SERVICE.getInstance();
         initScreens();
-        toolWindow.getContentManager().addContentManagerListener(new ContentManagerListener() {
-
-            @Override
-            public void contentAdded(@NotNull ContentManagerEvent contentManagerEvent) {
-
-            }
-
-            @Override
-            public void contentRemoved(@NotNull ContentManagerEvent contentManagerEvent) {
-
-            }
-
-            @Override
-            public void contentRemoveQuery(@NotNull ContentManagerEvent contentManagerEvent) {
-
-            }
-
-            @Override
-            public void selectionChanged(@NotNull ContentManagerEvent contentManagerEvent) {
-                System.out.println("in: selectionChanged");
-                System.out.println("Current Component: \"" + contentManagerEvent.getContent().getDisplayName() + "\"");
-                System.out.println("Component object: " + contentManagerEvent.getContent().getComponent());
-            }
-        });
     }
 
     private void initScreens() {

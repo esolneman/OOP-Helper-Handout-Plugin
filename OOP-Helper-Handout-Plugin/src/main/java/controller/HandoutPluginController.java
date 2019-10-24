@@ -36,7 +36,6 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
         handoutDataProvider = ServiceManager.getService(project, HandoutContentDataProviderInterface.class);
         updateHandoutContent();
         handoutDataProvider.addListener(this);
-        linkToHandoutController = new LinkToHandoutController(project);
     }
 
 

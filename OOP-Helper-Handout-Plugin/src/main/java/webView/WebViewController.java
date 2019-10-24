@@ -31,6 +31,7 @@ public class WebViewController {
             heading = heading.replaceAll("\\s+","");
         }
         String newLocation = urlString + "#" + heading;
+        System.out.println(newLocation);
         Platform.setImplicitExit(false);
         Platform.runLater(() -> {
             webView.getEngine().load(newLocation);

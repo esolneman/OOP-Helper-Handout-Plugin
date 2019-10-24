@@ -1,26 +1,22 @@
 package controller;
 
-import com.intellij.openapi.Disposable;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.EditorFactory;
-import com.intellij.openapi.editor.LogicalPosition;
-import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.editor.event.*;
-import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.project.Project;
 import listener.OnEditorClickedListener;
 import org.jetbrains.annotations.NotNull;
+import toolWindow.HandoutContentScreen;
 
 public class LinkToHandoutController implements OnEditorClickedListener {
 
     private Project project;
+    private HandoutContentScreen handoutContentScreen;
 
-    public LinkToHandoutController(Project project){
+    public LinkToHandoutController(Project project, HandoutContentScreen handoutContentScreen){
         this.project = project;
+        this.handoutContentScreen = handoutContentScreen;
         createListener();
     }
 
@@ -62,12 +58,11 @@ public class LinkToHandoutController implements OnEditorClickedListener {
                 public void selectionChanged(@NotNull SelectionEvent e) {
                     System.out.println("SelectionEvent: " + e.toString());
                     String selectedText = e.getEditor().getSelectionModel().getSelectedText();
-                    String className = FileEditorManager.getInstance(project).getSelectedEditor().getName();
+                    String className = FileEditorManager.getInstance(project).getSelectedEditor().getFile().getPresentableName();
                     System.out.println("selectedText: " + selectedText);
-                    System.out.println("className: " + FileEditorManager.getInstance(project).getSelectedEditor().getFile().getPresentableName());
-                    String functionAnchor = className + "." + selectedText;
-
+                    System.out.println("className: " + className);
                     if(selectedText != null) {
+                        String functionAnchor = className + "/" + selectedText;
                         openHandoutOnPosition(functionAnchor);
                     }
                 }
@@ -79,12 +74,14 @@ public class LinkToHandoutController implements OnEditorClickedListener {
     }
 
     private void openHandoutOnPosition(String functionAnchor) {
-        
+        System.out.println("functionAnchor: " + functionAnchor);
+
+        handoutContentScreen.goToLocation(functionAnchor);
+
     }
 
     @Override
     public void onFunctionClickedEvent(String functionName, String className, String path) {
         System.out.println(functionName);
-
     }
 }
