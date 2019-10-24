@@ -44,11 +44,7 @@ public class WebViewLinkListener {
         //https://github.com/CodeFX-org/LibFX/wiki/WebViewHyperlinkListener
         WebViewHyperlinkListener eventPrintingListener = event -> {
             //TODO: Refactor variable name
-            System.out.println("getDescription: " + event.getDescription());
-
             String toBeopen = event.getURL().toString();
-            System.out.println("toBeopen: " +toBeopen);
-
             Project project = RepoLocalStorageDataProvider.getProject();
             if (toBeopen.contains("LinkToCode")) {
                 handleLinkToCode(toBeopen, project);
@@ -86,7 +82,6 @@ public class WebViewLinkListener {
         String lineToSelect = "";
         String pathToClass = "";
 
-
         //https://stackoverflow.com/a/13592324
         List<org.apache.http.NameValuePair> params = null;
         try {
@@ -111,14 +106,11 @@ public class WebViewLinkListener {
             }
         }
 
-        System.out.println("className: " + className);
         newFile = LocalFileSystem.getInstance().findFileByPath(RepoLocalStorageDataProvider.getUserProjectDirectory() + pathToClass + className);
         pathToClass = RepoLocalStorageDataProvider.getUserProjectDirectory() + pathToClass + className;
-        System.out.println("pathToClass: " + pathToClass);
 
         //TODO: ADD Ballon for unable to find class
 
-        
         File file = new File(pathToClass);
         //https://stackoverflow.com/a/5600442
         try {
