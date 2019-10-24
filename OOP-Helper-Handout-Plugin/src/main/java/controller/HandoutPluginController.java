@@ -29,12 +29,14 @@ import static environment.Messages.FILES_SELECTING_TEXT;
 
 public class HandoutPluginController implements HandoutPluginControllerInterface, OnEventListener{
     HandoutContentDataProviderInterface handoutDataProvider;
+    LinkToHandoutController linkToHandoutController;
 
     public HandoutPluginController(Project project) {
         RepoLocalStorageDataProvider.setUserProjectDirectory(project);
         handoutDataProvider = ServiceManager.getService(project, HandoutContentDataProviderInterface.class);
-        handoutDataProvider.addListener(this);
         updateHandoutContent();
+        handoutDataProvider.addListener(this);
+        linkToHandoutController = new LinkToHandoutController(project);
     }
 
 
