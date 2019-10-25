@@ -60,6 +60,9 @@ public class WebViewController {
                 handoutToolWindow.getContentManager().setSelectedContent(handoutToolWindow.getContentManager().getContent(handoutContentScreen.getContent()));
             }else{
                 //TODO open small part of tool window
+                handoutToolWindow.activate(() -> {
+                    handoutToolWindow.getContentManager().setSelectedContent(handoutToolWindow.getContentManager().getContent(handoutContentScreen.getContent()));
+                });
             }
         });
         Platform.runLater(() -> {
