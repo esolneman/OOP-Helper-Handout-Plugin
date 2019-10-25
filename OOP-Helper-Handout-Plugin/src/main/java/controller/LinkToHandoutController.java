@@ -47,6 +47,13 @@ public class LinkToHandoutController{
             EditorFactory.getInstance().addEditorFactoryListener(editorFactoryListener, disposable);*/
 
 
+
+
+
+
+
+           //https://www.programcreek.com/java-api-examples/?api=com.intellij.openapi.editor.EditorFactory
+
            EditorEventMulticaster editorEventMulticaster = EditorFactory.getInstance().getEventMulticaster();
 
            editorEventMulticaster.addSelectionListener(new SelectionListener() {
