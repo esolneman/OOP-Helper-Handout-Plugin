@@ -80,6 +80,6 @@ public class HandoutContentScreen extends SimpleToolWindowPanel{
     }
 
     public void goToLocation(String heading) {
-        webViewController.goToLocation(heading);
+        webViewController.goToLocation(heading, handoutToolWindow, this);
     }
 }

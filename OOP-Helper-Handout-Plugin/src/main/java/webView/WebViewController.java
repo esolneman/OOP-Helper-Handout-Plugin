@@ -1,5 +1,8 @@
 package webView;
 
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.wm.ToolWindow;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import javafx.application.Platform;
 import javafx.scene.web.WebView;
 import org.apache.commons.io.FileUtils;
@@ -9,6 +12,7 @@ import org.jsoup.nodes.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import provider.LocalStorageDataProvider;
+import toolWindow.HandoutContentScreen;
 
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
@@ -35,7 +39,7 @@ public class WebViewController {
     }
 
     //https://stackoverflow.com/questions/49070734/javafx-webview-link-to-anchor-in-document-doesnt-work-using-loadcontent
-    public void goToLocation(String heading){
+    public void goToLocation(String heading, ToolWindow handoutToolWindow, HandoutContentScreen handoutContentScreen){
         System.out.println("heading: " + heading);
         //TODO: check or if (class ref)
         if(heading.contains(" ")){
@@ -48,9 +52,18 @@ public class WebViewController {
         System.out.println(newLocation);
         Platform.setImplicitExit(false);
         String finalHeading = heading;
+        ApplicationManager.getApplication().invokeLater(() -> {
+            System.out.println("ToolWindow isVisible: "+ handoutToolWindow.isVisible());
+
+            if(handoutToolWindow.isVisible()) {
+                //handoutContent.setPreferredFocusableComponent(handoutToolWindow.getContent());
+                handoutToolWindow.getContentManager().setSelectedContent(handoutToolWindow.getContentManager().getContent(handoutContentScreen.getContent()));
+            }else{
+                //TODO open small part of tool window
+            }
+        });
         Platform.runLater(() -> {
             /*
-
             //https://stackoverflow.com/questions/52960101/how-to-edit-html-page-in-a-webview-from-javafx-without-reloading-the-page
 
             final Document document;
@@ -94,8 +107,12 @@ public class WebViewController {
                 e.printStackTrace();
             }*/
 
-            
-            webView.getEngine().load(newLocation);
+            if (finalHeading.contains("/")){
+                webView.getEngine().load(newLocation);
+
+            }else {
+                webView.getEngine().load(newLocation);
+            }
 
         });
     }
