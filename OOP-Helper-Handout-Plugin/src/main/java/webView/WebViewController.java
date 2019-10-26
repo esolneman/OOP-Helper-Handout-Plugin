@@ -1,7 +1,11 @@
 package webView;
 
+import com.intellij.ide.actions.ToolWindowViewModeAction;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.wm.ToolWindow;
+import com.intellij.openapi.wm.ToolWindowContentUiType;
+import com.intellij.openapi.wm.ToolWindowManager;
+import com.intellij.openapi.wm.impl.ToolWindowsPane;
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import javafx.application.Platform;
 import javafx.scene.web.WebView;
@@ -56,12 +60,15 @@ public class WebViewController {
             System.out.println("ToolWindow isVisible: "+ handoutToolWindow.isVisible());
 
             if(handoutToolWindow.isVisible()) {
-                //handoutContent.setPreferredFocusableComponent(handoutToolWindow.getContent());
+                //open HandoutToolWindow and select the correct tab
                 handoutToolWindow.getContentManager().setSelectedContent(handoutToolWindow.getContentManager().getContent(handoutContentScreen.getContent()));
             }else{
                 //TODO open small part of tool window
                 handoutToolWindow.activate(() -> {
                     handoutToolWindow.getContentManager().setSelectedContent(handoutToolWindow.getContentManager().getContent(handoutContentScreen.getContent()));
+                    //ToolWindowViewModeAction toolWindowViewModeAction
+                    //ToolWindowViewModeAction.ViewMode.DockUnpinned;
+                    //handoutToolWindow.;
                 });
             }
         });

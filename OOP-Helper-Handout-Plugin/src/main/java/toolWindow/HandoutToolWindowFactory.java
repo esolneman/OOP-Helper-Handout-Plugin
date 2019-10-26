@@ -52,11 +52,8 @@ public class HandoutToolWindowFactory implements ToolWindowFactory {
         toolWindow.getContentManager().addContent(shortcutContent);
         toolWindow.getContentManager().addContent(specificCriteriaContent);
         toolWindow.getContentManager().addContent(commonAssessmentCriteriaContent);
+        //TODO: Decide which Tab is open when start ide
+        toolWindow.getContentManager().setSelectedContent(handoutContent);
 
     }
-
-    public void updateScreenContent() {
-        //handoutContentScreen.updateContent();
-    }
-
 }

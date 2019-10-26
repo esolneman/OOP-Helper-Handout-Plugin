@@ -1,6 +1,4 @@
 package controller;
-
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.EditorFactory;
 import com.intellij.openapi.editor.event.*;
@@ -78,7 +76,6 @@ public class LinkToHandoutController{
            editorEventMulticaster.addEditorMouseListener(new EditorMouseListener() {
                @Override
                public void mouseClicked(@NotNull EditorMouseEvent event) {
-                   System.out.println("addEditorMouseListener: " + event.toString());
                    if(event.getMouseEvent().getClickCount() == 2){
                        openHandoutOnPosition();
                    }
