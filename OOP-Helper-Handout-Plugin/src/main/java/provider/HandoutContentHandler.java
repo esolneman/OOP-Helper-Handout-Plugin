@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public class HandoutContentHandler {
 
-    //TODO: Create class HandleHandoutFile
+    //TODO: Wait for HandoutContentDataProvider
     public static ArrayList<String> getNavHeadings() {
         ArrayList<String> headings = new ArrayList<>();
         File htmlFile = LocalStorageDataProvider.getHandoutFileDirectory();

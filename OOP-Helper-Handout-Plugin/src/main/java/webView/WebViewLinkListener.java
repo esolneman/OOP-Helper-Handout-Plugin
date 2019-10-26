@@ -106,6 +106,7 @@ public class WebViewLinkListener {
             }
         }
 
+        System.out.println("File string: " + RepoLocalStorageDataProvider.getUserProjectDirectory() + pathToClass + className);
         newFile = LocalFileSystem.getInstance().findFileByPath(RepoLocalStorageDataProvider.getUserProjectDirectory() + pathToClass + className);
         pathToClass = RepoLocalStorageDataProvider.getUserProjectDirectory() + pathToClass + className;
 
