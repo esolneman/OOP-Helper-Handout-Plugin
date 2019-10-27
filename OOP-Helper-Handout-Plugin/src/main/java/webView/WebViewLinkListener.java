@@ -45,7 +45,7 @@ public class WebViewLinkListener {
         this.urlString = urlString;
         createListener();
     }
-    
+
     private void createListener() {
         //https://github.com/CodeFX-org/LibFX/wiki/WebViewHyperlinkListener
         WebViewHyperlinkListener eventPrintingListener = event -> {
@@ -56,13 +56,6 @@ public class WebViewLinkListener {
             if (toBeopen.contains("LinkToCode")) {
                 System.out.println("WebView: LinkToCode");
                 handleLinkToCode(toBeopen, project);
-            } else if(toBeopen.contains("img")){
-                System.out.println("WebView: Image");
-                Platform.setImplicitExit(false);
-                Platform.runLater(() -> {
-                    webView.getEngine().load(urlString + "#Screenshots");
-                });
-
             } else {
                 System.out.println("WebView: OtherLink");
                 handleLinkToExternalWebpage(toBeopen);
