@@ -1,28 +1,11 @@
 package webView;
 
-import com.intellij.ide.actions.ToolWindowViewModeAction;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowContentUiType;
-import com.intellij.openapi.wm.ToolWindowManager;
-import com.intellij.openapi.wm.impl.ToolWindowsPane;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import javafx.application.Platform;
 import javafx.scene.web.WebView;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.WordUtils;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import provider.LocalStorageDataProvider;
 import toolWindow.HandoutContentScreen;
-
-import javax.xml.transform.*;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import java.io.File;
-import java.io.IOException;
 
 public class WebViewController {
     private WebView webView;
