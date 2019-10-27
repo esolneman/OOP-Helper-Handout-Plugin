@@ -11,11 +11,16 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Worker;
 import javafx.scene.web.WebView;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.codefx.libfx.control.webview.WebViewHyperlinkListener;
 import org.codefx.libfx.control.webview.WebViews;
+import org.w3c.dom.Element;
+import org.w3c.dom.events.EventListener;
 import provider.RepoLocalStorageDataProvider;
 
 import javax.swing.event.HyperlinkEvent;
@@ -28,6 +33,7 @@ import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 public class WebViewLinkListener {
 
@@ -39,16 +45,26 @@ public class WebViewLinkListener {
         this.urlString = urlString;
         createListener();
     }
-
+    
     private void createListener() {
         //https://github.com/CodeFX-org/LibFX/wiki/WebViewHyperlinkListener
         WebViewHyperlinkListener eventPrintingListener = event -> {
             //TODO: Refactor variable name
             String toBeopen = event.getURL().toString();
             Project project = RepoLocalStorageDataProvider.getProject();
+            System.out.println("WebView: Listener: "+ toBeopen);
             if (toBeopen.contains("LinkToCode")) {
+                System.out.println("WebView: LinkToCode");
                 handleLinkToCode(toBeopen, project);
+            } else if(toBeopen.contains("img")){
+                System.out.println("WebView: Image");
+                Platform.setImplicitExit(false);
+                Platform.runLater(() -> {
+                    webView.getEngine().load(urlString + "#Screenshots");
+                });
+
             } else {
+                System.out.println("WebView: OtherLink");
                 handleLinkToExternalWebpage(toBeopen);
             }
             return false;
@@ -63,6 +79,7 @@ public class WebViewLinkListener {
             Desktop desktop = Desktop.getDesktop();
             URI address = new URI(toBeopen);
             if (toBeopen.contains("http://") || toBeopen.contains("https://") || toBeopen.contains("mailto")) {
+                System.out.println("open ecternal link: " + toBeopen);
                 Platform.setImplicitExit(false);
                 Platform.runLater(() -> {
                     webView.getEngine().load(urlString);
