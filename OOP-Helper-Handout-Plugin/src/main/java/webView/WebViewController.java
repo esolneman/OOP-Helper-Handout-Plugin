@@ -4,32 +4,13 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.wm.ToolWindow;
 import javafx.application.Platform;
 import javafx.scene.web.WebView;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.WordUtils;
-import org.jsoup.Jsoup;
-import org.jsoup.helper.W3CDom;
 import org.jsoup.nodes.Document;
-import org.w3c.css.sac.InputSource;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-import provider.LocalStorageDataProvider;
-import sun.net.www.protocol.file.FileURLConnection;
-import sun.net.www.protocol.http.HttpURLConnection;
 import toolWindow.HandoutContentScreen;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
-import java.net.URL;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 public class WebViewController {
     private WebView webView;
@@ -85,50 +66,29 @@ public class WebViewController {
             if (finalHeading.contains("/")){
                 //https://stackoverflow.com/questions/52960101/how-to-edit-html-page-in-a-webview-from-javafx-without-reloading-the-page
                 final Document document;
-                DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-                //https://stackoverflow.com/questions/29087077/is-it-possible-to-convert-html-into-xhtml-with-jsoup-1-8-1
-                File htmlFile = LocalStorageDataProvider.getHandoutFileDirectory();
-                InputStream is = null;
-                try {
-                    document = Jsoup.parse(htmlFile, "UTF-8");
-                    W3CDom w3CDom = new W3CDom();
-                    org.w3c.dom.Document documentW3 = w3CDom.fromJsoup(document);
-                    System.out.println(finalHeading);
-                    System.out.println("getDoctype: " + documentW3.getDoctype());
-
-
-                    Element ele = documentW3.getElementById(finalHeading);
-                    System.out.println("ele: " + ele);
-
-                    org.jsoup.nodes.Element jsoupEle = document.getElementById(finalHeading);
-                    System.out.println("JsoueEle: " + jsoupEle.html());
-
-                    Element eleEngine = webView.getEngine().getDocument().getElementById(finalHeading);
-                    System.out.println("eleEngine: " + eleEngine.getTagName());
-
-
-                    //System.out.println("ele: " + ele.getNodeName());
-                    Element mark = documentW3.createElement("mark");
-                    System.out.println("mrk: " + mark);
-                    Element parentElement = (Element) ele.getParentNode();
-                    System.out.println("ele getParentNode : " + parentElement.getNodeName());
-                    parentElement.insertBefore(mark, ele);
-                    mark.appendChild(ele);
-                    System.out.println("ele getParentNode -new: " + ele.getParentNode());
-
-                    String highlightOutput = LocalStorageDataProvider.testFile();
-
-                    String highlightLocation = highlightOutput + "#" + finalHeading;
-                    webView.getEngine().load(newLocation);
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }finally {
-                    IOUtils.closeQuietly(is);
-
-                }
-
+                org.w3c.dom.Document documentJava = webView.getEngine().getDocument();
+                Element ele = documentJava.getElementById(finalHeading);
+                System.out.println("ele: " + ele.getNodeName());
+                Element mark = documentJava.createElement("mark");
+                System.out.println("mrk: " + mark);
+                Element parentElement = (Element) ele.getParentNode();
+                System.out.println("ele getParentNode : " + parentElement.getNodeName());
+                parentElement.insertBefore(mark, ele);
+                mark.appendChild(ele);
+                System.out.println("ele getParentNode -new: " + ele.getParentNode());
                 webView.getEngine().load(newLocation);
+
+                System.out.println("second start: ");
+
+                CompletableFuture.delayedExecutor(1, TimeUnit.SECONDS).execute(() -> {
+                    System.out.println("second finish: ");
+                    Platform.setImplicitExit(false);
+                    Platform.runLater(() -> {
+                        webView.getEngine().reload();
+                    });
+                });
+
+                //https://stackoverflow.com/questions/29087077/is-it-possible-to-convert-html-into-xhtml-with-jsoup-1-8-1
 
             }else {
                 webView.getEngine().load(newLocation);
