@@ -62,24 +62,17 @@ public class WebViewController {
                     });
                 }
             });
-
             if (finalHeading.contains("/")){
                 //https://stackoverflow.com/questions/52960101/how-to-edit-html-page-in-a-webview-from-javafx-without-reloading-the-page
-                final Document document;
+                //https://stackoverflow.com/a/5882802
                 org.w3c.dom.Document documentJava = webView.getEngine().getDocument();
                 Element ele = documentJava.getElementById(finalHeading);
-                System.out.println("ele: " + ele.getNodeName());
                 Element mark = documentJava.createElement("mark");
-                System.out.println("mrk: " + mark);
                 Element parentElement = (Element) ele.getParentNode();
-                System.out.println("ele getParentNode : " + parentElement.getNodeName());
                 parentElement.insertBefore(mark, ele);
                 mark.appendChild(ele);
-                System.out.println("ele getParentNode -new: " + ele.getParentNode());
                 webView.getEngine().load(newLocation);
-
-                System.out.println("second start: ");
-
+                //https://stackoverflow.com/a/53452586
                 CompletableFuture.delayedExecutor(1, TimeUnit.SECONDS).execute(() -> {
                     System.out.println("second finish: ");
                     Platform.setImplicitExit(false);
@@ -87,8 +80,6 @@ public class WebViewController {
                         webView.getEngine().reload();
                     });
                 });
-
-                //https://stackoverflow.com/questions/29087077/is-it-possible-to-convert-html-into-xhtml-with-jsoup-1-8-1
 
             }else {
                 webView.getEngine().load(newLocation);
