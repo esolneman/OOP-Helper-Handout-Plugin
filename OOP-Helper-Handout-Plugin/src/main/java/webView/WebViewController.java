@@ -5,7 +5,12 @@ import com.intellij.openapi.wm.ToolWindow;
 import javafx.application.Platform;
 import javafx.scene.web.WebView;
 import org.apache.commons.lang.WordUtils;
+import org.jsoup.nodes.Document;
+import org.w3c.dom.Element;
 import toolWindow.HandoutContentScreen;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 public class WebViewController {
     private WebView webView;
@@ -39,69 +44,42 @@ public class WebViewController {
         System.out.println(newLocation);
         Platform.setImplicitExit(false);
         String finalHeading = heading;
-        ApplicationManager.getApplication().invokeLater(() -> {
-            System.out.println("ToolWindow isVisible: "+ handoutToolWindow.isVisible());
 
-            if(handoutToolWindow.isVisible()) {
-                //open HandoutToolWindow and select the correct tab
-                handoutToolWindow.getContentManager().setSelectedContent(handoutToolWindow.getContentManager().getContent(handoutContentScreen.getContent()));
-            }else{
-                //TODO open small part of tool window
-                handoutToolWindow.activate(() -> {
-                    handoutToolWindow.getContentManager().setSelectedContent(handoutToolWindow.getContentManager().getContent(handoutContentScreen.getContent()));
-                    //ToolWindowViewModeAction toolWindowViewModeAction
-                    //ToolWindowViewModeAction.ViewMode.DockUnpinned;
-                    //handoutToolWindow.;
-                });
-            }
-        });
         Platform.runLater(() -> {
-            /*
-            //https://stackoverflow.com/questions/52960101/how-to-edit-html-page-in-a-webview-from-javafx-without-reloading-the-page
 
-            final Document document;
-            Element ele = webView.getEngine().getDocument().getElementById(finalHeading);
-            System.out.println("ele: " + ele.getTagName());
-            Element mark = webView.getEngine().getDocument().createElement("mark");
-            System.out.println("mrk: " + mark.getTagName());
-            Element parentElement = (Element) ele.getParentNode();
-            System.out.println("ele getParentNode : " + parentElement.getNodeName());
-            parentElement.insertBefore(mark, ele);
-            mark.appendChild(ele);
-            System.out.println("ele getParentNode -new: " + ele.getParentNode());
-
-             DOMSource domSource = new DOMSource(webView.getEngine().getDocument());
-
-             StreamResult result = new StreamResult(urlString);
-             TransformerFactory tf = TransformerFactory.newInstance();
-             Transformer transformer = null;
-
-             try {
-                 transformer = tf.newTransformer();
-                 transformer.setOutputProperty(OutputKeys.METHOD, "html");
-                 transformer.transform(domSource, result);
-             } catch (TransformerConfigurationException e) {
-                 e.printStackTrace();
-             } catch (TransformerException e) {
-                 e.printStackTrace();
-             }
-
-
-
-            try {
-                //https://stackoverflow.com/questions/29087077/is-it-possible-to-convert-html-into-xhtml-with-jsoup-1-8-1
-
-                document = Jsoup.parse(LocalStorageDataProvider.getHandoutFileDirectory(), "UTF-8");
-                document.outputSettings().syntax(Document.OutputSettings.Syntax.xml);
-                File outputFile = new File(LocalStorageDataProvider.getHandoutStringDirectory());
-                FileUtils.writeStringToFile(outputFile, document.html(), "UTF-8");
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }*/
-
+            ApplicationManager.getApplication().invokeLater(() -> {
+                System.out.println("ToolWindow isVisible: "+ handoutToolWindow.isVisible());
+                if(handoutToolWindow.isVisible()) {
+                    //open HandoutToolWindow and select the correct tab
+                    handoutToolWindow.getContentManager().setSelectedContent(handoutToolWindow.getContentManager().getContent(handoutContentScreen.getContent()));
+                }else{
+                    //TODO open small part of tool window
+                    handoutToolWindow.activate(() -> {
+                        handoutToolWindow.getContentManager().setSelectedContent(handoutToolWindow.getContentManager().getContent(handoutContentScreen.getContent()));
+                        //ToolWindowViewModeAction toolWindowViewModeAction
+                        //ToolWindowViewModeAction.ViewMode.DockUnpinned;
+                        //handoutToolWindow.;
+                    });
+                }
+            });
             if (finalHeading.contains("/")){
+                //https://stackoverflow.com/questions/52960101/how-to-edit-html-page-in-a-webview-from-javafx-without-reloading-the-page
+                //https://stackoverflow.com/a/5882802
+                org.w3c.dom.Document documentJava = webView.getEngine().getDocument();
+                Element ele = documentJava.getElementById(finalHeading);
+                Element mark = documentJava.createElement("mark");
+                Element parentElement = (Element) ele.getParentNode();
+                parentElement.insertBefore(mark, ele);
+                mark.appendChild(ele);
                 webView.getEngine().load(newLocation);
+                //https://stackoverflow.com/a/53452586
+                CompletableFuture.delayedExecutor(1, TimeUnit.SECONDS).execute(() -> {
+                    System.out.println("second finish: ");
+                    Platform.setImplicitExit(false);
+                    Platform.runLater(() -> {
+                        webView.getEngine().reload();
+                    });
+                });
 
             }else {
                 webView.getEngine().load(newLocation);
