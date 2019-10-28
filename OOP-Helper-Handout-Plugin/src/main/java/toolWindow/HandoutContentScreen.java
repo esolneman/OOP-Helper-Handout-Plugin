@@ -58,6 +58,9 @@ public class HandoutContentScreen extends SimpleToolWindowPanel{
         handoutActionGroup.add(handoutContentActionGroup);
         handoutActionGroup.add(new Separator());
         handoutActionGroup.add(ActionManager.getInstance().getAction("Handout.Download"));
+        handoutActionGroup.add(new Separator());
+        handoutActionGroup.add(ActionManager.getInstance().getAction("Handout.Minimize"));
+        handoutActionGroup.add(ActionManager.getInstance().getAction("Handout.Maximize"));
         final ActionToolbar checklistActionToolbar = ActionManager.getInstance().createActionToolbar("HandoutTool", handoutActionGroup, true);
         return checklistActionToolbar.getComponent();
     }
