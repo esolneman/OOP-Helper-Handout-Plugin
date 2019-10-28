@@ -11,17 +11,18 @@ import java.util.ArrayList;
 
 public class HandoutContentHandler {
 
-    //TODO: Create class HandleHandoutFile
+    //TODO: Wait for HandoutContentDataProvider
     public static ArrayList<String> getNavHeadings() {
         ArrayList<String> headings = new ArrayList<>();
         File htmlFile = LocalStorageDataProvider.getHandoutFileDirectory();
-        Document yourPage;
+        Document handoutDocument;
         try {
             //https://stackoverflow.com/a/9611720
-            yourPage = Jsoup.parse(htmlFile, null);
+            handoutDocument = Jsoup.parse(htmlFile, null);
             //https://stackoverflow.com/questions/34392919/find-href-link-from-webpage-using-java
-            Elements aElement = yourPage.select("a[href]");
-            for (Element link : aElement) {
+            //https://jsoup.org/apidocs/org/jsoup/select/Selector.html
+            Elements navElement = handoutDocument.select(" nav>ul>a[href]");
+            for (Element link : navElement) {
                 if(link.attr("href").contains("#")){
                     headings.add(link.text());
                 }
