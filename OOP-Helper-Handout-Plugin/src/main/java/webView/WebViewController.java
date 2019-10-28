@@ -2,6 +2,7 @@ package webView;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.wm.ToolWindow;
+import com.intellij.openapi.wm.ToolWindowType;
 import javafx.application.Platform;
 import javafx.scene.web.WebView;
 import org.apache.commons.lang.WordUtils;
@@ -55,10 +56,10 @@ public class WebViewController {
                 }else{
                     //TODO open small part of tool window
                     handoutToolWindow.activate(() -> {
+                        handoutToolWindow.show(null);
+                        //https://intellij-support.jetbrains.com/hc/en-us/community/posts/206383859-How-to-float-tool-window-programatically-
+                        handoutToolWindow.setType(ToolWindowType.FLOATING, null);
                         handoutToolWindow.getContentManager().setSelectedContent(handoutToolWindow.getContentManager().getContent(handoutContentScreen.getContent()));
-                        //ToolWindowViewModeAction toolWindowViewModeAction
-                        //ToolWindowViewModeAction.ViewMode.DockUnpinned;
-                        //handoutToolWindow.;
                     });
                 }
             });
@@ -74,7 +75,6 @@ public class WebViewController {
                 webView.getEngine().load(newLocation);
                 //https://stackoverflow.com/a/53452586
                 CompletableFuture.delayedExecutor(1, TimeUnit.SECONDS).execute(() -> {
-                    System.out.println("second finish: ");
                     Platform.setImplicitExit(false);
                     Platform.runLater(() -> {
                         webView.getEngine().reload();
