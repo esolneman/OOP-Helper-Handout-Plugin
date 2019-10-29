@@ -3,8 +3,6 @@ package toolWindow;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.*;
 import com.intellij.ui.content.*;
-import environment.HandoutPluginFXPanel;
-import org.jetbrains.annotations.NotNull;
 
 
 public class HandoutToolWindowFactory implements ToolWindowFactory {
@@ -20,7 +18,7 @@ public class HandoutToolWindowFactory implements ToolWindowFactory {
     HandoutContentScreen handoutContentScreen;
     ChecklistScreen checklistScreen;
     ShortcutScreen shortcutScreen;
-    SpecificAssessmentCriteria specificAssessmentCriteria;
+    SpecificAssessmentCriteriaScreen specificAssessmentCriteria;
     CommonAssessmentCriteriaScreen commonAssessmentCriteriaScreen;
 
     // Create the tool window content.
@@ -34,7 +32,7 @@ public class HandoutToolWindowFactory implements ToolWindowFactory {
         handoutContentScreen = new HandoutContentScreen(toolWindow);
         checklistScreen = new ChecklistScreen(toolWindow);
         shortcutScreen = new ShortcutScreen(toolWindow);
-        specificAssessmentCriteria = new SpecificAssessmentCriteria(toolWindow);
+        specificAssessmentCriteria = new SpecificAssessmentCriteriaScreen(toolWindow);
         commonAssessmentCriteriaScreen = new CommonAssessmentCriteriaScreen(toolWindow);
         addScreenContent();
     }

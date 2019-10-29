@@ -71,8 +71,8 @@ public class WebViewLinkListener {
         try {
             Desktop desktop = Desktop.getDesktop();
             URI address = new URI(toBeopen);
-            if (toBeopen.contains("http://") || toBeopen.contains("https://") || toBeopen.contains("mailto")) {
-                System.out.println("open ecternal link: " + toBeopen);
+            if (toBeopen.contains("http://") || toBeopen.contains("https://") || toBeopen.contains("mailto") || toBeopen.contains("file:/")) {
+                System.out.println("open external link: " + toBeopen);
                 Platform.setImplicitExit(false);
                 Platform.runLater(() -> {
                     webView.getEngine().load(urlString);

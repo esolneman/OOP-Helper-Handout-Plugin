@@ -1,5 +1,7 @@
 package provider;
 
+import objects.SpecificAssessmentCriteria;
+
 import java.io.File;
 import java.util.ArrayList;
 
@@ -20,4 +22,6 @@ public class LocalStorageDataProvider implements LocalStorageDataProviderInterfa
         return testPath;
     }
 
+    public static SpecificAssessmentCriteria getSpecificAssessmentCriteria() {
+    }
 }
