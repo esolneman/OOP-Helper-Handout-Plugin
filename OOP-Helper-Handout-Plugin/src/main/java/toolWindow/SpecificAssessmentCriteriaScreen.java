@@ -1,27 +1,71 @@
 package toolWindow;
 
+import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
+import com.intellij.ui.table.JBTable;
+import javafx.scene.web.WebView;
 import objects.SpecificAssessmentCriteria;
 import provider.LocalStorageDataProvider;
+import webView.WebViewController;
 
 import javax.swing.*;
-import java.util.spi.LocaleNameProvider;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 
 public class SpecificAssessmentCriteriaScreen {
-    private JPanel specificAssessmentCriteriaContent;
-    private JTable assessmentCriteriaTable;
-    private SpecificAssessmentCriteria specificAssessmentCriteria;
+    //private final HandoutPluginFXPanel specificAssessmentCriteriaContent;
+    private static WebView webView;
+    private WebViewController webViewController;
+    private SimpleToolWindowPanel toolWindowPanel;
+    private SpecificAssessmentCriteria data;
+    private JPanel assessmentCriteriaContent;
+    private JTable criteriaTable;
+
+
 
     public SpecificAssessmentCriteriaScreen(ToolWindow toolWindow) {
-        specificAssessmentCriteria = LocalStorageDataProvider.getSpecificAssessmentCriteria();
-        createTable();
+        /*toolWindowPanel = new SimpleToolWindowPanel(true);
+        webViewController = new WebViewController();
+        specificAssessmentCriteriaContent = new HandoutPluginFXPanel();
+        Platform.setImplicitExit(false);
+        Platform.runLater(() -> {
+            try {
+                webView = webViewController.createWebView(LocalStorageDataProvider.getSpecificAssessmentCriteria().toURI().toURL().toString());
+                specificAssessmentCriteriaContent.showHandoutWebView(LocalStorageDataProvider.getSpecificAssessmentCriteria().toURI().toURL().toString(), webView);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+        });
+        toolWindowPanel.setContent(specificAssessmentCriteriaContent);*/
+        DefaultTableModel model = new DefaultTableModel();
+        criteriaTable.setAutoCreateRowSorter(true);
+        criteriaTable.setFillsViewportHeight(true);
+        data = LocalStorageDataProvider.getSpecificAssessmentCriteria();
+        for (String s : data.getHeadline()) {
+            System.out.println(s);
+            model.addColumn(s);
+        }
+        criteriaTable.setModel(model);
+
+
+        //String[] columnNames = {"First Name", "Last Name"};
+        //Object[][] data2 = {{"Kathy", "Smith"},{"John", "Doe"}};
+        //criteriaTable = new JTable(data2, columnNames);
+
+
+        //TableColumn tableColumn = new TableColumn(data.getHeadline().size());
+        //criteriaTable.addColumn(new TableColumn(data.getHeadline().size()));
     }
 
     private void createTable() {
 
     }
 
+    /*    public JPanel getContent() {
+        return toolWindowPanel;
+    }*/
+
     public JPanel getContent() {
-        return specificAssessmentCriteriaContent;
+        return assessmentCriteriaContent;
     }
 }

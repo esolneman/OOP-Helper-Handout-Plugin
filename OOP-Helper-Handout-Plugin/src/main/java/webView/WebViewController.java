@@ -6,7 +6,6 @@ import com.intellij.openapi.wm.ToolWindowType;
 import javafx.application.Platform;
 import javafx.scene.web.WebView;
 import org.apache.commons.lang.WordUtils;
-import org.jsoup.nodes.Document;
 import org.w3c.dom.Element;
 import toolWindow.HandoutContentScreen;
 

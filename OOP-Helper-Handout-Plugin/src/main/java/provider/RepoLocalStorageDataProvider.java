@@ -1,6 +1,7 @@
 package provider;
 
 import com.intellij.openapi.project.Project;
+import objects.SpecificAssessmentCriteria;
 
 import java.io.File;
 
@@ -27,6 +28,11 @@ public class RepoLocalStorageDataProvider implements RepoLocalStorageDataProvide
     public static File getHandoutHtmlFile(){
         File handoutFile = new File(getHandoutHtmlString());
         return handoutFile;
+    }
+
+    public static File getSpecificAssessmentCriteriaFile(){
+        File specificAssessmentCriteriaFile = new File(getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE + SPECIFIC_ASSESSMENT_CRITERIA_FILE_NAME);
+        return specificAssessmentCriteriaFile;
     }
 
     public static String getHandoutHtmlString(){
