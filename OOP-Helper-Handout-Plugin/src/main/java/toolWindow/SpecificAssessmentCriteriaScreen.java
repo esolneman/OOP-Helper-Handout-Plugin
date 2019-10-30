@@ -10,9 +10,12 @@ import webView.WebViewController;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import javax.swing.text.TableView;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class SpecificAssessmentCriteriaScreen {
     //private final HandoutPluginFXPanel specificAssessmentCriteriaContent;
@@ -27,16 +30,21 @@ public class SpecificAssessmentCriteriaScreen {
 
     public SpecificAssessmentCriteriaScreen(ToolWindow toolWindow) {
         DefaultTableModel model = new DefaultTableModel();
-        criteriaTable.setAutoCreateRowSorter(true);
+        criteriaTable.setEnabled(false);
         criteriaTable.setFillsViewportHeight(true);
         data = LocalStorageDataProvider.getSpecificAssessmentCriteria();
+
         for (String s : data.getHeadline()) {
             model.addColumn(s);
         }
-        for (String[][] criterion : data.getCriteria()) {
+        /*for (String[][] criterion : data.getCriteria()) {
             for (String[] strings : criterion) {
-                
+                System.out.println("Data: " + Arrays.toString(strings));
             }
+            model.addRow(criterion);
+        }*/
+
+        for (String[] criterion : data.getCriteria()) {
             model.addRow(criterion);
         }
         criteriaTable.setModel(model);

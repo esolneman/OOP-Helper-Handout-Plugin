@@ -17,7 +17,10 @@
         <children>
           <component id="5367f" class="javax.swing.JTable" binding="criteriaTable">
             <constraints/>
-            <properties/>
+            <properties>
+              <fillsViewportHeight value="true"/>
+              <showHorizontalLines value="true"/>
+            </properties>
           </component>
         </children>
       </scrollpane>

@@ -4,10 +4,10 @@ import java.util.ArrayList;
 
 public class SpecificAssessmentCriteria {
     String[]  headline;
-    ArrayList<String[][]> criteria;
+    ArrayList<String[]> criteria;
 
 
-    public SpecificAssessmentCriteria(String[] headLine, ArrayList<String[][]> criteria){
+    public SpecificAssessmentCriteria(String[] headLine, ArrayList<String[]> criteria){
         setHeadline(headLine);
         setCriteria(criteria);
     }
@@ -20,14 +20,12 @@ public class SpecificAssessmentCriteria {
         return this.headline;
     }
 
-    private void setCriteria(ArrayList<String[][]> criteria){
-        String[] explanation;
-        String[] score;
+    private void setCriteria(ArrayList<String[]> criteria){
         //this.criteria = new Criteria[explanation, score];
         this.criteria = criteria;
     }
 
-    public ArrayList<String[][]> getCriteria(){
+    public ArrayList<String[]> getCriteria(){
         return criteria;
     }
 
