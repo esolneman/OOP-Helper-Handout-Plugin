@@ -24,25 +24,11 @@ public class SpecificAssessmentCriteriaScreen {
 
 
     public SpecificAssessmentCriteriaScreen(ToolWindow toolWindow) {
-        /*toolWindowPanel = new SimpleToolWindowPanel(true);
-        webViewController = new WebViewController();
-        specificAssessmentCriteriaContent = new HandoutPluginFXPanel();
-        Platform.setImplicitExit(false);
-        Platform.runLater(() -> {
-            try {
-                webView = webViewController.createWebView(LocalStorageDataProvider.getSpecificAssessmentCriteria().toURI().toURL().toString());
-                specificAssessmentCriteriaContent.showHandoutWebView(LocalStorageDataProvider.getSpecificAssessmentCriteria().toURI().toURL().toString(), webView);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-        });
-        toolWindowPanel.setContent(specificAssessmentCriteriaContent);*/
         DefaultTableModel model = new DefaultTableModel();
         criteriaTable.setAutoCreateRowSorter(true);
         criteriaTable.setFillsViewportHeight(true);
         data = LocalStorageDataProvider.getSpecificAssessmentCriteria();
         for (String s : data.getHeadline()) {
-            System.out.println(s);
             model.addColumn(s);
         }
         criteriaTable.setModel(model);
