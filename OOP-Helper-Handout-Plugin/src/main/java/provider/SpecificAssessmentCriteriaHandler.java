@@ -9,13 +9,13 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class SpecificAssessmentCriteriaHandler {
 
     private static SpecificAssessmentCriteria specificAssessmentCriteria;
     private static File file;
-    private static String[] headline;
 
     public static SpecificAssessmentCriteria getSpecificAssessmentCriteria() {
         specificAssessmentCriteria = null;
@@ -29,36 +29,38 @@ public class SpecificAssessmentCriteriaHandler {
     private static void parseFileToSpecificAssessmentCriteriaObject() {
         try {
             String content = Files.readString(file.toPath(), StandardCharsets.UTF_8);
-            System.out.println(content);
-            headline = new String[] {"Kriterium", "test", "test1", "test2"};
             Document document = Jsoup.parse(content);
-            System.out.println("document: " + document.body().html());
+            ArrayList<String[][]> criteria = new ArrayList<>();
 
             String[] headers = document.select("table tr th")
                     .stream()
                     .map(Element::text)
                     .toArray(String[]::new);
-            //headline = content.
             System.out.println("ths: " + Arrays.toString(headers));
-            specificAssessmentCriteria = new SpecificAssessmentCriteria(headers);
-            String[][] data = document.select("table.tablehead tr:gt(1)")
+
+
+            String[][] data = document.select("table tr")
                     .stream()
                     .map(row -> row.select("td")
                             .stream()
                             .map(Element::text)
                             .toArray(String[]::new)
                     ).toArray(String[][]::new);
-
-            System.out.println("----");
-            for (String[] row : data){
+            for (int i = 0; i < data.length; i++) {
+                String[] row = data[i];
+                System.out.println("row: " + Arrays.toString(row));
+                String[][] criterion = new String[row.length][row.length];
+                for (int j = 0; j < row.length; j++) {
+                    String currentString = row[j];
+                    criterion[j][0] = currentString.split("\\[(.*?)\\]")[0];
+                    System.out.println("currentString: " + currentString);
+                    System.out.println("score: " + currentString.split("\\[(.*?)\\]")[0]);
+                    criterion[1][j] = currentString.split("\\[(.*?)\\]")[0];
+                }
+                criteria.add(criterion);
                 System.out.println("row: " + Arrays.toString(row));
             }
-
-            Element table = document.getElementsByTag("table").get(0);
-            System.out.println("table: " + table.nodeName());
-
-
-
+            specificAssessmentCriteria = new SpecificAssessmentCriteria(headers, criteria);
         } catch (IOException e) {
             e.printStackTrace();
         }

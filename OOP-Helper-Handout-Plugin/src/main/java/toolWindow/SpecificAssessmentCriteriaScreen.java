@@ -11,6 +11,8 @@ import webView.WebViewController;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+import javax.swing.text.TableView;
+import java.util.ArrayList;
 
 public class SpecificAssessmentCriteriaScreen {
     //private final HandoutPluginFXPanel specificAssessmentCriteriaContent;
@@ -30,6 +32,12 @@ public class SpecificAssessmentCriteriaScreen {
         data = LocalStorageDataProvider.getSpecificAssessmentCriteria();
         for (String s : data.getHeadline()) {
             model.addColumn(s);
+        }
+        for (String[][] criterion : data.getCriteria()) {
+            for (String[] strings : criterion) {
+                
+            }
+            model.addRow(criterion);
         }
         criteriaTable.setModel(model);
 

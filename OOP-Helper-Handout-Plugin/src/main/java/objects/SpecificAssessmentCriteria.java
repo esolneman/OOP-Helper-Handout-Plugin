@@ -1,15 +1,15 @@
 package objects;
 
-import com.intellij.openapi.vcs.history.VcsRevisionNumber;
-
 import java.util.ArrayList;
 
 public class SpecificAssessmentCriteria {
     String[]  headline;
-   // Criteria criteria;
+    ArrayList<String[][]> criteria;
 
-    public SpecificAssessmentCriteria(String[] headLine){
+
+    public SpecificAssessmentCriteria(String[] headLine, ArrayList<String[][]> criteria){
         setHeadline(headLine);
+        setCriteria(criteria);
     }
 
     private void setHeadline(String[] headLine){
@@ -20,32 +20,25 @@ public class SpecificAssessmentCriteria {
         return this.headline;
     }
 
-    private void setCriteria(String explanation, String condition, Integer score){
-
+    private void setCriteria(ArrayList<String[][]> criteria){
+        String[] explanation;
+        String[] score;
+        //this.criteria = new Criteria[explanation, score];
+        this.criteria = criteria;
     }
 
-    public void getCriteria(){
-
+    public ArrayList<String[][]> getCriteria(){
+        return criteria;
     }
 
-    private static class Headline {
-        String criteriaHeadlineString;
-        String conditionLowScoreString;
-        String conditionMiddleScoreString;
-        String conditionHighestScoreString;
-
-        public Headline(String test, String test1, String test2, String test3) {
-        }
-    }
     
-    private class Criteria {
-        String explanation;
-        Condition[] conditions;
+    public class Criteria {
+        String[] explanation;
+        String[] score;
     }
 
-    private class Condition {
+    public class Condition {
         String condition;
         Integer score;
     }
-    
 }
