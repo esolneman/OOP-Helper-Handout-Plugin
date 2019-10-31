@@ -5,6 +5,7 @@ import listener.OnEventListener;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import provider.helper.DownloadTask;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,6 +23,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
 
     // TODO: get RepoURL from jar file
     String repoUrl = "https://github.com/esolneman/OOP-Helper-Handout-Template.git";
+    String repoZipUrl = "https://github.com/esolneman/OOP-Helper-Handout-Template/archive/test.zip";
     //String CLONE_DIRECTORY_PATH = "refs/heads/test";
     //String CONTENT_FILE_NAME = "/HelperHandoutPluginContentData/RepoLocalStorage";
     String repoFileName;
@@ -57,6 +59,18 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
 
         //TODO check internet connection first
 
+        File zipFile = new File (RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE  + "/repo.zip");
+        File outputDir = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE  + "/repo");
+
+
+
+        DownloadTask task = new DownloadTask(repoZipUrl);
+        task.run(zipFile);
+
+        // TODO: Currently not working, make sure output folder exist before trying to unzip file
+        task.unzipFile(zipFile, outputDir);
+
+
         //https://stackoverflow.com/a/15571626
         if (!contentRepoFile.exists()) {
             cloneRepository();
@@ -64,6 +78,8 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
             System.out.println("repo exist");
             //updateBranch() check;
         }
+
+
     }
     public void addListener(OnEventListener listener) {
         listeners.add(listener);
@@ -71,6 +87,14 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
 
     private void cloneRepository() {
         System.out.println("start cloning branch");
+
+        /**
+         * 1. Download handout branch as ZIP
+         * 2. Store ZIP in project folder
+         * 3. Compare ZIP file with last downloaded file (HASH)
+         * 4. If new (HASH is different) unzip to handout folder and overwrite last downloaded file
+         */
+
         //https://www.vogella.com/tutorials/JGit/article.html#example-for-using-jgit
 
 /*        Runnable cloneTask = () -> {};
