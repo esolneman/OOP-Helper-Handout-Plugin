@@ -40,7 +40,7 @@ public class SpecificAssessmentCriteriaHandler {
             System.out.println("ths: " + Arrays.toString(headers));
 
 
-            String[][] data = document.select("table tr")
+            String[][] data = document.select("table tr:gt(0)")
                     .stream()
                     .map(row -> row.select("td")
                             .stream()

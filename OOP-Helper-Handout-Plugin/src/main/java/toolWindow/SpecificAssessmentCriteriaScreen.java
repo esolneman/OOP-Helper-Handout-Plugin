@@ -44,7 +44,10 @@ public class SpecificAssessmentCriteriaScreen {
             model.addRow(criterion);
         }*/
 
+
+
         for (String[] criterion : data.getCriteria()) {
+            System.out.println("ROW: " + Arrays.toString(criterion));
             model.addRow(criterion);
         }
         criteriaTable.setModel(model);
