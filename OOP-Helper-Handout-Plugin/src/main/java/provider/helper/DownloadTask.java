@@ -38,6 +38,8 @@ public class DownloadTask {
             ZipEntry zipEntry = zis.getNextEntry();
             while (zipEntry != null) {
                 File newFile = new File(out, String.valueOf(zipEntry));
+                newFile.mkdirs();
+                newFile.createNewFile();
                 FileOutputStream fos = new FileOutputStream(newFile);
                 int len;
                 while ((len = zis.read(buffer)) > 0) {

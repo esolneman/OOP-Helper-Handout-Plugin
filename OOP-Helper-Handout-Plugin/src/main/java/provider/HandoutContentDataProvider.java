@@ -5,6 +5,7 @@ import listener.OnEventListener;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import provider.helper.AsyncExecutor;
 import provider.helper.DownloadTask;
 
 import java.io.File;
@@ -34,7 +35,9 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
     File contentRepoFile;
     File zipFile;
     File outputDir;
-    File tempVersion;
+    File tempVersionZipFile;
+    File tempVersionOutputDir;
+
 
 
     public HandoutContentDataProvider(Project project) {
@@ -42,10 +45,12 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         projectDirectory = project.getBasePath();
         contentRepoPath = RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE;
         contentRepoFile = new File (contentRepoPath);
-        zipFile = new File (RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE  + "/repo.zip");
-        outputDir = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE  + "/repo");
+        zipFile = new File (RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE  + REPO_LOCAL_STORAGE_FILE + "/repo.zip");
+        outputDir = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE  + REPO_LOCAL_STORAGE_FILE + "/repo");
         //TODO: TEMP-File
-        tempVersion = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE  + "/temp" + "/repo");
+        tempVersionZipFile = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE  + REPO_LOCAL_STORAGE_FILE + "/temp" + "/repo.zip");
+        tempVersionOutputDir = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE  + REPO_LOCAL_STORAGE_FILE + "/temp");
+
         //getRepoUrl();
         //getBranchName();
         // ToDo: get BranchName
@@ -72,14 +77,39 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
 
 
 //https://stackoverflow.com/a/15571626
-        if (!contentRepoFile.exists()) {
-            //cloneRepository();
-            task.run(zipFile);
-            // TODO: Currently not working, make sure output folder exist before trying to unzip file
-            task.unzipFile(zipFile, outputDir);
+        if (!zipFile.exists()) {
+            System.out.println("repo doesn't exist");
+            try {
+                zipFile.getParentFile().mkdirs();
+                zipFile.createNewFile();
+                task.run(zipFile);
+                //TODO: maybe delete if --> always true?
+                if(!outputDir.exists()){
+                    outputDir.mkdirs();
+                    outputDir.createNewFile();
+                    // TODO: Currently not working, make sure output folder exist before trying to unzip file
+                    task.unzipFile(zipFile, outputDir);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         } else {
             System.out.println("repo exist");
-            //updateBranch() check;
+            if(!tempVersionZipFile.exists()){
+                try {
+                    tempVersionZipFile.getParentFile().mkdirs();
+                    tempVersionZipFile.createNewFile();
+                    task.run(tempVersionZipFile);
+                    if(!tempVersionOutputDir.exists()){
+                        tempVersionOutputDir.getParentFile().mkdirs();
+                        tempVersionZipFile.createNewFile();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            task.unzipFile(tempVersionZipFile, tempVersionOutputDir);
+            //TODO: hash zips or output files
         }
 
 
