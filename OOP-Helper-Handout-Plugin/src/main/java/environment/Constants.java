@@ -1,7 +1,5 @@
 package environment;
 
-import com.intellij.openapi.project.Project;
-
 public class Constants {
 
     //prevent instantiation
