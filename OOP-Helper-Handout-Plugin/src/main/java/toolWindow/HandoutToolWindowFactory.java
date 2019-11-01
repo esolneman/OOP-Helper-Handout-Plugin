@@ -1,13 +1,18 @@
 package toolWindow;
 
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.*;
 import com.intellij.ui.content.*;
 import environment.HandoutPluginFXPanel;
+import listener.OnEventListener;
 import org.jetbrains.annotations.NotNull;
+import provider.HandoutContentDataProviderInterface;
+
+import java.io.File;
 
 
-public class HandoutToolWindowFactory implements ToolWindowFactory {
+public class HandoutToolWindowFactory implements ToolWindowFactory, OnEventListener {
     ToolWindow toolWindow;
     ContentFactory contentFactory;
 
@@ -24,7 +29,11 @@ public class HandoutToolWindowFactory implements ToolWindowFactory {
     CommonAssessmentCriteriaScreen commonAssessmentCriteriaScreen;
 
     // Create the tool window content.
-    public void createToolWindowContent(Project project, ToolWindow toolWindow) {
+    public void createToolWindowContent (Project project, ToolWindow toolWindow) {
+        HandoutContentDataProviderInterface handoutDataProvider;
+        handoutDataProvider = ServiceManager.getService(project, HandoutContentDataProviderInterface.class);
+        handoutDataProvider.addListener(this);
+
         this.toolWindow = toolWindow;
         contentFactory = ContentFactory.SERVICE.getInstance();
         initScreens();
@@ -55,5 +64,12 @@ public class HandoutToolWindowFactory implements ToolWindowFactory {
         //TODO: Decide which Tab is open when start ide
         toolWindow.getContentManager().setSelectedContent(handoutContent);
 
+    }
+
+    public void onCloningRepositoryEvent(File repoFile) {
+        System.out.println("Performing callback after Asynchronous Task");
+        System.out.println("HandoutToolWindowFactory: " + repoFile);
+        handoutContent = contentFactory.createContent(handoutContentScreen.getContent(), "HandoutHTML", false);
+        toolWindow.getContentManager().addContent(handoutContent);
     }
 }

@@ -2,16 +2,12 @@ package provider;
 
 import com.intellij.openapi.project.Project;
 import listener.OnEventListener;
-import org.apache.commons.io.FileUtils;
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
 import provider.helper.AsyncExecutor;
 import provider.helper.DownloadTask;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static environment.Constants.*;
