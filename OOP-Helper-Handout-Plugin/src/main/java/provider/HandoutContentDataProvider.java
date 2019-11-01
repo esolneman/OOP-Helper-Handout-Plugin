@@ -5,6 +5,7 @@ import listener.OnEventListener;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import provider.helper.DownloadTask;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,6 +23,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
 
     // TODO: get RepoURL from jar file
     String repoUrl = "https://github.com/esolneman/OOP-Helper-Handout-Template.git";
+    String repoZipUrl = "https://github.com/esolneman/OOP-Helper-Handout-Template/archive/test.zip";
     //String CLONE_DIRECTORY_PATH = "refs/heads/test";
     //String CONTENT_FILE_NAME = "/HelperHandoutPluginContentData/RepoLocalStorage";
     String repoFileName;
@@ -30,6 +32,9 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
     String projectDirectory;
     String contentRepoPath;
     File contentRepoFile;
+    File zipFile;
+    File outputDir;
+    File tempVersion;
 
 
     public HandoutContentDataProvider(Project project) {
@@ -37,6 +42,10 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         projectDirectory = project.getBasePath();
         contentRepoPath = RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE;
         contentRepoFile = new File (contentRepoPath);
+        zipFile = new File (RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE  + "/repo.zip");
+        outputDir = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE  + "/repo");
+        //TODO: TEMP-File
+        tempVersion = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE  + "/temp" + "/repo");
         //getRepoUrl();
         //getBranchName();
         // ToDo: get BranchName
@@ -57,13 +66,27 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
 
         //TODO check internet connection first
 
-        //https://stackoverflow.com/a/15571626
+        //TODO: implement Logic
+
+        DownloadTask task = new DownloadTask(repoZipUrl);
+
+
+//https://stackoverflow.com/a/15571626
         if (!contentRepoFile.exists()) {
-            cloneRepository();
+            //cloneRepository();
+            task.run(zipFile);
+            // TODO: Currently not working, make sure output folder exist before trying to unzip file
+            task.unzipFile(zipFile, outputDir);
         } else {
             System.out.println("repo exist");
             //updateBranch() check;
         }
+
+
+
+
+
+
     }
     public void addListener(OnEventListener listener) {
         listeners.add(listener);
@@ -72,22 +95,12 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
     private void cloneRepository() {
         System.out.println("start cloning branch");
         //https://www.vogella.com/tutorials/JGit/article.html#example-for-using-jgit
-
-/*        Runnable cloneTask = () -> {};
-        Git git = null;
-        try {
-            git = Git.cloneRepository()
-                    .setURI(repoUrl)
-                    .setDirectory(contentRepoFile)
-                    .setBranchesToClone(Arrays.asList(branchPath))
-                    .setBranch(branchPath)
-                    .call();
-        } catch (GitAPIException e) {
-            e.printStackTrace();
-        } finally {
-            assert git != null;
-            git.close();
-        }*/
+        /**
+         * 1. Download handout branch as ZIP
+         * 2. Store ZIP in project folder
+         * 3. Compare ZIP file with last downloaded file (HASH)
+         * 4. If new (HASH is different) unzip to handout folder and overwrite last downloaded file
+         */
 
         Runnable cloneTask = () -> {
             Git clone = null;
