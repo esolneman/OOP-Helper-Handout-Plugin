@@ -1,4 +1,6 @@
 package provider.helper;
+import net.lingala.zip4j.ZipFile;
+
 import java.io.*;
 import java.net.URL;
 import java.util.zip.ZipEntry;
@@ -31,15 +33,17 @@ public class DownloadTask {
         //TODO Add Listener
     }
 
+    //https://www.baeldung.com/java-compress-and-uncompress
     public void unzipFile(File in, File out) {
         byte[] buffer = new byte[1024];
+
         try {
-            ZipInputStream zis = new ZipInputStream(new FileInputStream(in));
+            ZipFile zipFile = new ZipFile(in);
+            zipFile.extractAll(out.getPath());
+            /*ZipInputStream zis = new ZipInputStream(new FileInputStream(in));
             ZipEntry zipEntry = zis.getNextEntry();
             while (zipEntry != null) {
                 File newFile = new File(out, String.valueOf(zipEntry));
-                newFile.mkdirs();
-                newFile.createNewFile();
                 FileOutputStream fos = new FileOutputStream(newFile);
                 int len;
                 while ((len = zis.read(buffer)) > 0) {
@@ -49,7 +53,8 @@ public class DownloadTask {
                 zipEntry = zis.getNextEntry();
             }
             zis.closeEntry();
-            zis.close();
+            zis.close();*/
+
         } catch (Exception e) {
             e.printStackTrace();
         }
