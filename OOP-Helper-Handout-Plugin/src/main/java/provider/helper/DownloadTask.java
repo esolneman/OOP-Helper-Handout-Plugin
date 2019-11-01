@@ -33,10 +33,8 @@ public class DownloadTask {
         //TODO Add Listener
     }
 
-    //https://www.baeldung.com/java-compress-and-uncompress
+    //https://stackoverflow.com/a/14656534
     public void unzipFile(File in, File out) {
-        byte[] buffer = new byte[1024];
-
         try {
             ZipFile zipFile = new ZipFile(in);
             zipFile.extractAll(out.getPath());

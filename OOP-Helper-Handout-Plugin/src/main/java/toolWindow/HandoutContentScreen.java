@@ -36,6 +36,8 @@ public class HandoutContentScreen extends SimpleToolWindowPanel{
         toolWindowPanel = new SimpleToolWindowPanel(true);
         handoutToolWindow = toolWindow;
         content = LocalStorageDataProvider.getHandoutFileDirectory();
+        System.out.println("content HandoutContentScreen: " + content);
+
         try {
             urlString = content.toURI().toURL().toString();
         } catch (MalformedURLException e) {

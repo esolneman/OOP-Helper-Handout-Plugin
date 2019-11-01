@@ -72,44 +72,15 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         //TODO check internet connection first
 
         //TODO: implement Logic
-
         DownloadTask task = new DownloadTask(repoZipUrl);
 
-
-//https://stackoverflow.com/a/15571626
+        //https://stackoverflow.com/a/15571626
         if (!zipFile.exists()) {
             System.out.println("repo doesn't exist");
-            try {
-                zipFile.getParentFile().mkdirs();
-                zipFile.createNewFile();
-                task.run(zipFile);
-                //TODO: maybe delete if --> always true?
-                if(!outputDir.exists()){
-                    outputDir.mkdirs();
-                    outputDir.createNewFile();
-                    // TODO: Currently not working, make sure output folder exist before trying to unzip file
-                    task.unzipFile(zipFile, outputDir);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            cloneRepository(task);
         } else {
             System.out.println("repo exist");
-            if(!tempVersionZipFile.exists()){
-                try {
-                    tempVersionZipFile.getParentFile().mkdirs();
-                    tempVersionZipFile.createNewFile();
-                    task.run(tempVersionZipFile);
-                    if(!tempVersionOutputDir.exists()){
-                        tempVersionOutputDir.getParentFile().mkdirs();
-                        tempVersionZipFile.createNewFile();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            task.unzipFile(tempVersionZipFile, tempVersionOutputDir);
-            //TODO: hash zips or output files
+            updateBranch(task);
         }
 
 
@@ -122,7 +93,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         listeners.add(listener);
     }
 
-    private void cloneRepository() {
+    private void cloneRepository(DownloadTask task) {
         System.out.println("start cloning branch");
         //https://www.vogella.com/tutorials/JGit/article.html#example-for-using-jgit
         /**
@@ -133,55 +104,69 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
          */
 
         Runnable cloneTask = () -> {
-            Git clone = null;
-            {
-                try {
-                    clone = Git.cloneRepository()
-                            .setURI(repoUrl)
-                            .setDirectory(contentRepoFile)
-                            .setBranchesToClone(Arrays.asList(branchPath))
-                            .setBranch(branchPath)
-                            .call();
-                    System.out.println("clone run");
-
-                } catch (GitAPIException e) {
-                    try {
-                        FileUtils.deleteDirectory(contentRepoFile);
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                        System.out.println(ex);
-
+            try {
+                zipFile.getParentFile().mkdirs();
+                zipFile.createNewFile();
+                task.run(zipFile);
+                //TODO: maybe delete if --> always true?
+                if(!outputDir.exists()){
+                    outputDir.mkdirs();
+                    outputDir.createNewFile();
+                    task.unzipFile(zipFile, outputDir);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                System.out.println("end cloning branch");
+                if (listeners != null) {
+                    System.out.println("listener not null");
+                    for (OnEventListener listener : listeners) {
+                        System.out.println("listener: " + listener.toString());
+                        listener.onCloningRepositoryEvent(outputDir);
                     }
-                    System.out.println(e);
-                    //throw e;
-                } finally {
-                    System.out.println("end cloning branch");
-                    //clone.close();
-                    //clone.getRepository().close();
-                    //check if listener is registered.
-                    if (listeners != null) {
-                        System.out.println("listener not null");
-
-                        for(OnEventListener listener : listeners){
-                            System.out.println("listener: " + listener.toString());
-                            listener.onCloningRepositoryEvent(contentRepoFile);
-                        }
-                    }else{
-                        System.out.println("event Listener null");
-                    }
+                } else {
+                    System.out.println("event Listener null");
                 }
             }
         };
         asyncExecutor.runAsyncClone(cloneTask);
     }
 
-    private void updateBranch(){}
-    private void getLocalRepository(){
-/*        FileRepositoryBuilder repositoryBuilder = new FileRepositoryBuilder();
-        Repository repository = repositoryBuilder.setGitDir(new File("/path/to/repo/.git"))
-                .readEnvironment() // scan environment GIT_* variables
-                .findGitDir() // scan up the file system tree
-                .setMustExist(true)
-                .build();*/
+    private void updateBranch(DownloadTask task){
+        Runnable updateTask = () -> {
+        if(!tempVersionZipFile.exists()){
+            try {
+                tempVersionZipFile.getParentFile().mkdirs();
+                tempVersionZipFile.createNewFile();
+                task.run(tempVersionZipFile);
+                if(!tempVersionOutputDir.exists()){
+                    tempVersionOutputDir.getParentFile().mkdirs();
+                    tempVersionZipFile.createNewFile();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                System.out.println("end cloning branch");
+                if (listeners != null) {
+                    System.out.println("listener not null");
+                    for (OnEventListener listener : listeners) {
+                        System.out.println("listener: " + listener.toString());
+                        listener.onCloningRepositoryEvent(outputDir);
+                    }
+                } else {
+                    System.out.println("event Listener null");
+                }
+            }
+        }
+        //TODO: hash zips or output files
+        hashZipFiles();
+        task.unzipFile(tempVersionZipFile, tempVersionOutputDir);
+        };
+        asyncExecutor.runAsyncClone(updateTask);
     }
+
+    private void hashZipFiles(){
+
+    }
+
 }
