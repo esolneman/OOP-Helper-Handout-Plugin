@@ -15,6 +15,8 @@ public class HandoutContentHandler {
     public static ArrayList<String> getNavHeadings() {
         ArrayList<String> headings = new ArrayList<>();
         File htmlFile = LocalStorageDataProvider.getHandoutFileDirectory();
+        System.out.println("htmlFile ContentHandler: " + htmlFile);
+
         Document handoutDocument;
         try {
             //https://stackoverflow.com/a/9611720

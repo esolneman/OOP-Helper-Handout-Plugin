@@ -30,7 +30,8 @@ public class RepoLocalStorageDataProvider implements RepoLocalStorageDataProvide
     }
 
     public static String getHandoutHtmlString(){
-        String handoutDataDirectoryPath = getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE + HANDOUT_FILE_NAME;
+        //ToDo: implement retrieving branchName
+        String handoutDataDirectoryPath = getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE + "/repo/OOP-Helper-Handout-Template-test"+ HANDOUT_FILE_NAME;
         return handoutDataDirectoryPath;
     }
 
