@@ -65,7 +65,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         //System.out.println(TaskConfiguration.loadFrom());
         //repoUrl = TaskConfiguration.loadFrom().getHandoutURL();
         String branchFolderName = "/OOP-Helper-Handout-Template-test";
-        RepoLocalStorageDataProvider.setHandoutHtmlString(branchFolderName);
+        RepoLocalStorageDataProvider.setBranchFolderName(branchFolderName);
     }
 
     public void updateHandoutData() {
