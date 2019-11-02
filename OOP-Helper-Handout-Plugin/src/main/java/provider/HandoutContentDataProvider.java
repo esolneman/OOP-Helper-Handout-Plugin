@@ -34,6 +34,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
     File outputDir;
     File tempVersionZipFile;
     File tempVersionOutputDir;
+    File repoLocalData;
 
 
 
@@ -47,7 +48,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         //TODO: TEMP-File
         tempVersionZipFile = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE  + REPO_LOCAL_STORAGE_FILE + "/temp" + "/repo.zip");
         tempVersionOutputDir = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE  + REPO_LOCAL_STORAGE_FILE + "/temp");
-
+        repoLocalData = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE  + REPO_LOCAL_STORAGE_FILE);
         //getRepoUrl();
         //getBranchName();
         // ToDo: get BranchName
@@ -79,21 +80,12 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
 
     }
     public void addListener(OnEventListener listener) {
-        System.out.println("addListener: " + listener);
-
         listeners.add(listener);
     }
 
     private void cloneRepository(DownloadTask task) {
         System.out.println("start cloning branch");
         //https://www.vogella.com/tutorials/JGit/article.html#example-for-using-jgit
-        /**
-         * 1. Download handout branch as ZIP
-         * 2. Store ZIP in project folder
-         * 3. Compare ZIP file with last downloaded file (HASH)
-         * 4. If new (HASH is different) unzip to handout folder and overwrite last downloaded file
-         */
-
         Runnable cloneTask = () -> {
             try {
                 zipFile.getParentFile().mkdirs();
@@ -103,21 +95,27 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
                 outputDir.createNewFile();
                 task.unzipFile(zipFile, outputDir);
             } catch (IOException e) {
+                repoLocalData.delete();
+                //TODO delete folder strucutre complete
                 e.printStackTrace();
             } finally {
-                System.out.println("end cloning branch");
-                if (listeners != null) {
-                    System.out.println("listener not null");
-                    for (OnEventListener listener : listeners) {
-                        System.out.println("listener: " + listener.toString());
-                        listener.onCloningRepositoryEvent(outputDir);
-                    }
-                } else {
-                    System.out.println("event Listener null");
-                }
+                callListener();
             }
         };
         asyncExecutor.runAsyncClone(cloneTask);
+    }
+
+    private void callListener() {
+        System.out.println("end cloning branch");
+        if (listeners != null) {
+            System.out.println("listener not null");
+            for (OnEventListener listener : listeners) {
+                System.out.println("listener: " + listener.toString());
+                listener.onCloningRepositoryEvent(outputDir);
+            }
+        } else {
+            System.out.println("event Listener null");
+        }
     }
 
     private void updateBranch(DownloadTask task){
@@ -133,18 +131,10 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
                     tempVersionZipFile.createNewFile();
                 }
             } catch (IOException e) {
+                repoLocalData.delete();
                 e.printStackTrace();
             } finally {
-                System.out.println("end cloning branch");
-                if (listeners != null) {
-                    System.out.println("listener not null");
-                    for (OnEventListener listener : listeners) {
-                        System.out.println("listener: " + listener.toString());
-                        listener.onCloningRepositoryEvent(outputDir);
-                    }
-                } else {
-                    System.out.println("event Listener null");
-                }
+                callListener();
             }
         }else{
 
@@ -152,15 +142,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         if(!compareZipFiles(zipFile, tempVersionZipFile)){
             System.out.println("not equal");
             task.unzipFile(tempVersionZipFile, outputDir);
-            if (listeners != null) {
-                System.out.println("listener not null");
-                for (OnEventListener listener : listeners) {
-                    System.out.println("listener: " + listener.toString());
-                    listener.onCloningRepositoryEvent(outputDir);
-                }
-            } else {
-                System.out.println("event Listener null");
-            }
+            callListener();
         }
         };
         tempVersionZipFile.delete();
