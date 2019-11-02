@@ -2,7 +2,6 @@ package provider;
 
 import com.intellij.openapi.project.Project;
 import listener.OnEventListener;
-import org.apache.commons.io.FileUtils;
 import provider.helper.AsyncExecutor;
 import provider.helper.DownloadTask;
 
@@ -52,7 +51,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         tempVersionZipFile = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE + "/temp" + "/repo.zip");
         tempVersionOutputDir = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE + "/temp");
         repoLocalData = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE);
-        //getRepoUrl();
+        getRepoUrl();
         //getBranchName();
         // ToDo: get BranchName
         //TODO get RepoName
@@ -65,6 +64,8 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         System.out.println("getRepoUrl");
         //System.out.println(TaskConfiguration.loadFrom());
         //repoUrl = TaskConfiguration.loadFrom().getHandoutURL();
+        String branchFolderName = "/OOP-Helper-Handout-Template-test";
+        RepoLocalStorageDataProvider.setHandoutHtmlString(branchFolderName);
     }
 
     public void updateHandoutData() {

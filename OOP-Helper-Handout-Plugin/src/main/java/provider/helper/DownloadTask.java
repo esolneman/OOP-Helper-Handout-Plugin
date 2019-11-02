@@ -32,7 +32,7 @@ public class DownloadTask {
         }
     }
 
-    public void hashFiles(File newVersion, File oldVersion){
+    public void hashFiles(File newVersion, File oldVersion) {
         //TODO Add Listener
     }
 
