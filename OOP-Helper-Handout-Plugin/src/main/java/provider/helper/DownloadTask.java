@@ -1,10 +1,13 @@
 package provider.helper;
-import net.lingala.zip4j.ZipFile;
 
-import java.io.*;
+import net.lingala.zip4j.ZipFile;
+import org.apache.commons.io.FileUtils;
+
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URL;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 public class DownloadTask {
 
@@ -29,7 +32,7 @@ public class DownloadTask {
         }
     }
 
-    public void hashFiles(File newVersion, File oldVersion){
+    public void hashFiles(File newVersion, File oldVersion) {
         //TODO Add Listener
     }
 
@@ -52,10 +55,25 @@ public class DownloadTask {
             }
             zis.closeEntry();
             zis.close();*/
-
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    //https://stackoverflow.com/a/27379126
+    public boolean compareZipFiles(File file1, File file2) {
+        //Deprecated
+       /* try {
+            return Files.hash(file1, Hashing.md5()).equals(Files.hash(file2, Hashing.sha1()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
+        try {
+            return FileUtils.contentEquals(file1, file2);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
 }

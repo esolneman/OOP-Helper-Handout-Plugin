@@ -98,9 +98,12 @@ public class HandoutContentScreen extends SimpleToolWindowPanel implements OnEve
     public void onCloningRepositoryEvent(File repoFile) {
         System.out.println("Performing callback after Asynchronous Task");
         System.out.println("HandoutContentScreen: " + repoFile);
-        Platform.setImplicitExit(false);
-        Platform.runLater(() -> {
-            webView.getEngine().reload();
-        });
+        // TODO Error once
+        if(webView != null){
+            Platform.setImplicitExit(false);
+            Platform.runLater(() -> {
+                webView.getEngine().reload();
+            });
+        }
     }
 }

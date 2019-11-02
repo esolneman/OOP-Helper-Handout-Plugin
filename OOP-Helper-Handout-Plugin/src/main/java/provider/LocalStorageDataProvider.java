@@ -15,9 +15,5 @@ public class LocalStorageDataProvider implements LocalStorageDataProviderInterfa
         return RepoLocalStorageDataProvider.getHandoutHtmlString();
     }
 
-    public static String testFile(){
-        String testPath = RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE + "/test.html";;
-        return testPath;
-    }
 
 }
