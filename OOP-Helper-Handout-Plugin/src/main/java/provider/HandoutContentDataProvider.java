@@ -152,11 +152,15 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
                     System.out.println("event Listener null");
                 }
             }
+        }else{
+
         }
         //TODO: hash zips or output files
-        if(hashZipFiles(zipFile, tempVersionZipFile)){
-            System.out.println("equal");
+        if(!hashZipFiles(zipFile, tempVersionZipFile)){
+            System.out.println("not equal");
             task.unzipFile(tempVersionZipFile, outputDir);
+        }else{
+            System.out.println("equal");
         }
         };
         asyncExecutor.runAsyncClone(updateTask);
