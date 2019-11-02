@@ -43,7 +43,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         contentRepoPath = RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE;
         contentRepoFile = new File (contentRepoPath);
         zipFile = new File (RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE  + REPO_LOCAL_STORAGE_FILE + "/repo.zip");
-        outputDir = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE  + REPO_LOCAL_STORAGE_FILE + "/repo");
+        outputDir = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE  + REPO_LOCAL_STORAGE_FILE);
         //TODO: TEMP-File
         tempVersionZipFile = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE  + REPO_LOCAL_STORAGE_FILE + "/temp" + "/repo.zip");
         tempVersionOutputDir = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE  + REPO_LOCAL_STORAGE_FILE + "/temp");
@@ -65,12 +65,9 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
 
     public void updateHandoutData() {
         System.out.println("updateHandoutData");
-
         //TODO check internet connection first
-
         //TODO: implement Logic
         DownloadTask task = new DownloadTask(repoZipUrl);
-
         //https://stackoverflow.com/a/15571626
         if (!zipFile.exists()) {
             System.out.println("repo doesn't exist");
@@ -102,12 +99,9 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
                 zipFile.getParentFile().mkdirs();
                 zipFile.createNewFile();
                 task.run(zipFile);
-                //TODO: maybe delete if --> always true?
-                if(!outputDir.exists()){
-                    outputDir.mkdirs();
-                    outputDir.createNewFile();
-                    task.unzipFile(zipFile, outputDir);
-                }
+                outputDir.mkdirs();
+                outputDir.createNewFile();
+                task.unzipFile(zipFile, outputDir);
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
@@ -155,20 +149,33 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         }else{
 
         }
-        //TODO: hash zips or output files
-        if(!hashZipFiles(zipFile, tempVersionZipFile)){
+        if(!compareZipFiles(zipFile, tempVersionZipFile)){
             System.out.println("not equal");
             task.unzipFile(tempVersionZipFile, outputDir);
-        }else{
-            System.out.println("equal");
+            if (listeners != null) {
+                System.out.println("listener not null");
+                for (OnEventListener listener : listeners) {
+                    System.out.println("listener: " + listener.toString());
+                    listener.onCloningRepositoryEvent(outputDir);
+                }
+            } else {
+                System.out.println("event Listener null");
+            }
         }
         };
+        tempVersionZipFile.delete();
         asyncExecutor.runAsyncClone(updateTask);
     }
 
-    private boolean hashZipFiles(File file1, File file2){
+    //https://stackoverflow.com/a/27379126
+    private boolean compareZipFiles(File file1, File file2){
+        //Deprecated
+       /* try {
+            return Files.hash(file1, Hashing.md5()).equals(Files.hash(file2, Hashing.sha1()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
         try {
-
             return FileUtils.contentEquals(file1, file2);
         } catch (IOException e) {
             e.printStackTrace();
