@@ -2,6 +2,7 @@ package provider;
 
 import com.intellij.openapi.project.Project;
 import listener.OnEventListener;
+import org.apache.commons.io.FileUtils;
 import provider.helper.AsyncExecutor;
 import provider.helper.DownloadTask;
 
@@ -79,11 +80,6 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
             updateBranch(task);
         }
 
-
-
-
-
-
     }
     public void addListener(OnEventListener listener) {
         System.out.println("addListener: " + listener);
@@ -134,6 +130,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         Runnable updateTask = () -> {
         if(!tempVersionZipFile.exists()){
             try {
+                //https://stackoverflow.com/a/6143076
                 tempVersionZipFile.getParentFile().mkdirs();
                 tempVersionZipFile.createNewFile();
                 task.run(tempVersionZipFile);
@@ -157,14 +154,22 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
             }
         }
         //TODO: hash zips or output files
-        hashZipFiles();
-        task.unzipFile(tempVersionZipFile, tempVersionOutputDir);
+        if(hashZipFiles(zipFile, tempVersionZipFile)){
+            System.out.println("equal");
+            task.unzipFile(tempVersionZipFile, outputDir);
+        }
         };
         asyncExecutor.runAsyncClone(updateTask);
     }
 
-    private void hashZipFiles(){
+    private boolean hashZipFiles(File file1, File file2){
+        try {
 
+            return FileUtils.contentEquals(file1, file2);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
 }
