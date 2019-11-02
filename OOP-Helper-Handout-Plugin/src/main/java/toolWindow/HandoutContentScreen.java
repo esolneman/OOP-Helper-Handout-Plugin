@@ -4,12 +4,15 @@ import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.ActionToolbar;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.actionSystem.Separator;
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
 import controller.LinkToHandoutController;
 import environment.HandoutPluginFXPanel;
 import javafx.application.Platform;
 import javafx.scene.web.WebView;
+import listener.OnEventListener;
+import provider.HandoutContentDataProviderInterface;
 import provider.LocalStorageDataProvider;
 import provider.RepoLocalStorageDataProvider;
 import toolWindow.actionGroups.HandoutContentActionGroup;
@@ -19,19 +22,23 @@ import javax.swing.*;
 import java.io.File;
 import java.net.MalformedURLException;
 
-public class HandoutContentScreen extends SimpleToolWindowPanel{
+public class HandoutContentScreen extends SimpleToolWindowPanel implements OnEventListener {
     private HandoutPluginFXPanel handoutContent;
     private ToolWindow handoutToolWindow;
     private static File content;
     private String urlString;
     private static WebView webView;
     private WebViewController webViewController;
+    HandoutContentDataProviderInterface handoutDataProvider;
+
 
     private SimpleToolWindowPanel toolWindowPanel;
 
     public HandoutContentScreen(ToolWindow toolWindow){
         super(true, true);
         LinkToHandoutController linkToHandoutController = new LinkToHandoutController(RepoLocalStorageDataProvider.getProject(), this);
+        handoutDataProvider = ServiceManager.getService(RepoLocalStorageDataProvider.getProject(), HandoutContentDataProviderInterface.class);
+        handoutDataProvider.addListener(this);
         webViewController = new WebViewController();
         toolWindowPanel = new SimpleToolWindowPanel(true);
         handoutToolWindow = toolWindow;
@@ -86,5 +93,14 @@ public class HandoutContentScreen extends SimpleToolWindowPanel{
 
     public void goToLocation(String heading) {
         webViewController.goToLocation(heading, handoutToolWindow, this);
+    }
+
+    public void onCloningRepositoryEvent(File repoFile) {
+        System.out.println("Performing callback after Asynchronous Task");
+        System.out.println("HandoutContentScreen: " + repoFile);
+        Platform.setImplicitExit(false);
+        Platform.runLater(() -> {
+            webView.getEngine().reload();
+        });
     }
 }

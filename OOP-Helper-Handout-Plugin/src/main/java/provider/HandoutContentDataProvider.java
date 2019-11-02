@@ -86,6 +86,8 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
 
     }
     public void addListener(OnEventListener listener) {
+        System.out.println("addListener: " + listener);
+
         listeners.add(listener);
     }
 

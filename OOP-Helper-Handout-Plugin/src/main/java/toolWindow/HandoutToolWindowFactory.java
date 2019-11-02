@@ -12,7 +12,7 @@ import provider.HandoutContentDataProviderInterface;
 import java.io.File;
 
 
-public class HandoutToolWindowFactory implements ToolWindowFactory, OnEventListener {
+public class HandoutToolWindowFactory implements ToolWindowFactory {
     ToolWindow toolWindow;
     ContentFactory contentFactory;
 
@@ -30,10 +30,6 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, OnEventListe
 
     // Create the tool window content.
     public void createToolWindowContent (Project project, ToolWindow toolWindow) {
-        HandoutContentDataProviderInterface handoutDataProvider;
-        handoutDataProvider = ServiceManager.getService(project, HandoutContentDataProviderInterface.class);
-        handoutDataProvider.addListener(this);
-
         this.toolWindow = toolWindow;
         contentFactory = ContentFactory.SERVICE.getInstance();
         initScreens();
@@ -64,12 +60,5 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, OnEventListe
         //TODO: Decide which Tab is open when start ide
         toolWindow.getContentManager().setSelectedContent(handoutContent);
 
-    }
-
-    public void onCloningRepositoryEvent(File repoFile) {
-        System.out.println("Performing callback after Asynchronous Task");
-        System.out.println("HandoutToolWindowFactory: " + repoFile);
-        handoutContent = contentFactory.createContent(handoutContentScreen.getContent(), "HandoutHTML", false);
-        toolWindow.getContentManager().addContent(handoutContent);
     }
 }
