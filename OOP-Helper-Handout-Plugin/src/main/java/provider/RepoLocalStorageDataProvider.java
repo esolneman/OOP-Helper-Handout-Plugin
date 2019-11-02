@@ -11,6 +11,7 @@ public class RepoLocalStorageDataProvider implements RepoLocalStorageDataProvide
 
     private static String projectDirectory;
     private static Project handoutProject;
+    private static String handoutDataDirectoryPath = null;
 
     public static void setUserProjectDirectory(Project project){
         projectDirectory = project.getBasePath();
@@ -36,8 +37,12 @@ public class RepoLocalStorageDataProvider implements RepoLocalStorageDataProvide
     }
 
     public static String getHandoutHtmlString(){
-        String handoutDataDirectoryPath = getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE + HANDOUT_FILE_NAME;
+        //ToDo: implement retrieving branchName
         return handoutDataDirectoryPath;
+    }
+
+    public static void setHandoutHtmlString(String BranchFolderName){
+        handoutDataDirectoryPath = getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE + BranchFolderName + HANDOUT_FILE_NAME;
     }
 
 

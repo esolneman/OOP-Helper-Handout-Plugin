@@ -25,6 +25,9 @@ dependencies {
     //implementation files('libs/PluginHelper-Core.jar')
     compile 'io.woo:htmltopdf:1.0.8'
     compile 'org.codefx.libfx:LibFX:0.3.0'
+    // https://mvnrepository.com/artifact/net.lingala.zip4j/zip4j
+    compile group: 'net.lingala.zip4j', name: 'zip4j', version: '2.2.3'
+
 }
 
 
