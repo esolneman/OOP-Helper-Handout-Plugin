@@ -1,10 +1,15 @@
 package toolWindow;
 
+import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.*;
 import com.intellij.ui.content.*;
 import environment.HandoutPluginFXPanel;
+import listener.OnEventListener;
 import org.jetbrains.annotations.NotNull;
+import provider.HandoutContentDataProviderInterface;
+
+import java.io.File;
 
 
 public class HandoutToolWindowFactory implements ToolWindowFactory {
@@ -24,7 +29,7 @@ public class HandoutToolWindowFactory implements ToolWindowFactory {
     CommonAssessmentCriteriaScreen commonAssessmentCriteriaScreen;
 
     // Create the tool window content.
-    public void createToolWindowContent(Project project, ToolWindow toolWindow) {
+    public void createToolWindowContent (Project project, ToolWindow toolWindow) {
         this.toolWindow = toolWindow;
         contentFactory = ContentFactory.SERVICE.getInstance();
         initScreens();
