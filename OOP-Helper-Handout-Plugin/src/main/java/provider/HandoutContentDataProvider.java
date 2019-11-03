@@ -1,5 +1,6 @@
 package provider;
 
+import com.intellij.notification.NotificationType;
 import com.intellij.openapi.project.Project;
 import controller.BalloonPopupController;
 import listener.OnEventListener;
@@ -82,17 +83,13 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         Boolean internetConnection = checkInternetConnection();
         Boolean repoContentDataExists = checkRepoContentDataExists();
         if (internetConnection && !repoContentDataExists) {
-            System.out.println("Downloading - internet && !repoContentDataExists");
             updateBranch(task);
         } else if (internetConnection && repoContentDataExists) {
-            System.out.println("UPDATE - internet && repoContentDataExists");
             cloneRepository(task);
         } else if (repoContentDataExists) {
-            System.out.println("Notification - !internet && repoContentDataExists");
-            BalloonPopupController.showMyMessage(project, "Keine Internetverbindung vorhanden. Handout Daten können momentan nciht aktualisiert werden.");
+            BalloonPopupController.showNotification(project, "Keine Internetverbindung vorhanden. Handout Daten können momentan nicht aktualisiert werden.", NotificationType.ERROR);
         } else {
-            //TODO: Notification
-            System.out.println("Notification - !internet && !repoContentDataExists");
+            BalloonPopupController.showNotification(project, "Keine Internetverbindung vorhanden. Handout Daten können momentan nciht geladen werden.", NotificationType.ERROR);
         }
     }
 
@@ -145,6 +142,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
                 e.printStackTrace();
             } finally {
                 callListener();
+                BalloonPopupController.showNotification(project, "Handout Daten wurden erfolgreich aktualisiert.", NotificationType.INFORMATION);
             }
         };
         asyncExecutor.runAsyncClone(cloneTask);
@@ -187,6 +185,8 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
             } finally {
                 deleteFile(tempVersionZipFile);
                 callListener();
+                BalloonPopupController.showNotification(project, "Handout Daten wurden erfolgreich heruntergeladen.", NotificationType.INFORMATION);
+
             }
         };
         asyncExecutor.runAsyncClone(updateTask);

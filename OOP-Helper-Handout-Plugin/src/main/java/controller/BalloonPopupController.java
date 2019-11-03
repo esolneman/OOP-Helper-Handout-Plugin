@@ -16,7 +16,7 @@ public class BalloonPopupController {
     //https://stackoverflow.com/a/32928915
     public static final NotificationGroup OOP_HELPER_HANDOUT_NOTIFICATION = new NotificationGroup("OOP-Helper-Handout", NotificationDisplayType.BALLOON, true);
 
-    public static void createBalloonNotification(JComponent component, Balloon.Position position, String notificationText, MessageType messageType){
+    public static void showBalloonNotification(JComponent component, Balloon.Position position, String notificationText, MessageType messageType){
         JBPopupFactory.getInstance()
                 .createHtmlTextBalloonBuilder(notificationText, messageType, null)
                 .setFadeoutTime(7500)
@@ -26,9 +26,9 @@ public class BalloonPopupController {
     }
 
     //https://stackoverflow.com/a/32928915
-    public static void showMyMessage(Project project, String message) {
+    public static void showNotification(Project project, String message, NotificationType messageType) {
         ApplicationManager.getApplication().invokeLater(() -> {
-            Notification notification = OOP_HELPER_HANDOUT_NOTIFICATION.createNotification(message, NotificationType.ERROR);
+            Notification notification = OOP_HELPER_HANDOUT_NOTIFICATION.createNotification(message, messageType);
             Notifications.Bus.notify(notification, project);
         });
     }
