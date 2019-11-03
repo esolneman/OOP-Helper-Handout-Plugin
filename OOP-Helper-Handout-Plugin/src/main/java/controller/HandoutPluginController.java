@@ -43,7 +43,4 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
         }
         System.out.println("RepoFile hidden: "+ repoFile.isHidden());*/
     }
-
-    private void updateContent(){
-    }
 }
