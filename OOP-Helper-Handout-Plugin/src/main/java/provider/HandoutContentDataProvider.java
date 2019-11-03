@@ -1,6 +1,7 @@
 package provider;
 
 import com.intellij.openapi.project.Project;
+import controller.BalloonPopupController;
 import listener.OnEventListener;
 import provider.helper.AsyncExecutor;
 import provider.helper.DownloadTask;
@@ -88,7 +89,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
             cloneRepository(task);
         } else if (repoContentDataExists) {
             System.out.println("Notification - !internet && repoContentDataExists");
-            //TODO: Notification
+            BalloonPopupController.showMyMessage(project, "Keine Internetverbindung vorhanden. Handout Daten können momentan nciht aktualisiert werden.");
         } else {
             //TODO: Notification
             System.out.println("Notification - !internet && !repoContentDataExists");
