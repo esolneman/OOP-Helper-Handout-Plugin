@@ -38,6 +38,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
     File tempVersionZipFile;
     File tempVersionOutputDir;
     File repoLocalData;
+    DownloadTask task;
 
 
     public HandoutContentDataProvider(Project project) {
@@ -59,6 +60,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         System.out.println(contentRepoPath);
     }
 
+
     //ToDo getRepo Url
     private void getRepoUrl() {
         System.out.println("getRepoUrl");
@@ -70,18 +72,57 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
 
     public void updateHandoutData() {
         System.out.println("updateHandoutData");
-        //TODO check internet connection first
         //TODO: implement Logic
-        DownloadTask task = new DownloadTask(repoZipUrl);
+        task = new DownloadTask(repoZipUrl);
+        controlRetrievingContentData();
+    }
+
+    private void controlRetrievingContentData() {
+        Boolean internetConnection = checkInternetConnection();
+        Boolean repoContentDataExists = checkRepoContentDataExists();
+        if (internetConnection && !repoContentDataExists) {
+            System.out.println("Downloading - internet && !repoContentDataExists");
+            updateBranch(task);
+        } else if (internetConnection && repoContentDataExists) {
+            System.out.println("UPDATE - internet && repoContentDataExists");
+            cloneRepository(task);
+        } else if (repoContentDataExists) {
+            System.out.println("Notification - !internet && repoContentDataExists");
+            //TODO: Notification
+        } else {
+            //TODO: Notification
+            System.out.println("Notification - !internet && !repoContentDataExists");
+        }
+    }
+
+    private boolean checkRepoContentDataExists() {
         //https://stackoverflow.com/a/15571626
         if (!zipFile.exists()) {
             System.out.println("repo doesn't exist");
-            cloneRepository(task);
+            return false;
         } else {
             System.out.println("repo exist");
-            updateBranch(task);
+            return true;
         }
+    }
 
+    //https://www.geeksforgeeks.org/checking-internet-connectivity-using-java/
+    public Boolean checkInternetConnection() {
+        Process process;
+        try {
+            process = Runtime.getRuntime().exec("ping www.geeksforgeeks.org");
+            int x = process.waitFor();
+            if (x == 0) {
+                System.out.println("Connection Successful, " + "Output was " + x);
+                return true;
+            } else {
+                System.out.println("Internet Not Connected, " + "Output was " + x);
+                return false;
+            }
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     public void addListener(OnEventListener listener) {
@@ -93,15 +134,13 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         //https://www.vogella.com/tutorials/JGit/article.html#example-for-using-jgit
         Runnable cloneTask = () -> {
             try {
-                zipFile.getParentFile().mkdirs();
-                zipFile.createNewFile();
+                createFolder(zipFile, true);
+                createFolder(outputDir, false);
                 task.run(zipFile);
-                outputDir.mkdirs();
-                outputDir.createNewFile();
                 task.unzipFile(zipFile, outputDir);
             } catch (IOException e) {
                 //TODO Notification
-                repoLocalData.delete();
+                deleteFile(repoLocalData);
                 e.printStackTrace();
             } finally {
                 callListener();
@@ -110,47 +149,56 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         asyncExecutor.runAsyncClone(cloneTask);
     }
 
+    private void createFolder(File zipFile, Boolean createParentFolder) throws IOException {
+        if(createParentFolder){
+            zipFile.getParentFile().mkdirs();
+        }else{
+            zipFile.mkdirs();
+        }
+        zipFile.createNewFile();
+    }
+
     private void callListener() {
         System.out.println("end cloning branch");
         if (listeners != null) {
             System.out.println("listener not null");
             for (OnEventListener listener : listeners) {
-                System.out.println("listener: " + listener.toString());
                 listener.onCloningRepositoryEvent(outputDir);
             }
-        } else {
-            System.out.println("event Listener null");
         }
     }
 
     private void updateBranch(DownloadTask task) {
         Runnable updateTask = () -> {
-            if (!tempVersionZipFile.exists()) {
-                try {
-                    //https://stackoverflow.com/a/6143076
-                    tempVersionZipFile.getParentFile().mkdirs();
-                    tempVersionZipFile.createNewFile();
-                    task.run(tempVersionZipFile);
-                    if (!task.compareZipFiles(zipFile, tempVersionZipFile)) {
-                        System.out.println("not equal");
-                        task.unzipFile(tempVersionZipFile, outputDir);
-                        //https://stackoverflow.com/a/17169576
-                        Path from = tempVersionZipFile.toPath(); //convert from File to Path
-                        Path to = Paths.get(zipFile.getPath()); //convert from String to Path
-                        Files.copy(from, to, StandardCopyOption.REPLACE_EXISTING);
-                    }
-                } catch (IOException e) {
-                    //TODO Notification
-                    repoLocalData.delete();
-                    e.printStackTrace();
-                } finally {
-                    //FileUtils.deleteDirectory(transformation.getTransformedApplicationLocation());
-                    boolean delete = tempVersionOutputDir.delete();
-                    System.out.println(" delete file: " + delete);
-                    callListener();
+            try {
+                //https://stackoverflow.com/a/6143076
+                createFolder(tempVersionZipFile, true);
+                task.run(tempVersionZipFile);
+                if (!task.compareZipFiles(zipFile, tempVersionZipFile)) {
+                    System.out.println("not equal");
+                    task.unzipFile(tempVersionZipFile, outputDir);
+                    replaceFile(tempVersionZipFile, zipFile);
                 }
+            } catch (IOException e) {
+                //TODO Notification
+                repoLocalData.delete();
+                e.printStackTrace();
+            } finally {
+                deleteFile(tempVersionZipFile);
+                callListener();
             }
         };
         asyncExecutor.runAsyncClone(updateTask);
+    }
+
+    private void replaceFile (File newData, File oldData) throws IOException {
+        //https://stackoverflow.com/a/17169576
+        Path from = newData.toPath(); //convert from File to Path
+        Path to = Paths.get(oldData.getPath()); //convert from String to Path
+        Files.copy(from, to, StandardCopyOption.REPLACE_EXISTING);
+    }
+
+    private void deleteFile(File file){
+        file.delete();
     }
 }

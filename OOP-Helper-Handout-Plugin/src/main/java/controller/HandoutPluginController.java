@@ -7,6 +7,7 @@ import provider.HandoutContentDataProviderInterface;
 import provider.RepoLocalStorageDataProvider;
 
 import java.io.File;
+import java.io.IOException;
 
 public class HandoutPluginController implements HandoutPluginControllerInterface, OnEventListener{
     HandoutContentDataProviderInterface handoutDataProvider;
@@ -18,7 +19,6 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
         updateHandoutContent();
         handoutDataProvider.addListener(this);
     }
-
 
     public void updateHandoutContent() {
         handoutDataProvider.updateHandoutData();
@@ -42,8 +42,5 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
             System.out.print(e);
         }
         System.out.println("RepoFile hidden: "+ repoFile.isHidden());*/
-    }
-
-    private void updateContent(){
     }
 }
