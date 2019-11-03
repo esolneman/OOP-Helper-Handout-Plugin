@@ -16,21 +16,22 @@ public class HandoutContentHandler {
         ArrayList<String> headings = new ArrayList<>();
         File htmlFile = LocalStorageDataProvider.getHandoutFileDirectory();
         System.out.println("htmlFile ContentHandler: " + htmlFile);
-
-        Document handoutDocument;
-        try {
-            //https://stackoverflow.com/a/9611720
-            handoutDocument = Jsoup.parse(htmlFile, null);
-            //https://stackoverflow.com/questions/34392919/find-href-link-from-webpage-using-java
-            //https://jsoup.org/apidocs/org/jsoup/select/Selector.html
-            Elements navElement = handoutDocument.select(" nav>ul>a[href]");
-            for (Element link : navElement) {
-                if(link.attr("href").contains("#")){
-                    headings.add(link.text());
+        if(htmlFile.getParentFile().exists()){
+            Document handoutDocument;
+            try {
+                //https://stackoverflow.com/a/9611720
+                handoutDocument = Jsoup.parse(htmlFile, null);
+                //https://stackoverflow.com/questions/34392919/find-href-link-from-webpage-using-java
+                //https://jsoup.org/apidocs/org/jsoup/select/Selector.html
+                Elements navElement = handoutDocument.select(" nav>ul>a[href]");
+                for (Element link : navElement) {
+                    if(link.attr("href").contains("#")){
+                        headings.add(link.text());
+                    }
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
         return headings;
     }
