@@ -1,8 +1,14 @@
 package toolWindow;
 
+import com.intellij.icons.AllIcons;
+import com.intellij.ide.plugins.newui.MyPluginModel;
+import com.intellij.openapi.actionSystem.ActionManager;
+import com.intellij.openapi.actionSystem.ActionToolbar;
+import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.*;
+import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.ui.content.*;
 import environment.HandoutPluginFXPanel;
 import listener.OnEventListener;
@@ -33,6 +39,7 @@ public class HandoutToolWindowFactory implements ToolWindowFactory {
         this.toolWindow = toolWindow;
         contentFactory = ContentFactory.SERVICE.getInstance();
         initScreens();
+        createToolbar();
     }
 
     private void initScreens() {
@@ -59,6 +66,13 @@ public class HandoutToolWindowFactory implements ToolWindowFactory {
         toolWindow.getContentManager().addContent(commonAssessmentCriteriaContent);
         //TODO: Decide which Tab is open when start ide
         toolWindow.getContentManager().setSelectedContent(handoutContent);
+    }
 
+    //https://www.programcreek.com/java-api-examples/?api=com.intellij.openapi.wm.ex.ToolWindowEx
+    private void createToolbar() {
+        AnAction updateAction = ActionManager.getInstance().getAction("Myplugin.Textboxes.Update");
+        AnAction minimizeAction = (ActionManager.getInstance().getAction("Handout.Minimize"));
+        AnAction maximizeAction = (ActionManager.getInstance().getAction("Handout.Maximize"));
+        ((ToolWindowEx)toolWindow).setTitleActions(new AnAction[] {updateAction, minimizeAction, maximizeAction});
     }
 }
