@@ -81,13 +81,17 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         Boolean internetConnection = checkInternetConnection();
         Boolean repoContentDataExists = checkRepoContentDataExists();
         if (internetConnection && !repoContentDataExists) {
+            System.out.println("Downloading - internet && !repoContentDataExists");
             updateBranch(task);
         } else if (internetConnection && repoContentDataExists) {
+            System.out.println("UPDATE - internet && repoContentDataExists");
             cloneRepository(task);
-        } else if (!internetConnection && repoContentDataExists) {
+        } else if (repoContentDataExists) {
+            System.out.println("Notification - !internet && repoContentDataExists");
             //TODO: Notification
         } else {
             //TODO: Notification
+            System.out.println("Notification - !internet && !repoContentDataExists");
         }
     }
 
@@ -113,7 +117,6 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
                 return true;
             } else {
                 System.out.println("Internet Not Connected, " + "Output was " + x);
-                //TODO NOTIFICATION NO INTERNET CONNECTION
                 return false;
             }
         } catch (IOException | InterruptedException e) {

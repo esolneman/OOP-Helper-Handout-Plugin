@@ -43,9 +43,8 @@ public class HandoutDownloadAction extends AnAction {
     }
 
     //https://github.com/wooio/htmltopdf-java
-    /*
-
-     */
+    //TODO: if no content data is available
+    //TODO: close FileChooser
     private void create(String handoutHTMLDirectory, AnActionEvent event) {
         System.out.println(handoutHTMLDirectory);
         File content = LocalStorageDataProvider.getHandoutFileDirectory();
