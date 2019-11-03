@@ -16,31 +16,9 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
     public HandoutPluginController(Project project) {
         RepoLocalStorageDataProvider.setUserProjectDirectory(project);
         handoutDataProvider = ServiceManager.getService(project, HandoutContentDataProviderInterface.class);
-        checkInternetConnection();
         updateHandoutContent();
         handoutDataProvider.addListener(this);
     }
-
-
-    public Boolean checkInternetConnection(){
-        Process process = null;
-        try {
-            process = Runtime.getRuntime().exec("ping www.geeksforgeeks.org");
-            int x = process.waitFor();
-            if (x == 0) {
-                System.out.println("Connection Successful, " + "Output was " + x);
-                return true;
-            }
-            else {
-                System.out.println("Internet Not Connected, "  + "Output was " + x);
-                return false;
-            }
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
 
     public void updateHandoutContent() {
         handoutDataProvider.updateHandoutData();
