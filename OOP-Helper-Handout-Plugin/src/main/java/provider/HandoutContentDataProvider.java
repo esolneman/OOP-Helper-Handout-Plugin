@@ -1,12 +1,18 @@
 package provider;
 
+import com.intellij.notification.NotificationType;
 import com.intellij.openapi.project.Project;
+import controller.BalloonPopupController;
 import listener.OnEventListener;
 import provider.helper.AsyncExecutor;
 import provider.helper.DownloadTask;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,21 +39,22 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
     File outputDir;
     File tempVersionZipFile;
     File tempVersionOutputDir;
-
+    File repoLocalData;
+    DownloadTask task;
 
 
     public HandoutContentDataProvider(Project project) {
         this.project = project;
         projectDirectory = project.getBasePath();
         contentRepoPath = RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE;
-        contentRepoFile = new File (contentRepoPath);
-        zipFile = new File (RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE  + REPO_LOCAL_STORAGE_FILE + "/repo.zip");
-        outputDir = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE  + REPO_LOCAL_STORAGE_FILE + "/repo");
+        contentRepoFile = new File(contentRepoPath);
+        zipFile = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE + "/repo.zip");
+        outputDir = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE);
         //TODO: TEMP-File
-        tempVersionZipFile = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE  + REPO_LOCAL_STORAGE_FILE + "/temp" + "/repo.zip");
-        tempVersionOutputDir = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE  + REPO_LOCAL_STORAGE_FILE + "/temp");
-
-        //getRepoUrl();
+        tempVersionZipFile = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE + "/temp" + "/repo.zip");
+        tempVersionOutputDir = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE + "/temp");
+        repoLocalData = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE);
+        getRepoUrl();
         //getBranchName();
         // ToDo: get BranchName
         //TODO get RepoName
@@ -55,116 +62,144 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         System.out.println(contentRepoPath);
     }
 
+
     //ToDo getRepo Url
     private void getRepoUrl() {
         System.out.println("getRepoUrl");
         //System.out.println(TaskConfiguration.loadFrom());
         //repoUrl = TaskConfiguration.loadFrom().getHandoutURL();
+        String branchFolderName = "/OOP-Helper-Handout-Template-test";
+        RepoLocalStorageDataProvider.setHandoutHtmlString(branchFolderName);
     }
 
     public void updateHandoutData() {
         System.out.println("updateHandoutData");
-
-        //TODO check internet connection first
-
         //TODO: implement Logic
-        DownloadTask task = new DownloadTask(repoZipUrl);
+        task = new DownloadTask(repoZipUrl);
+        controlRetrievingContentData();
+    }
 
+    private void controlRetrievingContentData() {
+        Boolean internetConnection = checkInternetConnection();
+        Boolean repoContentDataExists = checkRepoContentDataExists();
+        if (internetConnection && !repoContentDataExists) {
+            updateBranch(task);
+        } else if (internetConnection && repoContentDataExists) {
+            cloneRepository(task);
+        } else if (repoContentDataExists) {
+            BalloonPopupController.showNotification(project, "Keine Internetverbindung vorhanden. Handout Daten können momentan nicht aktualisiert werden.", NotificationType.ERROR);
+        } else {
+            BalloonPopupController.showNotification(project, "Keine Internetverbindung vorhanden. Handout Daten können momentan nciht geladen werden.", NotificationType.ERROR);
+        }
+    }
+
+    private boolean checkRepoContentDataExists() {
         //https://stackoverflow.com/a/15571626
         if (!zipFile.exists()) {
             System.out.println("repo doesn't exist");
-            cloneRepository(task);
+            return false;
         } else {
             System.out.println("repo exist");
-            updateBranch(task);
+            return true;
         }
-
-
-
-
-
-
     }
-    public void addListener(OnEventListener listener) {
-        System.out.println("addListener: " + listener);
 
+    //https://www.geeksforgeeks.org/checking-internet-connectivity-using-java/
+    public Boolean checkInternetConnection() {
+        Process process;
+        try {
+            process = Runtime.getRuntime().exec("ping www.geeksforgeeks.org");
+            int x = process.waitFor();
+            if (x == 0) {
+                System.out.println("Connection Successful, " + "Output was " + x);
+                return true;
+            } else {
+                System.out.println("Internet Not Connected, " + "Output was " + x);
+                return false;
+            }
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public void addListener(OnEventListener listener) {
         listeners.add(listener);
     }
 
     private void cloneRepository(DownloadTask task) {
         System.out.println("start cloning branch");
         //https://www.vogella.com/tutorials/JGit/article.html#example-for-using-jgit
-        /**
-         * 1. Download handout branch as ZIP
-         * 2. Store ZIP in project folder
-         * 3. Compare ZIP file with last downloaded file (HASH)
-         * 4. If new (HASH is different) unzip to handout folder and overwrite last downloaded file
-         */
-
         Runnable cloneTask = () -> {
             try {
-                zipFile.getParentFile().mkdirs();
-                zipFile.createNewFile();
+                createFolder(zipFile, true);
+                createFolder(outputDir, false);
                 task.run(zipFile);
-                //TODO: maybe delete if --> always true?
-                if(!outputDir.exists()){
-                    outputDir.mkdirs();
-                    outputDir.createNewFile();
-                    task.unzipFile(zipFile, outputDir);
-                }
+                task.unzipFile(zipFile, outputDir);
             } catch (IOException e) {
+                //TODO Notification
+                deleteFile(repoLocalData);
                 e.printStackTrace();
             } finally {
-                System.out.println("end cloning branch");
-                if (listeners != null) {
-                    System.out.println("listener not null");
-                    for (OnEventListener listener : listeners) {
-                        System.out.println("listener: " + listener.toString());
-                        listener.onCloningRepositoryEvent(outputDir);
-                    }
-                } else {
-                    System.out.println("event Listener null");
-                }
+                callListener();
+                BalloonPopupController.showNotification(project, "Handout Daten wurden erfolgreich aktualisiert.", NotificationType.INFORMATION);
             }
         };
         asyncExecutor.runAsyncClone(cloneTask);
     }
 
-    private void updateBranch(DownloadTask task){
-        Runnable updateTask = () -> {
-        if(!tempVersionZipFile.exists()){
-            try {
-                tempVersionZipFile.getParentFile().mkdirs();
-                tempVersionZipFile.createNewFile();
-                task.run(tempVersionZipFile);
-                if(!tempVersionOutputDir.exists()){
-                    tempVersionOutputDir.getParentFile().mkdirs();
-                    tempVersionZipFile.createNewFile();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                System.out.println("end cloning branch");
-                if (listeners != null) {
-                    System.out.println("listener not null");
-                    for (OnEventListener listener : listeners) {
-                        System.out.println("listener: " + listener.toString());
-                        listener.onCloningRepositoryEvent(outputDir);
-                    }
-                } else {
-                    System.out.println("event Listener null");
-                }
+    private void createFolder(File zipFile, Boolean createParentFolder) throws IOException {
+        if(createParentFolder){
+            zipFile.getParentFile().mkdirs();
+        }else{
+            zipFile.mkdirs();
+        }
+        zipFile.createNewFile();
+    }
+
+    private void callListener() {
+        System.out.println("end cloning branch");
+        if (listeners != null) {
+            System.out.println("listener not null");
+            for (OnEventListener listener : listeners) {
+                listener.onCloningRepositoryEvent(outputDir);
             }
         }
-        //TODO: hash zips or output files
-        hashZipFiles();
-        task.unzipFile(tempVersionZipFile, tempVersionOutputDir);
+    }
+
+    private void updateBranch(DownloadTask task) {
+        Runnable updateTask = () -> {
+            try {
+                //https://stackoverflow.com/a/6143076
+                createFolder(tempVersionZipFile, true);
+                task.run(tempVersionZipFile);
+                if (!task.compareZipFiles(zipFile, tempVersionZipFile)) {
+                    System.out.println("not equal");
+                    task.unzipFile(tempVersionZipFile, outputDir);
+                    replaceFile(tempVersionZipFile, zipFile);
+                }
+            } catch (IOException e) {
+                //TODO Notification
+                repoLocalData.delete();
+                e.printStackTrace();
+            } finally {
+                deleteFile(tempVersionZipFile);
+                callListener();
+                BalloonPopupController.showNotification(project, "Handout Daten wurden erfolgreich heruntergeladen.", NotificationType.INFORMATION);
+
+            }
         };
         asyncExecutor.runAsyncClone(updateTask);
     }
 
-    private void hashZipFiles(){
-
+    private void replaceFile (File newData, File oldData) throws IOException {
+        //https://stackoverflow.com/a/17169576
+        Path from = newData.toPath(); //convert from File to Path
+        Path to = Paths.get(oldData.getPath()); //convert from String to Path
+        Files.copy(from, to, StandardCopyOption.REPLACE_EXISTING);
     }
 
+    private void deleteFile(File file){
+        file.delete();
+    }
 }

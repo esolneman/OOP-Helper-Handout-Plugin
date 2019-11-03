@@ -68,8 +68,6 @@ public class HandoutContentScreen extends SimpleToolWindowPanel implements OnEve
         handoutActionGroup.add(new Separator());
         handoutActionGroup.add(ActionManager.getInstance().getAction("Handout.Download"));
         handoutActionGroup.add(new Separator());
-        handoutActionGroup.add(ActionManager.getInstance().getAction("Handout.Minimize"));
-        handoutActionGroup.add(ActionManager.getInstance().getAction("Handout.Maximize"));
         final ActionToolbar checklistActionToolbar = ActionManager.getInstance().createActionToolbar("HandoutTool", handoutActionGroup, true);
         return checklistActionToolbar.getComponent();
     }
@@ -98,9 +96,12 @@ public class HandoutContentScreen extends SimpleToolWindowPanel implements OnEve
     public void onCloningRepositoryEvent(File repoFile) {
         System.out.println("Performing callback after Asynchronous Task");
         System.out.println("HandoutContentScreen: " + repoFile);
-        Platform.setImplicitExit(false);
-        Platform.runLater(() -> {
-            webView.getEngine().reload();
-        });
+        // TODO Error once
+        if(webView != null){
+            Platform.setImplicitExit(false);
+            Platform.runLater(() -> {
+                webView.getEngine().reload();
+            });
+        }
     }
 }
