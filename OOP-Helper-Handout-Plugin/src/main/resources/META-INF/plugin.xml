@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>oop_helper_handout</id>
     <name>oop_helper_handout</name>
-    <vendor email="marlena.wolfes@stud.uni-regensburg.de" url="http://www.company.com">Marlena Wolfes</vendor>
+    <vendor email="marlena.wolfes@stud.uni-regensburg.de">Marlena Wolfes</vendor>
 
     <description><![CDATA[
     Unterstützt die Studenten des OOP-Kurses der Univerität Regensburg bei der Bearbeitung von Studienleistung und Übungsaufgben<br>

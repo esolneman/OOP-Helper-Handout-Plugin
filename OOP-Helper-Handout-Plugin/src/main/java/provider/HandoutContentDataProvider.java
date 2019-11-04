@@ -108,7 +108,8 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
     public Boolean checkInternetConnection() {
         Process process;
         try {
-            process = Runtime.getRuntime().exec("ping www.geeksforgeeks.org");
+            //TODO was anpingen?
+            process = Runtime.getRuntime().exec("ping www.google.de");
             int x = process.waitFor();
             if (x == 0) {
                 System.out.println("Connection Successful, " + "Output was " + x);

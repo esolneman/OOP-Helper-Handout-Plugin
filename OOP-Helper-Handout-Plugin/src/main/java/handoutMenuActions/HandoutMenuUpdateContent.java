@@ -7,6 +7,6 @@ import org.jetbrains.annotations.NotNull;
 public class HandoutMenuUpdateContent extends AnAction {
     @Override
     public void actionPerformed(@NotNull AnActionEvent anActionEvent) {
-        //TODO AddListener to update content Datza
+        //TODO AddListener to update content Data
     }
 }
