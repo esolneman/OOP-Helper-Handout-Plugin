@@ -18,10 +18,11 @@ import java.util.List;
 
 import static environment.Constants.*;
 
-
+// is Singleton
 public class HandoutContentDataProvider implements HandoutContentDataProviderInterface {
     private List<OnEventListener> listeners = new ArrayList<>();
     private AsyncExecutor asyncExecutor = new AsyncExecutor();
+    private static HandoutContentDataProvider single_instance = null;
     //private OnEventListener eventListener;
 
     // TODO: get RepoURL from jar file
@@ -43,8 +44,16 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
     DownloadTask task;
 
 
-    public HandoutContentDataProvider(Project project) {
-        this.project = project;
+    public static HandoutContentDataProvider getInstance() {
+        if (single_instance == null) {
+            single_instance = new HandoutContentDataProvider();
+        }
+        return single_instance;
+    }
+
+
+    private HandoutContentDataProvider() {
+        this.project = RepoLocalStorageDataProvider.getProject();
         projectDirectory = project.getBasePath();
         contentRepoPath = RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE;
         contentRepoFile = new File(contentRepoPath);
