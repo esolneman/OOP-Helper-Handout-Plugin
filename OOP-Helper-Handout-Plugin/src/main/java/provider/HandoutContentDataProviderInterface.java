@@ -2,7 +2,7 @@ package provider;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import listener.OnEventListener;
+import eventHandling.OnEventListener;
 import org.jetbrains.annotations.NotNull;
 
 public interface HandoutContentDataProviderInterface {

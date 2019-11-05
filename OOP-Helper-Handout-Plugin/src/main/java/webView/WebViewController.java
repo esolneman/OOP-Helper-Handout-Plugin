@@ -47,7 +47,6 @@ public class WebViewController {
         String finalHeading = heading;
 
         Platform.runLater(() -> {
-
             ApplicationManager.getApplication().invokeLater(() -> {
                 System.out.println("ToolWindow isVisible: "+ handoutToolWindow.isVisible());
                 if(handoutToolWindow.isVisible()) {
@@ -84,7 +83,17 @@ public class WebViewController {
             }else {
                 webView.getEngine().load(newLocation);
             }
-
         });
     }
+
+    public void updateWebViewContent() {
+        // TODO Error once
+        if(webView != null){
+            Platform.setImplicitExit(false);
+            Platform.runLater(() -> {
+                webView.getEngine().reload();
+            });
+        }
+    }
+
 }

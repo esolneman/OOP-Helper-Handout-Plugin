@@ -2,16 +2,15 @@ package controller;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import listener.OnEventListener;
+import eventHandling.OnEventListener;
 import provider.HandoutContentDataProviderInterface;
 import provider.RepoLocalStorageDataProvider;
+import toolWindow.HandoutToolWindowFactory;
 
 import java.io.File;
-import java.io.IOException;
 
 public class HandoutPluginController implements HandoutPluginControllerInterface, OnEventListener{
     HandoutContentDataProviderInterface handoutDataProvider;
-    LinkToHandoutController linkToHandoutController;
 
     public HandoutPluginController(Project project) {
         RepoLocalStorageDataProvider.setUserProjectDirectory(project);
@@ -24,16 +23,21 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
         handoutDataProvider.updateHandoutData();
     }
 
+    //TODO MANAGE UPDATE VIEWS....
+    //TODO update Webview and other content of toolWindows
+    //TODO enable / disable Actions
     public void onCloningRepositoryEvent(File repoFile) {
         System.out.println("Performing callback after Asynchronous Task");
         System.out.println("repoFile: " + repoFile);
-
         System.out.println(repoFile.getAbsolutePath());
-
         repoFile.setExecutable(false);
         repoFile.setReadable(true);
         repoFile.setWritable(false);
         repoFile.setReadOnly();
+
+        //update toolWindow
+        //
+
 
         /*Path file = Paths.get(repoFile.getAbsolutePath());
         try {

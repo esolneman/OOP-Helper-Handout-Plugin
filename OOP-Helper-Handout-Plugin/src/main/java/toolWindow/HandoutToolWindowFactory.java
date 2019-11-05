@@ -1,21 +1,11 @@
 package toolWindow;
 
-import com.intellij.icons.AllIcons;
-import com.intellij.ide.plugins.newui.MyPluginModel;
 import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.actionSystem.ActionToolbar;
 import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.*;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.ui.content.*;
-import environment.HandoutPluginFXPanel;
-import listener.OnEventListener;
-import org.jetbrains.annotations.NotNull;
-import provider.HandoutContentDataProviderInterface;
-
-import java.io.File;
 
 
 public class HandoutToolWindowFactory implements ToolWindowFactory {
@@ -34,9 +24,14 @@ public class HandoutToolWindowFactory implements ToolWindowFactory {
     SpecificAssessmentCriteria specificAssessmentCriteria;
     CommonAssessmentCriteriaScreen commonAssessmentCriteriaScreen;
 
+
+
+
     // Create the tool window content.
+    // is called when user clicks on tool window button
     public void createToolWindowContent (Project project, ToolWindow toolWindow) {
         this.toolWindow = toolWindow;
+
         contentFactory = ContentFactory.SERVICE.getInstance();
         initScreens();
         createToolbar();
@@ -51,7 +46,7 @@ public class HandoutToolWindowFactory implements ToolWindowFactory {
         addScreenContent();
     }
 
-    public void addScreenContent() {
+    private void addScreenContent() {
         handoutContent = contentFactory.createContent(handoutContentScreen.getContent(), "HandoutHTML", false);
         handoutContent.setPreferredFocusableComponent(handoutContentScreen.getContent());
         checklistContent = contentFactory.createContent(checklistScreen.getContent(), "Checklist", false);
@@ -75,4 +70,9 @@ public class HandoutToolWindowFactory implements ToolWindowFactory {
         AnAction maximizeAction = (ActionManager.getInstance().getAction("Handout.Maximize"));
         ((ToolWindowEx)toolWindow).setTitleActions(new AnAction[] {updateAction, minimizeAction, maximizeAction});
     }
+
+    public void updateContent(){
+        handoutContentScreen.updateContent();
+    }
+
 }
