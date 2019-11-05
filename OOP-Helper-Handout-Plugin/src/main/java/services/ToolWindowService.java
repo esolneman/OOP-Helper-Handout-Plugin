@@ -1,6 +1,7 @@
 package services;
 
 import com.intellij.openapi.wm.ToolWindow;
+import controller.HandoutPluginController;
 
 public class ToolWindowService implements ToolWindowServiceInterface{
 
@@ -14,6 +15,11 @@ public class ToolWindowService implements ToolWindowServiceInterface{
     @Override
     public void setToolWindow(ToolWindow toolWindow) {
         this.toolWindow = toolWindow;
+    }
+
+    @Override
+    public void addListener(HandoutPluginController handoutPluginController) {
+
     }
 
 
