@@ -2,10 +2,11 @@ package services;
 
 import com.intellij.openapi.wm.ToolWindow;
 import controller.HandoutPluginController;
+import eventHandling.OnToolWindowCreatedListener;
+import toolWindow.HandoutToolWindowFactory;
 
 public interface ToolWindowServiceInterface {
-    ToolWindow getToolWindow();
-    void setToolWindow(ToolWindow toolWindow);
-
-    void addListener(HandoutPluginController handoutPluginController);
+    //HandoutToolWindowFactory getToolWindowFactory();
+    //void setToolWindowFactory(HandoutToolWindowFactory toolWindowFactory);
+    void addListener(OnToolWindowCreatedListener listener);
 }

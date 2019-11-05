@@ -12,16 +12,16 @@ import toolWindow.HandoutToolWindowFactory;
 
 import java.io.File;
 
-public class HandoutPluginController implements HandoutPluginControllerInterface, OnEventListener, OnToolWindowCreatedListener {
+public class HandoutPluginController implements HandoutPluginControllerInterface, OnEventListener {
     HandoutContentDataProviderInterface handoutDataProvider;
-    ToolWindowServiceInterface toolWindowService;
+    HandoutToolWindowFactory handoutToolWindowFactory;
+    ToolWindowController toolWindowController;
 
     public HandoutPluginController(Project project) {
         RepoLocalStorageDataProvider.setUserProjectDirectory(project);
         handoutDataProvider = ServiceManager.getService(project, HandoutContentDataProviderInterface.class);
         handoutDataProvider.addListener(this);
-        toolWindowService = ServiceManager.getService(project, ToolWindowServiceInterface.class);
-        toolWindowService.addListener(this);
+        toolWindowController = ToolWindowController.getInstance();
         updateHandoutContent();
     }
 
@@ -40,7 +40,7 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
         repoFile.setReadable(true);
         repoFile.setWritable(false);
         repoFile.setReadOnly();
-
+        toolWindowController.updateContent();
         //update toolWindow
         //
         /*Path file = Paths.get(repoFile.getAbsolutePath());
@@ -50,10 +50,5 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
             System.out.print(e);
         }
         System.out.println("RepoFile hidden: "+ repoFile.isHidden());*/
-    }
-
-    @Override
-    public void OnToolWindowCreatedEvent(ToolWindow toolWindow) {
-
     }
 }

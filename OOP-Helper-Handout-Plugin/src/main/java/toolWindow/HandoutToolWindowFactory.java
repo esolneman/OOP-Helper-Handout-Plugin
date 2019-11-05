@@ -6,32 +6,36 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.*;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.ui.content.*;
+import eventHandling.OnToolWindowCreatedListener;
+import services.ToolWindowServiceInterface;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
-public class HandoutToolWindowFactory implements ToolWindowFactory {
-    ToolWindow toolWindow;
-    ContentFactory contentFactory;
+public class HandoutToolWindowFactory implements ToolWindowFactory, ToolWindowServiceInterface {
 
-    Content handoutContent;
-    Content checklistContent;
-    Content shortcutContent;
-    Content specificCriteriaContent;
-    Content commonAssessmentCriteriaContent;
+    private List<OnToolWindowCreatedListener> listeners = new ArrayList<>();
 
-    HandoutContentScreen handoutContentScreen;
-    ChecklistScreen checklistScreen;
-    ShortcutScreen shortcutScreen;
-    SpecificAssessmentCriteria specificAssessmentCriteria;
-    CommonAssessmentCriteriaScreen commonAssessmentCriteriaScreen;
+    private ToolWindow toolWindow;
+    private ContentFactory contentFactory;
 
+    private Content handoutContent;
+    private Content checklistContent;
+    private Content shortcutContent;
+    private Content specificCriteriaContent;
+    private Content commonAssessmentCriteriaContent;
 
-
+    private HandoutContentScreen handoutContentScreen;
+    private ChecklistScreen checklistScreen;
+    private ShortcutScreen shortcutScreen;
+    private SpecificAssessmentCriteria specificAssessmentCriteria;
+    private CommonAssessmentCriteriaScreen commonAssessmentCriteriaScreen;
 
     // Create the tool window content.
     // is called when user clicks on tool window button
     public void createToolWindowContent (Project project, ToolWindow toolWindow) {
         this.toolWindow = toolWindow;
-
         contentFactory = ContentFactory.SERVICE.getInstance();
         initScreens();
         createToolbar();
@@ -61,6 +65,8 @@ public class HandoutToolWindowFactory implements ToolWindowFactory {
         toolWindow.getContentManager().addContent(commonAssessmentCriteriaContent);
         //TODO: Decide which Tab is open when start ide
         toolWindow.getContentManager().setSelectedContent(handoutContent);
+        callListener();
+
     }
 
     //https://www.programcreek.com/java-api-examples/?api=com.intellij.openapi.wm.ex.ToolWindowEx
@@ -72,7 +78,22 @@ public class HandoutToolWindowFactory implements ToolWindowFactory {
     }
 
     public void updateContent(){
+        System.out.println("Update ToolWindows");
         handoutContentScreen.updateContent();
     }
 
+    @Override
+    public void addListener(OnToolWindowCreatedListener listener) {
+        listeners.add(listener);
+    }
+
+    private void callListener() {
+        System.out.println("toolWindow available");
+        if (listeners != null) {
+            System.out.println("listener not null");
+            for (OnToolWindowCreatedListener listener : listeners) {
+                listener.OnToolWindowCreatedEvent(this);
+            }
+        }
+    }
 }
