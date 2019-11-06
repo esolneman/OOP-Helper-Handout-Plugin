@@ -47,7 +47,6 @@ public class WebViewController {
         String finalHeading = heading;
 
         Platform.runLater(() -> {
-
             ApplicationManager.getApplication().invokeLater(() -> {
                 System.out.println("ToolWindow isVisible: "+ handoutToolWindow.isVisible());
                 if(handoutToolWindow.isVisible()) {
@@ -67,24 +66,34 @@ public class WebViewController {
                 //https://stackoverflow.com/questions/52960101/how-to-edit-html-page-in-a-webview-from-javafx-without-reloading-the-page
                 //https://stackoverflow.com/a/5882802
                 org.w3c.dom.Document documentJava = webView.getEngine().getDocument();
+                //TODO Sometimes Nullpointer
                 Element ele = documentJava.getElementById(finalHeading);
                 Element mark = documentJava.createElement("mark");
+                //TODO Sometimes Nullpointer
                 Element parentElement = (Element) ele.getParentNode();
                 parentElement.insertBefore(mark, ele);
                 mark.appendChild(ele);
                 webView.getEngine().load(newLocation);
                 //https://stackoverflow.com/a/53452586
+                //TODO REFACTOR
                 CompletableFuture.delayedExecutor(1, TimeUnit.SECONDS).execute(() -> {
-                    Platform.setImplicitExit(false);
-                    Platform.runLater(() -> {
-                        webView.getEngine().reload();
-                    });
+                    updateWebViewContent();
                 });
 
             }else {
                 webView.getEngine().load(newLocation);
             }
-
         });
     }
+
+    public void updateWebViewContent() {
+        // TODO Error once
+        if(webView != null){
+            Platform.setImplicitExit(false);
+            Platform.runLater(() -> {
+                webView.getEngine().reload();
+            });
+        }
+    }
+
 }
