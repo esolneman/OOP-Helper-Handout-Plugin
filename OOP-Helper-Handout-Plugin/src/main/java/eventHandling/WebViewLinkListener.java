@@ -1,4 +1,4 @@
-package webView;
+package eventHandling;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Editor;
