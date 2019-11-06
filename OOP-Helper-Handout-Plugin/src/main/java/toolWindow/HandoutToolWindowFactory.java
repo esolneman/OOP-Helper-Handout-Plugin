@@ -5,30 +5,49 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
+import com.intellij.openapi.actionSystem.ActionManager;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.wm.*;
+import com.intellij.openapi.wm.ex.ToolWindowEx;
+import com.intellij.ui.content.*;
+import eventHandling.OnToolWindowCreatedListener;
+import objects.SpecificAssessmentCriteria;
+import services.ToolWindowServiceInterface;
 
-public class HandoutToolWindowFactory implements ToolWindowFactory {
-    ToolWindow toolWindow;
-    ContentFactory contentFactory;
+import java.util.ArrayList;
+import java.util.List;
 
-    Content handoutContent;
-    Content checklistContent;
-    Content shortcutContent;
-    Content specificCriteriaContent;
-    Content commonAssessmentCriteriaContent;
-    Content commonAssessmentCriteriaContentJavaFXTable;
 
-    HandoutContentScreen handoutContentScreen;
-    ChecklistScreen checklistScreen;
-    ShortcutScreen shortcutScreen;
-    SpecificAssessmentCriteriaScreen specificAssessmentCriteria;
-    CommonAssessmentCriteriaScreen commonAssessmentCriteriaScreen;
-    AssessmentScreen assessmentScreen;
+public class HandoutToolWindowFactory implements ToolWindowFactory, ToolWindowServiceInterface {
+
+    private List<OnToolWindowCreatedListener> listeners = new ArrayList<>();
+
+    private ToolWindow toolWindow;
+    private ContentFactory contentFactory;
+
+    private Content handoutContent;
+    private Content checklistContent;
+    private Content shortcutContent;
+    private Content specificCriteriaContent;
+    private Content commonAssessmentCriteriaContent;
+    private Content commonAssessmentCriteriaContentJavaFXTable;
+
+
+    private HandoutContentScreen handoutContentScreen;
+    private ChecklistScreen checklistScreen;
+    private ShortcutScreen shortcutScreen;
+    private SpecificAssessmentCriteriaScreen specificAssessmentCriteria;
+    private CommonAssessmentCriteriaScreen commonAssessmentCriteriaScreen;
+    private AssessmentScreen assessmentScreen;
 
     // Create the tool window content.
-    public void createToolWindowContent(Project project, ToolWindow toolWindow) {
+    // is called when user clicks on tool window button
+    public void createToolWindowContent (Project project, ToolWindow toolWindow) {
         this.toolWindow = toolWindow;
         contentFactory = ContentFactory.SERVICE.getInstance();
         initScreens();
+        createToolbar();
     }
 
     private void initScreens() {
@@ -41,7 +60,7 @@ public class HandoutToolWindowFactory implements ToolWindowFactory {
         addScreenContent();
     }
 
-    public void addScreenContent() {
+    private void addScreenContent() {
         handoutContent = contentFactory.createContent(handoutContentScreen.getContent(), "HandoutHTML", false);
         handoutContent.setPreferredFocusableComponent(handoutContentScreen.getContent());
         checklistContent = contentFactory.createContent(checklistScreen.getContent(), "Checklist", false);
@@ -58,6 +77,35 @@ public class HandoutToolWindowFactory implements ToolWindowFactory {
         toolWindow.getContentManager().addContent(commonAssessmentCriteriaContentJavaFXTable);
         //TODO: Decide which Tab is open when start ide
         toolWindow.getContentManager().setSelectedContent(handoutContent);
+        callListener();
 
+    }
+
+    //https://www.programcreek.com/java-api-examples/?api=com.intellij.openapi.wm.ex.ToolWindowEx
+    private void createToolbar() {
+        AnAction updateAction = ActionManager.getInstance().getAction("Myplugin.Textboxes.Update");
+        AnAction minimizeAction = (ActionManager.getInstance().getAction("Handout.Minimize"));
+        AnAction maximizeAction = (ActionManager.getInstance().getAction("Handout.Maximize"));
+        ((ToolWindowEx)toolWindow).setTitleActions(new AnAction[] {updateAction, minimizeAction, maximizeAction});
+    }
+
+    public void updateContent(){
+        System.out.println("Update ToolWindows");
+        handoutContentScreen.updateContent();
+    }
+
+    @Override
+    public void addListener(OnToolWindowCreatedListener listener) {
+        listeners.add(listener);
+    }
+
+    private void callListener() {
+        System.out.println("toolWindow available");
+        if (listeners != null) {
+            System.out.println("listener not null");
+            for (OnToolWindowCreatedListener listener : listeners) {
+                listener.OnToolWindowCreatedEvent(this);
+            }
+        }
     }
 }

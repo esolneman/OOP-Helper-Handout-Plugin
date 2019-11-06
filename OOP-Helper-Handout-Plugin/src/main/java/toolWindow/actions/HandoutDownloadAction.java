@@ -2,23 +2,19 @@ package toolWindow.actions;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.popup.Balloon;
-import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.*;
-import com.intellij.ui.awt.RelativePoint;
 import controller.BalloonPopupController;
 import io.woo.htmltopdf.HtmlToPdf;
 import io.woo.htmltopdf.HtmlToPdfObject;
 import provider.LocalStorageDataProvider;
 import provider.RepoLocalStorageDataProvider;
-import toolWindow.HandoutContentScreen;
 
 import javax.swing.*;
 import java.io.File;
@@ -63,9 +59,9 @@ public class HandoutDownloadAction extends AnAction {
                     .convert(handoutPDFDirectory);
             JComponent handoutContentScreen = ToolWindowManager.getActiveToolWindow().getComponent();
             if(success){
-                BalloonPopupController.createBalloonNotification(handoutContentScreen, Balloon.Position.above, "Downloading was successfully", MessageType.INFO);
+                BalloonPopupController.showBalloonNotification(handoutContentScreen, Balloon.Position.above, "Downloading was successfully", MessageType.INFO);
             }else{
-                BalloonPopupController.createBalloonNotification(handoutContentScreen, Balloon.Position.above, "Error while downloading the handout. Please try again.", MessageType.ERROR);
+                BalloonPopupController.showBalloonNotification(handoutContentScreen, Balloon.Position.above, "Error while downloading the handout. Please try again.", MessageType.ERROR);
             }
         } catch (MalformedURLException e) {
             e.printStackTrace();

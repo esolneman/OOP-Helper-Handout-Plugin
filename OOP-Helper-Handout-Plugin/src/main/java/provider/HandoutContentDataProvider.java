@@ -1,7 +1,11 @@
 package provider;
 
+import com.google.common.eventbus.EventBus;
+import com.intellij.notification.NotificationType;
 import com.intellij.openapi.project.Project;
-import listener.OnEventListener;
+import controller.BalloonPopupController;
+import eventHandling.DataProviderListener;
+import eventHandling.OnEventListener;
 import provider.helper.AsyncExecutor;
 import provider.helper.DownloadTask;
 
@@ -16,10 +20,11 @@ import java.util.List;
 
 import static environment.Constants.*;
 
-
+// is Singleton
 public class HandoutContentDataProvider implements HandoutContentDataProviderInterface {
     private List<OnEventListener> listeners = new ArrayList<>();
     private AsyncExecutor asyncExecutor = new AsyncExecutor();
+    private static HandoutContentDataProvider single_instance = null;
     //private OnEventListener eventListener;
 
     // TODO: get RepoURL from jar file
@@ -39,10 +44,19 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
     File tempVersionOutputDir;
     File repoLocalData;
     DownloadTask task;
+    //EventBus eventBus;
 
 
-    public HandoutContentDataProvider(Project project) {
-        this.project = project;
+    public static HandoutContentDataProvider getInstance() {
+        if (single_instance == null) {
+            single_instance = new HandoutContentDataProvider();
+        }
+        return single_instance;
+    }
+
+
+    private HandoutContentDataProvider() {
+        this.project = RepoLocalStorageDataProvider.getProject();
         projectDirectory = project.getBasePath();
         contentRepoPath = RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE;
         contentRepoFile = new File(contentRepoPath);
@@ -81,17 +95,13 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         Boolean internetConnection = checkInternetConnection();
         Boolean repoContentDataExists = checkRepoContentDataExists();
         if (internetConnection && !repoContentDataExists) {
-            System.out.println("Downloading - internet && !repoContentDataExists");
             updateBranch(task);
         } else if (internetConnection && repoContentDataExists) {
-            System.out.println("UPDATE - internet && repoContentDataExists");
             cloneRepository(task);
         } else if (repoContentDataExists) {
-            System.out.println("Notification - !internet && repoContentDataExists");
-            //TODO: Notification
+            BalloonPopupController.showNotification(project, "Keine Internetverbindung vorhanden. Handout Daten können momentan nicht aktualisiert werden.", NotificationType.ERROR);
         } else {
-            //TODO: Notification
-            System.out.println("Notification - !internet && !repoContentDataExists");
+            BalloonPopupController.showNotification(project, "Keine Internetverbindung vorhanden. Handout Daten können momentan nciht geladen werden.", NotificationType.ERROR);
         }
     }
 
@@ -107,10 +117,12 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
     }
 
     //https://www.geeksforgeeks.org/checking-internet-connectivity-using-java/
+    //TODO Ping Github Repo -> is Repo Available
     public Boolean checkInternetConnection() {
         Process process;
         try {
-            process = Runtime.getRuntime().exec("ping www.geeksforgeeks.org");
+            //TODO was anpingen?
+            process = Runtime.getRuntime().exec("ping www.google.de");
             int x = process.waitFor();
             if (x == 0) {
                 System.out.println("Connection Successful, " + "Output was " + x);
@@ -144,6 +156,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
                 e.printStackTrace();
             } finally {
                 callListener();
+                BalloonPopupController.showNotification(project, "Handout Daten wurden erfolgreich aktualisiert.", NotificationType.INFORMATION);
             }
         };
         asyncExecutor.runAsyncClone(cloneTask);
@@ -156,16 +169,6 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
             zipFile.mkdirs();
         }
         zipFile.createNewFile();
-    }
-
-    private void callListener() {
-        System.out.println("end cloning branch");
-        if (listeners != null) {
-            System.out.println("listener not null");
-            for (OnEventListener listener : listeners) {
-                listener.onCloningRepositoryEvent(outputDir);
-            }
-        }
     }
 
     private void updateBranch(DownloadTask task) {
@@ -186,6 +189,8 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
             } finally {
                 deleteFile(tempVersionZipFile);
                 callListener();
+                BalloonPopupController.showNotification(project, "Handout Daten wurden erfolgreich heruntergeladen.", NotificationType.INFORMATION);
+
             }
         };
         asyncExecutor.runAsyncClone(updateTask);
@@ -196,6 +201,19 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         Path from = newData.toPath(); //convert from File to Path
         Path to = Paths.get(oldData.getPath()); //convert from String to Path
         Files.copy(from, to, StandardCopyOption.REPLACE_EXISTING);
+    }
+
+    private void callListener() {
+        System.out.println("end cloning branch");
+        if (listeners != null) {
+            System.out.println("listener not null");
+            for (OnEventListener listener : listeners) {
+                listener.onCloningRepositoryEvent(outputDir);
+            }
+        }
+       /* EventBus eventBus = new EventBus();
+        eventBus.register(DataProviderListener);
+        eventBus.post(outputDir); */
     }
 
     private void deleteFile(File file){
