@@ -3,10 +3,10 @@ package webView;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowType;
+import eventHandling.WebViewLinkListener;
 import javafx.application.Platform;
 import javafx.scene.web.WebView;
 import org.apache.commons.lang.WordUtils;
-import org.jsoup.nodes.Document;
 import org.w3c.dom.Element;
 import toolWindow.HandoutContentScreen;
 
@@ -81,6 +81,7 @@ public class WebViewController {
                 });
 
             }else {
+                //TODO new method
                 webView.getEngine().load(newLocation);
             }
         });
@@ -88,6 +89,7 @@ public class WebViewController {
 
     public void updateWebViewContent() {
         // TODO Error once
+        // TODO test if load urlAtring is working
         if(webView != null){
             Platform.setImplicitExit(false);
             Platform.runLater(() -> {
