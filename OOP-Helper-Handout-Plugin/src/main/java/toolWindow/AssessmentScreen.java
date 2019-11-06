@@ -69,7 +69,7 @@ public class AssessmentScreen extends SimpleToolWindowPanel{
         TableColumn nachNameCol = new TableColumn("Nachname");
         TableColumn emailCol = new TableColumn("Email");
         TableColumn alterCol = new TableColumn("Alter");
-        table.getColumns().addAll(vorNameCol, nachNameCol, emailCol, alterCol);
+        //table.getColumns().addAll(vorNameCol, nachNameCol, emailCol, alterCol);
         //JScrollPane tableContainer = new JBScrollPane(table);
         handoutContent.showTable();
     }

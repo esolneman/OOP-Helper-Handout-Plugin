@@ -1,18 +1,14 @@
 package toolWindow;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowFactory;
-import com.intellij.ui.content.Content;
-import com.intellij.ui.content.ContentFactory;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.wm.*;
+import com.intellij.openapi.wm.ToolWindow;
+import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
-import com.intellij.ui.content.*;
+import com.intellij.ui.content.Content;
+import com.intellij.ui.content.ContentFactory;
 import eventHandling.OnToolWindowCreatedListener;
-import objects.SpecificAssessmentCriteria;
 import services.ToolWindowServiceInterface;
 
 import java.util.ArrayList;
@@ -43,7 +39,7 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, ToolWindowSe
 
     // Create the tool window content.
     // is called when user clicks on tool window button
-    public void createToolWindowContent (Project project, ToolWindow toolWindow) {
+    public void createToolWindowContent(Project project, ToolWindow toolWindow) {
         this.toolWindow = toolWindow;
         contentFactory = ContentFactory.SERVICE.getInstance();
         initScreens();
@@ -86,10 +82,10 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, ToolWindowSe
         AnAction updateAction = ActionManager.getInstance().getAction("Myplugin.Textboxes.Update");
         AnAction minimizeAction = (ActionManager.getInstance().getAction("Handout.Minimize"));
         AnAction maximizeAction = (ActionManager.getInstance().getAction("Handout.Maximize"));
-        ((ToolWindowEx)toolWindow).setTitleActions(new AnAction[] {updateAction, minimizeAction, maximizeAction});
+        ((ToolWindowEx) toolWindow).setTitleActions(new AnAction[]{updateAction, minimizeAction, maximizeAction});
     }
 
-    public void updateContent(){
+    public void updateContent() {
         System.out.println("Update ToolWindows");
         handoutContentScreen.updateContent();
     }

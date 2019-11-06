@@ -52,12 +52,11 @@ public class HandoutPluginFXPanel extends JFXPanel {
                 TableRow newRow = new TableRow();
                 newRow.setText(Arrays.toString(criterion));
                 //newRow.updateTableView(table);
-                data2.add(Arrays.toString(criterion));
+                data2.add(newRow);
                 System.out.println("Criterion: " + Arrays.toString(criterion));
                 System.out.println("data2: " + data2.get(0));
             }
             table.setItems(data2);
-
             this.setScene(new Scene(table, 50, 50));
         });
     }
