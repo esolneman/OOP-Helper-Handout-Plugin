@@ -10,6 +10,7 @@ import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import provider.LocalStorageDataProvider;
 import provider.RepoLocalStorageDataProvider;
 
@@ -41,10 +42,24 @@ public class DownloadTask {
             e.printStackTrace();
         }
 
+        /*FileRepositoryBuilder builder = new FileRepositoryBuilder();
+        File file = new File(RepoLocalStorageDataProvider.getRepoLocalFile();
+        try (Repository repository = builder.setGitDir(file)
+                .readEnvironment() // scan environment GIT_* variables
+                .findGitDir() // scan up the file system tree
+                .build()) {
+            System.out.println("Having repository: " + repository.getDirectory());
+
+            // the Ref holds an ObjectId for any type of object (tree, commit, blob, tree)
+            Ref head = repository.exactRef("refs/heads/master");
+            System.out.println("Ref of refs/heads/master: " + head);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         Repository repository = null;
-        Repository contentDataRepo = Repository.
+        //Repository contentDataRepo = Repository.
         Ref head = repository.getAllRefs().get("HEAD");
-        System.out.println("Ref of HEAD: " + head + ": " + head.getName() + " - " + head.getObjectId().getName());
+        System.out.println("Ref of HEAD: " + head + ": " + head.getName() + " - " + head.getObjectId().getName());*/
      /*   File currentFile = new File(".");
         try {
             Git git = Git.init().setDirectory(currentFile).call();
@@ -77,7 +92,7 @@ public class DownloadTask {
 
     //https://stackoverflow.com/a/27379126
     public boolean compareZipFiles(File file1, File file2) {
-        System.out.println(TimeStamp.getCurrentTime());
+        System.out.println("TimeBefore: " + TimeStamp.getCurrentTime().toDateString());
         //Deprecated
        /* try {
             return Files.hash(file1, Hashing.md5()).equals(Files.hash(file2, Hashing.sha1()));
@@ -89,7 +104,7 @@ public class DownloadTask {
         } catch (IOException e) {
             e.printStackTrace();
         }finally {
-            System.out.println(TimeStamp.getCurrentTime());
+            System.out.println("Time After: " +TimeStamp.getCurrentTime().toDateString());
         }
         return false;
     }

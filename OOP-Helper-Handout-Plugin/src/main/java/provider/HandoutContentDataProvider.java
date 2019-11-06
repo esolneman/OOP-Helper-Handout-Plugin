@@ -95,9 +95,9 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         Boolean internetConnection = checkInternetConnection();
         Boolean repoContentDataExists = checkRepoContentDataExists();
         if (internetConnection && !repoContentDataExists) {
-            updateBranch(task);
-        } else if (internetConnection && repoContentDataExists) {
             cloneRepository(task);
+        } else if (internetConnection && repoContentDataExists) {
+            updateBranch(task);
         } else if (repoContentDataExists) {
             BalloonPopupController.showNotification(project, "Keine Internetverbindung vorhanden. Handout Daten können momentan nicht aktualisiert werden.", NotificationType.ERROR);
         } else {
@@ -156,7 +156,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
                 e.printStackTrace();
             } finally {
                 callListener();
-                BalloonPopupController.showNotification(project, "Handout Daten wurden erfolgreich aktualisiert.", NotificationType.INFORMATION);
+                BalloonPopupController.showNotification(project, "Handout Daten wurden runtergeladen.", NotificationType.INFORMATION);
             }
         };
         asyncExecutor.runAsyncClone(cloneTask);
@@ -173,6 +173,8 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
 
     private void updateBranch(DownloadTask task) {
         Runnable updateTask = () -> {
+            System.out.println("updateBranch");
+
             try {
                 //https://stackoverflow.com/a/6143076
                 createFolder(tempVersionZipFile, true);
@@ -189,7 +191,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
             } finally {
                 deleteFile(tempVersionZipFile);
                 callListener();
-                BalloonPopupController.showNotification(project, "Handout Daten wurden erfolgreich heruntergeladen.", NotificationType.INFORMATION);
+                BalloonPopupController.showNotification(project, "Handout Daten wurden erfolgreich aktualisiert.", NotificationType.INFORMATION);
 
             }
         };
