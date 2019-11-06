@@ -25,11 +25,14 @@ public class SpecificAssessmentCriteriaScreen {
 
         criteriaTable.setEnabled(false);
         criteriaTable.setFillsViewportHeight(true);
-        data = LocalStorageDataProvider.getSpecificAssessmentCriteria();
+       /* data = LocalStorageDataProvider.getSpecificAssessmentCriteria();
 
         for (String s : data.getHeadline()) {
             model.addColumn(s);
-        }
+        }*/
+
+
+
         /*for (String[][] criterion : data.getCriteria()) {
             for (String[] strings : criterion) {
                 System.out.println("Data: " + Arrays.toString(strings));
@@ -37,11 +40,11 @@ public class SpecificAssessmentCriteriaScreen {
             model.addRow(criterion);
         }*/
 
-        for (String[] criterion : data.getCriteria()) {
+        /*for (String[] criterion : data.getCriteria()) {
             System.out.println("ROW: " + Arrays.toString(criterion));
             model.addRow(criterion);
         }
-        criteriaTable.setModel(model);
+        criteriaTable.setModel(model);*/
 
 
         //String[] columnNames = {"First Name", "Last Name"};

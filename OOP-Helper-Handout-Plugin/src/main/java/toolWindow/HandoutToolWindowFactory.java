@@ -50,7 +50,7 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, ToolWindowSe
         handoutContentScreen = new HandoutContentScreen(toolWindow);
         checklistScreen = new ChecklistScreen(toolWindow);
         shortcutScreen = new ShortcutScreen(toolWindow);
-        specificAssessmentCriteria = new SpecificAssessmentCriteriaScreen(toolWindow);
+        //specificAssessmentCriteria = new SpecificAssessmentCriteriaScreen(toolWindow);
         commonAssessmentCriteriaScreen = new CommonAssessmentCriteriaScreen(toolWindow);
         assessmentScreen = new AssessmentScreen(toolWindow);
         addScreenContent();
@@ -61,14 +61,14 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, ToolWindowSe
         handoutContent.setPreferredFocusableComponent(handoutContentScreen.getContent());
         checklistContent = contentFactory.createContent(checklistScreen.getContent(), "Checklist", false);
         shortcutContent = contentFactory.createContent(shortcutScreen.getContent(), "Shortcut", false);
-        specificCriteriaContent = contentFactory.createContent(specificAssessmentCriteria.getContent(), "Specific Assessment Criteria", false);
+        //specificCriteriaContent = contentFactory.createContent(specificAssessmentCriteria.getContent(), "Specific Assessment Criteria", false);
         commonAssessmentCriteriaContent = contentFactory.createContent(commonAssessmentCriteriaScreen.getContent(), "Common Assessment Criteria", false);
         commonAssessmentCriteriaContentJavaFXTable = contentFactory.createContent(assessmentScreen.getContent(), "TABLE", false);
 
         toolWindow.getContentManager().addContent(handoutContent);
         toolWindow.getContentManager().addContent(checklistContent);
         toolWindow.getContentManager().addContent(shortcutContent);
-        toolWindow.getContentManager().addContent(specificCriteriaContent);
+        //toolWindow.getContentManager().addContent(specificCriteriaContent);
         toolWindow.getContentManager().addContent(commonAssessmentCriteriaContent);
         toolWindow.getContentManager().addContent(commonAssessmentCriteriaContentJavaFXTable);
         //TODO: Decide which Tab is open when start ide

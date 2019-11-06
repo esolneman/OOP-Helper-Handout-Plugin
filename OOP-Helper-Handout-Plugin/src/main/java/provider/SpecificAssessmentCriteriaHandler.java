@@ -52,7 +52,7 @@ public class SpecificAssessmentCriteriaHandler {
                 System.out.println("row: " + Arrays.toString(row));
 
 
-               /* String[][] criterion = new String[row.length][row.length];
+               /*String[][] criterion = new String[row.length][row.length];
                 for (int j = 0; j < row.length; j++) {
                     String currentString = row[j];
                     criterion[j][0] = currentString.split("\\[(.*?)\\]")[0];

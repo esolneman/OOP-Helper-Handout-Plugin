@@ -19,7 +19,7 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 
 public class AssessmentScreen extends SimpleToolWindowPanel{
-    private final SpecificAssessmentCriteria data;
+    //private final SpecificAssessmentCriteria data;
     private HandoutPluginFXPanel assessmentContent;
     private ToolWindow handoutToolWindow;
     private static File content;
@@ -34,7 +34,7 @@ public class AssessmentScreen extends SimpleToolWindowPanel{
         toolWindowPanel = new SimpleToolWindowPanel(true);
         webViewController = new WebViewController();
         handoutToolWindow = toolWindow;
-        data = LocalStorageDataProvider.getSpecificAssessmentCriteria();
+        //data = LocalStorageDataProvider.getSpecificAssessmentCriteria();
         //content = LocalStorageDataProvider.getSpecificAssessmentCriteria();
         content = LocalStorageDataProvider.getSpecificAssessmentCriteriaFileDirectory();
         try {
