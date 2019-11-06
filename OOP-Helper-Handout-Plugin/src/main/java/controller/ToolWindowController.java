@@ -26,7 +26,9 @@ public class ToolWindowController implements OnToolWindowCreatedListener{
     }
 
     public void updateContent() {
-        handoutToolWindowFactory.updateContent();
+        if(handoutToolWindowFactory != null){
+            handoutToolWindowFactory.updateContent();
+        }
     }
 
     public void OnToolWindowCreatedEvent(HandoutToolWindowFactory toolWindowFactory) {
