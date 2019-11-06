@@ -2,12 +2,9 @@ package controller;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.wm.ToolWindow;
 import eventHandling.OnEventListener;
-import eventHandling.OnToolWindowCreatedListener;
 import provider.HandoutContentDataProviderInterface;
 import provider.RepoLocalStorageDataProvider;
-import services.ToolWindowServiceInterface;
 import toolWindow.HandoutToolWindowFactory;
 
 import java.io.File;

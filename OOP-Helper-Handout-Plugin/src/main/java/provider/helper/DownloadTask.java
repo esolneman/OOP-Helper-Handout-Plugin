@@ -2,6 +2,16 @@ package provider.helper;
 
 import net.lingala.zip4j.ZipFile;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.net.ntp.TimeStamp;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.Constants;
+import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevCommit;
+import provider.LocalStorageDataProvider;
+import provider.RepoLocalStorageDataProvider;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -30,6 +40,29 @@ public class DownloadTask {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        Repository repository = null;
+        Repository contentDataRepo = Repository.
+        Ref head = repository.getAllRefs().get("HEAD");
+        System.out.println("Ref of HEAD: " + head + ": " + head.getName() + " - " + head.getObjectId().getName());
+     /*   File currentFile = new File(".");
+        try {
+            Git git = Git.init().setDirectory(currentFile).call();
+            Repository repository = git.getRepository();
+            ObjectId head = repository.resolve(Constants.HEAD);
+            Iterable<RevCommit> commits = git.log()
+                    .add(head)
+                    .addPath(RepoLocalStorageDataProvider.getRepoLocalFile())
+                    .setMaxCount(1).call();
+            commits.forEach(revCommit -> System.out.println("commit: " + revCommit.getName())); // getName will print the revision hash
+        } catch (IOException | GitAPIException e) {
+            System.out.println("commit crash");
+
+            e.printStackTrace();
+        }*/
+
+
+
     }
 
     //https://stackoverflow.com/a/14656534
@@ -44,6 +77,7 @@ public class DownloadTask {
 
     //https://stackoverflow.com/a/27379126
     public boolean compareZipFiles(File file1, File file2) {
+        System.out.println(TimeStamp.getCurrentTime());
         //Deprecated
        /* try {
             return Files.hash(file1, Hashing.md5()).equals(Files.hash(file2, Hashing.sha1()));
@@ -54,6 +88,8 @@ public class DownloadTask {
             return FileUtils.contentEquals(file1, file2);
         } catch (IOException e) {
             e.printStackTrace();
+        }finally {
+            System.out.println(TimeStamp.getCurrentTime());
         }
         return false;
     }
