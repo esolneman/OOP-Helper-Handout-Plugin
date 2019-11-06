@@ -88,6 +88,7 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, ToolWindowSe
     public void updateContent() {
         System.out.println("Update ToolWindows");
         handoutContentScreen.updateContent();
+        assessmentScreen.updateContent();
     }
 
     @Override

@@ -5,13 +5,13 @@ import com.intellij.openapi.actionSystem.ActionToolbar;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.ui.components.JBScrollPane;
 import environment.HandoutPluginFXPanel;
-import javafx.scene.Scene;
-import javafx.scene.control.TableColumn;
+import javafx.application.Platform;
 import javafx.scene.control.TableView;
+import javafx.scene.web.WebView;
 import objects.SpecificAssessmentCriteria;
 import provider.LocalStorageDataProvider;
+import webView.WebViewController;
 
 import javax.swing.*;
 import java.io.File;
@@ -20,22 +20,25 @@ import java.util.ArrayList;
 
 public class AssessmentScreen extends SimpleToolWindowPanel{
     private final SpecificAssessmentCriteria data;
-    private HandoutPluginFXPanel handoutContent;
+    private HandoutPluginFXPanel assessmentContent;
     private ToolWindow handoutToolWindow;
     private static File content;
     private String urlString;
     private TableView table = new TableView();
-
-
     private SimpleToolWindowPanel toolWindowPanel;
+    private static WebView webView;
+    private WebViewController webViewController;
 
     public AssessmentScreen (ToolWindow toolWindow){
         super(true, true);
         toolWindowPanel = new SimpleToolWindowPanel(true);
+        webViewController = new WebViewController();
         handoutToolWindow = toolWindow;
         data = LocalStorageDataProvider.getSpecificAssessmentCriteria();
-        content = LocalStorageDataProvider.getHandoutFileDirectory();
+        //content = LocalStorageDataProvider.getSpecificAssessmentCriteria();
+        content = LocalStorageDataProvider.getSpecificAssessmentCriteriaFileDirectory();
         try {
+            //
             urlString = content.toURI().toURL().toString();
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -46,8 +49,8 @@ public class AssessmentScreen extends SimpleToolWindowPanel{
 
     private void initToolWindowMenu() {
         //http://androhi.hatenablog.com/entry/2015/07/23/233932
-        toolWindowPanel.setToolbar(createToolbarPanel());
-        toolWindowPanel.setContent(handoutContent);
+        //toolWindowPanel.setToolbar(createToolbarPanel());
+        toolWindowPanel.setContent(assessmentContent);
     }
 
     private JComponent createToolbarPanel() {
@@ -59,19 +62,21 @@ public class AssessmentScreen extends SimpleToolWindowPanel{
     }
 
     private void createContent() {
-        handoutContent = new HandoutPluginFXPanel();
-        table.setEditable(true);
+        assessmentContent = new HandoutPluginFXPanel();
+        /*table.setEditable(false);
         ArrayList<String> headings = new ArrayList<>();
         for (String s : data.getHeadline()) {
             headings.add(s);
         }
-        TableColumn vorNameCol = new TableColumn("Vorname");
-        TableColumn nachNameCol = new TableColumn("Nachname");
-        TableColumn emailCol = new TableColumn("Email");
-        TableColumn alterCol = new TableColumn("Alter");
-        //table.getColumns().addAll(vorNameCol, nachNameCol, emailCol, alterCol);
+
         //JScrollPane tableContainer = new JBScrollPane(table);
-        handoutContent.showTable();
+        assessmentContent.showTable();*/
+
+        Platform.setImplicitExit(false);
+        Platform.runLater(() -> {
+            webView = webViewController.createWebView(urlString);;
+            assessmentContent.showHandoutWebView(urlString, webView);
+        });
     }
 
     public JComponent getToolbar(){
@@ -81,6 +86,11 @@ public class AssessmentScreen extends SimpleToolWindowPanel{
     public JPanel getContent() {
         return toolWindowPanel;
     }
+
+    public void updateContent() {
+        webViewController.updateWebViewContent();
+    }
+
 
 }
 

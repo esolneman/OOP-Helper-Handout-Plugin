@@ -2,6 +2,7 @@ package toolWindow;
 
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
+import com.intellij.ui.components.JBScrollPane;
 import javafx.scene.web.WebView;
 import objects.SpecificAssessmentCriteria;
 import provider.LocalStorageDataProvider;
@@ -21,6 +22,7 @@ public class SpecificAssessmentCriteriaScreen {
 
     public SpecificAssessmentCriteriaScreen(ToolWindow toolWindow) {
         DefaultTableModel model = new DefaultTableModel();
+
         criteriaTable.setEnabled(false);
         criteriaTable.setFillsViewportHeight(true);
         data = LocalStorageDataProvider.getSpecificAssessmentCriteria();
@@ -34,8 +36,6 @@ public class SpecificAssessmentCriteriaScreen {
             }
             model.addRow(criterion);
         }*/
-
-
 
         for (String[] criterion : data.getCriteria()) {
             System.out.println("ROW: " + Arrays.toString(criterion));

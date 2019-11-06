@@ -38,6 +38,7 @@ public class HandoutPluginFXPanel extends JFXPanel {
 
     public void showTable() {
         TableView table = new TableView();
+
         SpecificAssessmentCriteria data = LocalStorageDataProvider.getSpecificAssessmentCriteria();
         ObservableList data2 = FXCollections.observableArrayList();
         Platform.setImplicitExit(false);
