@@ -103,7 +103,7 @@ public class DownloadTask {
 
         InputStream theFile2 = new FileInputStream(file2);
         ZipInputStream stream2 = new ZipInputStream(theFile2);
-        
+
         try
         {
             ZipEntry entry;
@@ -119,12 +119,11 @@ public class DownloadTask {
                 while (read > -1) {
                     read = dis.read(buffer);
                     read2 = dis.read(buffer);
-
                 }
                 System.out.println(entry.getName() + ": "
                         + Arrays.toString(dis.getMessageDigest().digest()));
                 System.out.println(entry.getName() + ": "
-                        + Arrays.toString(dis.getMessageDigest().digest()));
+                        + Arrays.toString(dis2.getMessageDigest().digest()));
             }
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
@@ -138,7 +137,7 @@ public class DownloadTask {
         } catch (IOException e) {
             e.printStackTrace();
         }finally {
-            System.out.println("Time After: " +TimeStamp.getCurrentTime().toDateString());
+            System.out.println("Time After: " + TimeStamp.getCurrentTime().toDateString());
         }
         return false;
 
