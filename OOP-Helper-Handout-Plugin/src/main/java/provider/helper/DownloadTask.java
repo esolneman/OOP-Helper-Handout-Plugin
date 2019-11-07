@@ -24,6 +24,8 @@ import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import static environment.Constants.*;
+
 public class DownloadTask {
 
     private String path;
@@ -32,21 +34,26 @@ public class DownloadTask {
         this.path = path;
     }
 
-    public void run(String repoUrl, File contentRepoFile, String branchPath) throws GitAPIException {
+    public void run(String repoUrl, File contentRepoFile, String branchPath) throws IOException {
         Git clone = null;
         {
-            clone = Git.cloneRepository()
-                    .setURI(repoUrl)
-                    .setDirectory(contentRepoFile)
-                    .setBranchesToClone(Arrays.asList(branchPath))
-                    .setBranch(branchPath)
-                    .call();
-            System.out.println("clone run");
+            try {
+                clone = Git.cloneRepository()
+                        .setURI(repoUrl)
+                        .setDirectory(contentRepoFile)
+                        .setBranchesToClone(Arrays.asList(branchPath))
+                        .setBranch(branchPath)
+                        .call();
+            } catch (GitAPIException e) {
+                e.printStackTrace();
+            }finally {
+                System.out.println("clone run");
+                Ref head = clone.getRepository().getAllRefs().get("HEAD");
+                System.out.println("Ref of HEAD: " + head + ": " + head.getName() + " - " + head.getObjectId().getName());
+                String lastCommitHash = head.getObjectId().getName();
+                saveLastCommitHash(lastCommitHash);
+            }
         }
-
-
-        Ref head = clone.getRepository().getAllRefs().get("HEAD");
-        System.out.println("Ref of HEAD: " + head + ": " + head.getName() + " - " + head.getObjectId().getName());
 
 
     /*System.out.println("Start downloading [" + this.path + "] to " + output.getAbsolutePath());
@@ -101,6 +108,20 @@ public class DownloadTask {
         }*/
 
 
+    }
+
+
+    private void saveLastCommitHash(String lastCommitHash) throws IOException {
+        System.out.println("saveLastCommitHash run");
+        File lastCommitHashFile = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + LAST_COMMIT_HASH_FILE);
+        lastCommitHashFile.createNewFile();
+        //TODO save in file :D
+        //https://stackoverflow.com/a/1053475
+        //PrintWriter out = new PrintWriter(lastCommitHashFile);
+        //out.println(lastCommitHash);
+        try (PrintWriter out = new PrintWriter(lastCommitHashFile)) {
+            out.println(lastCommitHash);
+        }
     }
 
     //https://stackoverflow.com/a/14656534

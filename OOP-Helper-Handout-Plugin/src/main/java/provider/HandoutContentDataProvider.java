@@ -153,7 +153,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
                 task.run(repoUrl, contentRepoFile, branchPath);
                 //task.run(zipFile);
                 //task.unzipFile(zipFile, outputDir);
-            } catch (GitAPIException e) {
+            } catch (IOException e) {
                 //TODO Notification
                 deleteFile(repoLocalData);
                 e.printStackTrace();
@@ -171,14 +171,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         asyncExecutor.runAsyncClone(cloneTask);
     }
 
-    private void createFolder(File zipFile, Boolean createParentFolder) throws IOException {
-        if (createParentFolder) {
-            zipFile.getParentFile().mkdirs();
-        } else {
-            zipFile.mkdirs();
-        }
-        zipFile.createNewFile();
-    }
+
 
     private void updateBranch(DownloadTask task) {
         Runnable updateTask = () -> {
@@ -203,11 +196,6 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
 
             }*/
 
-
-
-
-
-
         };
         asyncExecutor.runAsyncClone(updateTask);
     }
@@ -227,9 +215,6 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
                 listener.onCloningRepositoryEvent(outputDir);
             }
         }
-       /* EventBus eventBus = new EventBus();
-        eventBus.register(DataProviderListener);
-        eventBus.post(outputDir); */
     }
 
     private void deleteFile(File file) {
