@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>oop_helper_handout</id>
     <name>oop_helper_handout</name>
-    <vendor email="marlena.wolfes@stud.uni-regensburg.de" url="http://www.company.com">Marlena Wolfes</vendor>
+    <vendor email="marlena.wolfes@stud.uni-regensburg.de">Marlena Wolfes</vendor>
 
     <description><![CDATA[
     Unterstützt die Studenten des OOP-Kurses der Univerität Regensburg bei der Bearbeitung von Studienleistung und Übungsaufgben<br>
@@ -24,6 +24,7 @@
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow id="handoutToolWindow" anchor="right" factoryClass="toolWindow.HandoutToolWindowFactory"/>
         <projectService serviceInterface="provider.HandoutContentDataProviderInterface" serviceImplementation="provider.HandoutContentDataProvider"/>
+        <projectService serviceInterface="services.ToolWindowServiceInterface" serviceImplementation="services.ToolWindowService"/>
     </extensions>
 
     <actions>
@@ -39,7 +40,5 @@
             <action id ="Handout.Maximize" class="toolWindow.actions.ToolWindowMaximizeAction" text="Maximize" description="maximize Tool Window" icon="/icons/maximize.svg"> </action>
             <action id ="Handout.Minimize" class="toolWindow.actions.ToolWindowMinimizeAction" text="Minimize" description="minimize Tool Window" icon="/icons/minimize.svg"> </action>
         </group>
-
-
     </actions>
 </idea-plugin>

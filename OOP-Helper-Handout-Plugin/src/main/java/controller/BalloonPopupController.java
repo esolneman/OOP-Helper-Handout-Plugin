@@ -19,8 +19,11 @@ public class BalloonPopupController {
     public static void showBalloonNotification(JComponent component, Balloon.Position position, String notificationText, MessageType messageType){
         JBPopupFactory.getInstance()
                 .createHtmlTextBalloonBuilder(notificationText, messageType, null)
-                .setFadeoutTime(7500)
-                .setSmallVariant(true)
+                .setFadeoutTime(8000)
+                //.setDialogMode(true)
+                //TODO: add Title as param
+                .setTitle("Download Information")
+                .setSmallVariant(false)
                 .createBalloon()
                 .show(RelativePoint.getNorthEastOf(component), position);
     }
