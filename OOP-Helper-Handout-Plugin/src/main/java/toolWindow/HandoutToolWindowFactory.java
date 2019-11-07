@@ -27,7 +27,6 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, ToolWindowSe
     private Content shortcutContent;
     private Content specificCriteriaContent;
     private Content commonAssessmentCriteriaContent;
-    private Content commonAssessmentCriteriaContentJavaFXTable;
 
 
     private HandoutContentScreen handoutContentScreen;
@@ -67,7 +66,6 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, ToolWindowSe
         toolWindow.getContentManager().addContent(shortcutContent);
         toolWindow.getContentManager().addContent(specificCriteriaContent);
         toolWindow.getContentManager().addContent(commonAssessmentCriteriaContent);
-        toolWindow.getContentManager().addContent(commonAssessmentCriteriaContentJavaFXTable);
         //TODO: Decide which Tab is open when start ide
         toolWindow.getContentManager().setSelectedContent(handoutContent);
         callListener();
