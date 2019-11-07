@@ -5,7 +5,6 @@ import com.intellij.openapi.project.Project;
 import controller.BalloonPopupController;
 import eventHandling.OnEventListener;
 import org.apache.commons.io.FileUtils;
-import org.eclipse.jgit.api.errors.GitAPIException;
 import provider.helper.AsyncExecutor;
 import provider.helper.DownloadTask;
 
@@ -71,6 +70,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         //TODO get RepoName
         branchPath = REPO_PATH_TO_BRANCH + "test";
         System.out.println(contentRepoPath);
+        task = DownloadTask.getInstance();
     }
 
 
@@ -88,7 +88,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
     public void updateHandoutData() {
         System.out.println("updateHandoutData");
         //TODO: implement Logic
-        task = new DownloadTask(repoZipUrl);
+        //task = new DownloadTask(repoZipUrl);
         controlRetrievingContentData();
     }
 
@@ -96,9 +96,9 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         Boolean internetConnection = checkInternetConnection();
         Boolean repoContentDataExists = checkRepoContentDataExists();
         if (internetConnection && !repoContentDataExists) {
-            cloneRepository(task);
+            cloneRepository();
         } else if (internetConnection && repoContentDataExists) {
-            updateBranch(task);
+            updateBranch();
         } else if (repoContentDataExists) {
             BalloonPopupController.showNotification(project, "Keine Internetverbindung vorhanden. Handout Daten können momentan nicht aktualisiert werden.", NotificationType.ERROR);
         } else {
@@ -143,7 +143,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         listeners.add(listener);
     }
 
-    private void cloneRepository(DownloadTask task) {
+    private void cloneRepository() {
         System.out.println("start cloning branch");
         //https://www.vogella.com/tutorials/JGit/article.html#example-for-using-jgit
         Runnable cloneTask = () -> {
@@ -173,9 +173,10 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
 
 
 
-    private void updateBranch(DownloadTask task) {
+    private void updateBranch() {
         Runnable updateTask = () -> {
             System.out.println("updateBranch");
+            task.checkLastCommit();
            /* try {
                 //https://stackoverflow.com/a/6143076
                 createFolder(tempVersionZipFile, true);
@@ -195,7 +196,6 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
                 BalloonPopupController.showNotification(project, "Handout Daten wurden erfolgreich aktualisiert.", NotificationType.INFORMATION);
 
             }*/
-
         };
         asyncExecutor.runAsyncClone(updateTask);
     }

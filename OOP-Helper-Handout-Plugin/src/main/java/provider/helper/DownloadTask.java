@@ -11,6 +11,7 @@ import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
+import provider.HandoutContentDataProvider;
 import provider.LocalStorageDataProvider;
 import provider.RepoLocalStorageDataProvider;
 
@@ -29,13 +30,26 @@ import static environment.Constants.*;
 public class DownloadTask {
 
     private String path;
+    private static DownloadTask single_instance = null;
+    private static Git clone = null;
 
-    public DownloadTask(String path) {
+   /* public DownloadTask(String path) {
         this.path = path;
+    }*/
+
+
+    public static DownloadTask getInstance() {
+        if (single_instance == null) {
+            single_instance = new DownloadTask();
+        }
+        return single_instance;
     }
 
-    public void run(String repoUrl, File contentRepoFile, String branchPath) throws IOException {
-        Git clone = null;
+    private DownloadTask() {}
+
+
+    public  void run(String repoUrl, File contentRepoFile, String branchPath) throws IOException {
+        clone = null;
         {
             try {
                 clone = Git.cloneRepository()
@@ -55,7 +69,6 @@ public class DownloadTask {
             }
         }
 
-
     /*System.out.println("Start downloading [" + this.path + "] to " + output.getAbsolutePath());
         try (BufferedInputStream in = new BufferedInputStream(new URL(this.path).openStream());
              FileOutputStream fileOutputStream = new FileOutputStream(output)) {
@@ -68,9 +81,6 @@ public class DownloadTask {
         } catch (IOException e) {
             e.printStackTrace();
         }*/
-
-
-
 
 
         /*FileRepositoryBuilder builder = new FileRepositoryBuilder();
@@ -119,9 +129,29 @@ public class DownloadTask {
         //https://stackoverflow.com/a/1053475
         //PrintWriter out = new PrintWriter(lastCommitHashFile);
         //out.println(lastCommitHash);
+
+        //https://stackoverflow.com/a/1053487
+        //FileUtils.writeStringToFile(new File("test.txt"), "Hello File");
+
         try (PrintWriter out = new PrintWriter(lastCommitHashFile)) {
             out.println(lastCommitHash);
         }
+    }
+
+    public void checkLastCommit(){
+        System.out.println("checkLastCommit");
+        try {
+            clone = Git.open(new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE));
+            Repository repository = clone.getRepository();
+            Ref head = repository.getAllRefs().get("HEAD");
+            System.out.println(repository.getBranch());
+            System.out.println("Ref of New HEAD: " + head + ": " + head.getName() + " - " + head.getObjectId().getName());
+            String lastCommitHash = head.getObjectId().getName();
+        } catch (IOException e) {
+            System.out.println("IOException: " + e);
+            //e.printStackTrace();
+        }
+
     }
 
     //https://stackoverflow.com/a/14656534
