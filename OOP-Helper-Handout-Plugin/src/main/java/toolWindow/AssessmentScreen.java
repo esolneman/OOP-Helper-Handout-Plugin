@@ -36,7 +36,7 @@ public class AssessmentScreen extends SimpleToolWindowPanel{
         handoutToolWindow = toolWindow;
         //data = LocalStorageDataProvider.getSpecificAssessmentCriteria();
         //content = LocalStorageDataProvider.getSpecificAssessmentCriteria();
-        content = LocalStorageDataProvider.getSpecificAssessmentCriteriaFileDirectory();
+        content = LocalStorageDataProvider.getSpecificAssessmentCriteriaFileDirectoryTest();
         try {
             //
             urlString = content.toURI().toURL().toString();

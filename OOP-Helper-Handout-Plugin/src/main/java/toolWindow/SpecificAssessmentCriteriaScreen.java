@@ -10,6 +10,7 @@ import webView.WebViewController;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import java.util.Arrays;
 
 public class SpecificAssessmentCriteriaScreen {
@@ -25,26 +26,26 @@ public class SpecificAssessmentCriteriaScreen {
 
         criteriaTable.setEnabled(false);
         criteriaTable.setFillsViewportHeight(true);
-       /* data = LocalStorageDataProvider.getSpecificAssessmentCriteria();
+        data = LocalStorageDataProvider.getSpecificAssessmentCriteria();
 
         for (String s : data.getHeadline()) {
             model.addColumn(s);
-        }*/
+        }
 
 
 
-        /*for (String[][] criterion : data.getCriteria()) {
+/*        for (String[][] criterion : data.getCriteria()) {
             for (String[] strings : criterion) {
                 System.out.println("Data: " + Arrays.toString(strings));
             }
             model.addRow(criterion);
         }*/
 
-        /*for (String[] criterion : data.getCriteria()) {
+        for (String[] criterion : data.getCriteria()) {
             System.out.println("ROW: " + Arrays.toString(criterion));
             model.addRow(criterion);
         }
-        criteriaTable.setModel(model);*/
+        criteriaTable.setModel(model);
 
 
         //String[] columnNames = {"First Name", "Last Name"};
