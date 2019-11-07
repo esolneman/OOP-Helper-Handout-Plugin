@@ -38,32 +38,6 @@ public class HandoutPluginFXPanel extends JFXPanel {
         });
     }
 
-    public void showTable() {
-        TableView table = new TableView();
-
-        SpecificAssessmentCriteria data = LocalStorageDataProvider.getSpecificAssessmentCriteria();
-        ObservableList data2 = FXCollections.observableArrayList();
-        Platform.setImplicitExit(false);
-        Platform.runLater(() -> {
-            table.setEditable(true);
-            for (String s : data.getHeadline()) {
-                TableColumn newColumn = new TableColumn(s);
-                table.getColumns().add(newColumn);
-            }
-            for (String[] criterion : data.getCriteria()) {
-                table.getItems().add(Arrays.toString(criterion));
-                TableRow newRow = new TableRow();
-                newRow.setText(Arrays.toString(criterion));
-                //newRow.updateTableView(table);
-                data2.add(newRow);
-                System.out.println("Criterion: " + Arrays.toString(criterion));
-                System.out.println("data2: " + data2.get(0));
-            }
-            table.setItems(data2);
-            this.setScene(new Scene(table, 50, 50));
-        });
-    }
-
     //public void
     public void sayName() {
             System.out.println("I am a MyJFXPanel");

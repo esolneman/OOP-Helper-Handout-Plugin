@@ -1,71 +1,98 @@
 package toolWindow;
 
+import com.intellij.openapi.actionSystem.ActionManager;
+import com.intellij.openapi.actionSystem.ActionToolbar;
+import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.ui.components.JBScrollPane;
+import environment.HandoutPluginFXPanel;
+import javafx.application.Platform;
+import javafx.scene.control.TableView;
 import javafx.scene.web.WebView;
 import objects.SpecificAssessmentCriteria;
 import provider.LocalStorageDataProvider;
 import webView.WebViewController;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
-import java.util.Arrays;
+import java.io.File;
+import java.net.MalformedURLException;
+import java.util.ArrayList;
 
-public class SpecificAssessmentCriteriaScreen {
+public class SpecificAssessmentCriteriaScreen extends SimpleToolWindowPanel{
+    //private final SpecificAssessmentCriteria data;
+    private HandoutPluginFXPanel assessmentContent;
+    private ToolWindow handoutToolWindow;
+    private static File content;
+    private String urlString;
+    private TableView table = new TableView();
     private SimpleToolWindowPanel toolWindowPanel;
-    private SpecificAssessmentCriteria data;
-    private JPanel assessmentCriteriaContent;
-    private JTable criteriaTable;
+    private static WebView webView;
+    private WebViewController webViewController;
 
+    public SpecificAssessmentCriteriaScreen(ToolWindow toolWindow){
+        super(true, true);
+        toolWindowPanel = new SimpleToolWindowPanel(true);
+        webViewController = new WebViewController();
+        handoutToolWindow = toolWindow;
+        //data = LocalStorageDataProvider.getSpecificAssessmentCriteria();
+        //content = LocalStorageDataProvider.getSpecificAssessmentCriteria();
+        content = LocalStorageDataProvider.getSpecificAssessmentCriteriaFileDirectory();
+        try {
+            //
+            urlString = content.toURI().toURL().toString();
+            System.out.println("URL STRING TABLE: " + urlString);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        createContent();
+        initToolWindowMenu();
+    }
 
+    private void initToolWindowMenu() {
+        //http://androhi.hatenablog.com/entry/2015/07/23/233932
+        //toolWindowPanel.setToolbar(createToolbarPanel());
+        toolWindowPanel.setContent(assessmentContent);
+    }
 
-    public SpecificAssessmentCriteriaScreen(ToolWindow toolWindow) {
-        DefaultTableModel model = new DefaultTableModel();
+    private JComponent createToolbarPanel() {
+        final DefaultActionGroup handoutActionGroup = new DefaultActionGroup();
+        handoutActionGroup.add(ActionManager.getInstance().getAction("Handout.Minimize"));
+        handoutActionGroup.add(ActionManager.getInstance().getAction("Handout.Maximize"));
+        final ActionToolbar checklistActionToolbar = ActionManager.getInstance().createActionToolbar("SpecificAssessmentTool", handoutActionGroup, true);
+        return checklistActionToolbar.getComponent();
+    }
 
-        criteriaTable.setEnabled(false);
-        criteriaTable.setFillsViewportHeight(true);
-        data = LocalStorageDataProvider.getSpecificAssessmentCriteria();
-
+    private void createContent() {
+        assessmentContent = new HandoutPluginFXPanel();
+        /*table.setEditable(false);
+        ArrayList<String> headings = new ArrayList<>();
         for (String s : data.getHeadline()) {
-            model.addColumn(s);
+            headings.add(s);
         }
 
+        //JScrollPane tableContainer = new JBScrollPane(table);
+        assessmentContent.showTable();*/
 
-
-/*        for (String[][] criterion : data.getCriteria()) {
-            for (String[] strings : criterion) {
-                System.out.println("Data: " + Arrays.toString(strings));
-            }
-            model.addRow(criterion);
-        }*/
-
-        for (String[] criterion : data.getCriteria()) {
-            System.out.println("ROW: " + Arrays.toString(criterion));
-            model.addRow(criterion);
-        }
-        criteriaTable.setModel(model);
-
-
-        //String[] columnNames = {"First Name", "Last Name"};
-        //Object[][] data2 = {{"Kathy", "Smith"},{"John", "Doe"}};
-        //criteriaTable = new JTable(data2, columnNames);
-
-
-        //TableColumn tableColumn = new TableColumn(data.getHeadline().size());
-        //criteriaTable.addColumn(new TableColumn(data.getHeadline().size()));
+        Platform.setImplicitExit(false);
+        Platform.runLater(() -> {
+            webView = webViewController.createWebView(urlString);;
+            assessmentContent.showHandoutWebView(urlString, webView);
+        });
     }
 
-    private void createTable() {
-
+    public JComponent getToolbar(){
+        return toolWindowPanel.getToolbar();
     }
-
-    /*    public JPanel getContent() {
-        return toolWindowPanel;
-    }*/
 
     public JPanel getContent() {
-        return assessmentCriteriaContent;
+        return toolWindowPanel;
     }
+
+    public void updateContent() {
+        webViewController.updateWebViewContent();
+    }
+
+
 }
+
+

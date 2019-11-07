@@ -33,9 +33,8 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, ToolWindowSe
     private HandoutContentScreen handoutContentScreen;
     private ChecklistScreen checklistScreen;
     private ShortcutScreen shortcutScreen;
-    private SpecificAssessmentCriteriaScreen specificAssessmentCriteria;
+    private SpecificAssessmentCriteriaScreen specificAssessmentCriteriaScreen;
     private CommonAssessmentCriteriaScreen commonAssessmentCriteriaScreen;
-    private AssessmentScreen assessmentScreen;
 
     // Create the tool window content.
     // is called when user clicks on tool window button
@@ -50,9 +49,8 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, ToolWindowSe
         handoutContentScreen = new HandoutContentScreen(toolWindow);
         checklistScreen = new ChecklistScreen(toolWindow);
         shortcutScreen = new ShortcutScreen(toolWindow);
-        specificAssessmentCriteria = new SpecificAssessmentCriteriaScreen(toolWindow);
+        specificAssessmentCriteriaScreen = new SpecificAssessmentCriteriaScreen(toolWindow);
         commonAssessmentCriteriaScreen = new CommonAssessmentCriteriaScreen(toolWindow);
-        assessmentScreen = new AssessmentScreen(toolWindow);
         addScreenContent();
     }
 
@@ -61,9 +59,8 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, ToolWindowSe
         handoutContent.setPreferredFocusableComponent(handoutContentScreen.getContent());
         checklistContent = contentFactory.createContent(checklistScreen.getContent(), "Checklist", false);
         shortcutContent = contentFactory.createContent(shortcutScreen.getContent(), "Shortcut", false);
-        specificCriteriaContent = contentFactory.createContent(specificAssessmentCriteria.getContent(), "Specific Assessment Criteria", false);
+        specificCriteriaContent = contentFactory.createContent(specificAssessmentCriteriaScreen.getContent(), "Specific Assessment Criteria", false);
         commonAssessmentCriteriaContent = contentFactory.createContent(commonAssessmentCriteriaScreen.getContent(), "Common Assessment Criteria", false);
-        commonAssessmentCriteriaContentJavaFXTable = contentFactory.createContent(assessmentScreen.getContent(), "TABLE", false);
 
         toolWindow.getContentManager().addContent(handoutContent);
         toolWindow.getContentManager().addContent(checklistContent);
@@ -88,7 +85,7 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, ToolWindowSe
     public void updateContent() {
         System.out.println("Update ToolWindows");
         handoutContentScreen.updateContent();
-        assessmentScreen.updateContent();
+        specificAssessmentCriteriaScreen.updateContent();
     }
 
     @Override
