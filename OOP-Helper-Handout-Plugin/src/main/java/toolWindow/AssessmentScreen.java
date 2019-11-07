@@ -40,6 +40,7 @@ public class AssessmentScreen extends SimpleToolWindowPanel{
         try {
             //
             urlString = content.toURI().toURL().toString();
+            System.out.println("URL STRING TABLE: " + urlString);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
