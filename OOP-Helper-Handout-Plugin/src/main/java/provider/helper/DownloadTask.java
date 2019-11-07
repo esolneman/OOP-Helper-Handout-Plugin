@@ -14,11 +14,15 @@ import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import provider.LocalStorageDataProvider;
 import provider.RepoLocalStorageDataProvider;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
+import java.security.DigestInputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 public class DownloadTask {
 
@@ -91,14 +95,44 @@ public class DownloadTask {
     }
 
     //https://stackoverflow.com/a/27379126
-    public boolean compareZipFiles(File file1, File file2) {
+    public boolean compareZipFiles(File file1, File file2) throws IOException {
         System.out.println("TimeBefore: " + TimeStamp.getCurrentTime().toDateString());
-        //Deprecated
-       /* try {
-            return Files.hash(file1, Hashing.md5()).equals(Files.hash(file2, Hashing.sha1()));
-        } catch (IOException e) {
+
+        InputStream theFile1 = new FileInputStream(file1);
+        ZipInputStream stream = new ZipInputStream(theFile1);
+
+        InputStream theFile2 = new FileInputStream(file2);
+        ZipInputStream stream2 = new ZipInputStream(theFile2);
+        
+        try
+        {
+            ZipEntry entry;
+            while((entry = stream.getNextEntry()) != null)
+            {
+                MessageDigest md = MessageDigest.getInstance("MD5");
+                DigestInputStream dis = new DigestInputStream(stream, md);
+                DigestInputStream dis2 = new DigestInputStream(stream2, md);
+
+                byte[] buffer = new byte[1024];
+                int read = dis.read(buffer);
+                int read2 = dis2.read(buffer);
+                while (read > -1) {
+                    read = dis.read(buffer);
+                    read2 = dis.read(buffer);
+
+                }
+                System.out.println(entry.getName() + ": "
+                        + Arrays.toString(dis.getMessageDigest().digest()));
+                System.out.println(entry.getName() + ": "
+                        + Arrays.toString(dis.getMessageDigest().digest()));
+            }
+        } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
-        }*/
+        } finally { stream.close(); }
+
+
+
+
         try {
             return FileUtils.contentEquals(file1, file2);
         } catch (IOException e) {
@@ -107,6 +141,6 @@ public class DownloadTask {
             System.out.println("Time After: " +TimeStamp.getCurrentTime().toDateString());
         }
         return false;
-    }
 
+    }
 }
