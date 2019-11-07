@@ -32,8 +32,24 @@ public class DownloadTask {
         this.path = path;
     }
 
-    public void run(File output) {
-        System.out.println("Start downloading [" + this.path + "] to " + output.getAbsolutePath());
+    public void run(String repoUrl, File contentRepoFile, String branchPath) throws GitAPIException {
+        Git clone = null;
+        {
+            clone = Git.cloneRepository()
+                    .setURI(repoUrl)
+                    .setDirectory(contentRepoFile)
+                    .setBranchesToClone(Arrays.asList(branchPath))
+                    .setBranch(branchPath)
+                    .call();
+            System.out.println("clone run");
+        }
+
+
+        Ref head = clone.getRepository().getAllRefs().get("HEAD");
+        System.out.println("Ref of HEAD: " + head + ": " + head.getName() + " - " + head.getObjectId().getName());
+
+
+    /*System.out.println("Start downloading [" + this.path + "] to " + output.getAbsolutePath());
         try (BufferedInputStream in = new BufferedInputStream(new URL(this.path).openStream());
              FileOutputStream fileOutputStream = new FileOutputStream(output)) {
             byte dataBuffer[] = new byte[1024];
@@ -44,7 +60,11 @@ public class DownloadTask {
             System.out.println("Finished download file");
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
+
+
+
+
 
         /*FileRepositoryBuilder builder = new FileRepositoryBuilder();
         File file = new File(RepoLocalStorageDataProvider.getRepoLocalFile();
@@ -81,7 +101,6 @@ public class DownloadTask {
         }*/
 
 
-
     }
 
     //https://stackoverflow.com/a/14656534
@@ -104,11 +123,9 @@ public class DownloadTask {
         InputStream theFile2 = new FileInputStream(file2);
         ZipInputStream stream2 = new ZipInputStream(theFile2);
 
-        try
-        {
+        try {
             ZipEntry entry;
-            while((entry = stream.getNextEntry()) != null)
-            {
+            while ((entry = stream.getNextEntry()) != null) {
                 MessageDigest md = MessageDigest.getInstance("MD5");
                 DigestInputStream dis = new DigestInputStream(stream, md);
                 DigestInputStream dis2 = new DigestInputStream(stream2, md);
@@ -127,16 +144,16 @@ public class DownloadTask {
             }
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
-        } finally { stream.close(); }
-
-
+        } finally {
+            stream.close();
+        }
 
 
         try {
             return FileUtils.contentEquals(file1, file2);
         } catch (IOException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             System.out.println("Time After: " + TimeStamp.getCurrentTime().toDateString());
         }
         return false;

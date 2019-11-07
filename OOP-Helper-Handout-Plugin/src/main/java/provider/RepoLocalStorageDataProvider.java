@@ -33,12 +33,12 @@ public class RepoLocalStorageDataProvider implements RepoLocalStorageDataProvide
     }
 
     public static File getSpecificAssessmentCriteriaFile(){
-        File specificAssessmentCriteriaFile = new File(getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE +  branchFolderName + SPECIFIC_ASSESSMENT_CRITERIA_FILE_NAME);
+        File specificAssessmentCriteriaFile = new File(getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE  + SPECIFIC_ASSESSMENT_CRITERIA_FILE_NAME);
         return specificAssessmentCriteriaFile;
     }
 
     public static String getHandoutHtmlString(){
-        String handoutFile = getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE +  branchFolderName + HANDOUT_FILE_NAME;
+        String handoutFile = getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE  + HANDOUT_FILE_NAME;
         return handoutFile;
     }
 
