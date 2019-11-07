@@ -19,12 +19,10 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 
 public class SpecificAssessmentCriteriaScreen extends SimpleToolWindowPanel{
-    //private final SpecificAssessmentCriteria data;
     private HandoutPluginFXPanel assessmentContent;
     private ToolWindow handoutToolWindow;
     private static File content;
     private String urlString;
-    private TableView table = new TableView();
     private SimpleToolWindowPanel toolWindowPanel;
     private static WebView webView;
     private WebViewController webViewController;
@@ -34,13 +32,9 @@ public class SpecificAssessmentCriteriaScreen extends SimpleToolWindowPanel{
         toolWindowPanel = new SimpleToolWindowPanel(true);
         webViewController = new WebViewController();
         handoutToolWindow = toolWindow;
-        //data = LocalStorageDataProvider.getSpecificAssessmentCriteria();
-        //content = LocalStorageDataProvider.getSpecificAssessmentCriteria();
         content = LocalStorageDataProvider.getSpecificAssessmentCriteriaFileDirectory();
         try {
-            //
             urlString = content.toURI().toURL().toString();
-            System.out.println("URL STRING TABLE: " + urlString);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -50,29 +44,11 @@ public class SpecificAssessmentCriteriaScreen extends SimpleToolWindowPanel{
 
     private void initToolWindowMenu() {
         //http://androhi.hatenablog.com/entry/2015/07/23/233932
-        //toolWindowPanel.setToolbar(createToolbarPanel());
         toolWindowPanel.setContent(assessmentContent);
-    }
-
-    private JComponent createToolbarPanel() {
-        final DefaultActionGroup handoutActionGroup = new DefaultActionGroup();
-        handoutActionGroup.add(ActionManager.getInstance().getAction("Handout.Minimize"));
-        handoutActionGroup.add(ActionManager.getInstance().getAction("Handout.Maximize"));
-        final ActionToolbar checklistActionToolbar = ActionManager.getInstance().createActionToolbar("SpecificAssessmentTool", handoutActionGroup, true);
-        return checklistActionToolbar.getComponent();
     }
 
     private void createContent() {
         assessmentContent = new HandoutPluginFXPanel();
-        /*table.setEditable(false);
-        ArrayList<String> headings = new ArrayList<>();
-        for (String s : data.getHeadline()) {
-            headings.add(s);
-        }
-
-        //JScrollPane tableContainer = new JBScrollPane(table);
-        assessmentContent.showTable();*/
-
         Platform.setImplicitExit(false);
         Platform.runLater(() -> {
             webView = webViewController.createWebView(urlString);;
