@@ -1,6 +1,7 @@
 package provider;
 
 import com.intellij.openapi.project.Project;
+import objects.SpecificAssessmentCriteria;
 
 import java.io.File;
 
@@ -11,6 +12,7 @@ public class RepoLocalStorageDataProvider implements RepoLocalStorageDataProvide
     private static String projectDirectory;
     private static Project handoutProject;
     private static String handoutDataDirectoryPath = null;
+    private static String branchFolderName;
 
     public static void setUserProjectDirectory(Project project){
         projectDirectory = project.getBasePath();
@@ -30,13 +32,19 @@ public class RepoLocalStorageDataProvider implements RepoLocalStorageDataProvide
         return handoutFile;
     }
 
-    public static String getHandoutHtmlString(){
-        //ToDo: implement retrieving branchName
-        return handoutDataDirectoryPath;
+    public static File getSpecificAssessmentCriteriaFile(){
+        File specificAssessmentCriteriaFile = new File(getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE +  branchFolderName + SPECIFIC_ASSESSMENT_CRITERIA_FILE_NAME);
+        return specificAssessmentCriteriaFile;
     }
 
-    public static void setHandoutHtmlString(String BranchFolderName){
-        handoutDataDirectoryPath = getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE + BranchFolderName + HANDOUT_FILE_NAME;
+    public static String getHandoutHtmlString(){
+        String handoutFile = getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE +  branchFolderName + HANDOUT_FILE_NAME;
+        return handoutFile;
+    }
+
+    //TODO REFACTOR
+    public static void setBranchFolderName(String branchFolderName){
+        RepoLocalStorageDataProvider.branchFolderName = branchFolderName;
     }
 
     public static String getRepoLocalFile(){

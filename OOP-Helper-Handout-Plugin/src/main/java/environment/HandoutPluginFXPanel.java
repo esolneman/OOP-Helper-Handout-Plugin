@@ -1,29 +1,24 @@
 package environment;
 
-import com.intellij.openapi.actionSystem.CommonDataKeys;
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
-import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.LocalFileSystem;
-import com.intellij.openapi.vfs.VirtualFile;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
 import javafx.scene.web.WebView;
-import provider.RepoLocalStorageDataProvider;
+import objects.SpecificAssessmentCriteria;
+import provider.LocalStorageDataProvider;
 
-import java.awt.*;
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.util.Arrays;
 
 public class HandoutPluginFXPanel extends JFXPanel {
-
     public void showHandoutWebView(String urlString, WebView webView) {
+        System.out.println("in: showHandoutWebView");
+
         //Platform.setImplicitExit(false);
         //Platform.runLater(() -> {
             webView.getEngine().load(urlString);

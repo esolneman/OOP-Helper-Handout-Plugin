@@ -3,9 +3,11 @@ package toolWindow;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.wm.*;
+import com.intellij.openapi.wm.ToolWindow;
+import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
-import com.intellij.ui.content.*;
+import com.intellij.ui.content.Content;
+import com.intellij.ui.content.ContentFactory;
 import eventHandling.OnToolWindowCreatedListener;
 import services.ToolWindowServiceInterface;
 
@@ -26,15 +28,16 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, ToolWindowSe
     private Content specificCriteriaContent;
     private Content commonAssessmentCriteriaContent;
 
+
     private HandoutContentScreen handoutContentScreen;
     private ChecklistScreen checklistScreen;
     private ShortcutScreen shortcutScreen;
-    private SpecificAssessmentCriteria specificAssessmentCriteria;
+    private SpecificAssessmentCriteriaScreen specificAssessmentCriteriaScreen;
     private CommonAssessmentCriteriaScreen commonAssessmentCriteriaScreen;
 
     // Create the tool window content.
     // is called when user clicks on tool window button
-    public void createToolWindowContent (Project project, ToolWindow toolWindow) {
+    public void createToolWindowContent(Project project, ToolWindow toolWindow) {
         this.toolWindow = toolWindow;
         contentFactory = ContentFactory.SERVICE.getInstance();
         initScreens();
@@ -45,7 +48,7 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, ToolWindowSe
         handoutContentScreen = new HandoutContentScreen(toolWindow);
         checklistScreen = new ChecklistScreen(toolWindow);
         shortcutScreen = new ShortcutScreen(toolWindow);
-        specificAssessmentCriteria = new SpecificAssessmentCriteria(toolWindow);
+        specificAssessmentCriteriaScreen = new SpecificAssessmentCriteriaScreen(toolWindow);
         commonAssessmentCriteriaScreen = new CommonAssessmentCriteriaScreen(toolWindow);
         addScreenContent();
     }
@@ -55,7 +58,7 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, ToolWindowSe
         handoutContent.setPreferredFocusableComponent(handoutContentScreen.getContent());
         checklistContent = contentFactory.createContent(checklistScreen.getContent(), "Checklist", false);
         shortcutContent = contentFactory.createContent(shortcutScreen.getContent(), "Shortcut", false);
-        specificCriteriaContent = contentFactory.createContent(specificAssessmentCriteria.getContent(), "Specific Assessment Criteria", false);
+        specificCriteriaContent = contentFactory.createContent(specificAssessmentCriteriaScreen.getContent(), "Specific Assessment Criteria", false);
         commonAssessmentCriteriaContent = contentFactory.createContent(commonAssessmentCriteriaScreen.getContent(), "Common Assessment Criteria", false);
 
         toolWindow.getContentManager().addContent(handoutContent);
@@ -74,12 +77,13 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, ToolWindowSe
         AnAction updateAction = ActionManager.getInstance().getAction("Myplugin.Textboxes.Update");
         AnAction minimizeAction = (ActionManager.getInstance().getAction("Handout.Minimize"));
         AnAction maximizeAction = (ActionManager.getInstance().getAction("Handout.Maximize"));
-        ((ToolWindowEx)toolWindow).setTitleActions(new AnAction[] {updateAction, minimizeAction, maximizeAction});
+        ((ToolWindowEx) toolWindow).setTitleActions(new AnAction[]{updateAction, minimizeAction, maximizeAction});
     }
 
-    public void updateContent(){
+    public void updateContent() {
         System.out.println("Update ToolWindows");
         handoutContentScreen.updateContent();
+        specificAssessmentCriteriaScreen.updateContent();
     }
 
     @Override
