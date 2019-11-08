@@ -48,4 +48,8 @@ public class RepoLocalStorageDataProvider implements RepoLocalStorageDataProvide
     }
 
 
+    public static File getShortcutFileDirectory() {
+        File shortcutFile = new File(getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE +  branchFolderName + SHORTCUT_FILE_NAME);
+        return shortcutFile;
+    }
 }
