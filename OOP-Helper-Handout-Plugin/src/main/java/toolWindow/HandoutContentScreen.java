@@ -56,7 +56,7 @@ public class HandoutContentScreen extends SimpleToolWindowPanel implements Plugi
     private JComponent createToolbarPanel() {
         final DefaultActionGroup handoutActionGroup = new DefaultActionGroup();
         HandoutContentActionGroup handoutContentActionGroup = (HandoutContentActionGroup) ActionManager.getInstance().getAction("Handout.TableOfContents");
-        handoutContentActionGroup.setHandoutContentScreen(this);
+        handoutContentActionGroup.setWebViewController(webViewController);
         handoutActionGroup.add(handoutContentActionGroup);
         handoutActionGroup.add(new Separator());
         handoutActionGroup.add(ActionManager.getInstance().getAction("Handout.Download"));

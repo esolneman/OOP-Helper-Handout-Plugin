@@ -6,15 +6,15 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import provider.HandoutContentHandler;
-import toolWindow.HandoutContentScreen;
 import toolWindow.actions.HandoutTableOfContentsAction;
+import webView.WebViewController;
 
 import java.util.ArrayList;
 
 //https://intellij-support.jetbrains.com/hc/en-us/community/posts/360000105804-Adding-PopupMenu-to-ActionBarButton
 public class HandoutContentActionGroup extends ActionGroup {
 
-    private static HandoutContentScreen handoutContentScreen;
+    private static WebViewController webViewController;
 
     @NotNull
     @Override
@@ -22,13 +22,13 @@ public class HandoutContentActionGroup extends ActionGroup {
         ArrayList<String> headings = getHeadings();
         AnAction[] actions = new AnAction[headings.size()];
         for (int i = 0; i < actions.length; i++) {
-            actions[i] = new HandoutTableOfContentsAction(headings.get(i), handoutContentScreen);
+            actions[i] = new HandoutTableOfContentsAction(headings.get(i), webViewController);
         }
         return actions;
     }
 
-    public void setHandoutContentScreen(HandoutContentScreen handoutContentScreen){
-        this.handoutContentScreen = handoutContentScreen;
+    public void setWebViewController(WebViewController webViewController){
+        this.webViewController = webViewController;
     }
 
     private ArrayList<String> getHeadings() {

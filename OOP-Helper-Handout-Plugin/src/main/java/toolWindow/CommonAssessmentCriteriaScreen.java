@@ -1,11 +1,16 @@
 package toolWindow;
 
+import com.intellij.openapi.actionSystem.ActionManager;
+import com.intellij.openapi.actionSystem.ActionToolbar;
+import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import com.intellij.openapi.actionSystem.Separator;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
 import environment.HandoutPluginFXPanel;
 import javafx.application.Platform;
 import javafx.scene.web.WebView;
 import provider.LocalStorageDataProvider;
+import toolWindow.actionGroups.HandoutContentActionGroup;
 import webView.WebViewController;
 
 import javax.swing.*;
@@ -40,7 +45,17 @@ public class CommonAssessmentCriteriaScreen extends SimpleToolWindowPanel {
 
     private void initToolWindowMenu() {
         //http://androhi.hatenablog.com/entry/2015/07/23/233932
+        toolWindowPanel.setToolbar(createToolbarPanel());
         toolWindowPanel.setContent(assessmentContent);
+    }
+
+    private JComponent createToolbarPanel() {
+        final DefaultActionGroup handoutActionGroup = new DefaultActionGroup();
+        HandoutContentActionGroup handoutContentActionGroup = (HandoutContentActionGroup) ActionManager.getInstance().getAction("Handout.TableOfContents");
+        //handoutContentActionGroup.setHandoutContentScreen(webViewController);
+        handoutActionGroup.add(handoutContentActionGroup);
+        final ActionToolbar checklistActionToolbar = ActionManager.getInstance().createActionToolbar("HandoutTool", handoutActionGroup, true);
+        return checklistActionToolbar.getComponent();
     }
 
     private void createContent() {

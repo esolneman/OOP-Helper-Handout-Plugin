@@ -36,6 +36,7 @@ public class WebViewController {
         System.out.println("heading: " + heading);
         //TODO: check or if (class ref)
         if(heading.contains(" ")){
+            System.out.println("heading contains space: " + heading);
             //https://stackoverflow.com/a/1892778
             heading = WordUtils.capitalize(heading);
             //https://stackoverflow.com/a/15633284
@@ -85,6 +86,26 @@ public class WebViewController {
                 webView.getEngine().load(newLocation);
             }
         });
+    }
+
+    public void goToHeading(String heading){
+        System.out.println("heading: " + heading);
+        //TODO: check or if (class ref)
+        if(heading.contains(" ")){
+            System.out.println("heading contains space: " + heading);
+            //https://stackoverflow.com/a/1892778
+            heading = WordUtils.capitalize(heading);
+            //https://stackoverflow.com/a/15633284
+            heading = heading.replaceAll("\\s+","");
+        }
+        String newLocation = urlString + "#" + heading;
+        System.out.println(newLocation);
+        Platform.setImplicitExit(false);
+        Platform.runLater(() -> {
+            //TODO new method
+            webView.getEngine().load(newLocation);
+        });
+
     }
 
     public void updateWebViewContent() {
