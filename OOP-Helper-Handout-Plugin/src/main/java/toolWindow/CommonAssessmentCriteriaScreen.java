@@ -3,7 +3,6 @@ package toolWindow;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.ActionToolbar;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
-import com.intellij.openapi.actionSystem.Separator;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
 import environment.HandoutPluginFXPanel;
@@ -11,7 +10,6 @@ import javafx.application.Platform;
 import javafx.scene.web.WebView;
 import provider.LocalStorageDataProvider;
 import provider.contentHandler.CommonAssessmentCriteriaContentHandler;
-import provider.contentHandler.HandoutContentHandler;
 import toolWindow.actionGroups.HandoutContentActionGroup;
 import webView.WebViewController;
 
@@ -57,8 +55,8 @@ public class CommonAssessmentCriteriaScreen extends SimpleToolWindowPanel {
         handoutContentActionGroup.setWebViewController(webViewController);
         handoutContentActionGroup.setHeadings(CommonAssessmentCriteriaContentHandler.getNavHeadings());
         handoutActionGroup.add(handoutContentActionGroup);
-        final ActionToolbar checklistActionToolbar = ActionManager.getInstance().createActionToolbar("HandoutTool", handoutActionGroup, true);
-        return checklistActionToolbar.getComponent();
+        final ActionToolbar actionToolbar = ActionManager.getInstance().createActionToolbar("HandoutTool", handoutActionGroup, true);
+        return actionToolbar.getComponent();
     }
 
     private void createContent() {

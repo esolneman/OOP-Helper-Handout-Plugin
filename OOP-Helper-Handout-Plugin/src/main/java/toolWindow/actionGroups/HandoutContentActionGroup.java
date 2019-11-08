@@ -3,11 +3,8 @@ package toolWindow.actionGroups;
 import com.intellij.openapi.actionSystem.ActionGroup;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import provider.contentHandler.ContentHandlerInterface;
-import provider.contentHandler.HandoutContentHandler;
 import toolWindow.actions.HandoutTableOfContentsAction;
 import webView.WebViewController;
 

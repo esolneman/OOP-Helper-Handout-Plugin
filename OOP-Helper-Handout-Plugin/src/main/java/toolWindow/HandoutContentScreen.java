@@ -1,13 +1,15 @@
 package toolWindow;
 
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.ActionManager;
+import com.intellij.openapi.actionSystem.ActionToolbar;
+import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import com.intellij.openapi.actionSystem.Separator;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
 import controller.LinkToHandoutController;
 import environment.HandoutPluginFXPanel;
 import javafx.application.Platform;
 import javafx.scene.web.WebView;
-import org.jetbrains.annotations.NotNull;
 import provider.LocalStorageDataProvider;
 import provider.RepoLocalStorageDataProvider;
 import provider.contentHandler.HandoutContentHandler;
@@ -63,8 +65,8 @@ public class HandoutContentScreen extends SimpleToolWindowPanel implements Plugi
         handoutActionGroup.add(new Separator());
         handoutActionGroup.add(ActionManager.getInstance().getAction("Handout.Download"));
         handoutActionGroup.add(new Separator());
-        final ActionToolbar checklistActionToolbar = ActionManager.getInstance().createActionToolbar("HandoutTool", handoutActionGroup, true);
-        return checklistActionToolbar.getComponent();
+        final ActionToolbar actionToolbar = ActionManager.getInstance().createActionToolbar("HandoutTool", handoutActionGroup, true);
+        return actionToolbar.getComponent();
     }
 
     private void createContent() {

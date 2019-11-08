@@ -17,10 +17,6 @@ public class LocalStorageDataProvider implements LocalStorageDataProviderInterfa
         return RepoLocalStorageDataProvider.getHandoutHtmlString();
     }
 
-    public static SpecificAssessmentCriteria getSpecificAssessmentCriteria() {
-        return SpecificAssessmentCriteriaHandler.getSpecificAssessmentCriteria();
-    }
-
     public static File getSpecificAssessmentCriteriaFileDirectory() {
         return RepoLocalStorageDataProvider.getSpecificAssessmentCriteriaFile();
     }
