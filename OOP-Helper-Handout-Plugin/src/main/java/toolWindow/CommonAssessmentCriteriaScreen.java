@@ -10,6 +10,8 @@ import environment.HandoutPluginFXPanel;
 import javafx.application.Platform;
 import javafx.scene.web.WebView;
 import provider.LocalStorageDataProvider;
+import provider.contentHandler.CommonAssessmentCriteriaContentHandler;
+import provider.contentHandler.HandoutContentHandler;
 import toolWindow.actionGroups.HandoutContentActionGroup;
 import webView.WebViewController;
 
@@ -51,8 +53,9 @@ public class CommonAssessmentCriteriaScreen extends SimpleToolWindowPanel {
 
     private JComponent createToolbarPanel() {
         final DefaultActionGroup handoutActionGroup = new DefaultActionGroup();
-        HandoutContentActionGroup handoutContentActionGroup = (HandoutContentActionGroup) ActionManager.getInstance().getAction("Handout.TableOfContents");
-        //handoutContentActionGroup.setHandoutContentScreen(webViewController);
+        HandoutContentActionGroup handoutContentActionGroup = (HandoutContentActionGroup) ActionManager.getInstance().getAction("CommonAssessmentCriteria.TableOfContents");
+        handoutContentActionGroup.setWebViewController(webViewController);
+        handoutContentActionGroup.setHeadings(CommonAssessmentCriteriaContentHandler.getNavHeadings());
         handoutActionGroup.add(handoutContentActionGroup);
         final ActionToolbar checklistActionToolbar = ActionManager.getInstance().createActionToolbar("HandoutTool", handoutActionGroup, true);
         return checklistActionToolbar.getComponent();

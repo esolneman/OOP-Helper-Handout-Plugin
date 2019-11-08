@@ -18,8 +18,7 @@ public class WebViewController {
     private WebViewLinkListener webViewLinkListener;
     private String urlString;
 
-    public WebViewController(){
-    }
+    public WebViewController(){}
 
     public WebView createWebView(String urlString){
         this.urlString = urlString;

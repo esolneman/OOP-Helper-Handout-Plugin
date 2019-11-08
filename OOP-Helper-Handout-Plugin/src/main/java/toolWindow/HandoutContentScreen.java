@@ -1,23 +1,23 @@
 package toolWindow;
 
-import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.actionSystem.ActionToolbar;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
-import com.intellij.openapi.actionSystem.Separator;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
 import controller.LinkToHandoutController;
 import environment.HandoutPluginFXPanel;
 import javafx.application.Platform;
 import javafx.scene.web.WebView;
+import org.jetbrains.annotations.NotNull;
 import provider.LocalStorageDataProvider;
 import provider.RepoLocalStorageDataProvider;
+import provider.contentHandler.HandoutContentHandler;
 import toolWindow.actionGroups.HandoutContentActionGroup;
 import webView.WebViewController;
 
 import javax.swing.*;
 import java.io.File;
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 
 public class HandoutContentScreen extends SimpleToolWindowPanel implements PluginToolWindowTabsInterface {
     private HandoutPluginFXPanel handoutContent;
@@ -57,6 +57,8 @@ public class HandoutContentScreen extends SimpleToolWindowPanel implements Plugi
         final DefaultActionGroup handoutActionGroup = new DefaultActionGroup();
         HandoutContentActionGroup handoutContentActionGroup = (HandoutContentActionGroup) ActionManager.getInstance().getAction("Handout.TableOfContents");
         handoutContentActionGroup.setWebViewController(webViewController);
+        ArrayList<String> headings = HandoutContentHandler.getNavHeadings();
+        handoutContentActionGroup.setHeadings(headings);
         handoutActionGroup.add(handoutContentActionGroup);
         handoutActionGroup.add(new Separator());
         handoutActionGroup.add(ActionManager.getInstance().getAction("Handout.Download"));
