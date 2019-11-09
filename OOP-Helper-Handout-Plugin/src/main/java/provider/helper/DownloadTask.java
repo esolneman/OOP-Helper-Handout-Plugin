@@ -4,29 +4,29 @@ import net.lingala.zip4j.ZipFile;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.net.ntp.TimeStamp;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.LogCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.DepthWalk;
 import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
-import provider.HandoutContentDataProvider;
-import provider.LocalStorageDataProvider;
+import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.storage.file.FileRepository;
 import provider.RepoLocalStorageDataProvider;
 
 import java.io.*;
-import java.net.URL;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
-import java.util.Enumeration;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import static environment.Constants.*;
 
+//is singleton
 public class DownloadTask {
 
     private String path;
@@ -45,10 +45,11 @@ public class DownloadTask {
         return single_instance;
     }
 
-    private DownloadTask() {}
+    private DownloadTask() {
+    }
 
 
-    public  void run(String repoUrl, File contentRepoFile, String branchPath) throws IOException {
+    public void run(String repoUrl, File contentRepoFile, String branchPath) throws IOException {
         clone = null;
         {
             try {
@@ -60,7 +61,7 @@ public class DownloadTask {
                         .call();
             } catch (GitAPIException e) {
                 e.printStackTrace();
-            }finally {
+            } finally {
                 System.out.println("clone run");
                 Ref head = clone.getRepository().getAllRefs().get("HEAD");
                 System.out.println("Ref of HEAD: " + head + ": " + head.getName() + " - " + head.getObjectId().getName());
@@ -125,7 +126,6 @@ public class DownloadTask {
         System.out.println("saveLastCommitHash run");
         File lastCommitHashFile = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + LAST_COMMIT_HASH_FILE);
         lastCommitHashFile.createNewFile();
-        //TODO save in file :D
         //https://stackoverflow.com/a/1053475
         //PrintWriter out = new PrintWriter(lastCommitHashFile);
         //out.println(lastCommitHash);
@@ -138,21 +138,40 @@ public class DownloadTask {
         }
     }
 
-    public void checkLastCommit(){
-        System.out.println("checkLastCommit");
+    //https://stackoverflow.com/a/13944180
+    public boolean checkIfNewVersionIsAvailable() {
+        System.out.println("checkIfNewVersionIsAvailable");
+        //TODO compare Last Commits
         try {
-            clone = Git.open(new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE));
-            Repository repository = clone.getRepository();
-            Ref head = repository.getAllRefs().get("HEAD");
-            System.out.println(repository.getBranch());
-            System.out.println("Ref of New HEAD: " + head + ": " + head.getName() + " - " + head.getObjectId().getName());
-            String lastCommitHash = head.getObjectId().getName();
-        } catch (IOException e) {
-            System.out.println("IOException: " + e);
-            //e.printStackTrace();
-        }
+            Git git = Git.open(new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE + "/.git"));
+            //Git git = new Git(repository);
+            Repository repository = git.getRepository();
 
+            git.fetch().call();
+            System.out.println("git.fetch Branch: " + git.getRepository().getBranch());
+
+            Iterable<RevCommit> logs = git.log().call();
+            int count = 0;
+            logs = git.log()
+                    .add(repository.resolve("remotes/origin/test"))
+                    .call();
+            count = 0;
+            for (RevCommit rev : logs) {
+                System.out.println("Commit: " + rev /* + ", name: " + rev.getName() + ", id: " + rev.getId().getName() */);
+                count++;
+            }
+            System.out.println("Had " + count + " commits overall on test-branch");
+
+
+
+        } catch (IOException | GitAPIException  e ) {
+            e.printStackTrace();
+            System.out.println(e);
+        }
+        return false;
     }
+
+
 
     //https://stackoverflow.com/a/14656534
     public void unzipFile(File in, File out) {
@@ -209,5 +228,9 @@ public class DownloadTask {
         }
         return false;
 
+    }
+
+    public ArrayList<String> getLastCommitMassages() {
+        return null;
     }
 }

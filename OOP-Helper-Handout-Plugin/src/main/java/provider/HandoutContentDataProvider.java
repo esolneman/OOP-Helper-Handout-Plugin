@@ -42,8 +42,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
     private File tempVersionOutputDir;
     private File repoLocalData;
     private DownloadTask task;
-    //EventBus eventBus;
-
+    private ArrayList<String> lastCommitMessages;
 
     public static HandoutContentDataProvider getInstance() {
         if (single_instance == null) {
@@ -176,7 +175,18 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
     private void updateBranch() {
         Runnable updateTask = () -> {
             System.out.println("updateBranch");
-            task.checkLastCommit();
+            if(task.checkIfNewVersionIsAvailable()){
+                try {
+                    //lastCommitMessages = task.getLastCommitMassages();
+                    task.run(repoUrl, contentRepoFile, branchPath);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }finally {
+                    BalloonPopupController.showNotification(project, "Handout Daten wurden runtergeladen.", NotificationType.INFORMATION);
+                }
+            }else{
+                BalloonPopupController.showNotification(project, "Handout Daten sind bereits auf dem aktuellsten Stand.", NotificationType.INFORMATION);
+            }
            /* try {
                 //https://stackoverflow.com/a/6143076
                 createFolder(tempVersionZipFile, true);
