@@ -4,10 +4,13 @@ import com.intellij.notification.NotificationType;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import eventHandling.OnGitEventListener;
+import gui.InformChangesPanel;
+import gui.InformCommitChangesDialog;
 import provider.HandoutContentDataProviderInterface;
 import provider.RepoLocalStorageDataProvider;
 import toolWindow.HandoutToolWindowFactory;
 
+import javax.swing.*;
 import java.io.File;
 import java.util.ArrayList;
 
@@ -24,6 +27,13 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
         handoutDataProvider.addListener(this);
         toolWindowController = ToolWindowController.getInstance();
         updateHandoutContent();
+        ArrayList<String> test = new ArrayList<>();
+        test.add("dfghj");
+        test.add("zghjkl");
+        test.add("jhgfd");
+        test.add("AARGHHGHGH");
+        InformCommitChangesDialog informCommitChangesDialog = new InformCommitChangesDialog(test);
+        informCommitChangesDialog.show();
     }
 
     public void updateHandoutContent() {
@@ -57,9 +67,11 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
 
 
     @Override
+    //TODO add strings to message constants
     public void onUpdatingRepositoryEvent(ArrayList<String> commitMessages) {
-        Integer numCommits = commitMessages.size();
         BalloonPopupController.showNotification(project, "Handout Daten wurden runtergeladen." + commitMessages.toString(), NotificationType.INFORMATION);
+        InformChangesPanel informChangesPanel = new InformChangesPanel(commitMessages);
+        informChangesPanel.showPanel();
     }
 
     @Override
@@ -67,7 +79,6 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
         System.out.println("onNotUpdatingRepositoryEvent");
         BalloonPopupController.showNotification(project, notificationMessage, messageType);
     }
-
 
 
 }

@@ -9,8 +9,9 @@ import java.util.ArrayList;
 
 public interface OnGitEventListener {
     void onCloningRepositoryEvent(String notificationMessage, NotificationType messageType);
+
     void onUpdatingRepositoryEvent(ArrayList<String> commitMessages);
-    //TODO implement Event
+
     void onNotUpdatingRepositoryEvent(String notificationMessage, NotificationType messageType);
 
 }

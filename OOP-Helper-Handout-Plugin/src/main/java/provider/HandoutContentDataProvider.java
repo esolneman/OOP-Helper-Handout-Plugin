@@ -174,6 +174,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         System.out.println("updateBranch  commitMessages : " + commitMessages.size());
         if (commitMessages.size() >= 1) {
             System.out.println("commitMessages not empty");
+            //TODO ASK USER IF DOWNLOAD IS OK
             Runnable updateTask = () -> {
                 try {
                     task.updateRepository(repoUrl);
