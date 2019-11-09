@@ -2,9 +2,7 @@ package provider;
 
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.project.Project;
-import controller.BalloonPopupController;
 import eventHandling.OnGitEventListener;
-import eventHandling.OnUpdatingRepositoryEvent;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import provider.helper.AsyncExecutor;
@@ -24,7 +22,6 @@ import static environment.Constants.*;
 // is Singleton
 public class HandoutContentDataProvider implements HandoutContentDataProviderInterface {
     private OnGitEventListener onEventListener;
-    private OnUpdatingRepositoryEvent onUpdatingRepositoryEvent;
     private AsyncExecutor asyncExecutor = new AsyncExecutor();
     private static HandoutContentDataProvider single_instance = null;
 
@@ -100,9 +97,9 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         } else if (internetConnection && repoContentDataExists) {
             updateBranch();
         } else if (repoContentDataExists) {
-            BalloonPopupController.showNotification(project, "Keine Internetverbindung vorhanden. Handout Daten können momentan nicht aktualisiert werden.", NotificationType.ERROR);
+            callListenerNotUpdating("Keine Internetverbindung vorhanden. Handout Daten können momentan nicht aktualisiert werden." , NotificationType.ERROR);
         } else {
-            BalloonPopupController.showNotification(project, "Keine Internetverbindung vorhanden. Handout Daten können momentan nciht geladen werden.", NotificationType.ERROR);
+            callListenerNotUpdating("Keine Internetverbindung vorhanden. Handout Daten können momentan nicht heruntergeladen werden.", NotificationType.ERROR);
         }
     }
 
@@ -143,11 +140,6 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         this.onEventListener = listener;
     }
 
-    @Override
-    public void addListener(OnUpdatingRepositoryEvent listener) {
-        this.onUpdatingRepositoryEvent = listener;
-    }
-
     //TODO
     private void cloneRepository() {
         System.out.println("start cloning branch");
@@ -170,8 +162,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
                     System.out.println(ex);
                 }
             } finally {
-                callListener();
-                BalloonPopupController.showNotification(project, "Handout Daten wurden runtergeladen.", NotificationType.INFORMATION);
+                callListener("Handout Daten wurden runtergeladen.", NotificationType.INFORMATION);
             }
         };
         asyncExecutor.runAsyncClone(cloneTask);
@@ -194,8 +185,6 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
             Future<String> test = asyncExecutor.runAsyncClone(updateTask);
             while (test.isDone() == false) {
                 callListener(commitMessages);
-                BalloonPopupController.showNotification(project, "Handout Daten wurden runtergeladen." + commitMessages.toString(), NotificationType.INFORMATION);
-
                 //Sleep for 1 second
                 try {
                     Thread.sleep(1000L);
@@ -206,7 +195,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
 
         } else {
             System.out.println("commitMessages empty");
-            BalloonPopupController.showNotification(project, "Handout Daten sind bereits auf dem aktuellsten Stand.", NotificationType.INFORMATION);
+            callListenerNotUpdating("Handout Daten sind bereits auf dem aktuellsten Stand." , NotificationType.INFORMATION);
         }
 
     }
@@ -218,19 +207,27 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         Files.copy(from, to, StandardCopyOption.REPLACE_EXISTING);
     }
 
-    private void callListener() {
+    private void callListener(String message, NotificationType messageType) {
         System.out.println("end cloning branch");
         if (onEventListener != null) {
             System.out.println("listener not null");
-            onEventListener.onCloningRepositoryEvent();
+            onEventListener.onCloningRepositoryEvent(message, messageType);
         }
     }
 
     private void callListener(ArrayList<String> lastCommitMessages) {
         System.out.println("end cloning branch");
-        if (onUpdatingRepositoryEvent != null) {
+        if (onEventListener != null) {
             System.out.println("listener not null");
             onEventListener.onUpdatingRepositoryEvent(lastCommitMessages);
+        }
+    }
+
+    private void callListenerNotUpdating(String message, NotificationType messageType) {
+        System.out.println("end cloning branch");
+        if (onEventListener != null) {
+            System.out.println("listener not null");
+            onEventListener.onNotUpdatingRepositoryEvent(message, messageType);
         }
     }
 
