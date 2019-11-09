@@ -29,9 +29,9 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
     //TODO MANAGE UPDATE VIEWS....
     //TODO update Webview and other content of toolWindows
     //TODO enable / disable Actions
-    public void onCloningRepositoryEvent(File repoFile) {
+    public void onCloningRepositoryEvent() {
         System.out.println("Performing callback after Asynchronous Task");
-        System.out.println("repoFile: " + repoFile);
+        File repoFile = new File(RepoLocalStorageDataProvider.getRepoLocalFile());
         System.out.println(repoFile.getAbsolutePath());
         repoFile.setExecutable(false);
         repoFile.setReadable(true);

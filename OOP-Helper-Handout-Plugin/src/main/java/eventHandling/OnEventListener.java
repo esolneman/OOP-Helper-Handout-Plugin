@@ -5,5 +5,5 @@ import java.io.File;
 //https://www.geeksforgeeks.org/asynchronous-synchronous-callbacks-java/
 
 public interface OnEventListener {
-    void onCloningRepositoryEvent(File repoFile);
+    void onCloningRepositoryEvent();
 }

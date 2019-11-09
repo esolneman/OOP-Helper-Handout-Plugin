@@ -135,12 +135,11 @@ public class DownloadTask {
         }
     }
 
-    //get commits ahead of local repository
+    //get commit messages ahead of local repository
     public ArrayList<String> getLatestCommits() {
         System.out.println("checkIfNewVersionIsAvailable");
         //https://github.com/centic9/jgit-cookbook/blob/master/src/main/java/org/dstadler/jgit/porcelain/ShowLog.java
         ArrayList<String> commitMessages = new ArrayList<>();
-        int count = 0;
         Git git = null;
         try {
             git = Git.open(new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE + "/.git"));
@@ -154,17 +153,14 @@ public class DownloadTask {
             logs = git.log()
                     .add(repository.resolve("remotes/origin/test"))
                     .call();
-            count = 0;
             for (RevCommit rev : logs) {
                 String currentRevID = rev.getId().getName();
-                System.out.println("Commit  id: " + currentRevID);
                 if (currentRevID.equals(lastLocalCommitId)) {
                     break;
                 }
-                commitMessages.add(currentRevID);
-                count++;
+                System.out.println("Commit  Text Add: " + rev.getFullMessage());
+                commitMessages.add(rev.getFullMessage());
             }
-            System.out.println("Had " + count + " commits ahead on test-branch");
             repository.close();
         } catch (IOException | GitAPIException e) {
             e.printStackTrace();
@@ -234,11 +230,11 @@ public class DownloadTask {
         return null;
     }
 
-    public void updateRepository(String repoUrl) throws IOException {
+    public void updateRepository(String repoUrl) throws IOException, GitAPIException {
         System.out.println("updateRepository");
         Git git = null;
         git = Git.open(new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE));
-        git.pull();
+        git.pull().call();
         System.out.println("pullende");
     }
 }

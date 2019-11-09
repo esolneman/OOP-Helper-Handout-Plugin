@@ -49,7 +49,7 @@ public class RepoLocalStorageDataProvider implements RepoLocalStorageDataProvide
 
     public static String getRepoLocalFile(){
         //File file = new File();
-        return getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE + "/OOP-Helper-Handout-Template-test";
+        return getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE;
     }
 
 

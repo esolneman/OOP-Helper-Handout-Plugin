@@ -5,6 +5,7 @@ import com.intellij.openapi.project.Project;
 import controller.BalloonPopupController;
 import eventHandling.OnEventListener;
 import org.apache.commons.io.FileUtils;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import provider.helper.AsyncExecutor;
 import provider.helper.DownloadTask;
 
@@ -16,6 +17,8 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 import static environment.Constants.*;
 
@@ -172,25 +175,36 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
 
 
     private void updateBranch() {
-        Runnable updateTask = () -> {
-            ArrayList<String> commitMessages = new ArrayList<>();
-            System.out.println("updateBranch");
-            commitMessages = task.getLatestCommits();
-            if (commitMessages.isEmpty()) {
+        System.out.println("updateBranch");
+        ArrayList<String> commitMessages = task.getLatestCommits();
+        System.out.println("updateBranch  commitMessages : " + commitMessages.size());
+        if (commitMessages.size() >= 1) {
+            System.out.println("commitMessages not empty");
+            Runnable updateTask = () -> {
                 try {
-                    //lastCommitMessages = task.getLastCommitMassages();
                     task.updateRepository(repoUrl);
-                } catch (IOException e) {
+                } catch (IOException | GitAPIException e) {
                     e.printStackTrace();
-                } finally {
-                    callListener();
-                    BalloonPopupController.showNotification(project, "Handout Daten wurden runtergeladen." + commitMessages.toString(), NotificationType.INFORMATION);
                 }
-            } else {
-                BalloonPopupController.showNotification(project, "Handout Daten sind bereits auf dem aktuellsten Stand.", NotificationType.INFORMATION);
+            };
+            Future<String> test = asyncExecutor.runAsyncClone(updateTask);
+            while (test.isDone() == false) {
+                callListener();
+                BalloonPopupController.showNotification(project, "Handout Daten wurden runtergeladen." + commitMessages.toString(), NotificationType.INFORMATION);
+
+                //Sleep for 1 second
+                try {
+                    Thread.sleep(1000L);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
-        };
-        asyncExecutor.runAsyncClone(updateTask);
+
+        } else {
+            System.out.println("commitMessages empty");
+            BalloonPopupController.showNotification(project, "Handout Daten sind bereits auf dem aktuellsten Stand.", NotificationType.INFORMATION);
+        }
+
     }
 
     private void replaceFile(File newData, File oldData) throws IOException {
@@ -205,7 +219,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         if (listeners != null) {
             System.out.println("listener not null");
             for (OnEventListener listener : listeners) {
-                listener.onCloningRepositoryEvent(outputDir);
+                listener.onCloningRepositoryEvent();
             }
         }
     }
