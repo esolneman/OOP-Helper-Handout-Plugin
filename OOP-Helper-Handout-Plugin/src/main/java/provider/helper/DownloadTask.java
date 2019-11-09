@@ -60,6 +60,7 @@ public class DownloadTask {
                 e.printStackTrace();
             } finally {
                 System.out.println("clone run");
+                //https://stackoverflow.com/a/33120428
                 Ref head = clone.getRepository().getAllRefs().get("HEAD");
                 System.out.println("Ref of HEAD: " + head + ": " + head.getName() + " - " + head.getObjectId().getName());
                 String lastCommitHash = head.getObjectId().getName();

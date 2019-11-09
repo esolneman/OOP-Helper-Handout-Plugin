@@ -15,7 +15,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
-import java.util.concurrent.Future;
 
 import static environment.Constants.*;
 
@@ -182,22 +181,11 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
                     e.printStackTrace();
                 }
             };
-            Future<String> test = asyncExecutor.runAsyncClone(updateTask);
-            while (test.isDone() == false) {
-                callListener(commitMessages);
-                //Sleep for 1 second
-                try {
-                    Thread.sleep(1000L);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-
+            asyncExecutor.runAsyncClone(updateTask);
         } else {
             System.out.println("commitMessages empty");
             callListenerNotUpdating("Handout Daten sind bereits auf dem aktuellsten Stand." , NotificationType.INFORMATION);
         }
-
     }
 
     private void replaceFile(File newData, File oldData) throws IOException {
@@ -208,25 +196,19 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
     }
 
     private void callListener(String message, NotificationType messageType) {
-        System.out.println("end cloning branch");
         if (onEventListener != null) {
-            System.out.println("listener not null");
             onEventListener.onCloningRepositoryEvent(message, messageType);
         }
     }
 
     private void callListener(ArrayList<String> lastCommitMessages) {
-        System.out.println("end cloning branch");
         if (onEventListener != null) {
-            System.out.println("listener not null");
             onEventListener.onUpdatingRepositoryEvent(lastCommitMessages);
         }
     }
 
     private void callListenerNotUpdating(String message, NotificationType messageType) {
-        System.out.println("end cloning branch");
         if (onEventListener != null) {
-            System.out.println("listener not null");
             onEventListener.onNotUpdatingRepositoryEvent(message, messageType);
         }
     }

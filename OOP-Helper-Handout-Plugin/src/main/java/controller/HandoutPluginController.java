@@ -63,6 +63,7 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
 
     @Override
     public void onNotUpdatingRepositoryEvent(String notificationMessage, NotificationType messageType) {
+        System.out.println("onNotUpdatingRepositoryEvent");
         BalloonPopupController.showNotification(project, notificationMessage, messageType);
     }
 
