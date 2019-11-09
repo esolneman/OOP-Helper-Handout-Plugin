@@ -58,6 +58,7 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
 
     @Override
     public void onUpdatingRepositoryEvent(ArrayList<String> commitMessages) {
+        Integer numCommits = commitMessages.size();
         BalloonPopupController.showNotification(project, "Handout Daten wurden runtergeladen." + commitMessages.toString(), NotificationType.INFORMATION);
     }
 
