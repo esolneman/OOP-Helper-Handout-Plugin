@@ -4,16 +4,10 @@ import net.lingala.zip4j.ZipFile;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.net.ntp.TimeStamp;
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.LogCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.lib.Constants;
-import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.revwalk.DepthWalk;
 import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.revwalk.RevWalk;
-import org.eclipse.jgit.storage.file.FileRepository;
 import provider.RepoLocalStorageDataProvider;
 
 import java.io.*;
@@ -24,11 +18,11 @@ import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+
 import static environment.Constants.*;
 
 //is singleton
 public class DownloadTask {
-
     private String path;
     private static DownloadTask single_instance = null;
     private static Git clone = null;
@@ -50,6 +44,9 @@ public class DownloadTask {
 
 
     public void run(String repoUrl, File contentRepoFile, String branchPath) throws IOException {
+        System.out.println("repoUrl: " + repoUrl );
+        System.out.println("contentRepoFile: " + contentRepoFile.getPath() );
+        System.out.println( " branchPath: " + branchPath);
         clone = null;
         {
             try {
@@ -138,40 +135,43 @@ public class DownloadTask {
         }
     }
 
-    //https://stackoverflow.com/a/13944180
-    public boolean checkIfNewVersionIsAvailable() {
+    //get commits ahead of local repository
+    public ArrayList<String> getLatestCommits() {
         System.out.println("checkIfNewVersionIsAvailable");
-        //TODO compare Last Commits
+        //https://github.com/centic9/jgit-cookbook/blob/master/src/main/java/org/dstadler/jgit/porcelain/ShowLog.java
+        ArrayList<String> commitMessages = new ArrayList<>();
+        int count = 0;
+        Git git = null;
         try {
-            Git git = Git.open(new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE + "/.git"));
-            //Git git = new Git(repository);
+            git = Git.open(new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE + "/.git"));
             Repository repository = git.getRepository();
-
+            Ref head = repository.getAllRefs().get("HEAD");
+            String lastLocalCommitId = head.getObjectId().getName();
+            System.out.println("Ref of HEAD: " + lastLocalCommitId);
             git.fetch().call();
             System.out.println("git.fetch Branch: " + git.getRepository().getBranch());
-
             Iterable<RevCommit> logs = git.log().call();
-            int count = 0;
             logs = git.log()
                     .add(repository.resolve("remotes/origin/test"))
                     .call();
             count = 0;
             for (RevCommit rev : logs) {
-                System.out.println("Commit: " + rev /* + ", name: " + rev.getName() + ", id: " + rev.getId().getName() */);
+                String currentRevID = rev.getId().getName();
+                System.out.println("Commit  id: " + currentRevID);
+                commitMessages.add(currentRevID);
+                if (currentRevID.equals(lastLocalCommitId)) {
+                    break;
+                }
                 count++;
             }
-            System.out.println("Had " + count + " commits overall on test-branch");
-
-
-
-        } catch (IOException | GitAPIException  e ) {
+            System.out.println("Had " + count + " commits ahead on test-branch");
+            repository.close();
+        } catch (IOException | GitAPIException e) {
             e.printStackTrace();
             System.out.println(e);
         }
-        return false;
+        return commitMessages;
     }
-
-
 
     //https://stackoverflow.com/a/14656534
     public void unzipFile(File in, File out) {
@@ -232,5 +232,13 @@ public class DownloadTask {
 
     public ArrayList<String> getLastCommitMassages() {
         return null;
+    }
+
+    public void updateRepository(String repoUrl) throws IOException {
+        System.out.println("updateRepository");
+        Git git = null;
+        git = Git.open(new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE));
+        git.pull();
+        System.out.println("pullende");
     }
 }

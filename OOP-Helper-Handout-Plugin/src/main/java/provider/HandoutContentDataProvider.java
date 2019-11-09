@@ -26,7 +26,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
     private static HandoutContentDataProvider single_instance = null;
 
     // TODO: get RepoURL from jar file
-    private String repoUrl = "https://github.com/esolneman/OOP-Helper-Handout-Template.git";
+    private String repoUrl = "https://github.com/esolneman/OOP-Helper-Handout-Template";
     private String repoZipUrl = "https://github.com/esolneman/OOP-Helper-Handout-Template/archive/test.zip";
     //String CLONE_DIRECTORY_PATH = "refs/heads/test";
     //String CONTENT_FILE_NAME = "/HelperHandoutPluginContentData/RepoLocalStorage";
@@ -109,7 +109,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         //https://stackoverflow.com/a/15571626
         //if (!zipFile.exists()) {
         if (!contentRepoFile.exists()) {
-        System.out.println("repo doesn't exist");
+            System.out.println("repo doesn't exist");
             return false;
         } else {
             System.out.println("repo exist");
@@ -171,41 +171,24 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
     }
 
 
-
     private void updateBranch() {
         Runnable updateTask = () -> {
+            ArrayList<String> commitMessages = new ArrayList<>();
             System.out.println("updateBranch");
-            if(task.checkIfNewVersionIsAvailable()){
+            commitMessages = task.getLatestCommits();
+            if (commitMessages.size() > 0) {
                 try {
                     //lastCommitMessages = task.getLastCommitMassages();
-                    task.run(repoUrl, contentRepoFile, branchPath);
+                    task.updateRepository(repoUrl);
                 } catch (IOException e) {
                     e.printStackTrace();
-                }finally {
-                    BalloonPopupController.showNotification(project, "Handout Daten wurden runtergeladen.", NotificationType.INFORMATION);
+                } finally {
+                    callListener();
+                    BalloonPopupController.showNotification(project, "Handout Daten wurden runtergeladen." + commitMessages.toString(), NotificationType.INFORMATION);
                 }
-            }else{
+            } else {
                 BalloonPopupController.showNotification(project, "Handout Daten sind bereits auf dem aktuellsten Stand.", NotificationType.INFORMATION);
             }
-           /* try {
-                //https://stackoverflow.com/a/6143076
-                createFolder(tempVersionZipFile, true);
-                task.run(tempVersionZipFile);
-                if (!task.compareZipFiles(zipFile, tempVersionZipFile)) {
-                    System.out.println("not equal");
-                    task.unzipFile(tempVersionZipFile, outputDir);
-                    replaceFile(tempVersionZipFile, zipFile);
-                }
-            } catch (IOException e) {
-                //TODO Notification
-                repoLocalData.delete();
-                e.printStackTrace();
-            } finally {
-                deleteFile(tempVersionZipFile);
-                callListener();
-                BalloonPopupController.showNotification(project, "Handout Daten wurden erfolgreich aktualisiert.", NotificationType.INFORMATION);
-
-            }*/
         };
         asyncExecutor.runAsyncClone(updateTask);
     }
