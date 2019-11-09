@@ -158,10 +158,10 @@ public class DownloadTask {
             for (RevCommit rev : logs) {
                 String currentRevID = rev.getId().getName();
                 System.out.println("Commit  id: " + currentRevID);
-                commitMessages.add(currentRevID);
                 if (currentRevID.equals(lastLocalCommitId)) {
                     break;
                 }
+                commitMessages.add(currentRevID);
                 count++;
             }
             System.out.println("Had " + count + " commits ahead on test-branch");

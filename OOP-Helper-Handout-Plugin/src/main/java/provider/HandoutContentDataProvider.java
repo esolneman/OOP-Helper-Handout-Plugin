@@ -176,7 +176,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
             ArrayList<String> commitMessages = new ArrayList<>();
             System.out.println("updateBranch");
             commitMessages = task.getLatestCommits();
-            if (commitMessages.size() > 0) {
+            if (commitMessages.isEmpty()) {
                 try {
                     //lastCommitMessages = task.getLastCommitMassages();
                     task.updateRepository(repoUrl);
