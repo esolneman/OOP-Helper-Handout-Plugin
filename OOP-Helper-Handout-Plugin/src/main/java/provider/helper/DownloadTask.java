@@ -226,15 +226,9 @@ public class DownloadTask {
 
     }
 
-    public ArrayList<String> getLastCommitMassages() {
-        return null;
-    }
-
     public void updateRepository(String repoUrl) throws IOException, GitAPIException {
-        System.out.println("updateRepository");
-        Git git = null;
+        Git git;
         git = Git.open(new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE));
         git.pull().call();
-        System.out.println("pullende");
     }
 }

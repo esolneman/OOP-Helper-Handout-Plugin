@@ -7,6 +7,10 @@ import java.util.concurrent.Future;
 
 //https://howtodoinjava.com/java/multi-threading/executor-service-example/
 public class AsyncExecutor {
+
+    //TODO Executor Class with wait
+
+
     ExecutorService executor = Executors.newSingleThreadExecutor();
 
     public Future<String> runAsyncClone(Runnable runnableTask){

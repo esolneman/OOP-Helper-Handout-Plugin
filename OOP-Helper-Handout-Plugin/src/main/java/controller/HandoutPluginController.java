@@ -2,14 +2,16 @@ package controller;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import eventHandling.OnEventListener;
+import eventHandling.OnGitEventListener;
+import eventHandling.OnUpdatingRepositoryEvent;
 import provider.HandoutContentDataProviderInterface;
 import provider.RepoLocalStorageDataProvider;
 import toolWindow.HandoutToolWindowFactory;
 
 import java.io.File;
+import java.util.ArrayList;
 
-public class HandoutPluginController implements HandoutPluginControllerInterface, OnEventListener {
+public class HandoutPluginController implements HandoutPluginControllerInterface, OnGitEventListener {
     HandoutContentDataProviderInterface handoutDataProvider;
     HandoutToolWindowFactory handoutToolWindowFactory;
     ToolWindowController toolWindowController;
@@ -48,4 +50,10 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
         }
         System.out.println("RepoFile hidden: "+ repoFile.isHidden());*/
     }
+
+    @Override
+    public void onUpdatingRepositoryEvent(ArrayList<String> commitMessages) {
+
+    }
+
 }

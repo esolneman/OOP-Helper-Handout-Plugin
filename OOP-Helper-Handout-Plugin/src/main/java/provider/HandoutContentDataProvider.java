@@ -3,7 +3,8 @@ package provider;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.project.Project;
 import controller.BalloonPopupController;
-import eventHandling.OnEventListener;
+import eventHandling.OnGitEventListener;
+import eventHandling.OnUpdatingRepositoryEvent;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import provider.helper.AsyncExecutor;
@@ -16,15 +17,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import static environment.Constants.*;
 
 // is Singleton
 public class HandoutContentDataProvider implements HandoutContentDataProviderInterface {
-    private List<OnEventListener> listeners = new ArrayList<>();
+    private OnGitEventListener onEventListener;
+    private OnUpdatingRepositoryEvent onUpdatingRepositoryEvent;
     private AsyncExecutor asyncExecutor = new AsyncExecutor();
     private static HandoutContentDataProvider single_instance = null;
 
@@ -89,8 +89,6 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
 
     public void updateHandoutData() {
         System.out.println("updateHandoutData");
-        //TODO: implement Logic
-        //task = new DownloadTask(repoZipUrl);
         controlRetrievingContentData();
     }
 
@@ -141,10 +139,16 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         return false;
     }
 
-    public void addListener(OnEventListener listener) {
-        listeners.add(listener);
+    public void addListener(OnGitEventListener listener) {
+        this.onEventListener = listener;
     }
 
+    @Override
+    public void addListener(OnUpdatingRepositoryEvent listener) {
+        this.onUpdatingRepositoryEvent = listener;
+    }
+
+    //TODO
     private void cloneRepository() {
         System.out.println("start cloning branch");
         //https://www.vogella.com/tutorials/JGit/article.html#example-for-using-jgit
@@ -189,7 +193,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
             };
             Future<String> test = asyncExecutor.runAsyncClone(updateTask);
             while (test.isDone() == false) {
-                callListener();
+                callListener(commitMessages);
                 BalloonPopupController.showNotification(project, "Handout Daten wurden runtergeladen." + commitMessages.toString(), NotificationType.INFORMATION);
 
                 //Sleep for 1 second
@@ -216,11 +220,17 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
 
     private void callListener() {
         System.out.println("end cloning branch");
-        if (listeners != null) {
+        if (onEventListener != null) {
             System.out.println("listener not null");
-            for (OnEventListener listener : listeners) {
-                listener.onCloningRepositoryEvent();
-            }
+            onEventListener.onCloningRepositoryEvent();
+        }
+    }
+
+    private void callListener(ArrayList<String> lastCommitMessages) {
+        System.out.println("end cloning branch");
+        if (onUpdatingRepositoryEvent != null) {
+            System.out.println("listener not null");
+            onEventListener.onUpdatingRepositoryEvent(lastCommitMessages);
         }
     }
 
