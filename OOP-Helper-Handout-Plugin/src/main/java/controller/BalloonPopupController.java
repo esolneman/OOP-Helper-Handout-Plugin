@@ -31,7 +31,15 @@ public class BalloonPopupController {
     //https://stackoverflow.com/a/32928915
     public static void showNotification(Project project, String message, NotificationType messageType) {
         ApplicationManager.getApplication().invokeLater(() -> {
-            Notification notification = OOP_HELPER_HANDOUT_NOTIFICATION.createNotification(message, messageType);
+            //TODO Subtitle and Title as param
+            Notification notification = OOP_HELPER_HANDOUT_NOTIFICATION.createNotification("Content Data INromation", "Subtitle", message, messageType);
+            Notifications.Bus.notify(notification, project);
+        });
+    }
+
+    public static void showDialog(Project project, String message, NotificationType messageType) {
+        ApplicationManager.getApplication().invokeLater(() -> {
+            Notification notification = OOP_HELPER_HANDOUT_NOTIFICATION.createNotification("Content Data INromation", "Subtitle", message, messageType);
             Notifications.Bus.notify(notification, project);
         });
     }

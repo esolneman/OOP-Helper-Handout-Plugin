@@ -21,6 +21,7 @@ dependencies {
     // https://mvnrepository.com/artifact/net.lingala.zip4j/zip4j
     compile group: 'net.lingala.zip4j', name: 'zip4j', version: '2.2.3'
     compile group: 'com.google.guava', name: 'guava', version: '23.5-jre'
+    compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '2.2.0.201212191850-r'
 }
 
 

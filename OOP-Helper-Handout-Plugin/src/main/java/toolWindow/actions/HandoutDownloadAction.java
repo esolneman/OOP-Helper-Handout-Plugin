@@ -58,6 +58,9 @@ public class HandoutDownloadAction extends AnAction {
                     .object(HtmlToPdfObject.forUrl(URL_BEGIN_FOR_FILE + handoutHTMLDirectory))
                     .convert(handoutPDFDirectory);
             JComponent handoutContentScreen = ToolWindowManager.getActiveToolWindow().getComponent();
+
+            //TODO add Listener for this and display Notification with Listener!!!
+
             if(success){
                 BalloonPopupController.showBalloonNotification(handoutContentScreen, Balloon.Position.above, "Downloading was successfully", MessageType.INFO);
             }else{

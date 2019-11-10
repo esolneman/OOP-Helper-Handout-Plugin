@@ -20,13 +20,22 @@ public class WebViewController {
 
     public WebViewController(){}
 
-    public WebView createWebView(String urlString){
+    public WebView createWebViewWithListener(String urlString){
         this.urlString = urlString;
         //Platform.setImplicitExit(false);
         //Platform.runLater(() -> {
             webView = new WebView();
             WebViewLinkListener webViewLinkListener = new WebViewLinkListener(webView, urlString);
             return webView;
+        //});
+    }
+
+    public WebView createWebView(String urlString){
+        this.urlString = urlString;
+        //Platform.setImplicitExit(false);
+        //Platform.runLater(() -> {
+        webView = new WebView();
+        return webView;
         //});
     }
 
