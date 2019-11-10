@@ -2,7 +2,7 @@ package provider;
 
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
-import eventHandling.OnEventListener;
+import eventHandling.OnGitEventListener;
 import org.jetbrains.annotations.NotNull;
 
 public interface HandoutContentDataProviderInterface {
@@ -12,7 +12,8 @@ public interface HandoutContentDataProviderInterface {
 
     void updateHandoutData();
 
-    void addListener(OnEventListener listener);
+    void addListener(OnGitEventListener listener);
+
     //public void cloneRepository();
     //public void updateRepossitory();
     //void getLocalRepository();
