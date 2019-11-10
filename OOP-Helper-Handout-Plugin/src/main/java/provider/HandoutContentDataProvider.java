@@ -1,11 +1,10 @@
 package provider;
 
-import com.google.common.eventbus.EventBus;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.project.Project;
-import controller.BalloonPopupController;
-import eventHandling.DataProviderListener;
-import eventHandling.OnEventListener;
+import eventHandling.OnGitEventListener;
+import org.apache.commons.io.FileUtils;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import provider.helper.AsyncExecutor;
 import provider.helper.DownloadTask;
 
@@ -16,36 +15,33 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
-import java.util.List;
 
 import static environment.Constants.*;
 
 // is Singleton
 public class HandoutContentDataProvider implements HandoutContentDataProviderInterface {
-    private List<OnEventListener> listeners = new ArrayList<>();
+    private OnGitEventListener onEventListener;
     private AsyncExecutor asyncExecutor = new AsyncExecutor();
     private static HandoutContentDataProvider single_instance = null;
-    //private OnEventListener eventListener;
 
     // TODO: get RepoURL from jar file
-    String repoUrl = "https://github.com/esolneman/OOP-Helper-Handout-Template.git";
-    String repoZipUrl = "https://github.com/esolneman/OOP-Helper-Handout-Template/archive/test.zip";
+    private String repoUrl = "https://github.com/esolneman/OOP-Helper-Handout-Template";
+    private String repoZipUrl = "https://github.com/esolneman/OOP-Helper-Handout-Template/archive/test.zip";
     //String CLONE_DIRECTORY_PATH = "refs/heads/test";
     //String CONTENT_FILE_NAME = "/HelperHandoutPluginContentData/RepoLocalStorage";
-    String repoFileName;
-    String branchPath;
-    Project project;
-    String projectDirectory;
-    String contentRepoPath;
-    File contentRepoFile;
-    File zipFile;
-    File outputDir;
-    File tempVersionZipFile;
-    File tempVersionOutputDir;
-    File repoLocalData;
-    DownloadTask task;
-    //EventBus eventBus;
-
+    private String repoFileName;
+    private String branchPath;
+    private Project project;
+    private String projectDirectory;
+    private String contentRepoPath;
+    private File contentRepoFile;
+    private File zipFile;
+    private File outputDir;
+    private File tempVersionZipFile;
+    private File tempVersionOutputDir;
+    private File repoLocalData;
+    private DownloadTask task;
+    private ArrayList<String> lastCommitMessages;
 
     public static HandoutContentDataProvider getInstance() {
         if (single_instance == null) {
@@ -60,7 +56,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         projectDirectory = project.getBasePath();
         contentRepoPath = RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE;
         contentRepoFile = new File(contentRepoPath);
-        zipFile = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE + "/repo.zip");
+        zipFile = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE);
         outputDir = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE);
         //TODO: TEMP-File
         tempVersionZipFile = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE + "/temp" + "/repo.zip");
@@ -72,6 +68,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         //TODO get RepoName
         branchPath = REPO_PATH_TO_BRANCH + "test";
         System.out.println(contentRepoPath);
+        task = DownloadTask.getInstance();
     }
 
 
@@ -80,14 +77,14 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         System.out.println("getRepoUrl");
         //System.out.println(TaskConfiguration.loadFrom());
         //repoUrl = TaskConfiguration.loadFrom().getHandoutURL();
-        String branchFolderName = "/OOP-Helper-Handout-Template-test";
-        RepoLocalStorageDataProvider.setBranchFolderName(branchFolderName);
+
+
+        //String branchFolderName = "/OOP-Helper-Handout-Template-test";
+        //RepoLocalStorageDataProvider.setBranchFolderName(branchFolderName);
     }
 
     public void updateHandoutData() {
         System.out.println("updateHandoutData");
-        //TODO: implement Logic
-        task = new DownloadTask(repoZipUrl);
         controlRetrievingContentData();
     }
 
@@ -95,19 +92,20 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         Boolean internetConnection = checkInternetConnection();
         Boolean repoContentDataExists = checkRepoContentDataExists();
         if (internetConnection && !repoContentDataExists) {
-            updateBranch(task);
+            cloneRepository();
         } else if (internetConnection && repoContentDataExists) {
-            cloneRepository(task);
+            updateBranch();
         } else if (repoContentDataExists) {
-            BalloonPopupController.showNotification(project, "Keine Internetverbindung vorhanden. Handout Daten können momentan nicht aktualisiert werden.", NotificationType.ERROR);
+            callListenerNotUpdating("Keine Internetverbindung vorhanden. Handout Daten können momentan nicht aktualisiert werden." , NotificationType.ERROR);
         } else {
-            BalloonPopupController.showNotification(project, "Keine Internetverbindung vorhanden. Handout Daten können momentan nciht geladen werden.", NotificationType.ERROR);
+            callListenerNotUpdating("Keine Internetverbindung vorhanden. Handout Daten können momentan nicht heruntergeladen werden.", NotificationType.ERROR);
         }
     }
 
     private boolean checkRepoContentDataExists() {
         //https://stackoverflow.com/a/15571626
-        if (!zipFile.exists()) {
+        //if (!zipFile.exists()) {
+        if (!contentRepoFile.exists()) {
             System.out.println("repo doesn't exist");
             return false;
         } else {
@@ -137,86 +135,86 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         return false;
     }
 
-    public void addListener(OnEventListener listener) {
-        listeners.add(listener);
+    public void addListener(OnGitEventListener listener) {
+        this.onEventListener = listener;
     }
 
-    private void cloneRepository(DownloadTask task) {
+    //TODO
+    private void cloneRepository() {
         System.out.println("start cloning branch");
         //https://www.vogella.com/tutorials/JGit/article.html#example-for-using-jgit
         Runnable cloneTask = () -> {
             try {
-                createFolder(zipFile, true);
-                createFolder(outputDir, false);
-                task.run(zipFile);
-                task.unzipFile(zipFile, outputDir);
+                //createFolder(zipFile, true);
+                //createFolder(outputDir, false);
+                task.run(repoUrl, contentRepoFile, branchPath);
+                //task.run(zipFile);
+                //task.unzipFile(zipFile, outputDir);
             } catch (IOException e) {
                 //TODO Notification
                 deleteFile(repoLocalData);
                 e.printStackTrace();
+                try {
+                    FileUtils.deleteDirectory(contentRepoFile);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                    System.out.println(ex);
+                }
             } finally {
-                callListener();
-                BalloonPopupController.showNotification(project, "Handout Daten wurden erfolgreich aktualisiert.", NotificationType.INFORMATION);
+                callListener("Handout Daten wurden runtergeladen.", NotificationType.INFORMATION);
             }
         };
         asyncExecutor.runAsyncClone(cloneTask);
     }
 
-    private void createFolder(File zipFile, Boolean createParentFolder) throws IOException {
-        if(createParentFolder){
-            zipFile.getParentFile().mkdirs();
-        }else{
-            zipFile.mkdirs();
-        }
-        zipFile.createNewFile();
-    }
 
-    private void updateBranch(DownloadTask task) {
-        Runnable updateTask = () -> {
-            try {
-                //https://stackoverflow.com/a/6143076
-                createFolder(tempVersionZipFile, true);
-                task.run(tempVersionZipFile);
-                if (!task.compareZipFiles(zipFile, tempVersionZipFile)) {
-                    System.out.println("not equal");
-                    task.unzipFile(tempVersionZipFile, outputDir);
-                    replaceFile(tempVersionZipFile, zipFile);
+    private void updateBranch() {
+        System.out.println("updateBranch");
+        ArrayList<String> commitMessages = task.getLatestCommits();
+        System.out.println("updateBranch  commitMessages : " + commitMessages.size());
+        if (commitMessages.size() >= 1) {
+            System.out.println("commitMessages not empty");
+            //TODO ASK USER IF DOWNLOAD IS OK
+            Runnable updateTask = () -> {
+                try {
+                    task.updateRepository(repoUrl);
+                } catch (IOException | GitAPIException e) {
+                    e.printStackTrace();
                 }
-            } catch (IOException e) {
-                //TODO Notification
-                repoLocalData.delete();
-                e.printStackTrace();
-            } finally {
-                deleteFile(tempVersionZipFile);
-                callListener();
-                BalloonPopupController.showNotification(project, "Handout Daten wurden erfolgreich heruntergeladen.", NotificationType.INFORMATION);
-
-            }
-        };
-        asyncExecutor.runAsyncClone(updateTask);
+            };
+            asyncExecutor.runAsyncClone(updateTask);
+        } else {
+            System.out.println("commitMessages empty");
+            callListenerNotUpdating("Handout Daten sind bereits auf dem aktuellsten Stand." , NotificationType.INFORMATION);
+        }
     }
 
-    private void replaceFile (File newData, File oldData) throws IOException {
+    private void replaceFile(File newData, File oldData) throws IOException {
         //https://stackoverflow.com/a/17169576
         Path from = newData.toPath(); //convert from File to Path
         Path to = Paths.get(oldData.getPath()); //convert from String to Path
         Files.copy(from, to, StandardCopyOption.REPLACE_EXISTING);
     }
 
-    private void callListener() {
-        System.out.println("end cloning branch");
-        if (listeners != null) {
-            System.out.println("listener not null");
-            for (OnEventListener listener : listeners) {
-                listener.onCloningRepositoryEvent(outputDir);
-            }
+    private void callListener(String message, NotificationType messageType) {
+        if (onEventListener != null) {
+            onEventListener.onCloningRepositoryEvent(message, messageType);
         }
-       /* EventBus eventBus = new EventBus();
-        eventBus.register(DataProviderListener);
-        eventBus.post(outputDir); */
     }
 
-    private void deleteFile(File file){
+    private void callListener(ArrayList<String> lastCommitMessages) {
+        if (onEventListener != null) {
+            onEventListener.onUpdatingRepositoryEvent(lastCommitMessages);
+        }
+    }
+
+    private void callListenerNotUpdating(String message, NotificationType messageType) {
+        if (onEventListener != null) {
+            onEventListener.onNotUpdatingRepositoryEvent(message, messageType);
+        }
+    }
+
+    private void deleteFile(File file) {
         file.delete();
     }
 }

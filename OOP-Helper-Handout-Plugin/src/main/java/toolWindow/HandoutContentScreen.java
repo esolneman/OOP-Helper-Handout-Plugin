@@ -69,7 +69,7 @@ public class HandoutContentScreen extends SimpleToolWindowPanel implements Plugi
         handoutContent = new HandoutPluginFXPanel();
         Platform.setImplicitExit(false);
         Platform.runLater(() -> {
-            webView = webViewController.createWebView(urlString);;
+            webView = webViewController.createWebViewWithListener(urlString);
             handoutContent.showHandoutWebView(urlString, webView);
         });
     }

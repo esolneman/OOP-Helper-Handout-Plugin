@@ -24,4 +24,9 @@ public class LocalStorageDataProvider implements LocalStorageDataProviderInterfa
     public static File getSpecificAssessmentCriteriaFileDirectory() {
         return RepoLocalStorageDataProvider.getSpecificAssessmentCriteriaFile();
     }
+
+    public static File getShortcutFileDirectory() {
+        return RepoLocalStorageDataProvider.getShortcutFileDirectory();
+
+    }
 }
