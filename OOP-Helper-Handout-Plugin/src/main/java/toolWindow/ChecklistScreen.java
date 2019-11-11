@@ -3,14 +3,16 @@ package toolWindow;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
+import environment.HandoutPluginFXPanel;
 import provider.RepoLocalStorageDataProvider;
 import toolWindow.actions.HandoutDownloadAction;
 
 import javax.swing.*;
 import java.io.File;
 
-public class ChecklistScreen extends SimpleToolWindowPanel{
-
+public class ChecklistScreen extends SimpleToolWindowPanel {
+    private HandoutPluginFXPanel handoutContent;
+    private ToolWindow handoutToolWindow;
     private JPanel checklistContent;
     private JButton button1;
     private JTextPane userChecklist;
@@ -33,6 +35,7 @@ public class ChecklistScreen extends SimpleToolWindowPanel{
     private JComponent createToolbarPanel() {
         final DefaultActionGroup checklistActionGroup = new DefaultActionGroup();
         //checklistActionGroup.add(ActionManager.getInstance().getAction("Handout.Download"));
+        checklistActionGroup.add(ActionManager.getInstance().getAction("Checklist.EditContent"));
         final ActionToolbar checklistActionToolbar = ActionManager.getInstance().createActionToolbar("Checklisttool", checklistActionGroup, true);
         return checklistActionToolbar.getComponent();
     }
