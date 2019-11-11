@@ -19,6 +19,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 public class ChecklistScreen extends SimpleToolWindowPanel {
@@ -137,17 +138,19 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
         JsonArray checklist = ((JsonArray) checklistJson.get("checklist"));
         ArrayList<Tasks> tasks = new ArrayList<>();
         String task;
-        ArrayList<String> childTasks = new ArrayList<>();
         System.out.println(checklist.get(0).getClass());
         for (JsonElement jsonElement : checklist) {
-            Tasks newTask = new Tasks();
-            System.out.println("jsonElement TASK : " + jsonElement.getAsJsonObject().get("task"));
-            System.out.println("jsonElement TASK : " + jsonElement.getAsJsonObject().get("childTasks"));
-
+            System.out.println("jsonElement TASK : " + jsonElement.getAsJsonObject().get("task").getAsString());
+            System.out.println("jsonElement childTasks : " + jsonElement.getAsJsonObject().get("childtasks"));
+            String childtasks = jsonElement.getAsJsonObject().get("childtasks").getAsString();
+            ArrayList<String> childTasks = new ArrayList<>();
+            childTasks = (ArrayList<String>) Arrays.asList(childtasks);
+            Tasks newTask = new Tasks(jsonElement.getAsJsonObject().get("task").getAsString(), childTasks);
+            tasks.add(newTask);
         }
         Checklist realChecklist = new Checklist();
-        realChecklist.setTasks();
-        return null;
+        realChecklist.setTasks(tasks);
+        return realChecklist;
 
     }
 

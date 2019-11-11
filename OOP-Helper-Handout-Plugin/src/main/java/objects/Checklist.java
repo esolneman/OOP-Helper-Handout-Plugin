@@ -15,6 +15,11 @@ public class Checklist {
             return task;
         }
 
+        public Tasks(String task, ArrayList<String> childTasks){
+            this.task = task;
+            this.childTasks = childTasks;
+        }
+
         public void setTask(String task){
             this.task = task;
         }
