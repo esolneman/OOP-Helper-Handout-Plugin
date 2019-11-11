@@ -1,4 +1,4 @@
-package environment;
+package gui;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;

@@ -11,8 +11,6 @@ public class RepoLocalStorageDataProvider implements RepoLocalStorageDataProvide
 
     private static String projectDirectory;
     private static Project handoutProject;
-    private static String handoutDataDirectoryPath = null;
-    private static String branchFolderName;
 
     public static void setUserProjectDirectory(Project project){
         projectDirectory = project.getBasePath();
@@ -42,11 +40,6 @@ public class RepoLocalStorageDataProvider implements RepoLocalStorageDataProvide
         return handoutFile;
     }
 
-    //TODO REFACTOR
-    public static void setBranchFolderName(String branchFolderName){
-        RepoLocalStorageDataProvider.branchFolderName = branchFolderName;
-    }
-
     public static String getRepoLocalFile(){
         //File file = new File();
         return getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE;
@@ -56,5 +49,10 @@ public class RepoLocalStorageDataProvider implements RepoLocalStorageDataProvide
     public static File getShortcutFileDirectory() {
         File shortcutFile = new File(getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE + SHORTCUT_FILE_NAME);
         return shortcutFile;
+    }
+
+    public static File getChecklistFile() {
+        File checklistFile = new File(getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE + CHECKLIST_FILE_NAME);
+        return checklistFile;
     }
 }

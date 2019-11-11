@@ -1,17 +1,11 @@
 package toolWindow;
 
-import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.actionSystem.ActionToolbar;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
-import com.intellij.openapi.actionSystem.Separator;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
-import environment.HandoutPluginFXPanel;
+import gui.HandoutPluginFXPanel;
 import javafx.application.Platform;
-import javafx.embed.swing.JFXPanel;
 import javafx.scene.web.WebView;
 import provider.LocalStorageDataProvider;
-import toolWindow.actionGroups.HandoutContentActionGroup;
 import webView.WebViewController;
 
 import javax.swing.*;
@@ -33,7 +27,6 @@ public class ShortcutScreen extends SimpleToolWindowPanel implements PluginToolW
     public ShortcutScreen(ToolWindow toolWindow) {
         super(true, true);
         shortcutContent = new HandoutPluginFXPanel();
-        shortcutContent.showContent();
         webViewController = new WebViewController();
         toolWindowPanel = new SimpleToolWindowPanel(true);
         handoutToolWindow = toolWindow;
