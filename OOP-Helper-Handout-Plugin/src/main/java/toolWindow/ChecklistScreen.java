@@ -36,7 +36,7 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
         super(true, true);
         toolWindowPanel = new SimpleToolWindowPanel(true);
         handoutToolWindow = toolWindow;
-         file = LocalStorageDataProvider.getChecklistData();
+        file = LocalStorageDataProvider.getChecklistData();
 
         checklistJson = new JsonObject();
         JsonArray tasks = new JsonArray();
@@ -68,7 +68,7 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
 
         //checklistJson.put("tasks", task);
 
-       // Files.write(Paths.get(filename), checklistJson.toJSONString().getBytes());
+        // Files.write(Paths.get(filename), checklistJson.toJSONString().getBytes());
 
 
         createContent();
@@ -87,15 +87,11 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
         DefaultMutableTreeNode initNode = new DefaultMutableTreeNode("Angabe");
         for (int i = 0; i < checklist.getTasks().size(); i++) {
             Tasks task = checklist.getTasks().get(i);
-            if (i == 0){
-                DefaultMutableTreeNode newParentNode = new DefaultMutableTreeNode(task.getTask());
-                initNode.add(newParentNode);
-            }else{
-                DefaultMutableTreeNode newParentNode = new DefaultMutableTreeNode(task.getTask());
-                for (String childTask : task.getChildTasks()) {
-                    DefaultMutableTreeNode newChildNote = new DefaultMutableTreeNode(childTask);
-                    newParentNode.add(newChildNote);
-                }
+            DefaultMutableTreeNode newParentNode = new DefaultMutableTreeNode(task.getTask());
+            initNode.add(newParentNode);
+            for (String childTask : task.getChildTasks()) {
+                DefaultMutableTreeNode newChildNote = new DefaultMutableTreeNode(childTask);
+                newParentNode.add(newChildNote);
             }
         }
 
@@ -103,16 +99,21 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
         JTree jt = new Tree(initNode);
         checklistContent.add(jt);
 
-        DefaultMutableTreeNode style=new DefaultMutableTreeNode("Style");
-        DefaultMutableTreeNode color=new DefaultMutableTreeNode("color");
-        DefaultMutableTreeNode font=new DefaultMutableTreeNode("font");
+        //https://www.codejava.net/java-se/swing/jtree-basic-tutorial-and-examples
+
+        DefaultMutableTreeNode style = new DefaultMutableTreeNode("Style");
+        DefaultMutableTreeNode color = new DefaultMutableTreeNode("color");
+        DefaultMutableTreeNode font = new DefaultMutableTreeNode("font");
         style.add(color);
         style.add(font);
-        DefaultMutableTreeNode red=new DefaultMutableTreeNode("red");
-        DefaultMutableTreeNode blue=new DefaultMutableTreeNode("blue");
-        DefaultMutableTreeNode black=new DefaultMutableTreeNode("black");
-        DefaultMutableTreeNode green=new DefaultMutableTreeNode("green");
-        color.add(red); color.add(blue); color.add(black); color.add(green);
+        DefaultMutableTreeNode red = new DefaultMutableTreeNode("red");
+        DefaultMutableTreeNode blue = new DefaultMutableTreeNode("blue");
+        DefaultMutableTreeNode black = new DefaultMutableTreeNode("black");
+        DefaultMutableTreeNode green = new DefaultMutableTreeNode("green");
+        color.add(red);
+        color.add(blue);
+        color.add(black);
+        color.add(green);
         JTree jt2 = new Tree(style);
         checklistContent.add(jt2);
         //https://stackoverflow.com/a/21851201
@@ -137,21 +138,21 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
         System.out.println("JSON ARRAY: " + checklistJson.toString());
         JsonArray checklist = ((JsonArray) checklistJson.get("checklist"));
         ArrayList<Tasks> tasks = new ArrayList<>();
-        String task;
         System.out.println(checklist.get(0).getClass());
         for (JsonElement jsonElement : checklist) {
+            final ArrayList<String> childTasks = new ArrayList<>();
             System.out.println("jsonElement TASK : " + jsonElement.getAsJsonObject().get("task").getAsString());
             System.out.println("jsonElement childTasks : " + jsonElement.getAsJsonObject().get("childtasks"));
-            String childtasks = jsonElement.getAsJsonObject().get("childtasks").getAsString();
-            ArrayList<String> childTasks = new ArrayList<>();
-            childTasks = (ArrayList<String>) Arrays.asList(childtasks);
+            JsonElement childtasksEle = jsonElement.getAsJsonObject().get("childtasks");
+            childtasksEle.getAsJsonArray().forEach(jsonElement1 -> childTasks.add(jsonElement1.toString()));
             Tasks newTask = new Tasks(jsonElement.getAsJsonObject().get("task").getAsString(), childTasks);
+            System.out.println("newTask TASK : " + newTask.getTask());
             tasks.add(newTask);
         }
+        tasks.forEach(tasks1 -> System.out.println("ALLL TASKS" + tasks1.getTask()));
         Checklist realChecklist = new Checklist();
         realChecklist.setTasks(tasks);
         return realChecklist;
-
     }
 
     private JComponent createToolbarPanel() {
