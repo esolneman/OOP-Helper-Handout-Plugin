@@ -19,9 +19,14 @@ dependencies {
     compile 'io.woo:htmltopdf:1.0.8'
     compile 'org.codefx.libfx:LibFX:0.3.0'
     // https://mvnrepository.com/artifact/net.lingala.zip4j/zip4j
-    compile group: 'net.lingala.zip4j', name: 'zip4j', version: '2.2.3'
-    compile group: 'com.google.guava', name: 'guava', version: '23.5-jre'
+    //compile group: 'net.lingala.zip4j', name: 'zip4j', version: '2.2.3'
+    //compile group: 'com.google.guava', name: 'guava', version: '23.5-jre'
     compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '2.2.0.201212191850-r'
+    // https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple
+    compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.10.0'
+    implementation 'com.google.code.gson:gson:2.8.6'
 }
 
 

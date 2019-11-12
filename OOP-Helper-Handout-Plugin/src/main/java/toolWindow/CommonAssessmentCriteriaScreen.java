@@ -2,7 +2,7 @@ package toolWindow;
 
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
-import environment.HandoutPluginFXPanel;
+import gui.HandoutPluginFXPanel;
 
 import javax.swing.*;
 
