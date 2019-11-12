@@ -1,25 +1,25 @@
 package toolWindow;
 
-import com.google.gson.*;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.ActionToolbar;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.ui.treeStructure.Tree;
 import gui.ChecklistTreeView;
 import gui.HandoutPluginFXPanel;
 import objects.Checklist;
-import objects.Checklist.*;
-
+import objects.Checklist.Tasks;
 import provider.LocalStorageDataProvider;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 
 public class ChecklistScreen extends SimpleToolWindowPanel {
@@ -84,6 +84,7 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
     private void createContent() {
         checklistContent = new JPanel();
         Checklist checklist = cheklistJSONHandler(checklistJson);
+        //TODO replace with message Cosntant
         DefaultMutableTreeNode initNode = new DefaultMutableTreeNode("Angabe");
         for (int i = 0; i < checklist.getTasks().size(); i++) {
             Tasks task = checklist.getTasks().get(i);
@@ -94,30 +95,10 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
                 newParentNode.add(newChildNote);
             }
         }
-
-
-        JTree jt = new Tree(initNode);
-        checklistContent.add(jt);
-
-        //https://www.codejava.net/java-se/swing/jtree-basic-tutorial-and-examples
-
-        DefaultMutableTreeNode style = new DefaultMutableTreeNode("Style");
-        DefaultMutableTreeNode color = new DefaultMutableTreeNode("color");
-        DefaultMutableTreeNode font = new DefaultMutableTreeNode("font");
-        style.add(color);
-        style.add(font);
-        DefaultMutableTreeNode red = new DefaultMutableTreeNode("red");
-        DefaultMutableTreeNode blue = new DefaultMutableTreeNode("blue");
-        DefaultMutableTreeNode black = new DefaultMutableTreeNode("black");
-        DefaultMutableTreeNode green = new DefaultMutableTreeNode("green");
-        color.add(red);
-        color.add(blue);
-        color.add(black);
-        color.add(green);
-        JTree jt2 = new Tree(style);
-        checklistContent.add(jt2);
         //https://stackoverflow.com/a/21851201
-        final ChecklistTreeView cbt = new ChecklistTreeView(checklistJson);
+        final ChecklistTreeView cbt = new ChecklistTreeView();
+        DefaultTreeModel model = new DefaultTreeModel(initNode);
+        cbt.setModel(model);
         checklistContent.add(cbt);
         cbt.addCheckChangeEventListener(event -> {
             System.out.println("event");
@@ -134,6 +115,7 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
     }
 
     //TODO WRITE PARSER CLASS
+    //https://stackoverflow.com/a/34510715
     private Checklist cheklistJSONHandler(JsonObject checklistJson) {
         System.out.println("JSON ARRAY: " + checklistJson.toString());
         JsonArray checklist = ((JsonArray) checklistJson.get("checklist"));

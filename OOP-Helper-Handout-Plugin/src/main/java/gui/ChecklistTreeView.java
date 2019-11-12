@@ -1,9 +1,8 @@
 package gui;
 
 
-
-import com.google.gson.JsonObject;
-import org.json.simple.JSONObject;
+import com.intellij.ui.treeStructure.Tree;
+import objects.Checklist;
 
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
@@ -20,10 +19,10 @@ import java.util.HashSet;
 //after https://stackoverflow.com/a/21851201
 public class ChecklistTreeView extends JTree {
 
+    Checklist checklist;
     ChecklistTreeView selfPointer = this;
 
-
-    public ChecklistTreeView(JsonObject listElements) {
+    public ChecklistTreeView() {
         super();
         // Disabling toggling by double-click
         this.setToggleClickCount(0);
@@ -69,6 +68,25 @@ public class ChecklistTreeView extends JTree {
             }
         });
         this.setSelectionModel(dtsm);
+    }
+
+    private void createModelFromChecklist() {
+        //https://www.codejava.net/java-se/swing/jtree-basic-tutorial-and-examples
+        DefaultMutableTreeNode initNode = new DefaultMutableTreeNode("Angabe");
+        for (int i = 0; i < checklist.getTasks().size(); i++) {
+            Checklist.Tasks task = checklist.getTasks().get(i);
+            DefaultMutableTreeNode newParentNode = new DefaultMutableTreeNode(task.getTask());
+            initNode.add(newParentNode);
+            for (String childTask : task.getChildTasks()) {
+                DefaultMutableTreeNode newChildNote = new DefaultMutableTreeNode(childTask);
+                newParentNode.add(newChildNote);
+            }
+        }
+        //initNode.getRoot();
+        //JTree newTree = new Tree(initNode);
+        //DefaultTreeModel t = (DefaultTreeModel) newTree.getModel();
+        //TreeModel checklistModel = createTreeModel(initNode);
+        //setModel(checklistModel);
     }
 
     // Defining data structure that will enable to fast check-indicate the state of each node
@@ -121,6 +139,10 @@ public class ChecklistTreeView extends JTree {
     // Override
     public void setModel(TreeModel newModel) {
         super.setModel(newModel);
+        System.out.println("ROOT OF MODEL: " + newModel.getRoot().toString());
+        System.out.println("MODEL ROOT TYPE: " + newModel.getRoot().getClass());
+        System.out.println("MODEL  TYPE: " + newModel.getClass());
+
         resetCheckingState();
     }
 
