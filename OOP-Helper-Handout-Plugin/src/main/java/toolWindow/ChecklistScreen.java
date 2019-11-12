@@ -3,6 +3,7 @@ package toolWindow;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.ActionToolbar;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
@@ -18,7 +19,10 @@ import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.ArrayList;
 
 
@@ -38,7 +42,19 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
         handoutToolWindow = toolWindow;
         file = LocalStorageDataProvider.getChecklistData();
 
-        checklistJson = new JsonObject();
+        //TODO Create new MEthod
+        //https://stackoverflow.com/a/34486879
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new FileReader(file));
+            JsonParser parser = new JsonParser();
+            checklistJson = parser.parse(br).getAsJsonObject();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
+        /*checklistJson = new JsonObject();
         JsonArray tasks = new JsonArray();
         checklistJson.add("checklist", tasks);
 
@@ -65,10 +81,10 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
         JsonArray c1 = new JsonArray();
         task.add("childtasks", c1);
         tasks.add(task);
+*/
 
-        //checklistJson.put("tasks", task);
 
-        // Files.write(Paths.get(filename), checklistJson.toJSONString().getBytes());
+
 
 
         createContent();
@@ -110,8 +126,6 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
                 System.out.println();
             }
         });
-        //this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-
     }
 
     //TODO WRITE PARSER CLASS
