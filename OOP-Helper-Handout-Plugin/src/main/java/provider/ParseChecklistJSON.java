@@ -14,8 +14,9 @@ public class ParseChecklistJSON {
 
     //TODO neccessary?
     public static JsonObject getJsonFromTreeModel (TreeModel treeModel){
-        /*checklistJson = new JsonObject();
+        JsonObject checklistJson = new JsonObject();
         JsonArray tasks = new JsonArray();
+
         checklistJson.add("checklist", tasks);
 
         JsonObject task = new JsonObject();
@@ -40,8 +41,8 @@ public class ParseChecklistJSON {
         task.addProperty("task", "collision detection between player and projecttile");
         JsonArray c1 = new JsonArray();
         task.add("childtasks", c1);
-        tasks.add(task); */
-        return null;
+        tasks.add(task);
+        return checklistJson;
     }
 
     public static DefaultTreeModel getTreeModelFromJson (JsonObject jsonObject){

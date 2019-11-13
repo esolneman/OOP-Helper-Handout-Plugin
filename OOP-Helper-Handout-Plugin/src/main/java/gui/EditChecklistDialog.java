@@ -1,47 +1,48 @@
 package gui;
 
 import com.google.gson.*;
+import com.intellij.ui.treeStructure.Tree;
+import gherkin.lexer.Pa;
 import provider.LocalStorageDataProvider;
 import provider.ParseChecklistJSON;
 
 import javax.swing.*;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.TreeModel;
-import javax.swing.tree.TreePath;
+import javax.swing.tree.*;
+import java.awt.*;
 import java.io.*;
 
 //ToDo create class for Logic
 public class EditChecklistDialog {
-    private JFrame editChecklistPanel;
+    private JPanel editChecklistPanel;
     private String titleString = "Bearbeite die Checkliste";
     private String description;
-    private JOptionPane editChecklistPane;
+    private JOptionPane checklistOptionPane;
     private JDialog editDialog;
-    private TreeModel checklistModel;
     private JsonObject checklistJson;
     private File file;
     private TreeModel currentModel;
     private TreeModel newModel;
     private DefaultMutableTreeNode root;
+    private JTree tree;
 
     public EditChecklistDialog() {
-        editChecklistPanel = new JFrame();
+        editChecklistPanel = new JPanel();
         root = new DefaultMutableTreeNode();
         file = LocalStorageDataProvider.getChecklistUserData();
-        System.out.println("FILE: " + file.getPath());
         description = ("Die vorgegebene Checkliste kannst du nicht anpassen. n/ Es ist möglich neue Aufgaben zu erstellen. n/ Vorhandene anzupassen oder zu löschen.");
-        editChecklistPane = new JOptionPane();
+        checklistOptionPane = new JOptionPane();
         getChecklistTreeModel();
         createPanel();
     }
 
     public void showPanel() {
         editDialog.setVisible(true);
-        if (editChecklistPane.getValue() != null){
-            int value = (Integer) editChecklistPane.getValue();
+        if (checklistOptionPane.getValue() != null){
+            int value = (Integer) checklistOptionPane.getValue();
             if (value == JOptionPane.OK_OPTION) {
                 //TODO Update Model
+                newModel = tree.getModel();
+                saveCreatedModelInFile(ParseChecklistJSON.getJsonFromTreeModel(newModel));
                 System.out.println("Good.");
             } else if (value == JOptionPane.CANCEL_OPTION) {
                 //TODO DIALOG BESTAETIGEN
@@ -54,12 +55,12 @@ public class EditChecklistDialog {
 
     //https://docs.oracle.com/javase/tutorial/uiswing/components/dialog.html
     private void addChangeListener() {
-        editChecklistPane.addPropertyChangeListener(
+        checklistOptionPane.addPropertyChangeListener(
                 e -> {
                     String prop = e.getPropertyName();
 
                     if (editDialog.isVisible()
-                            && (e.getSource() == editChecklistPane)
+                            && (e.getSource() == checklistOptionPane)
                             && (prop.equals(JOptionPane.VALUE_PROPERTY))) {
                         //If you were going to check something
                         //before closing the window, you'd do
@@ -71,14 +72,38 @@ public class EditChecklistDialog {
     }
 
     private void createPanel() {
-        editChecklistPane.setOptionType(2);
+        checklistOptionPane.setOptionType(2);
         //https://stackoverflow.com/a/21851201
         EditableChecklistTreeView cbt = new EditableChecklistTreeView();
         DefaultTreeModel model = new DefaultTreeModel(root);
+
+
+
+        editChecklistPanel.setLayout(new FlowLayout());
+        JFrame frame = new JFrame("Demo");
+        tree = new Tree(root);
+        for (int i = 0; i < tree.getRowCount(); i++) {
+            tree.expandRow(i);
+        }
+        tree.putClientProperty("JTree.lineStyle", "Angled");
+        JTextField textField = new JTextField();
+        JButton addButton = new JButton();
+        TreeCellEditor editor = new DefaultCellEditor(textField);
+        tree.setEditable(true);
+        tree.setCellEditor(editor);
+        tree.setRowHeight(25);
+        editChecklistPanel.add(tree);
+        editChecklistPanel.setSize(600,450);
+        frame.add(tree);
+        frame.setVisible(true);
+
         cbt.setModel(model);
-        editChecklistPane.add(cbt);
-        editDialog = editChecklistPane.createDialog(titleString);
+        editChecklistPanel.add(tree);
+        checklistOptionPane.add(editChecklistPanel);
+
+        editDialog = checklistOptionPane.createDialog(titleString);
         editDialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+       // editDialog.add(editChecklistPanel);
         addChangeListener();
     }
 

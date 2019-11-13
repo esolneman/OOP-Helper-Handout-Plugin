@@ -1,5 +1,7 @@
 package gui;
 
+import com.intellij.util.ui.ThreeStateCheckBox;
+
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
 import javax.swing.tree.*;
@@ -155,6 +157,9 @@ public class ChecklistTreeView extends JTree {
     private class CheckBoxCellRenderer extends JPanel implements TreeCellRenderer {
         private static final long serialVersionUID = -7341833835878991719L;
         JCheckBox checkBox;
+        //TODO add ThreeStateCheckBos as ParentNodes
+        // dd
+        ThreeStateCheckBox threeStateCheckBox;
         public CheckBoxCellRenderer() {
             super();
             this.setLayout(new BorderLayout());
@@ -202,12 +207,9 @@ public class ChecklistTreeView extends JTree {
             if (! childCheckedNode.allChildrenSelected) {
                 parentCheckedNode.allChildrenSelected = false;
             }
-
-            //TODO Mark Parent when all childnodes aer selected
-            // If at least one child is selected, selecting also the parent
-           /* if (childCheckedNode.isSelected) {
-                parentCheckedNode.isSelected = true;
-            }*/
+            //TODO:
+            /* changes from source: all children had to be selected to select the parent node
+             automatically*/
             if (parentCheckedNode.allChildrenSelected) {
                 parentCheckedNode.isSelected = true;
             }else{
