@@ -12,14 +12,28 @@ import java.util.ArrayList;
 
 public class ParseChecklistJSON {
 
-    //TODO neccessary?
     public static JsonObject getJsonFromTreeModel (TreeModel treeModel){
         JsonObject checklistJson = new JsonObject();
         JsonArray tasks = new JsonArray();
-
         checklistJson.add("checklist", tasks);
-
+        JsonObject task;
+        for (int i = 0; i < treeModel.getChildCount(treeModel.getRoot()); i++) {
+            task = new JsonObject();
+            DefaultMutableTreeNode parentNode = (DefaultMutableTreeNode) treeModel.getChild(treeModel.getRoot(), i);
+            System.out.println("Parent: " + parentNode.toString());
+            task.addProperty("task", parentNode.toString());
+            JsonArray childtasks = new JsonArray();
+            for (int j = 0; j < parentNode.getChildCount() ; j++) {
+                DefaultMutableTreeNode childNode = (DefaultMutableTreeNode) parentNode.getChildAt(j);
+                System.out.println("CHILD  : " + childNode.toString());
+                childtasks.add(childNode.toString());
+            }
+            task.add("childtasks", childtasks);
+            tasks.add(task);
+        }
+/*
         JsonObject task = new JsonObject();
+        checklistJson.add("checklist", tasks);
         task.addProperty("task", "Create *Player* class");
         JsonArray childtasks = new JsonArray();
         childtasks.add("Create *update* method");
@@ -41,7 +55,7 @@ public class ParseChecklistJSON {
         task.addProperty("task", "collision detection between player and projecttile");
         JsonArray c1 = new JsonArray();
         task.add("childtasks", c1);
-        tasks.add(task);
+        tasks.add(task);*/
         return checklistJson;
     }
 
@@ -63,7 +77,7 @@ public class ParseChecklistJSON {
 
     //TODO WRITE PARSER CLASS
     //https://stackoverflow.com/a/34510715
-    private static Checklist checklistJSONHandler(JsonObject checklistJson) {
+    public static Checklist checklistJSONHandler(JsonObject checklistJson) {
         JsonArray checklist = ((JsonArray) checklistJson.get("checklist"));
         ArrayList<Checklist.Tasks> tasks = new ArrayList<>();
         for (JsonElement jsonElement : checklist) {

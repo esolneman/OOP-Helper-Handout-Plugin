@@ -14,10 +14,12 @@ import gui.HandoutPluginFXPanel;
 import objects.Checklist;
 import objects.Checklist.Tasks;
 import provider.LocalStorageDataProvider;
+import provider.ParseChecklistJSON;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreePath;
 import java.io.BufferedReader;
 import java.io.File;
@@ -29,18 +31,29 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
     private HandoutPluginFXPanel handoutContent;
     private ToolWindow handoutToolWindow;
     private JPanel checklistContent;
-    private JTextPane repoChecklist;
+    private JPanel EditButtons;
+    private JButton OKButton;
+    private JButton abbrechenButton;
+    private ChecklistTreeView predeterminedChecklistTree;
+    private ChecklistTreeView userChecklistTree;
     private JsonObject checklistJson;
+    private JsonObject userChecklistJson;
+
     private ChecklistTreeView cbt;
     private SimpleToolWindowPanel toolWindowPanel;
     private File file;
+    private File userData;
+    private Boolean editPanelVisible;
 
     public ChecklistScreen(ToolWindow toolWindow) {
         super(true, true);
+        editPanelVisible = false;
         toolWindowPanel = new SimpleToolWindowPanel(true);
         handoutToolWindow = toolWindow;
+        predeterminedChecklistTree = new ChecklistTreeView();
+        userChecklistTree = new ChecklistTreeView();
         file = LocalStorageDataProvider.getChecklistData();
-
+        userData = LocalStorageDataProvider.getChecklistUserData();
         //TODO Create new Method
         //https://stackoverflow.com/a/34486879
         BufferedReader br = null;
@@ -48,6 +61,15 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
             br = new BufferedReader(new FileReader(file));
             JsonParser parser = new JsonParser();
             checklistJson = parser.parse(br).getAsJsonObject();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        br = null;
+        try {
+            br = new BufferedReader(new FileReader(userData));
+            JsonParser parser = new JsonParser();
+            userChecklistJson = parser.parse(br).getAsJsonObject();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -77,12 +99,11 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
             }
         }
         //https://stackoverflow.com/a/21851201
-        ChecklistTreeView cbt = new ChecklistTreeView();
         DefaultTreeModel model = new DefaultTreeModel(initNode);
-        cbt.setModel(model);
-        checklistContent.add(cbt);
-        cbt.addCheckChangeEventListener(event -> {
-            TreePath[] paths = cbt.getCheckedPaths();
+        predeterminedChecklistTree.setModel(model);
+        checklistContent.add(predeterminedChecklistTree);
+        predeterminedChecklistTree.addCheckChangeEventListener(event -> {
+            TreePath[] paths = predeterminedChecklistTree.getCheckedPaths();
             for (TreePath tp : paths) {
                 for (Object pathPart : tp.getPath()) {
                     System.out.print(pathPart + ",");
@@ -90,6 +111,25 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
                 System.out.println();
             }
         });
+
+
+        if(userChecklistJson!= null){
+            Checklist userChecklsit = ParseChecklistJSON.checklistJSONHandler(userChecklistJson);
+            DefaultMutableTreeNode userinitNode = new DefaultMutableTreeNode("Eigene Checkliste");
+            userinitNode.add((MutableTreeNode) ParseChecklistJSON.getTreeModelFromJson(userChecklistJson).getRoot());
+            DefaultTreeModel userModel = new DefaultTreeModel(userinitNode);
+            userChecklistTree.setModel(userModel);
+            checklistContent.add(userChecklistTree);
+            userChecklistTree.addCheckChangeEventListener(event -> {
+                TreePath[] paths = userChecklistTree.getCheckedPaths();
+                for (TreePath tp : paths) {
+                    for (Object pathPart : tp.getPath()) {
+                        System.out.print(pathPart + ",");
+                    }
+                    System.out.println();
+                }
+            });
+        }
     }
 
     //TODO WRITE PARSER CLASS
