@@ -24,6 +24,9 @@ public class EditChecklistDialog {
     private TreeModel newModel;
     private DefaultMutableTreeNode root;
     private JTree tree;
+    private JButton deleteButton;
+    private JButton addButton;
+    private DefaultTreeModel model;
 
     public EditChecklistDialog() {
         editChecklistPanel = new JPanel();
@@ -75,36 +78,60 @@ public class EditChecklistDialog {
         checklistOptionPane.setOptionType(2);
         //https://stackoverflow.com/a/21851201
         EditableChecklistTreeView cbt = new EditableChecklistTreeView();
-        DefaultTreeModel model = new DefaultTreeModel(root);
-
+        model = new DefaultTreeModel(root);
 
 
         editChecklistPanel.setLayout(new FlowLayout());
-        JFrame frame = new JFrame("Demo");
         tree = new Tree(root);
         for (int i = 0; i < tree.getRowCount(); i++) {
             tree.expandRow(i);
         }
         tree.putClientProperty("JTree.lineStyle", "Angled");
         JTextField textField = new JTextField();
-        JButton addButton = new JButton();
+        addButton = new JButton();
+
         TreeCellEditor editor = new DefaultCellEditor(textField);
         tree.setEditable(true);
         tree.setCellEditor(editor);
         tree.setRowHeight(25);
         editChecklistPanel.add(tree);
         editChecklistPanel.setSize(600,450);
-        frame.add(tree);
-        frame.setVisible(true);
 
+
+        deleteButton = new JButton();
+        deleteButton.setText("Delete Node");
         cbt.setModel(model);
         editChecklistPanel.add(tree);
+        addButton.setText("Add Node on Marked Node");
+        checklistOptionPane.add(addButton);
+        checklistOptionPane.add(deleteButton);
         checklistOptionPane.add(editChecklistPanel);
-
         editDialog = checklistOptionPane.createDialog(titleString);
         editDialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
        // editDialog.add(editChecklistPanel);
         addChangeListener();
+        addButtonListener();
+    }
+
+    private void addButtonListener() {
+        addButton.addActionListener(actionEvent -> {
+            System.out.println("ADD");
+            DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+            if (selectedNode == null) {
+                return;
+            }
+            System.out.println(selectedNode.toString());
+            DefaultMutableTreeNode newNode = new DefaultMutableTreeNode("newChild");
+            selectedNode.add(newNode);
+            //model.insertNodeInto(newNode, selectedNode, selectedNode.getChildCount());
+            TreeNode[] nodes = model.getPathToRoot(newNode);
+            TreePath path = new TreePath(nodes);
+            tree.scrollPathToVisible(path);
+        });
+        deleteButton.addActionListener(actionEvent -> {
+            System.out.println("DELETE");
+
+        });
     }
 
     //TODO get TreeModel with Parser from LocalFile not data from prof.

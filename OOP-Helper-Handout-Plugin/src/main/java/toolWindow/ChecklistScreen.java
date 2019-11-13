@@ -10,7 +10,6 @@ import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
 import gui.ChecklistTreeView;
-import gui.HandoutPluginFXPanel;
 import objects.Checklist;
 import objects.Checklist.Tasks;
 import provider.LocalStorageDataProvider;
@@ -28,7 +27,6 @@ import java.io.FileReader;
 import java.util.ArrayList;
 
 public class ChecklistScreen extends SimpleToolWindowPanel {
-    private HandoutPluginFXPanel handoutContent;
     private ToolWindow handoutToolWindow;
     private JPanel checklistContent;
     private JPanel EditButtons;
@@ -36,6 +34,7 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
     private JButton abbrechenButton;
     private ChecklistTreeView predeterminedChecklistTree;
     private ChecklistTreeView userChecklistTree;
+    private JSeparator seperator;
     private JsonObject checklistJson;
     private JsonObject userChecklistJson;
 
@@ -54,6 +53,10 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
         userChecklistTree = new ChecklistTreeView();
         file = LocalStorageDataProvider.getChecklistData();
         userData = LocalStorageDataProvider.getChecklistUserData();
+        EditButtons = new JPanel();
+        OKButton = new JButton();
+        abbrechenButton = new JButton();
+        EditButtons.setVisible(editPanelVisible);
         //TODO Create new Method
         //https://stackoverflow.com/a/34486879
         BufferedReader br = null;
@@ -130,6 +133,10 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
                 }
             });
         }
+        seperator = new JSeparator();
+        checklistContent.add(predeterminedChecklistTree);
+        checklistContent.add(seperator);
+        checklistContent.add(userChecklistTree);
     }
 
     //TODO WRITE PARSER CLASS
@@ -160,5 +167,11 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
 
     public JPanel getContent() {
         return toolWindowPanel;
+    }
+
+    public void editUserChecklist() {
+        editPanelVisible = true;
+        EditButtons.setVisible(editPanelVisible);
+
     }
 }
