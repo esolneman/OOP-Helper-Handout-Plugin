@@ -42,19 +42,11 @@ public class CommitChangesDialog {
 
     //https://stackoverflow.com/a/16267700
     private void createPanel() {
-        //
-       // commitMessages.setListData(commitMessagesList.toArray());
-        //create a jframe
-        //frame = new JFrame(titleString);
-
-
         JTextPane subTitle = new JTextPane();
         subTitle.setText(subtitleString);
         JList commitMessages = new JBList();
         commitMessages.setListData(commitMessagesList.toArray());
         changesPanel.add(subTitle);
         changesPanel.add(commitMessages);
-
-        //JOptionPane.showMessageDialog(frame, subtitleString  + commitMessages, titleString, JOptionPane.INFORMATION_MESSAGE);
     }
 }

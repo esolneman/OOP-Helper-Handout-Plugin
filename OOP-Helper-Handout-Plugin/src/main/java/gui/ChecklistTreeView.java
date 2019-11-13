@@ -1,8 +1,5 @@
 package gui;
 
-
-import objects.Checklist;
-
 import javax.swing.*;
 import javax.swing.event.EventListenerList;
 import javax.swing.tree.*;
@@ -15,7 +12,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 
-//adapt after https://stackoverflow.com/a/21851201
+//adapted after https://stackoverflow.com/a/21851201
 public class ChecklistTreeView extends JTree {
 
     ChecklistTreeView selfPointer = this;
@@ -118,10 +115,6 @@ public class ChecklistTreeView extends JTree {
     // Override
     public void setModel(TreeModel newModel) {
         super.setModel(newModel);
-        System.out.println("ROOT OF MODEL: " + newModel.getRoot().toString());
-        System.out.println("MODEL ROOT TYPE: " + newModel.getRoot().getClass());
-        System.out.println("MODEL  TYPE: " + newModel.getClass());
-
         resetCheckingState();
     }
 
@@ -191,12 +184,14 @@ public class ChecklistTreeView extends JTree {
     // When a node is checked/unchecked, updating the states of the predecessors
     protected void updatePredecessorsWithCheckMode(TreePath tp, boolean check) {
         TreePath parentPath = tp.getParentPath();
+
         // If it is the root, stop the recursive calls and return
         if (parentPath == null) {
             return;
         }
         CheckedNode parentCheckedNode = nodesCheckingState.get(parentPath);
         DefaultMutableTreeNode parentNode = (DefaultMutableTreeNode) parentPath.getLastPathComponent();
+
         parentCheckedNode.allChildrenSelected = true;
         parentCheckedNode.isSelected = false;
         for (int i = 0 ; i < parentNode.getChildCount() ; i++) {
@@ -207,9 +202,16 @@ public class ChecklistTreeView extends JTree {
             if (! childCheckedNode.allChildrenSelected) {
                 parentCheckedNode.allChildrenSelected = false;
             }
+
+            //TODO Mark Parent when all childnodes aer selected
             // If at least one child is selected, selecting also the parent
-            if (childCheckedNode.isSelected) {
+           /* if (childCheckedNode.isSelected) {
                 parentCheckedNode.isSelected = true;
+            }*/
+            if (parentCheckedNode.allChildrenSelected) {
+                parentCheckedNode.isSelected = true;
+            }else{
+                parentCheckedNode.isSelected = false;
             }
         }
         if (parentCheckedNode.isSelected) {

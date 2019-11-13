@@ -25,4 +25,8 @@ public class LocalStorageDataProvider implements LocalStorageDataProviderInterfa
     public static File getChecklistData() {
         return RepoLocalStorageDataProvider.getChecklistFile();
     }
+
+    public static File getChecklistUserData() {
+        return UserLocalStorageDataProvider.getChecklistFile();
+    }
 }

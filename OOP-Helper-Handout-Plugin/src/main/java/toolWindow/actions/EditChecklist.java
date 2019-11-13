@@ -9,10 +9,8 @@ public class EditChecklist extends AnAction {
     @Override
     public void actionPerformed(@NotNull AnActionEvent anActionEvent) {
         System.out.println("actionPerformed: Edit Checklist");
+        //TODO Not Show Panel -> listener for Controller
         EditChecklistDialog editChecklistDialog = new EditChecklistDialog();
         editChecklistDialog.showPanel();
-    }
-
-    private void createJOptionPane() {
     }
 }

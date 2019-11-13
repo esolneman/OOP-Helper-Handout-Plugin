@@ -1,22 +1,35 @@
 package gui;
 
-import com.intellij.ui.components.JBList;
+import com.google.gson.*;
+import provider.LocalStorageDataProvider;
+import provider.ParseChecklistJSON;
 
 import javax.swing.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreePath;
+import java.io.*;
 
+//ToDo create class for Logic
 public class EditChecklistDialog {
-    private JPanel editChecklistPanel;
+    private JFrame editChecklistPanel;
     private String titleString = "Bearbeite die Checkliste";
     private String description;
     private JOptionPane editChecklistPane;
     private JDialog editDialog;
+    private TreeModel checklistModel;
+    private JsonObject checklistJson;
+    private File file;
+    private TreeModel currentModel;
+    private TreeModel newModel;
+    private DefaultMutableTreeNode root;
 
     public EditChecklistDialog() {
-        editChecklistPanel = new JPanel();
+        editChecklistPanel = new JFrame();
+        root = new DefaultMutableTreeNode();
+        file = LocalStorageDataProvider.getChecklistUserData();
+        System.out.println("FILE: " + file.getPath());
         description = ("Die vorgegebene Checkliste kannst du nicht anpassen. n/ Es ist möglich neue Aufgaben zu erstellen. n/ Vorhandene anzupassen oder zu löschen.");
         editChecklistPane = new JOptionPane();
         getChecklistTreeModel();
@@ -24,9 +37,7 @@ public class EditChecklistDialog {
     }
 
     public void showPanel() {
-
         editDialog.setVisible(true);
-
         if (editChecklistPane.getValue() != null){
             int value = (Integer) editChecklistPane.getValue();
             if (value == JOptionPane.OK_OPTION) {
@@ -41,6 +52,7 @@ public class EditChecklistDialog {
         }
     }
 
+    //https://docs.oracle.com/javase/tutorial/uiswing/components/dialog.html
     private void addChangeListener() {
         editChecklistPane.addPropertyChangeListener(
                 e -> {
@@ -60,11 +72,57 @@ public class EditChecklistDialog {
 
     private void createPanel() {
         editChecklistPane.setOptionType(2);
+        //https://stackoverflow.com/a/21851201
+        EditableChecklistTreeView cbt = new EditableChecklistTreeView();
+        DefaultTreeModel model = new DefaultTreeModel(root);
+        cbt.setModel(model);
+        editChecklistPane.add(cbt);
         editDialog = editChecklistPane.createDialog(titleString);
         editDialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
         addChangeListener();
     }
 
+    //TODO get TreeModel with Parser from LocalFile not data from prof.
     private void getChecklistTreeModel() {
+        //TODO Create new Method
+        //https://stackoverflow.com/a/34486879
+        BufferedReader br = null;
+        //get current tree model (only user nodes)
+        try {
+            br = new BufferedReader(new FileReader(file));
+            JsonParser parser = new JsonParser();
+            checklistJson = parser.parse(br).getAsJsonObject();
+            currentModel = ParseChecklistJSON.getTreeModelFromJson(checklistJson);
+            root = (DefaultMutableTreeNode) currentModel.getRoot();
+        } catch (FileNotFoundException e) {
+            // file doesn't exist - create file and new tree model
+            file.getParentFile().mkdirs();
+            try {
+                file.createNewFile();
+            } catch (IOException ex) {
+                System.out.println("FILE NOT Created");
+            }
+            createNewModel();
+            System.out.println("FILE NOT FOUND");
+        }
+    }
+
+    private void createNewModel() {
+        DefaultMutableTreeNode initNode = new DefaultMutableTreeNode("Eigene Checklist");
+        DefaultTreeModel model = new DefaultTreeModel(initNode);
+        JsonObject checklist = new JsonObject();
+        JsonArray tasks = new JsonArray();
+        checklist.add("checklist", tasks);
+        saveCreatedModelInFile(checklist);
+    }
+
+    private void saveCreatedModelInFile(JsonObject checklist) {
+        //https://stackoverflow.com/a/29319491
+        try (Writer writer = new FileWriter(file)) {
+            Gson gson = new GsonBuilder().create();
+            gson.toJson(checklist, writer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
