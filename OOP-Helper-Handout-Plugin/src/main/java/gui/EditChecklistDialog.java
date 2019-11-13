@@ -116,8 +116,10 @@ public class EditChecklistDialog {
     private void addButtonListener() {
         addButton.addActionListener(actionEvent -> {
             System.out.println("ADD");
+            //http://www.java2s.com/Tutorials/Java/Swing_How_to/JTree/Change_nodes_in_JTree.htm
             DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
             if (selectedNode == null) {
+                System.out.println("NODE NULL");
                 return;
             }
             System.out.println(selectedNode.toString());
@@ -130,7 +132,15 @@ public class EditChecklistDialog {
         });
         deleteButton.addActionListener(actionEvent -> {
             System.out.println("DELETE");
-
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+            if (node == null) {
+                System.out.println("NODE NULL");
+                return;
+            }
+            node.removeAllChildren();
+            DefaultMutableTreeNode parentnode = (DefaultMutableTreeNode) node.getParent();
+            parentnode.remove(node);
+            model.nodeStructureChanged((TreeNode)root);
         });
     }
 
