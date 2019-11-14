@@ -2,7 +2,6 @@ package gui;
 
 import com.google.gson.*;
 import com.intellij.ui.treeStructure.Tree;
-import gherkin.lexer.Pa;
 import provider.LocalStorageDataProvider;
 import provider.ParseChecklistJSON;
 
@@ -12,6 +11,7 @@ import java.awt.*;
 import java.io.*;
 
 //ToDo create class for Logic
+//TODO crate class for this TREE
 public class EditChecklistDialog {
     private JPanel editChecklistPanel;
     private String titleString = "Bearbeite die Checkliste";
@@ -117,30 +117,34 @@ public class EditChecklistDialog {
         addButton.addActionListener(actionEvent -> {
             System.out.println("ADD");
             //http://www.java2s.com/Tutorials/Java/Swing_How_to/JTree/Change_nodes_in_JTree.htm
+            //https://www.rgagnon.com/javadetails/java-0211.html
             DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
             if (selectedNode == null) {
                 System.out.println("NODE NULL");
                 return;
             }
-            System.out.println(selectedNode.toString());
             DefaultMutableTreeNode newNode = new DefaultMutableTreeNode("newChild");
             selectedNode.add(newNode);
-            //model.insertNodeInto(newNode, selectedNode, selectedNode.getChildCount());
+            ((DefaultTreeModel )tree.getModel()).nodeStructureChanged(newNode.getParent());
             TreeNode[] nodes = model.getPathToRoot(newNode);
             TreePath path = new TreePath(nodes);
             tree.scrollPathToVisible(path);
         });
+
+        //https://www.rgagnon.com/javadetails/java-0211.html
         deleteButton.addActionListener(actionEvent -> {
             System.out.println("DELETE");
-            DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree.getLastSelectedPathComponent();
+            TreePath path = tree.getSelectionPath();
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
+            DefaultMutableTreeNode parentnode = (DefaultMutableTreeNode) node.getParent();
             if (node == null) {
                 System.out.println("NODE NULL");
                 return;
             }
+            parentnode = (DefaultMutableTreeNode)node.getParent();
             node.removeAllChildren();
-            DefaultMutableTreeNode parentnode = (DefaultMutableTreeNode) node.getParent();
             parentnode.remove(node);
-            model.nodeStructureChanged((TreeNode)root);
+            ((DefaultTreeModel )tree.getModel()).nodeStructureChanged((TreeNode)node);
         });
     }
 
