@@ -125,6 +125,7 @@ public class EditChecklistDialog {
             }
             DefaultMutableTreeNode newNode = new DefaultMutableTreeNode("newChild");
             selectedNode.add(newNode);
+            //TODO IF PARENT NO T NULL
             ((DefaultTreeModel )tree.getModel()).nodeStructureChanged(newNode.getParent());
             TreeNode[] nodes = model.getPathToRoot(newNode);
             TreePath path = new TreePath(nodes);
