@@ -1,6 +1,5 @@
 package provider.helper;
 
-import net.lingala.zip4j.ZipFile;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.net.ntp.TimeStamp;
 import org.eclipse.jgit.api.Git;
@@ -168,14 +167,14 @@ public class DownloadTask {
     }
 
     //https://stackoverflow.com/a/14656534
-    public void unzipFile(File in, File out) {
+    /*public void unzipFile(File in, File out) {
         try {
             ZipFile zipFile = new ZipFile(in);
             zipFile.extractAll(out.getPath());
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     //https://stackoverflow.com/a/27379126
     public boolean compareZipFiles(File file1, File file2) throws IOException {

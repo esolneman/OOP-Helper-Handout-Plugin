@@ -1,22 +1,16 @@
 package toolWindow;
 
-import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.actionSystem.ActionToolbar;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
-import environment.HandoutPluginFXPanel;
+import gui.HandoutPluginFXPanel;
 import javafx.application.Platform;
-import javafx.scene.control.TableView;
 import javafx.scene.web.WebView;
-import objects.SpecificAssessmentCriteria;
 import provider.LocalStorageDataProvider;
 import webView.WebViewController;
 
 import javax.swing.*;
 import java.io.File;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
 
 public class SpecificAssessmentCriteriaScreen extends SimpleToolWindowPanel{
     private HandoutPluginFXPanel assessmentContent;
@@ -67,8 +61,6 @@ public class SpecificAssessmentCriteriaScreen extends SimpleToolWindowPanel{
     public void updateContent() {
         webViewController.updateWebViewContent();
     }
-
-
 }
 
 

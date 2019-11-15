@@ -1,4 +1,4 @@
-package environment;
+package gui;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -18,7 +18,6 @@ import java.util.Arrays;
 public class HandoutPluginFXPanel extends JFXPanel {
     public void showHandoutWebView(String urlString, WebView webView) {
         System.out.println("in: showHandoutWebView");
-
         //Platform.setImplicitExit(false);
         //Platform.runLater(() -> {
             webView.getEngine().load(urlString);
