@@ -60,7 +60,7 @@ public class ParseChecklistJSON {
     }
 
     public static DefaultTreeModel getTreeModelFromJson (JsonObject jsonObject){
-        Checklist checklist = checklistJSONHandler(jsonObject);
+/*        Checklist checklist = checklistJSONHandler(jsonObject);
         DefaultMutableTreeNode initNode = new DefaultMutableTreeNode("Angabe");
         for (int i = 0; i < checklist.getTasks().size(); i++) {
             Checklist.Tasks task = checklist.getTasks().get(i);
@@ -72,24 +72,55 @@ public class ParseChecklistJSON {
             }
         }
         DefaultTreeModel model = new DefaultTreeModel(initNode);
-        return model;
+        return model;*/
+
+        return null;
+
     }
 
-    //TODO WRITE PARSER CLASS
+    //TODO Combine Methods
     //https://stackoverflow.com/a/34510715
     public static Checklist checklistJSONHandler(JsonObject checklistJson) {
         JsonArray checklist = ((JsonArray) checklistJson.get("checklist"));
         ArrayList<Checklist.Tasks> tasks = new ArrayList<>();
-        for (JsonElement jsonElement : checklist) {
-            final ArrayList<String> childTasks = new ArrayList<>();
-            JsonElement childtasksEle = jsonElement.getAsJsonObject().get("childtasks");
-            childtasksEle.getAsJsonArray().forEach(jsonElement1 -> childTasks.add(jsonElement1.toString()));
-            Checklist.Tasks newTask = new Checklist.Tasks(jsonElement.getAsJsonObject().get("task").getAsString(), childTasks);
+        for (JsonElement task : checklist) {
+            String taskName = task.getAsJsonObject().get("task").toString();
+            System.out.println("taskName: " + taskName);
+
+            Boolean checked = task.getAsJsonObject().get("checked").getAsBoolean();
+            System.out.println("checked: " + checked);
+
+            //TODO Quelle: Efefective Java Page 13-14 Kapitel 2.2 - Thema 2
+            Checklist.Tasks newTask = new Checklist.Tasks.TasksBuilder(taskName, checked).build();
             tasks.add(newTask);
         }
         Checklist realChecklist = new Checklist();
         realChecklist.setTasks(tasks);
         return realChecklist;
     }
+
+    public static Checklist predefinedJsonToChecklistParser(JsonObject checklistJson) {
+        JsonArray checklist = ((JsonArray) checklistJson.get("checklist"));
+        ArrayList<Checklist.Tasks> tasks = new ArrayList<>();
+        for (JsonElement task : checklist) {
+            String taskName = task.getAsJsonObject().get("task").toString();
+            System.out.println("taskName: " + taskName);
+
+            Boolean checked = task.getAsJsonObject().get("checked").getAsBoolean();
+            System.out.println("checked: " + checked);
+
+            String id = task.getAsJsonObject().get("id").toString();
+            System.out.println("id: " + id);
+            //TODO Quelle: Efefective Java Page 13-14 Kapitel 2.2 - Thema 2
+            Checklist.Tasks newTask = new Checklist.Tasks.TasksBuilder(taskName, checked)
+                    .id(id).build();
+            tasks.add(newTask);
+        }
+        Checklist realChecklist = new Checklist();
+        realChecklist.setTasks(tasks);
+        return realChecklist;
+    }
+
+
 
 }

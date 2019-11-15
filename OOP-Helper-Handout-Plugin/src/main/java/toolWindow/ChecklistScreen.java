@@ -1,7 +1,5 @@
 package toolWindow;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.intellij.openapi.actionSystem.ActionManager;
@@ -9,36 +7,33 @@ import com.intellij.openapi.actionSystem.ActionToolbar;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
+import com.intellij.ui.components.JBScrollPane;
+import com.intellij.ui.table.JBTable;
+import gui.ChecklistCheckbox;
+import gui.ChecklistTable;
 import gui.ChecklistTreeView;
 import objects.Checklist;
-import objects.Checklist.Tasks;
 import provider.LocalStorageDataProvider;
 import provider.ParseChecklistJSON;
 
 import javax.swing.*;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.MutableTreeNode;
-import javax.swing.tree.TreePath;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.ArrayList;
 
 public class ChecklistScreen extends SimpleToolWindowPanel {
     private ToolWindow handoutToolWindow;
     private JPanel checklistContent;
-    private JPanel EditButtons;
-    private JButton OKButton;
-    private JButton abbrechenButton;
-    private ChecklistTreeView predeterminedChecklistTree;
-    private ChecklistTreeView userChecklistTree;
+    private JTable predefinedChecklistTable;
+    private JTable userChecklistTable;
     private JSeparator seperator;
     private JsonObject checklistJson;
     private JsonObject userChecklistJson;
 
-    private ChecklistTreeView cbt;
     private SimpleToolWindowPanel toolWindowPanel;
     private File file;
     private File userData;
@@ -48,15 +43,11 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
         super(true, true);
         editPanelVisible = false;
         toolWindowPanel = new SimpleToolWindowPanel(true);
+        predefinedChecklistTable = new JBTable();
+        userChecklistTable = new JBTable();
         handoutToolWindow = toolWindow;
-        predeterminedChecklistTree = new ChecklistTreeView();
-        userChecklistTree = new ChecklistTreeView();
         file = LocalStorageDataProvider.getChecklistData();
         userData = LocalStorageDataProvider.getChecklistUserData();
-        EditButtons = new JPanel();
-        OKButton = new JButton();
-        abbrechenButton = new JButton();
-        EditButtons.setVisible(editPanelVisible);
         //TODO Create new Method
         //https://stackoverflow.com/a/34486879
         BufferedReader br = null;
@@ -68,6 +59,7 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
             e.printStackTrace();
         }
 
+        //TODO IF AVAILALABLE -> CREATE TXT
         br = null;
         try {
             br = new BufferedReader(new FileReader(userData));
@@ -89,77 +81,27 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
 
     private void createContent() {
         checklistContent = new JPanel();
-        Checklist checklist = cheklistJSONHandler(checklistJson);
-        //TODO replace with message Cosntant
-        DefaultMutableTreeNode initNode = new DefaultMutableTreeNode("Angabe");
-        for (int i = 0; i < checklist.getTasks().size(); i++) {
-            Tasks task = checklist.getTasks().get(i);
-            DefaultMutableTreeNode newParentNode = new DefaultMutableTreeNode(task.getTask());
-            initNode.add(newParentNode);
-            for (String childTask : task.getChildTasks()) {
-                DefaultMutableTreeNode newChildNote = new DefaultMutableTreeNode(childTask);
-                newParentNode.add(newChildNote);
-            }
-        }
-        //https://stackoverflow.com/a/21851201
-        DefaultTreeModel model = new DefaultTreeModel(initNode);
-        predeterminedChecklistTree.setModel(model);
-        checklistContent.add(predeterminedChecklistTree);
-        predeterminedChecklistTree.addCheckChangeEventListener(event -> {
-            TreePath[] paths = predeterminedChecklistTree.getCheckedPaths();
-            for (TreePath tp : paths) {
-                for (Object pathPart : tp.getPath()) {
-                    System.out.print(pathPart + ",");
-                }
-                System.out.println();
-            }
-        });
+        Checklist checklist = ParseChecklistJSON.checklistJSONHandler(checklistJson);
 
+
+        for (Checklist.Tasks task : checklist.tasks) {
+            JCheckBox checkbox = new JCheckBox(task.taskDescription);
+            checklistContent.add(checkbox);
+        }
 
         if(userChecklistJson!= null){
             Checklist userChecklsit = ParseChecklistJSON.checklistJSONHandler(userChecklistJson);
-            DefaultMutableTreeNode userinitNode = new DefaultMutableTreeNode("Eigene Checkliste");
-            userinitNode.add((MutableTreeNode) ParseChecklistJSON.getTreeModelFromJson(userChecklistJson).getRoot());
-            DefaultTreeModel userModel = new DefaultTreeModel(userinitNode);
-            userChecklistTree.setModel(userModel);
-            checklistContent.add(userChecklistTree);
-            userChecklistTree.addCheckChangeEventListener(event -> {
-                TreePath[] paths = userChecklistTree.getCheckedPaths();
-                for (TreePath tp : paths) {
-                    for (Object pathPart : tp.getPath()) {
-                        System.out.print(pathPart + ",");
-                    }
-                    System.out.println();
-                }
-            });
+            for (Checklist.Tasks task : userChecklsit.tasks) {
+                ChecklistCheckbox checkbox = new ChecklistCheckbox(task.taskDescription);
+                checklistContent.add(checkbox);
+            }
         }
         seperator = new JSeparator();
-        checklistContent.add(predeterminedChecklistTree);
         checklistContent.add(seperator);
-        checklistContent.add(userChecklistTree);
-    }
-
-    //TODO WRITE PARSER CLASS
-    //https://stackoverflow.com/a/34510715
-    private Checklist cheklistJSONHandler(JsonObject checklistJson) {
-        JsonArray checklist = ((JsonArray) checklistJson.get("checklist"));
-        ArrayList<Tasks> tasks = new ArrayList<>();
-        System.out.println(checklist.get(0).getClass());
-        for (JsonElement jsonElement : checklist) {
-            final ArrayList<String> childTasks = new ArrayList<>();
-            JsonElement childtasksEle = jsonElement.getAsJsonObject().get("childtasks");
-            childtasksEle.getAsJsonArray().forEach(jsonElement1 -> childTasks.add(jsonElement1.toString()));
-            Tasks newTask = new Tasks(jsonElement.getAsJsonObject().get("task").getAsString(), childTasks);
-            tasks.add(newTask);
-        }
-        Checklist realChecklist = new Checklist();
-        realChecklist.setTasks(tasks);
-        return realChecklist;
     }
 
     private JComponent createToolbarPanel() {
         final DefaultActionGroup checklistActionGroup = new DefaultActionGroup();
-        //checklistActionGroup.add(ActionManager.getInstance().getAction("Handout.Download"));
         checklistActionGroup.add(ActionManager.getInstance().getAction("Checklist.EditContent"));
         final ActionToolbar checklistActionToolbar = ActionManager.getInstance().createActionToolbar("Checklisttool", checklistActionGroup, true);
         return checklistActionToolbar.getComponent();
@@ -169,9 +111,4 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
         return toolWindowPanel;
     }
 
-    public void editUserChecklist() {
-        editPanelVisible = true;
-        EditButtons.setVisible(editPanelVisible);
-
-    }
 }

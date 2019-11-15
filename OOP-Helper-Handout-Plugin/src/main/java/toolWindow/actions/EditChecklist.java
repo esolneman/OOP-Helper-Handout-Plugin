@@ -12,11 +12,11 @@ public class EditChecklist extends AnAction {
     public void actionPerformed(@NotNull AnActionEvent anActionEvent) {
         System.out.println("actionPerformed: Edit Checklist");
         //TODO Not Show Panel -> listener for Controller
-        EditChecklistDialog editChecklistDialog = new EditChecklistDialog();
-        System.out.println("TOOL ID WINDOW: " + ToolWindowManager.getInstance(RepoLocalStorageDataProvider.getProject()).getActiveToolWindowId());
+        //EditChecklistDialog editChecklistDialog = new EditChecklistDialog();
+       // System.out.println("TOOL ID WINDOW: " + ToolWindowManager.getInstance(RepoLocalStorageDataProvider.getProject()).getActiveToolWindowId());
 
         //ChecklistScreen checklistScreen = (ChecklistScreen) ToolWindowManager.getInstance(RepoLocalStorageDataProvider.getProject()).getToolWindow(ToolWindowManager.getInstance(RepoLocalStorageDataProvider.getProject()).getActiveToolWindowId());
         //checklistScreen.editUserChecklist();
-        editChecklistDialog.showPanel();
+        //editChecklistDialog.showPanel();
     }
 }

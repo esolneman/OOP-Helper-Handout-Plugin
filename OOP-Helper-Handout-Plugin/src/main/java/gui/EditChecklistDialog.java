@@ -77,7 +77,7 @@ public class EditChecklistDialog {
     private void createPanel() {
         checklistOptionPane.setOptionType(2);
         //https://stackoverflow.com/a/21851201
-        EditableChecklistTreeView cbt = new EditableChecklistTreeView();
+        //EditableChecklistTreeView cbt = new EditableChecklistTreeView();
         model = new DefaultTreeModel(root);
 
 
@@ -100,7 +100,7 @@ public class EditChecklistDialog {
 
         deleteButton = new JButton();
         deleteButton.setText("Delete Node");
-        cbt.setModel(model);
+       // cbt.setModel(model);
         editChecklistPanel.add(tree);
         addButton.setText("Add Node on Marked Node");
         checklistOptionPane.add(addButton);
