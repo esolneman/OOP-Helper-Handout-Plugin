@@ -2,36 +2,23 @@ package toolWindow;
 
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.ActionToolbar;
-import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.ui.components.JBTabbedPane;
 import gui.HandoutPluginFXPanel;
 import javafx.application.Platform;
-import javafx.embed.swing.JFXPanel;
-import javafx.scene.Scene;
-import javafx.scene.layout.StackPane;
-import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import provider.LocalStorageDataProvider;
-import provider.contentHandler.CommonAssessmentCriteriaContentHandler;
-import toolWindow.actionGroups.HandoutContentActionGroup;
 import toolWindow.actions.SwitchWebViewUrl;
 import webView.WebViewController;
 
 import javax.swing.*;
-import java.awt.*;
 import java.io.File;
 import java.net.MalformedURLException;
 
 public class CommonAssessmentCriteriaScreen extends SimpleToolWindowPanel {
     private HandoutPluginFXPanel criteriaContent;
-    private HandoutPluginFXPanel assessmentContentVariables;
-    private HandoutPluginFXPanel assessmentContentCodingStyle;
-    private HandoutPluginFXPanel assessmentContentShortcuts;
     private ToolWindow handoutToolWindow;
-    private static File shortcutContent;
     private String variablesDirectory;
     private String codingstylesDirectory;
     private String shortcutDirectory;
@@ -78,7 +65,7 @@ public class CommonAssessmentCriteriaScreen extends SimpleToolWindowPanel {
         switchWebViewUrl.setCriteriaScreen(this);
         criteriaActionGroup.add(switchWebViewUrl);
 
-         switchWebViewUrl = (SwitchWebViewUrl) ActionManager.getInstance().getAction("CommonInformation.Variables");
+        switchWebViewUrl = (SwitchWebViewUrl) ActionManager.getInstance().getAction("CommonInformation.Variables");
         switchWebViewUrl.setCriteriaScreen(this);
         criteriaActionGroup.add(switchWebViewUrl);
 
@@ -86,90 +73,18 @@ public class CommonAssessmentCriteriaScreen extends SimpleToolWindowPanel {
         switchWebViewUrl.setCriteriaScreen(this);
         criteriaActionGroup.add(switchWebViewUrl);
 
-        //criteriaActionGroup.add(ActionManager.getInstance().getAction("CommonInformation.CodingStyles"));
-        //criteriaActionGroup.add(ActionManager.getInstance().getAction("CommonInformation.Variables"));
-        //criteriaActionGroup.add(ActionManager.getInstance().getAction("CommonInformation.Shortcut"));
         final ActionToolbar actionToolbar = ActionManager.getInstance().createActionToolbar("HandoutTool", criteriaActionGroup, true);
         return actionToolbar.getComponent();
     }
 
     private void createContent() {
-        /*assessmentContentCodingStyle = new HandoutPluginFXPanel();
-        assessmentContentVariables = new HandoutPluginFXPanel();
-        assessmentContentShortcuts = new HandoutPluginFXPanel();
-
-        // This method is invoked on the EDT thread
-        JTabbedPane jtp = new JBTabbedPane();
-        jtp.add("Coding Styles", createTab(codingstylesDirectory, assessmentContentCodingStyle));
-        jtp.add("Variablen", createTab(variablesDirectory, assessmentContentVariables));
-        jtp.add("Shortcuts", createTab(shortcutDirectory, assessmentContentShortcuts));
-        panel.add(jtp, BorderLayout.CENTER);
-*/
-
         criteriaContent = new HandoutPluginFXPanel();
         Platform.setImplicitExit(false);
         Platform.runLater(() -> {
             webView = webViewController.createWebViewWithListener(codingstylesDirectory);
             criteriaContent.showHandoutWebView(codingstylesDirectory, webView);
         });
-
-
-
-/*        Platform.setImplicitExit(false);
-        Platform.runLater(() -> {
-            webView = webViewController.createWebView(urlString);
-            criteriaContent.showHandoutWebView(urlString, webView);
-        });*/
-
-/*       tabpane = new JBTabbedPane(JTabbedPane.TOP,JTabbedPane.SCROLL_TAB_LAYOUT );
-
-
-
-        Platform.setImplicitExit(false);
-        Platform.runLater(() -> {
-            webView = webViewController.createWebView(urlString);;
-            assessmentContentCodingStyle.showHandoutWebView(urlString, webView);
-        });
-
-        Platform.setImplicitExit(false);
-        Platform.runLater(() -> {
-            webView = webViewController.createWebView(urlString);;
-            assessmentContentVariables.showHandoutWebView(urlString, webView);
-        });
-
-        Platform.setImplicitExit(false);
-        Platform.runLater(() -> {
-            webView = webViewController.createWebView(urlString);;
-            assessmentContentShortcuts.showHandoutWebView(urlString, webView);
-        });
-
-
-        // Hier werden die JPanels als Registerkarten hinzugefügt
-        tabpane.add("Variable", assessmentContentCodingStyle);
-        tabpane.add("Coding Styles", assessmentContentVariables);
-        tabpane.add("Shortcuts", assessmentContentShortcuts);*/
     }
-
-    private JFXPanel createTab(String s, HandoutPluginFXPanel fxPanel) {
-        Platform.setImplicitExit(false);
-        Platform.runLater(() -> {
-            webView = webViewController.createWebView(s);
-            fxPanel.showHandoutWebView(s, webView);
-        });
-        return fxPanel;
-    }
-
-    private void initFX(JFXPanel fxPanel, String s) {
-        // This method is invoked on the JavaFX thread
-        StackPane root = new StackPane();
-        Scene scene = new Scene(root);
-        WebView webView = new WebView();
-        WebEngine webEngine = webView.getEngine();
-        webEngine.load(s);
-        root.getChildren().add(webView);
-        fxPanel.setScene(scene);
-    }
-
 
     public JComponent getToolbar(){
         return toolWindowPanel.getToolbar();

@@ -15,6 +15,8 @@ public class SwitchWebViewUrl extends AnAction {
         this.criteriaScreen.updateContent(eventText);
     }
 
+    //TODO TRY TO GET TOOLWINDOW VIA https://intellij-support.jetbrains.com/hc/en-us/community/posts/115000534584-Access-toolwindow-from-an-action
+    // ToolWindowManager.getInstance(project).getToolWindow(TOOLWINDOW_ID)
     public void setCriteriaScreen(CommonAssessmentCriteriaScreen criteriaScreen){
         this.criteriaScreen = criteriaScreen;
     }

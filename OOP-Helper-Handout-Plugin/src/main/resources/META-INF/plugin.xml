@@ -43,6 +43,7 @@
         </group>
         <action id="CommonAssessmentCriteria.TableOfContents" class="toolWindow.actionGroups.HandoutContentActionGroup" text="Inhaltsverzeichnis" description="content" icon="/icons/listFiles.svg"> </action>
         <group id="CommonInformation" text="test" description="test menu">
+            <!--TODO Display only name without default icon -->
             <action id="CommonInformation.CodingStyles" class="toolWindow.actions.SwitchWebViewUrl" text="CodingStyles" description="CodingStyles" > </action>
             <action id="CommonInformation.Variables" class="toolWindow.actions.SwitchWebViewUrl" text="Variables" description="Variables" > </action>
             <action id ="CommonInformation.Shortcut" class="toolWindow.actions.SwitchWebViewUrl" text="Shortcut" description="Shortcut"> </action>
