@@ -2,6 +2,7 @@ package toolWindow;
 
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.ActionToolbar;
+import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
@@ -16,6 +17,7 @@ import javafx.scene.web.WebView;
 import provider.LocalStorageDataProvider;
 import provider.contentHandler.CommonAssessmentCriteriaContentHandler;
 import toolWindow.actionGroups.HandoutContentActionGroup;
+import toolWindow.actions.SwitchWebViewUrl;
 import webView.WebViewController;
 
 import javax.swing.*;
@@ -43,6 +45,9 @@ public class CommonAssessmentCriteriaScreen extends SimpleToolWindowPanel {
     public CommonAssessmentCriteriaScreen(ToolWindow toolWindow) {
         super(true, true);
         toolWindowPanel = new SimpleToolWindowPanel(true);
+        panel = new JPanel();
+
+
         webViewController = new WebViewController();
         handoutToolWindow = toolWindow;
         try {
@@ -57,27 +62,58 @@ public class CommonAssessmentCriteriaScreen extends SimpleToolWindowPanel {
             e.printStackTrace();
         }
         createContent();
-        initAndShowGUI();
         initToolWindowMenu();
     }
 
     private void initToolWindowMenu() {
         //http://androhi.hatenablog.com/entry/2015/07/23/233932
-        //toolWindowPanel.setToolbar(createToolbarPanel());
-        toolWindowPanel.setContent(panel);
+        toolWindowPanel.setToolbar(createToolbarPanel());
+        toolWindowPanel.setContent(criteriaContent);
     }
 
     private JComponent createToolbarPanel() {
-        final DefaultActionGroup handoutActionGroup = new DefaultActionGroup();
-        HandoutContentActionGroup handoutContentActionGroup = (HandoutContentActionGroup) ActionManager.getInstance().getAction("CommonAssessmentCriteria.TableOfContents");
-        handoutContentActionGroup.setWebViewController(webViewController);
-        handoutContentActionGroup.setHeadings(CommonAssessmentCriteriaContentHandler.getNavHeadings());
-        handoutActionGroup.add(handoutContentActionGroup);
-        final ActionToolbar actionToolbar = ActionManager.getInstance().createActionToolbar("HandoutTool", handoutActionGroup, true);
+        final DefaultActionGroup criteriaActionGroup = new DefaultActionGroup();
+
+        SwitchWebViewUrl switchWebViewUrl = (SwitchWebViewUrl) ActionManager.getInstance().getAction("CommonInformation.CodingStyles");
+        switchWebViewUrl.setCriteriaScreen(this);
+        criteriaActionGroup.add(switchWebViewUrl);
+
+         switchWebViewUrl = (SwitchWebViewUrl) ActionManager.getInstance().getAction("CommonInformation.Variables");
+        switchWebViewUrl.setCriteriaScreen(this);
+        criteriaActionGroup.add(switchWebViewUrl);
+
+         switchWebViewUrl = (SwitchWebViewUrl) ActionManager.getInstance().getAction("CommonInformation.Shortcut");
+        switchWebViewUrl.setCriteriaScreen(this);
+        criteriaActionGroup.add(switchWebViewUrl);
+
+        //criteriaActionGroup.add(ActionManager.getInstance().getAction("CommonInformation.CodingStyles"));
+        //criteriaActionGroup.add(ActionManager.getInstance().getAction("CommonInformation.Variables"));
+        //criteriaActionGroup.add(ActionManager.getInstance().getAction("CommonInformation.Shortcut"));
+        final ActionToolbar actionToolbar = ActionManager.getInstance().createActionToolbar("HandoutTool", criteriaActionGroup, true);
         return actionToolbar.getComponent();
     }
 
     private void createContent() {
+        /*assessmentContentCodingStyle = new HandoutPluginFXPanel();
+        assessmentContentVariables = new HandoutPluginFXPanel();
+        assessmentContentShortcuts = new HandoutPluginFXPanel();
+
+        // This method is invoked on the EDT thread
+        JTabbedPane jtp = new JBTabbedPane();
+        jtp.add("Coding Styles", createTab(codingstylesDirectory, assessmentContentCodingStyle));
+        jtp.add("Variablen", createTab(variablesDirectory, assessmentContentVariables));
+        jtp.add("Shortcuts", createTab(shortcutDirectory, assessmentContentShortcuts));
+        panel.add(jtp, BorderLayout.CENTER);
+*/
+
+        criteriaContent = new HandoutPluginFXPanel();
+        Platform.setImplicitExit(false);
+        Platform.runLater(() -> {
+            webView = webViewController.createWebViewWithListener(codingstylesDirectory);
+            criteriaContent.showHandoutWebView(codingstylesDirectory, webView);
+        });
+
+
 
 /*        Platform.setImplicitExit(false);
         Platform.runLater(() -> {
@@ -87,9 +123,7 @@ public class CommonAssessmentCriteriaScreen extends SimpleToolWindowPanel {
 
 /*       tabpane = new JBTabbedPane(JTabbedPane.TOP,JTabbedPane.SCROLL_TAB_LAYOUT );
 
-        assessmentContentCodingStyle = new HandoutPluginFXPanel();
-        assessmentContentVariables = new HandoutPluginFXPanel();
-        assessmentContentShortcuts = new HandoutPluginFXPanel();
+
 
         Platform.setImplicitExit(false);
         Platform.runLater(() -> {
@@ -116,34 +150,16 @@ public class CommonAssessmentCriteriaScreen extends SimpleToolWindowPanel {
         tabpane.add("Shortcuts", assessmentContentShortcuts);*/
     }
 
-
-
-    private void initAndShowGUI() {
-        // This method is invoked on the EDT thread
-        panel = new JPanel();
-        JTabbedPane jtp = new JBTabbedPane();
-        jtp.add("Coding Styles", createTab(codingstylesDirectory));
-        jtp.add("Variablen", createTab(variablesDirectory));
-        jtp.add("Shortcuts", createTab(shortcutDirectory));
-        panel.add(jtp, BorderLayout.CENTER);
-    }
-
-
-    private JFXPanel createTab(String s) {
-        criteriaContent = new HandoutPluginFXPanel()
-        {
-            @Override
-            public Dimension getPreferredSize() {
-                return new Dimension(640, 480);
-            }
-        };
+    private JFXPanel createTab(String s, HandoutPluginFXPanel fxPanel) {
+        Platform.setImplicitExit(false);
         Platform.runLater(() -> {
-            initFX(criteriaContent, s);
+            webView = webViewController.createWebView(s);
+            fxPanel.showHandoutWebView(s, webView);
         });
-        return criteriaContent;
+        return fxPanel;
     }
 
-    private void initFX(JFXPanel criteriaContent, String s) {
+    private void initFX(JFXPanel fxPanel, String s) {
         // This method is invoked on the JavaFX thread
         StackPane root = new StackPane();
         Scene scene = new Scene(root);
@@ -151,7 +167,7 @@ public class CommonAssessmentCriteriaScreen extends SimpleToolWindowPanel {
         WebEngine webEngine = webView.getEngine();
         webEngine.load(s);
         root.getChildren().add(webView);
-        criteriaContent.setScene(scene);
+        fxPanel.setScene(scene);
     }
 
 
@@ -165,6 +181,19 @@ public class CommonAssessmentCriteriaScreen extends SimpleToolWindowPanel {
 
     public void updateContent() {
         webViewController.updateWebViewContent();
+    }
+
+    //TODO CHANGE NAME
+    public void updateContent(String eventText) {
+        String url;
+        if (eventText.equals("Shortcut")){
+            url = shortcutDirectory;
+        } else if (eventText.equals("CodingStyles")){
+            url = codingstylesDirectory;
+        } else{
+            url = variablesDirectory;
+        }
+        webViewController.changeURL(url);
     }
 
 }
