@@ -53,7 +53,7 @@ public class RepoLocalStorageDataProvider implements RepoLocalStorageDataProvide
 
 
     public static File getCommonAssessmentCriteriaFileDirectory() {
-        File specificAssessmentCriteriaFile = new File(getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE + branchFolderName + COMMON_ASSESSMENT_CRITERIA_FILE_NAME);
+        File specificAssessmentCriteriaFile = new File(getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE  + COMMON_ASSESSMENT_CRITERIA_FILE_NAME);
         return specificAssessmentCriteriaFile;
     }
     public static File getChecklistFile() {
