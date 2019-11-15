@@ -29,4 +29,13 @@ public class LocalStorageDataProvider implements LocalStorageDataProviderInterfa
     public static File getChecklistData() {
         return RepoLocalStorageDataProvider.getChecklistFile();
     }
+
+    public static File getCodingStylesFileDirectory() {
+        return RepoLocalStorageDataProvider.getCodingStylesFile();
+    }
+
+    public static File getVariablesDirectory() {
+        return RepoLocalStorageDataProvider.getVariablesFile();
+
+    }
 }

@@ -11,6 +11,7 @@ import com.intellij.ui.content.ContentFactory;
 import eventHandling.OnToolWindowCreatedListener;
 import services.ToolWindowServiceInterface;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +47,6 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, ToolWindowSe
 
     private void initScreens() {
         handoutContentScreen = new HandoutContentScreen(toolWindow);
-        //checklistScreen = new ChecklistScreen(toolWindow);
         shortcutScreen = new ShortcutScreen(toolWindow);
         specificAssessmentCriteriaScreen = new SpecificAssessmentCriteriaScreen(toolWindow);
         commonAssessmentCriteriaScreen = new CommonAssessmentCriteriaScreen(toolWindow);
