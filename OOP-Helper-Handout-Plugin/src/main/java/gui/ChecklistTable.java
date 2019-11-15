@@ -26,7 +26,12 @@ public class ChecklistTable extends JTable{
             public Class getColumnClass(int column) {
                 switch (column) {
                     case 0:
+                    case 1:
                         return String.class;
+                    case 2:
+                        return Integer.class;
+                    case 3:
+                        return Double.class;
                     default:
                         return Boolean.class;
                 }

@@ -7,19 +7,14 @@ import com.intellij.openapi.actionSystem.ActionToolbar;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.ui.components.JBScrollPane;
-import com.intellij.ui.table.JBTable;
-import gui.ChecklistCheckbox;
-import gui.ChecklistTable;
-import gui.ChecklistTreeView;
+import com.intellij.uiDesigner.core.GridLayoutManager;
 import objects.Checklist;
 import provider.LocalStorageDataProvider;
 import provider.ParseChecklistJSON;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -28,9 +23,13 @@ import java.io.FileReader;
 public class ChecklistScreen extends SimpleToolWindowPanel {
     private ToolWindow handoutToolWindow;
     private JPanel checklistContent;
+    private JPanel predefinedDataPanel;
+    private JPanel userDataPanel;
+    private JList predefinedChecklistList;
     private JTable predefinedChecklistTable;
     private JTable userChecklistTable;
-    private JSeparator seperator;
+    private JTextField predefiniedDataHeader;
+    private JScrollPane predefieniedDataScrollPane;
     private JsonObject checklistJson;
     private JsonObject userChecklistJson;
 
@@ -41,10 +40,12 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
 
     public ChecklistScreen(ToolWindow toolWindow) {
         super(true, true);
+        GridLayoutManager contentLayout = new GridLayoutManager(2,1);
+        checklistContent = new JPanel();
+        //checklistContent.setLayout(contentLayout);
+        predefinedDataPanel = new JPanel();
         editPanelVisible = false;
         toolWindowPanel = new SimpleToolWindowPanel(true);
-        predefinedChecklistTable = new JBTable();
-        userChecklistTable = new JBTable();
         handoutToolWindow = toolWindow;
         file = LocalStorageDataProvider.getChecklistData();
         userData = LocalStorageDataProvider.getChecklistUserData();
@@ -71,6 +72,7 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
 
         createContent();
         initToolWindowMenu();
+        checklistContent.add(predefiniedDataHeader);
     }
 
     private void initToolWindowMenu() {
@@ -80,24 +82,50 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
     }
 
     private void createContent() {
-        checklistContent = new JPanel();
         Checklist checklist = ParseChecklistJSON.checklistJSONHandler(checklistJson);
-
-
-        for (Checklist.Tasks task : checklist.tasks) {
-            JCheckBox checkbox = new JCheckBox(task.taskDescription);
-            checklistContent.add(checkbox);
+        Object[] columnNames = {"Type",  "Boolean"};
+        Object[][] data;
+        data = new Object[checklist.tasks.size()][2];
+        for (int i = 0; i < checklist.tasks.size(); i++) {
+            data[i][0] = checklist.tasks.get(i).taskDescription;
+            data [i] [1] = checklist.tasks.get(i).checked;
         }
+        JTable predefinedTable;
+        DefaultTableModel model = new DefaultTableModel(data, columnNames);
+        predefinedTable = new JTable(model) {
+
+            private static final long serialVersionUID = 1L;
+            @Override
+            public Class getColumnClass(int column) {
+                switch (column) {
+                    case 0:
+                        return String.class;
+                    default:
+                        return Boolean.class;
+                }
+            }
+
+            public boolean isCellEditable(int row, int column) {
+                return column == 1;
+            }
+        };
+
+
+        //TODO INIT USER LOCATION FILE WHEN START IDE
+        //predefinedTable.setPreferredScrollableViewportSize(predefinedTable.getMaximumSize());
+        predefinedChecklistTable = predefinedTable;
+        predefinedDataPanel.add(predefiniedDataHeader);
+        predefinedDataPanel.add(predefinedChecklistTable);
+        checklistContent.add(predefinedDataPanel);
+
 
         if(userChecklistJson!= null){
             Checklist userChecklsit = ParseChecklistJSON.checklistJSONHandler(userChecklistJson);
             for (Checklist.Tasks task : userChecklsit.tasks) {
-                ChecklistCheckbox checkbox = new ChecklistCheckbox(task.taskDescription);
-                checklistContent.add(checkbox);
+               // ChecklistCheckbox checkbox = new ChecklistCheckbox(task.taskDescription);
+               // checklistContent.add(checkbox);
             }
         }
-        seperator = new JSeparator();
-        checklistContent.add(seperator);
     }
 
     private JComponent createToolbarPanel() {
