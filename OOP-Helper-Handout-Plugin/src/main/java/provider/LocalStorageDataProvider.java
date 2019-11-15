@@ -21,8 +21,21 @@ public class LocalStorageDataProvider implements LocalStorageDataProviderInterfa
 
     }
 
+    public static File getCommonAssessmentCriteriaFileDirectory() {
+        return RepoLocalStorageDataProvider.getCommonAssessmentCriteriaFileDirectory();
+    }
+
     //TODO Parser from Repo and USER call
     public static File getChecklistData() {
         return RepoLocalStorageDataProvider.getChecklistFile();
+    }
+
+    public static File getCodingStylesFileDirectory() {
+        return RepoLocalStorageDataProvider.getCodingStylesFile();
+    }
+
+    public static File getVariablesDirectory() {
+        return RepoLocalStorageDataProvider.getVariablesFile();
+
     }
 }

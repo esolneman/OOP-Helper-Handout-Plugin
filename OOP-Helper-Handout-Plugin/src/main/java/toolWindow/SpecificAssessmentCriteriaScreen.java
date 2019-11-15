@@ -61,8 +61,6 @@ public class SpecificAssessmentCriteriaScreen extends SimpleToolWindowPanel{
     public void updateContent() {
         webViewController.updateWebViewContent();
     }
-
-
 }
 
 

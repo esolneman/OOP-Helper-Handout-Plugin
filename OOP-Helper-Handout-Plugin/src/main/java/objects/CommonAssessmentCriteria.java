@@ -1,4 +1,5 @@
 package objects;
 
-public class CommonAssessmentCriteria {
+public class CommonAssessmentCriteria   {
+
 }
