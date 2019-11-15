@@ -1,17 +1,11 @@
 package toolWindow;
 
-import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.actionSystem.ActionToolbar;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
-import com.intellij.openapi.actionSystem.Separator;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
-import environment.HandoutPluginFXPanel;
+import gui.HandoutPluginFXPanel;
 import javafx.application.Platform;
-import javafx.embed.swing.JFXPanel;
 import javafx.scene.web.WebView;
 import provider.LocalStorageDataProvider;
-import toolWindow.actionGroups.HandoutContentActionGroup;
 import webView.WebViewController;
 
 import javax.swing.*;
@@ -33,11 +27,11 @@ public class ShortcutScreen extends SimpleToolWindowPanel implements PluginToolW
     public ShortcutScreen(ToolWindow toolWindow) {
         super(true, true);
         shortcutContent = new HandoutPluginFXPanel();
-        shortcutContent.showContent();webViewController = new WebViewController();
+        webViewController = new WebViewController();
         toolWindowPanel = new SimpleToolWindowPanel(true);
         handoutToolWindow = toolWindow;
         content = LocalStorageDataProvider.getShortcutFileDirectory();
-        System.out.println("content HandoutContentScreen: " + content);
+        System.out.println("content Shortcut: " + content);
 
         try {
             urlString = content.toURI().toURL().toString();
@@ -52,15 +46,6 @@ public class ShortcutScreen extends SimpleToolWindowPanel implements PluginToolW
         //http://androhi.hatenablog.com/entry/2015/07/23/233932
         //toolWindowPanel.setToolbar(createToolbarPanel());
         toolWindowPanel.setContent(shortcutContent);
-    }
-
-    private JComponent createToolbarPanel() {
-        final DefaultActionGroup handoutActionGroup = new DefaultActionGroup();
-        HandoutContentActionGroup handoutContentActionGroup = (HandoutContentActionGroup) ActionManager.getInstance().getAction("Handout.TableOfContents");
-        handoutActionGroup.add(handoutContentActionGroup);
-        handoutActionGroup.add(new Separator());
-        final ActionToolbar checklistActionToolbar = ActionManager.getInstance().createActionToolbar("HandoutTool", handoutActionGroup, true);
-        return checklistActionToolbar.getComponent();
     }
 
     private void createContent() {

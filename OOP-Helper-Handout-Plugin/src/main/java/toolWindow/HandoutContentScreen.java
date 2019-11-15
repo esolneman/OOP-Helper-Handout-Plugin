@@ -7,7 +7,7 @@ import com.intellij.openapi.actionSystem.Separator;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
 import controller.LinkToHandoutController;
-import environment.HandoutPluginFXPanel;
+import gui.HandoutPluginFXPanel;
 import javafx.application.Platform;
 import javafx.scene.web.WebView;
 import provider.LocalStorageDataProvider;
@@ -30,7 +30,6 @@ public class HandoutContentScreen extends SimpleToolWindowPanel implements Plugi
     private WebViewController webViewController;
 
     private SimpleToolWindowPanel toolWindowPanel;
-
     public HandoutContentScreen(ToolWindow toolWindow){
         super(true, true);
         LinkToHandoutController linkToHandoutController = new LinkToHandoutController(RepoLocalStorageDataProvider.getProject(), this);

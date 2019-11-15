@@ -5,13 +5,14 @@ import com.intellij.openapi.actionSystem.ActionToolbar;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
-import environment.HandoutPluginFXPanel;
 import javafx.application.Platform;
 import javafx.scene.web.WebView;
 import provider.LocalStorageDataProvider;
 import provider.contentHandler.CommonAssessmentCriteriaContentHandler;
 import toolWindow.actionGroups.HandoutContentActionGroup;
 import webView.WebViewController;
+import gui.HandoutPluginFXPanel;
+
 
 import javax.swing.*;
 import java.io.File;
