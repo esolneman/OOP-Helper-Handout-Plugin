@@ -5,38 +5,31 @@ import com.intellij.ui.components.JBScrollPane;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
-public class ChecklistTable extends JTable{
+public class ChecklistTable extends JPanel{
 
     private static final long serialVersionUID = 1L;
     private JTable table;
 
-    public ChecklistTable() {
-        Object[] columnNames = {"Angabe", "Checked"};
-        Object[][] data = {
-                {"Buy", false},
-                {"Sell",  true},
-                {"Sell",  true},
-                {"Buy",  false}
-        };
-        DefaultTableModel model = new DefaultTableModel(data, columnNames);
+    public ChecklistTable(DefaultTableModel model) {
         table = new JTable(model) {
-
             private static final long serialVersionUID = 1L;
             @Override
             public Class getColumnClass(int column) {
                 switch (column) {
                     case 0:
-                    case 1:
                         return String.class;
-                    case 2:
-                        return Integer.class;
-                    case 3:
-                        return Double.class;
                     default:
                         return Boolean.class;
                 }
             }
         };
         table.setPreferredScrollableViewportSize(table.getPreferredSize());
+        JScrollBar scrollBar = new JScrollBar();
+        scrollBar.add(table);
+        this.add(scrollBar);
+    }
+
+    public void setModel(DefaultTableModel model) {
+        table.setModel(model);
     }
 }

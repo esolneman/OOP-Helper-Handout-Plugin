@@ -7,14 +7,13 @@ import com.intellij.openapi.actionSystem.ActionToolbar;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.uiDesigner.core.GridLayoutManager;
+import gui.ChecklistTable;
 import objects.Checklist;
 import provider.LocalStorageDataProvider;
 import provider.ParseChecklistJSON;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -23,28 +22,20 @@ import java.io.FileReader;
 public class ChecklistScreen extends SimpleToolWindowPanel {
     private ToolWindow handoutToolWindow;
     private JPanel checklistContent;
-    private JPanel predefinedDataPanel;
-    private JPanel userDataPanel;
-    private JList predefinedChecklistList;
     private JTable predefinedChecklistTable;
-    private JTable userChecklistTable;
     private JTextField predefiniedDataHeader;
-    private JScrollPane predefieniedDataScrollPane;
     private JsonObject checklistJson;
     private JsonObject userChecklistJson;
 
     private SimpleToolWindowPanel toolWindowPanel;
     private File file;
     private File userData;
-    private Boolean editPanelVisible;
 
     public ChecklistScreen(ToolWindow toolWindow) {
         super(true, true);
-        GridLayoutManager contentLayout = new GridLayoutManager(2,1);
+       //GridLayoutManager contentLayout = new GridLayoutManager(2,1);
         checklistContent = new JPanel();
         //checklistContent.setLayout(contentLayout);
-        predefinedDataPanel = new JPanel();
-        editPanelVisible = false;
         toolWindowPanel = new SimpleToolWindowPanel(true);
         handoutToolWindow = toolWindow;
         file = LocalStorageDataProvider.getChecklistData();
@@ -90,10 +81,11 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
             data[i][0] = checklist.tasks.get(i).taskDescription;
             data [i] [1] = checklist.tasks.get(i).checked;
         }
-        JTable predefinedTable;
+        //https://stackoverflow.com/a/7392163
         DefaultTableModel model = new DefaultTableModel(data, columnNames);
-        predefinedTable = new JTable(model) {
-
+        //TODO INIT USER LOCATION FILE WHEN START IDE
+        //predefinedTable.setPreferredScrollableViewportSize(predefinedTable.getMaximumSize());
+        predefinedChecklistTable = new JTable(model) {
             private static final long serialVersionUID = 1L;
             @Override
             public Class getColumnClass(int column) {
@@ -109,14 +101,12 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
                 return column == 1;
             }
         };
-
-
-        //TODO INIT USER LOCATION FILE WHEN START IDE
-        //predefinedTable.setPreferredScrollableViewportSize(predefinedTable.getMaximumSize());
-        predefinedChecklistTable = predefinedTable;
-        predefinedDataPanel.add(predefiniedDataHeader);
-        predefinedDataPanel.add(predefinedChecklistTable);
-        checklistContent.add(predefinedDataPanel);
+        predefinedChecklistTable.setEditingColumn(1);
+        predefinedChecklistTable.setPreferredScrollableViewportSize(predefinedChecklistTable.getPreferredSize());
+        predefinedChecklistTable.setFillsViewportHeight(true);
+        JScrollBar scrollBar = new JScrollBar();
+        scrollBar.add(predefinedChecklistTable);
+        checklistContent.add(predefinedChecklistTable);
 
 
         if(userChecklistJson!= null){
@@ -139,4 +129,7 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
         return toolWindowPanel;
     }
 
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
+    }
 }
