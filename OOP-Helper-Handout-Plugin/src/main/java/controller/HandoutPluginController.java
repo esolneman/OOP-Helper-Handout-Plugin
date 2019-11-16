@@ -62,7 +62,7 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
         BalloonPopupController.showNotification(project, notificationMessage, messageType);
 
         File notesFile = LocalStorageDataProvider.getNotesFile();
-        notesFile.mkdirs();
+        notesFile.getParentFile().mkdirs();
         try {
             notesFile.createNewFile();
             Notes.Note firstNote = new Notes.Note();
@@ -71,10 +71,13 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
             ArrayList<Notes.Note> newList = new ArrayList<>();
             newList.add(firstNote);
             Notes notes = new Notes(newList);
+            System.out.println("NOTES NOTE: " + notes.notes.get(0).note);
             JsonObject jsonObjectNotes = ParseNotesJson.getJsonObjectFromNotes(notes);
+            System.out.println("jsonObjectNotes NOTE: " + jsonObjectNotes.get("notes").getAsJsonArray().get(0).getAsJsonObject().get("note").getAsString());
             saveJsonObjectInFile(jsonObjectNotes, notesFile);
         } catch (IOException e) {
             //TODO CATACH
+            System.out.println(e);
         }
         //update toolWindow
         //
@@ -103,10 +106,18 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
     }
 
 
-    private void saveJsonObjectInFile(JsonObject checklist, File file) throws IOException {
+    private void saveJsonObjectInFile(JsonObject  jsonObject, File file) {
+        System.out.println("saveJsonObjectInFile: " + file.getPath());
+        System.out.println("saveJsonObjectInFile: " + jsonObject.get("notes").getAsJsonArray().get(0).getAsJsonObject().get("note").getAsString());
+
         //https://stackoverflow.com/a/29319491
-        Writer writer = new FileWriter(file);
-        Gson gson = new GsonBuilder().create();
-        gson.toJson(checklist, writer);
+        try (Writer writer = new FileWriter(file)) {
+            Gson gson = new GsonBuilder().create();
+            gson.toJson(jsonObject, writer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
     }
 }
