@@ -12,6 +12,7 @@ import objects.Notes;
 import provider.HandoutContentDataProviderInterface;
 import provider.LocalStorageDataProvider;
 import provider.RepoLocalStorageDataProvider;
+import provider.contentHandler.ParseNotesJson;
 import toolWindow.HandoutToolWindowFactory;
 
 import java.io.File;
@@ -34,8 +35,8 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
         handoutDataProvider.addListener(this);
         toolWindowController = ToolWindowController.getInstance();
         updateHandoutContent();
-       // InformChangesPanel informChangesPanel = new InformChangesPanel(test);
-       // informChangesPanel.showPanel();
+        // InformChangesPanel informChangesPanel = new InformChangesPanel(test);
+        // informChangesPanel.showPanel();
     }
 
     public void updateHandoutContent() {
@@ -70,6 +71,7 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
             ArrayList<Notes.Note> newList = new ArrayList<>();
             newList.add(firstNote);
             Notes notes = new Notes(newList);
+            JsonObject jsonObjectNotes = ParseNotesJson.getJsonObjectFromNotes(notes);
             saveJsonObjectInFile(jsonObjectNotes, notesFile);
         } catch (IOException e) {
             //TODO CATACH
@@ -103,9 +105,8 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
 
     private void saveJsonObjectInFile(JsonObject checklist, File file) throws IOException {
         //https://stackoverflow.com/a/29319491
-        Writer writer = new FileWriter(file));
-            Gson gson = new GsonBuilder().create();
-            gson.toJson(checklist, writer);
-
+        Writer writer = new FileWriter(file);
+        Gson gson = new GsonBuilder().create();
+        gson.toJson(checklist, writer);
     }
 }

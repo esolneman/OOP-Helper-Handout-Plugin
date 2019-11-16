@@ -5,7 +5,7 @@ import java.util.Date;
 
 public class Notes {
 
-    private ArrayList<Note> notes;
+    public ArrayList<Note> notes;
 
     public Notes(ArrayList<Note> notes){
         this.notes = notes;
