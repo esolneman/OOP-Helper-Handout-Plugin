@@ -24,8 +24,6 @@ public class ParseNotesJson {
         JsonObject note;
         for (int i = 0; i < notes.notes.size(); i++) {
             note = new JsonObject();
-            System.out.println("getJsonObjectFromNotes NOTE I: " + notes.notes.get(i).note);
-
             note.addProperty("note", notes.notes.get(i).note);
             note.addProperty("date", notes.notes.get(i).date.toString());
             notesJson.add(note);
@@ -34,14 +32,11 @@ public class ParseNotesJson {
     }
 
     public static Notes getNotesFromJsonObject(JsonObject notesJsonObject) throws ParseException {
-        DateFormat format = new SimpleDateFormat("d, MMMM, yyyy", Locale.GERMAN);
         JsonArray notesJsonArray = ((JsonArray) notesJsonObject.get("notes"));
         ArrayList<Notes.Note> notesArray = new ArrayList<>();
         for (JsonElement note : notesJsonArray) {
             String description = note.getAsJsonObject().get("note").toString();
-            System.out.println("note: " + description);
             String date = note.getAsJsonObject().get("date").getAsString();
-            System.out.println("date: " + date);
             Notes.Note notet = new Notes.Note();
             notet.note = description;
             notet.date = date;
