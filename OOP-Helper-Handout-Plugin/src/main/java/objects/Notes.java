@@ -13,6 +13,6 @@ public class Notes {
 
     public static class Note {
         public String note;
-        public Date date;
+        public String date;
     }
 }

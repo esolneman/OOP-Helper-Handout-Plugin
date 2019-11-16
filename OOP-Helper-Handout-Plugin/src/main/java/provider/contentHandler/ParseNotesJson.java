@@ -1,8 +1,17 @@
 package provider.contentHandler;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
+import gherkin.lexer.No;
 import objects.Notes;
+import provider.LocalStorageDataProvider;
+
+import java.io.*;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 public class ParseNotesJson {
 
@@ -22,6 +31,24 @@ public class ParseNotesJson {
             notesJson.add(note);
         }
         return notesJsonObject;
+    }
+
+    public static Notes getNotesFromJsonObject(JsonObject notesJsonObject) throws ParseException {
+        DateFormat format = new SimpleDateFormat("d, MMMM, yyyy", Locale.GERMAN);
+        JsonArray notesJsonArray = ((JsonArray) notesJsonObject.get("notes"));
+        ArrayList<Notes.Note> notesArray = new ArrayList<>();
+        for (JsonElement note : notesJsonArray) {
+            String description = note.getAsJsonObject().get("note").toString();
+            System.out.println("note: " + description);
+            String date = note.getAsJsonObject().get("date").getAsString();
+            System.out.println("date: " + date);
+            Notes.Note notet = new Notes.Note();
+            notet.note = description;
+            notet.date = date;
+            notesArray.add(notet);
+        }
+        Notes notes = new Notes(notesArray);
+        return notes;
     }
 
 }

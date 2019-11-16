@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -66,7 +67,7 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
         try {
             notesFile.createNewFile();
             Notes.Note firstNote = new Notes.Note();
-            firstNote.date = new Date();
+            firstNote.date = new Date().toString();
             firstNote.note = "Dies ist eine Beispielnotiz. Du kannst hier vermeken, was du gemacht hast, wo du aufgehört hast zu arbeiten und was du als nächstees gemacht hast.";
             ArrayList<Notes.Note> newList = new ArrayList<>();
             newList.add(firstNote);
@@ -75,10 +76,13 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
             JsonObject jsonObjectNotes = ParseNotesJson.getJsonObjectFromNotes(notes);
             System.out.println("jsonObjectNotes NOTE: " + jsonObjectNotes.get("notes").getAsJsonArray().get(0).getAsJsonObject().get("note").getAsString());
             saveJsonObjectInFile(jsonObjectNotes, notesFile);
-        } catch (IOException e) {
+            System.out.println("BACKWARDS: " + ParseNotesJson.getNotesFromJsonObject(jsonObjectNotes).notes.get(0).note);
+
+        } catch (IOException | ParseException e) {
             //TODO CATACH
             System.out.println(e);
         }
+
         //update toolWindow
         //
         /*Path file = Paths.get(repoFile.getAbsolutePath());
@@ -107,9 +111,6 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
 
 
     private void saveJsonObjectInFile(JsonObject  jsonObject, File file) {
-        System.out.println("saveJsonObjectInFile: " + file.getPath());
-        System.out.println("saveJsonObjectInFile: " + jsonObject.get("notes").getAsJsonArray().get(0).getAsJsonObject().get("note").getAsString());
-
         //https://stackoverflow.com/a/29319491
         try (Writer writer = new FileWriter(file)) {
             Gson gson = new GsonBuilder().create();
