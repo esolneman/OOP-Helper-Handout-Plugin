@@ -38,6 +38,7 @@ public class HandoutPluginFXPanel extends JFXPanel {
         //});
     }
 
+    //TODO Method for init HTML TEXT
     //https://docs.oracle.com/javafx/2/ui_controls/editor.htm
     public void showHTMLEditor(String urlString, WebView webView) {
         final HTMLEditor htmlEditor = new HTMLEditor();
@@ -72,6 +73,7 @@ public class HandoutPluginFXPanel extends JFXPanel {
         root.setAlignment(Pos.CENTER);
         addEntryButton.setOnAction(event -> {
             NotesController.saveNewEntryInFile(htmlEditor.getHtmlText());
+            htmlEditor.setHtmlText(doc.toString());
             webView.getEngine().loadContent(urlString);
         });
 

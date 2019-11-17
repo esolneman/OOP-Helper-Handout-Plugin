@@ -54,7 +54,7 @@ public class NotesScreen {
         }
 
 
-        content = LocalStorageDataProvider.getInitNotesHtmlFile();
+        content = LocalStorageDataProvider.getNotesFile();
         System.out.println("content HandoutContentScreen: " + content);
 
         try {

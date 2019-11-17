@@ -62,6 +62,8 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
         toolWindowController.updateContent();
         BalloonPopupController.showNotification(project, notificationMessage, messageType);
 
+
+        //TODO create in Notes controller
         File notesFile = LocalStorageDataProvider.getNotesFile();
         notesFile.getParentFile().mkdirs();
         try {
@@ -118,7 +120,5 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
     }
 }
