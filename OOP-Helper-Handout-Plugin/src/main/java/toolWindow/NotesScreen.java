@@ -41,6 +41,7 @@ public class NotesScreen {
         noteToolWindow = toolWindow;
         webViewController = new WebViewController();
 
+        //TODO verschiebe to LOCALUSERSTORAGE
         initNotesFile = LocalStorageDataProvider.getInitNotesHtmlFile();
         //notesFile = LocalStorageDataProvider.getNotesFile();
         try {
@@ -51,7 +52,8 @@ public class NotesScreen {
 
         noteContentPane = new JPanel();
 
-/*        //TODO Write in Handler
+        //TODO DISPLAY SOMETHING WHEN FILE IS EMPTY
+/*       //TODO Write in Handler
         // compare with notesController
         //https://www.mkyong.com/java/how-do-convert-java-object-to-from-json-format-gson-api/
         Gson gson = new Gson();

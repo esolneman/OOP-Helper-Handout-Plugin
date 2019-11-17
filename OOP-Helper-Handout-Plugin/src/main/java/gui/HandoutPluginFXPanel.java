@@ -52,11 +52,6 @@ public class HandoutPluginFXPanel extends JFXPanel {
         Element dateElement = doc.getElementById("date");
         dateElement.text(date);
 
-
-        String initalText;
-        System.out.println("HTML doc: " + doc.toString());
-        System.out.println("HTML HTML doc: " + doc.html());
-
         htmlEditor.setHtmlText(doc.toString());
 
         webView.getEngine().load(urlString);
@@ -77,11 +72,7 @@ public class HandoutPluginFXPanel extends JFXPanel {
         addEntryButton.setOnAction(event -> {
             NotesController.saveNewEntryInFile(htmlEditor.getHtmlText());
             htmlEditor.setHtmlText(doc.toString());
-            System.out.println("HTML URLS STRING LOAD: " + urlString);
             webView.getEngine().reload();
-            System.out.println("HTML UgetHtmlText: " + htmlEditor.getHtmlText());
-
-            //webView.getEngine().loadContent(htmlEditor.getHtmlText());
         });
 
         root.getChildren().addAll(webView, addEntryButton, scrollPane);

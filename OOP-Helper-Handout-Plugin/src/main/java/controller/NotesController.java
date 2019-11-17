@@ -19,6 +19,7 @@ import java.util.Date;
 public class NotesController {
 
 
+    //TODO
     public static void createNotesFile() {
 
     }
@@ -38,8 +39,6 @@ public class NotesController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
         //Notes.Note newNote = ParseNotesJson.getNoteFromString(htmlText);
 /*        File notesFile = LocalStorageDataProvider.getNotesFile();
 
@@ -62,18 +61,9 @@ public class NotesController {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }*/
-
     }
 
     private static void saveJsonObjectInFile(JsonObject jsonObject, File file) {
-/*        //https://stackoverflow.com/a/29319491
-        try (Writer writer = new FileWriter(file)) {
-            Gson gson = new GsonBuilder().create();
-            gson.toJson(jsonObject, writer);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
-
         //https://www.baeldung.com/java-write-to-file#write-with-printwriter
         FileWriter fileWriter = null;
         try {
@@ -83,36 +73,15 @@ public class NotesController {
         }
         PrintWriter printWriter = new PrintWriter(fileWriter);
         printWriter.print(jsonObject);
-        //printWriter.printf("Product name is %s and its price is %d $", "iPhone", 1000);
         printWriter.close();
-
-    }
-
-    private static void saveNotesInFile(Notes notes, File file) {
-        //https://stackoverflow.com/a/29319491
-        try (Writer writer = new FileWriter(file)) {
-            Gson gson = new GsonBuilder().create();
-            gson.toJson(notes, writer);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public static void saveNoteInHtmlFile(Notes.Note note, File initFile) throws IOException {
-        System.out.println("initFile: " + initFile.getPath());
-
-
         //https://stackoverflow.com/a/30258688
         Document jsoupDoc = Jsoup.parse(initFile, "UTF-8");
-
-        System.out.println("jsoupDoc: " + jsoupDoc.toString());
-
-
+        
         //TODO Sometimes Nullpointer
         Element ele = jsoupDoc.getElementById("notesList");
-        System.out.println("ele: " + ele.toString());
-
-        System.out.println("note: " + note.note);
         Element divNote = jsoupDoc.createElement("div");
         divNote.attr("id", "note");
         ele.appendChild(divNote);
@@ -129,11 +98,6 @@ public class NotesController {
         }
         PrintWriter printWriter = new PrintWriter(fileWriter);
         printWriter.print(jsoupDoc.html());
-        System.out.println("jsoupDoc row: " + jsoupDoc.html());
-
-        //printWriter.printf("Product name is %s and its price is %d $", "iPhone", 1000);
         printWriter.close();
-
-
     }
 }
