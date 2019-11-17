@@ -116,10 +116,9 @@ public class NotesController {
         Element divNote = jsoupDoc.createElement("div");
         divNote.attr("id", "note");
         ele.appendChild(divNote);
-        divNote.text(note.note);
-
-        System.out.println("jsoupDoc row: " + jsoupDoc);
-
+        //https://stackoverflow.com/a/37277534
+        //unescape-html-character-entities
+        divNote.text(Jsoup.parse(note.note).text());
 
         //https://www.baeldung.com/java-write-to-file#write-with-printwriter
         FileWriter fileWriter = null;
@@ -129,8 +128,12 @@ public class NotesController {
             e.printStackTrace();
         }
         PrintWriter printWriter = new PrintWriter(fileWriter);
-        printWriter.print(jsoupDoc.toString());
+        printWriter.print(jsoupDoc.html());
+        System.out.println("jsoupDoc row: " + jsoupDoc.html());
+
         //printWriter.printf("Product name is %s and its price is %d $", "iPhone", 1000);
         printWriter.close();
+
+
     }
 }
