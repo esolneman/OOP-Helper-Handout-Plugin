@@ -55,7 +55,6 @@ public class NotesScreen {
             e.printStackTrace();
         }
 
-
         if(notes != null){
             try {
                 notesHtmlString = NotesController.createHTMLString(notes, initNotesFile);

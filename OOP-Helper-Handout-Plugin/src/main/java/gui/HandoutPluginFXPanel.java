@@ -74,7 +74,8 @@ public class HandoutPluginFXPanel extends JFXPanel {
         addEntryButton.setOnAction(event -> {
             NotesController.saveNewEntryInFile(htmlEditor.getHtmlText());
             htmlEditor.setHtmlText(doc.toString());
-            webView.getEngine().loadContent(urlString);
+            System.out.println("HTML URLS STRING LOAD: " + urlString);
+            webView.getEngine().load(urlString);
         });
 
         root.getChildren().addAll(webView, addEntryButton, scrollPane);
