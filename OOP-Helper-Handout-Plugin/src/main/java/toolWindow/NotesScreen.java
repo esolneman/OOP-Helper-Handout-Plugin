@@ -58,8 +58,8 @@ public class NotesScreen {
 
         //content = LocalStorageDataProvider.getInitNotesHtmlFile();
         try {
-            htmlFile = NotesController.createHTMLString(notes, initNotesFile);
-            notesHtmlString = htmlFile.toURI().toURL().toString();
+            notesHtmlString = NotesController.createHTMLString(notes, initNotesFile);
+            //notesHtmlString = htmlFile.toURI().toURL().toString();
         } catch (IOException e) {
             e.printStackTrace();
         }

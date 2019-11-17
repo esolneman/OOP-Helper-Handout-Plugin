@@ -6,9 +6,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 import objects.Notes;
 import org.jsoup.Jsoup;
-import org.jsoup.helper.W3CDom;
 import org.jsoup.nodes.Document;
-import org.w3c.dom.Element;
+import org.jsoup.nodes.Element;
 import provider.LocalStorageDataProvider;
 
 import java.io.*;
@@ -69,7 +68,7 @@ public class NotesController {
         }
     }
 
-    public static File createHTMLString(Notes notes, File initFile) throws IOException {
+    public static String createHTMLString(Notes notes, File initFile) throws IOException {
         System.out.println("initFile: " + initFile.getPath());
 
 
@@ -80,25 +79,27 @@ public class NotesController {
         System.out.println("jsoupDoc: " + jsoupDoc.toString());
 
 
-        W3CDom documentJava = new W3CDom();
-        org.w3c.dom.Document w3cDoc = documentJava.fromJsoup(jsoupDoc);
+        //W3CDom documentJava = new W3CDom();
+        //org.w3c.dom.Document w3cDoc = documentJava.fromJsoup(jsoupDoc);
 
 
-        System.out.println("w3cDoc: " + w3cDoc.toString());
+        //System.out.println("w3cDoc: " + w3cDoc.toString());
 
-        System.out.println("w3cDoc: " + w3cDoc.getElementsByTagName("table"));
+        //System.out.println("w3cDoc: " + w3cDoc.getElementsByTagName("table"));
+
+
         //TODO Sometimes Nullpointer
-        org.w3c.dom.Element ele = (Element) w3cDoc.getElementsByTagName("table").item(0);
+        Element ele = jsoupDoc.getElementById("notesTable");
         System.out.println("ele: " + ele.toString());
 
         for (Notes.Note note : notes.notes) {
             System.out.println("note: " + note.note);
-            Element row = w3cDoc.createElement("tr");
-            row.setTextContent(note.note);
+            Element row = jsoupDoc.createElement("tr");
+            row.text(note.note);
             ele.appendChild(row);
         }
-        System.out.println("w3cDoc row: " + w3cDoc.getElementsByTagName("table").item(0).getChildNodes().item(0).toString());
+        System.out.println("jsoupDoc row: " + jsoupDoc.getElementById("notesTable").html());
 
-        return initFile;
+        return jsoupDoc.html();
     }
 }
