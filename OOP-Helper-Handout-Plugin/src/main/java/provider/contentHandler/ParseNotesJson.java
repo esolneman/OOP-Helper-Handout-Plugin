@@ -1,17 +1,14 @@
 package provider.contentHandler;
 
 import com.google.gson.*;
-import gherkin.lexer.No;
 import objects.Notes;
-import provider.LocalStorageDataProvider;
+import org.jsoup.Jsoup;
+import org.jsoup.helper.W3CDom;
+import org.jsoup.nodes.Document;
+import org.w3c.dom.Element;
 
 import java.io.*;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
 
 public class ParseNotesJson {
 
@@ -31,7 +28,7 @@ public class ParseNotesJson {
         return notesJsonObject;
     }
 
-    public static Notes getNotesFromJsonObject(JsonObject notesJsonObject) throws ParseException {
+    public static Notes getNotesFromJsonObject(JsonObject notesJsonObject) {
         JsonArray notesJsonArray = ((JsonArray) notesJsonObject.get("notes"));
         ArrayList<Notes.Note> notesArray = new ArrayList<>();
         for (JsonElement note : notesJsonArray) {
@@ -44,6 +41,25 @@ public class ParseNotesJson {
         }
         Notes notes = new Notes(notesArray);
         return notes;
+    }
+
+    public static Element getTableFromNotes(File htmlFile, Notes notes) throws IOException {
+        //https://stackoverflow.com/a/30258688
+        Document jsoupDoc = Jsoup.parse(htmlFile, "UTF-8");
+        W3CDom documentJava = new W3CDom();
+        org.w3c.dom.Document w3cDoc = documentJava.fromJsoup(jsoupDoc);
+        //TODO Sometimes Nullpointer
+        org.w3c.dom.Element ele = w3cDoc.getElementById("notesTable");
+
+
+        /*
+        ele.appendChild(TableRow)
+        parentElement.insertBefore(mark, ele);
+        mark.appendChild(ele);
+        webView.getEngine().load(newLocation);
+        */
+         return null;
+
     }
 
 }

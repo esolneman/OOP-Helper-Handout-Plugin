@@ -78,7 +78,7 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
             saveJsonObjectInFile(jsonObjectNotes, notesFile);
             System.out.println("BACKWARDS: " + ParseNotesJson.getNotesFromJsonObject(jsonObjectNotes).notes.get(0).note);
 
-        } catch (IOException | ParseException e) {
+        } catch (IOException e) {
             //TODO CATACH
             System.out.println(e);
         }

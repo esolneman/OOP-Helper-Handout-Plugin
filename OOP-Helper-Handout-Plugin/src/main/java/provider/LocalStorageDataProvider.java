@@ -2,8 +2,6 @@ package provider;
 
 import java.io.File;
 
-import static environment.Constants.*;
-
 public class LocalStorageDataProvider implements LocalStorageDataProviderInterface {
 
     public static File getHandoutFileDirectory() {
@@ -20,7 +18,6 @@ public class LocalStorageDataProvider implements LocalStorageDataProviderInterfa
 
     public static File getShortcutFileDirectory() {
         return RepoLocalStorageDataProvider.getShortcutFileDirectory();
-
     }
 
     public static File getCommonAssessmentCriteriaFileDirectory() {
@@ -38,10 +35,13 @@ public class LocalStorageDataProvider implements LocalStorageDataProviderInterfa
 
     public static File getVariablesDirectory() {
         return RepoLocalStorageDataProvider.getVariablesFile();
-
     }
 
     public static File getNotesFile() {
         return  UserLocalStorageDataProvider.getNotesFile();
+    }
+
+    public static File getInitNotesHtmlFile() {
+        return RepoLocalStorageDataProvider.getNotesInitFile();
     }
 }
