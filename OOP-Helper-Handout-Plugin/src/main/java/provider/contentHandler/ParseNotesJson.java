@@ -59,7 +59,6 @@ public class ParseNotesJson {
         webView.getEngine().load(newLocation);
         */
          return null;
-
     }
 
 }

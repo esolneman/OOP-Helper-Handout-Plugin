@@ -81,28 +81,10 @@ public class NotesScreen {
     }
 
     private void createContent() {
-/*
-        DefaultListModel dlm = new DefaultListModel();
-
-        String[] content = {"Some", "Random", "Words"};
-
-        for(String word : content){
-            dlm.addElement(word);
-        }
-
-        notesList.setModel(dlm);
-        textArea1.setText("dfghjkl");
-        htmlEditor = new HTMLEditor();
-        notesContent.add()
-        //notesScrollPane.add(textArea1);
-        //notesScrollPane.add(notesList);
-        noteContentPane.add(notesScrollPane);*/
-
-
         notesContent = new HandoutPluginFXPanel();
         Platform.setImplicitExit(false);
         Platform.runLater(() -> {
-            webView = webViewController.createWebViewWithListener(urlString);
+            webView = webViewController.createWebView(urlString);
             notesContent.showHTMLEditor(urlString, webView);
         });
     }

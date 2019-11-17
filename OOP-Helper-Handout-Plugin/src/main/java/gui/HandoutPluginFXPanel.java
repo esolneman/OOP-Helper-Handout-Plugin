@@ -1,5 +1,6 @@
 package gui;
 
+import controller.NotesController;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,6 +19,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import provider.LocalStorageDataProvider;
+import provider.contentHandler.ParseNotesJson;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -67,11 +69,12 @@ public class HandoutPluginFXPanel extends JFXPanel {
         Scene scene = new Scene(new Group());
 
         Button addEntryButton = new Button("Neuer Eintrag");
-        addEntryButton.setDisable(true);
         root.setAlignment(Pos.CENTER);
-        addEntryButton.setOnAction(arg0 ->
-                //webView.getEngine().loadContent(htmlEditor.getHtmlText())
-                root.getChildren().addAll(webView, addEntryButton, scrollPane));
+        addEntryButton.setOnAction(event -> {
+            NotesController.saveNewEntryInFile(htmlEditor.getHtmlText());
+            webView.getEngine().loadContent(urlString);
+        });
+
         root.getChildren().addAll(webView, addEntryButton, scrollPane);
 
         scene.setRoot(root);
