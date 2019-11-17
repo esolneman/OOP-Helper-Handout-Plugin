@@ -39,7 +39,9 @@ public class NotesController {
         try {
             reader = new JsonReader(new FileReader(notesFile));
             Notes allNotes = gson.fromJson(reader, Notes.class);
-            allNotes.notes.add(newNote);
+            if(allNotes != null){
+                allNotes.notes.add(newNote);
+            }
             saveNotesInFile(allNotes,notesFile);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -70,21 +72,13 @@ public class NotesController {
     public static String createHTMLString(Notes notes, File initFile) throws IOException {
         System.out.println("initFile: " + initFile.getPath());
 
+        System.out.println("notes: " + notes.notes.get(0).note);
 
 
         //https://stackoverflow.com/a/30258688
         Document jsoupDoc = Jsoup.parse(initFile, "UTF-8");
 
         System.out.println("jsoupDoc: " + jsoupDoc.toString());
-
-
-        //W3CDom documentJava = new W3CDom();
-        //org.w3c.dom.Document w3cDoc = documentJava.fromJsoup(jsoupDoc);
-
-
-        //System.out.println("w3cDoc: " + w3cDoc.toString());
-
-        //System.out.println("w3cDoc: " + w3cDoc.getElementsByTagName("table"));
 
 
         //TODO Sometimes Nullpointer

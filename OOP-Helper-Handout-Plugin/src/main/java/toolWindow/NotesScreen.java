@@ -56,13 +56,17 @@ public class NotesScreen {
         }
 
 
-        //content = LocalStorageDataProvider.getInitNotesHtmlFile();
-        try {
-            notesHtmlString = NotesController.createHTMLString(notes, initNotesFile);
-            //notesHtmlString = htmlFile.toURI().toURL().toString();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(notes != null){
+            try {
+                notesHtmlString = NotesController.createHTMLString(notes, initNotesFile);
+                //notesHtmlString = htmlFile.toURI().toURL().toString();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else{
+            notesHtmlString = null;
         }
+
 
 
         createContent();
