@@ -16,6 +16,7 @@ import webView.WebViewController;
 
 import javax.swing.*;
 import java.io.*;
+import java.net.MalformedURLException;
 
 public class NotesScreen {
     private HandoutPluginFXPanel notesContent;
@@ -41,10 +42,16 @@ public class NotesScreen {
         webViewController = new WebViewController();
 
         initNotesFile = LocalStorageDataProvider.getInitNotesHtmlFile();
-        notesFile = LocalStorageDataProvider.getNotesFile();
+        //notesFile = LocalStorageDataProvider.getNotesFile();
+        try {
+            notesHtmlString = initNotesFile.toURI().toURL().toString();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
         noteContentPane = new JPanel();
 
-        //TODO Write in Handler
+/*        //TODO Write in Handler
         // compare with notesController
         //https://www.mkyong.com/java/how-do-convert-java-object-to-from-json-format-gson-api/
         Gson gson = new Gson();
@@ -53,20 +60,7 @@ public class NotesScreen {
             notes = gson.fromJson(reader, Notes.class);
         } catch (IOException e) {
             e.printStackTrace();
-        }
-
-        if(notes != null){
-            try {
-                notesHtmlString = NotesController.createHTMLString(notes, initNotesFile);
-                //notesHtmlString = htmlFile.toURI().toURL().toString();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }else{
-            notesHtmlString = null;
-        }
-
-
+        }*/
 
         createContent();
         initToolWindowMenu();

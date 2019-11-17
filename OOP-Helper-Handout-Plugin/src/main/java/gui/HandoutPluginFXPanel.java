@@ -54,6 +54,9 @@ public class HandoutPluginFXPanel extends JFXPanel {
 
 
         String initalText;
+        System.out.println("HTML doc: " + doc.toString());
+        System.out.println("HTML HTML doc: " + doc.html());
+
         htmlEditor.setHtmlText(doc.toString());
 
         webView.getEngine().load(urlString);
@@ -75,7 +78,10 @@ public class HandoutPluginFXPanel extends JFXPanel {
             NotesController.saveNewEntryInFile(htmlEditor.getHtmlText());
             htmlEditor.setHtmlText(doc.toString());
             System.out.println("HTML URLS STRING LOAD: " + urlString);
-            webView.getEngine().load(urlString);
+            webView.getEngine().reload();
+            System.out.println("HTML UgetHtmlText: " + htmlEditor.getHtmlText());
+
+            //webView.getEngine().loadContent(htmlEditor.getHtmlText());
         });
 
         root.getChildren().addAll(webView, addEntryButton, scrollPane);

@@ -32,8 +32,16 @@ public class NotesController {
         Notes.Note newNote = new Notes.Note();
         newNote.note = htmlBody;
         newNote.date = new Date().toString();
+
+        try {
+            saveNoteInHtmlFile(newNote, LocalStorageDataProvider.getInitNotesHtmlFile());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
         //Notes.Note newNote = ParseNotesJson.getNoteFromString(htmlText);
-        File notesFile = LocalStorageDataProvider.getNotesFile();
+/*        File notesFile = LocalStorageDataProvider.getNotesFile();
 
         //TODO ADD SOURCE
         Gson gson = new Gson();
@@ -51,10 +59,9 @@ public class NotesController {
             JsonObject notes = ParseNotesJson.getJsonObjectFromNotes(allNotes);
             //saveNotesInFile(allNotes,notesFile);
             saveJsonObjectInFile(notes, notesFile);
-
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-        }
+        }*/
 
     }
 
@@ -91,10 +98,8 @@ public class NotesController {
         }
     }
 
-    public static String createHTMLString(Notes notes, File initFile) throws IOException {
+    public static void saveNoteInHtmlFile(Notes.Note note, File initFile) throws IOException {
         System.out.println("initFile: " + initFile.getPath());
-
-        System.out.println("notes: " + notes.notes.get(0).note);
 
 
         //https://stackoverflow.com/a/30258688
@@ -104,17 +109,16 @@ public class NotesController {
 
 
         //TODO Sometimes Nullpointer
-        Element ele = jsoupDoc.getElementById("notesTableBody");
+        Element ele = jsoupDoc.getElementById("notesList");
         System.out.println("ele: " + ele.toString());
 
-        for (Notes.Note note : notes.notes) {
-            System.out.println("note: " + note.note);
-            Element row = jsoupDoc.createElement("tr");
-            row.text(note.note);
-            ele.appendChild(row);
-        }
-        System.out.println("jsoupDoc row: " + jsoupDoc);
+        System.out.println("note: " + note.note);
+        Element divNote = jsoupDoc.createElement("div");
+        divNote.attr("id", "note");
+        ele.appendChild(divNote);
+        divNote.text(note.note);
 
+        System.out.println("jsoupDoc row: " + jsoupDoc);
 
 
         //https://www.baeldung.com/java-write-to-file#write-with-printwriter
@@ -128,10 +132,5 @@ public class NotesController {
         printWriter.print(jsoupDoc.toString());
         //printWriter.printf("Product name is %s and its price is %d $", "iPhone", 1000);
         printWriter.close();
-
-
-
-
-        return jsoupDoc.html();
     }
 }
