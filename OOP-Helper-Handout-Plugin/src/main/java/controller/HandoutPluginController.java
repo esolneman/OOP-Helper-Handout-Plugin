@@ -1,18 +1,27 @@
 package controller;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import eventHandling.OnGitEventListener;
 import gui.CommitChangesDialog;
+import objects.Notes;
 import provider.HandoutContentDataProviderInterface;
+import provider.LocalStorageDataProvider;
 import provider.RepoLocalStorageDataProvider;
+import provider.contentHandler.ParseNotesJson;
 import toolWindow.HandoutToolWindowFactory;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
+import java.text.ParseException;
 import java.util.ArrayList;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
+import java.util.Date;
 
 public class HandoutPluginController implements HandoutPluginControllerInterface, OnGitEventListener {
     private HandoutContentDataProviderInterface handoutDataProvider;
@@ -27,8 +36,8 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
         handoutDataProvider.addListener(this);
         toolWindowController = ToolWindowController.getInstance();
         updateHandoutContent();
-       // InformChangesPanel informChangesPanel = new InformChangesPanel(test);
-       // informChangesPanel.showPanel();
+        // InformChangesPanel informChangesPanel = new InformChangesPanel(test);
+        // informChangesPanel.showPanel();
     }
 
     public void updateHandoutContent() {
@@ -38,16 +47,31 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
     //TODO MANAGE UPDATE VIEWS....
     //TODO update Webview and other content of toolWindows
     //TODO enable / disable Actions
+
+
+    //TODO Create dummy file for user notes
+    //TODO Create dummy file for checklist
+
     public void onCloningRepositoryEvent(String notificationMessage, NotificationType messageType) {
         System.out.println("Performing callback after Asynchronous Task");
         File repoFile = new File(RepoLocalStorageDataProvider.getRepoLocalFile());
-        System.out.println(repoFile.getAbsolutePath());
         repoFile.setExecutable(false);
         repoFile.setReadable(true);
         repoFile.setWritable(false);
         repoFile.setReadOnly();
         toolWindowController.updateContent();
         BalloonPopupController.showNotification(project, notificationMessage, messageType);
+
+
+        //TODO create in Notes controller
+        File notesFile = LocalStorageDataProvider.getNotesFile();
+        notesFile.getParentFile().mkdirs();
+        try {
+            notesFile.createNewFile();
+        } catch (IOException e) {
+            //TODO CATACH
+            System.out.println(e);
+        }
 
         //update toolWindow
         //
@@ -73,5 +97,16 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
     public void onNotUpdatingRepositoryEvent(String notificationMessage, NotificationType messageType) {
         System.out.println("onNotUpdatingRepositoryEvent");
         BalloonPopupController.showNotification(project, notificationMessage, messageType);
+    }
+
+
+    private void saveJsonObjectInFile(JsonObject  jsonObject, File file) {
+        //https://stackoverflow.com/a/29319491
+        try (Writer writer = new FileWriter(file)) {
+            Gson gson = new GsonBuilder().create();
+            gson.toJson(jsonObject, writer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
