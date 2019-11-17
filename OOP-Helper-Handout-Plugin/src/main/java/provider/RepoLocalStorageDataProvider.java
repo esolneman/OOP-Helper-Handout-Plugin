@@ -70,4 +70,9 @@ public class RepoLocalStorageDataProvider implements RepoLocalStorageDataProvide
         File variablesFile = new File(getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE + VARIABLES_FILE);
         return variablesFile;
     }
+
+    public static File getNotesInitFile() {
+        File notesFile = new File(getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE + "/notes.html");
+        return notesFile;
+    }
 }

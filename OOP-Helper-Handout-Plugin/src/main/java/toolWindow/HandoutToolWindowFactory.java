@@ -28,6 +28,7 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, ToolWindowSe
     private Content shortcutContent;
     private Content specificCriteriaContent;
     private Content commonAssessmentCriteriaContent;
+    private Content notesContent;
 
 
     private HandoutContentScreen handoutContentScreen;
@@ -35,6 +36,7 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, ToolWindowSe
     private ShortcutScreen shortcutScreen;
     private SpecificAssessmentCriteriaScreen specificAssessmentCriteriaScreen;
     private CommonAssessmentCriteriaScreen commonAssessmentCriteriaScreen;
+    private NotesScreen notesScreen;
 
     // Create the tool window content.
     // is called when user clicks on tool window button
@@ -50,6 +52,7 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, ToolWindowSe
         shortcutScreen = new ShortcutScreen(toolWindow);
         specificAssessmentCriteriaScreen = new SpecificAssessmentCriteriaScreen(toolWindow);
         commonAssessmentCriteriaScreen = new CommonAssessmentCriteriaScreen(toolWindow);
+        notesScreen = new NotesScreen(toolWindow);
         addScreenContent();
     }
 
@@ -60,12 +63,14 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, ToolWindowSe
         shortcutContent = contentFactory.createContent(shortcutScreen.getContent(), "Shortcut", false);
         specificCriteriaContent = contentFactory.createContent(specificAssessmentCriteriaScreen.getContent(), "Bewertungskriterien", false);
         commonAssessmentCriteriaContent = contentFactory.createContent(commonAssessmentCriteriaScreen.getContent(), "Allg. Kritierien", false);
+        notesContent = contentFactory.createContent(notesScreen.getContent(), "Notizen", false);
 
         toolWindow.getContentManager().addContent(handoutContent);
         //toolWindow.getContentManager().addContent(checklistContent);
         toolWindow.getContentManager().addContent(shortcutContent);
         toolWindow.getContentManager().addContent(specificCriteriaContent);
         toolWindow.getContentManager().addContent(commonAssessmentCriteriaContent);
+        toolWindow.getContentManager().addContent(notesContent);
         //TODO: Decide which Tab is open when start ide
         toolWindow.getContentManager().setSelectedContent(handoutContent);
         callListener();

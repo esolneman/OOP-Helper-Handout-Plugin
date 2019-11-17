@@ -1,19 +1,31 @@
 package gui;
 
+import controller.NotesController;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.JFXPanel;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
+import javafx.scene.web.HTMLEditor;
 import javafx.scene.web.WebView;
 import objects.SpecificAssessmentCriteria;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import provider.LocalStorageDataProvider;
+import provider.contentHandler.ParseNotesJson;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
+
+import static environment.Messages.INITIAL_NOTES_TEXT;
 
 public class HandoutPluginFXPanel extends JFXPanel {
     public void showHandoutWebView(String urlString, WebView webView) {
@@ -26,12 +38,47 @@ public class HandoutPluginFXPanel extends JFXPanel {
         //});
     }
 
-    public void showContent() {
-        Platform.setImplicitExit(false);
-        Platform.runLater(() -> {
-            Label helloWord = new Label();
-            helloWord.setText("Hello World");
-            this.setScene(new Scene(helloWord, 50, 50));
+    //TODO Method for init HTML TEXT
+    //https://docs.oracle.com/javafx/2/ui_controls/editor.htm
+    public void showHTMLEditor(String urlString, WebView webView) {
+        final HTMLEditor htmlEditor = new HTMLEditor();
+        htmlEditor.setPrefHeight(250);
+        Date currentDate = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        String html = INITIAL_NOTES_TEXT;
+        //https://jsoup.org/cookbook/input/parse-document-from-string
+        Document doc = Jsoup.parse(html);
+        String date = formatter.format(currentDate);
+        Element dateElement = doc.getElementById("date");
+        dateElement.text(date);
+
+        htmlEditor.setHtmlText(doc.toString());
+
+        webView.getEngine().load(urlString);
+        webView.getEngine().setJavaScriptEnabled(true);
+
+        VBox root = new VBox();
+        root.setAlignment(Pos.CENTER);
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.getStyleClass().add("noborder-scroll-pane");
+        scrollPane.setStyle("-fx-background-color: white");
+        scrollPane.setContent(htmlEditor);
+        scrollPane.setFitToWidth(true);
+
+        Scene scene = new Scene(new Group());
+
+        Button addEntryButton = new Button("Neuer Eintrag");
+        root.setAlignment(Pos.CENTER);
+        addEntryButton.setOnAction(event -> {
+            NotesController.saveNewEntryInFile(htmlEditor.getHtmlText());
+            htmlEditor.setHtmlText(doc.toString());
+            webView.getEngine().reload();
         });
+
+        root.getChildren().addAll(webView, addEntryButton, scrollPane);
+
+        scene.setRoot(root);
+        this.setScene(scene);
+        this.show();
     }
 }
