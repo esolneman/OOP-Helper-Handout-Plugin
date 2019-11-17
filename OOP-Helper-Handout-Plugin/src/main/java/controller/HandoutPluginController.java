@@ -68,18 +68,6 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
         notesFile.getParentFile().mkdirs();
         try {
             notesFile.createNewFile();
-            Notes.Note firstNote = new Notes.Note();
-            firstNote.date = new Date().toString();
-            firstNote.note = "Dies ist eine Beispielnotiz. Du kannst hier vermeken, was du gemacht hast, wo du aufgehört hast zu arbeiten und was du als nächstees gemacht hast.";
-            ArrayList<Notes.Note> newList = new ArrayList<>();
-            newList.add(firstNote);
-            Notes notes = new Notes(newList);
-            System.out.println("NOTES NOTE: " + notes.notes.get(0).note);
-            JsonObject jsonObjectNotes = ParseNotesJson.getJsonObjectFromNotes(notes);
-            System.out.println("jsonObjectNotes NOTE: " + jsonObjectNotes.get("notes").getAsJsonArray().get(0).getAsJsonObject().get("note").getAsString());
-            saveJsonObjectInFile(jsonObjectNotes, notesFile);
-            System.out.println("BACKWARDS: " + ParseNotesJson.getNotesFromJsonObject(jsonObjectNotes).notes.get(0).note);
-
         } catch (IOException e) {
             //TODO CATACH
             System.out.println(e);

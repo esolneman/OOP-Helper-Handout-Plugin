@@ -22,9 +22,8 @@ public class NotesController {
     }
 
     public static void saveNewEntryInFile(String htmlText){
-        System.out.println("HTMLTEXT: " + htmlText);
         Document doc = Jsoup.parse(htmlText);
-        String htmlBody = doc.body().toString();
+        String htmlBody = doc.body().html();
         System.out.println("htmlBody: " + htmlBody);
 
         //create new Note
@@ -89,7 +88,7 @@ public class NotesController {
 
 
         //TODO Sometimes Nullpointer
-        Element ele = jsoupDoc.getElementById("notesTable");
+        Element ele = jsoupDoc.getElementById("notesTableBody");
         System.out.println("ele: " + ele.toString());
 
         for (Notes.Note note : notes.notes) {
@@ -98,7 +97,7 @@ public class NotesController {
             row.text(note.note);
             ele.appendChild(row);
         }
-        System.out.println("jsoupDoc row: " + jsoupDoc.getElementById("notesTable").html());
+        System.out.println("jsoupDoc row: " + jsoupDoc);
 
         return jsoupDoc.html();
     }
