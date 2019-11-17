@@ -5,6 +5,7 @@ import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.ActionToolbar;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.wm.ToolWindow;
+import controller.NotesController;
 import gui.HandoutPluginFXPanel;
 import javafx.application.Platform;
 import javafx.scene.web.HTMLEditor;
@@ -15,7 +16,6 @@ import webView.WebViewController;
 
 import javax.swing.*;
 import java.io.*;
-import java.net.MalformedURLException;
 
 public class NotesScreen {
     private HandoutPluginFXPanel notesContent;
@@ -28,10 +28,10 @@ public class NotesScreen {
     private JScrollPane notesScrollPane;
     private JTextArea textArea1;
     private HTMLEditor htmlEditor;
-    private static File content;
+    private static File initNotesFile;
     private WebViewController webViewController;
-
-    private String urlString;
+    private String notesHtmlString;
+    private File htmlFile;
     private static WebView webView;
 
     public NotesScreen(ToolWindow toolWindow) {
@@ -40,10 +40,12 @@ public class NotesScreen {
         noteToolWindow = toolWindow;
         webViewController = new WebViewController();
 
+        initNotesFile = LocalStorageDataProvider.getInitNotesHtmlFile();
         notesFile = LocalStorageDataProvider.getNotesFile();
         noteContentPane = new JPanel();
 
         //TODO Write in Handler
+        // compare with notesController
         //https://www.mkyong.com/java/how-do-convert-java-object-to-from-json-format-gson-api/
         Gson gson = new Gson();
         try (Reader reader = new FileReader(notesFile.getPath())) {
@@ -54,14 +56,14 @@ public class NotesScreen {
         }
 
 
-        content = LocalStorageDataProvider.getNotesFile();
-        System.out.println("content HandoutContentScreen: " + content);
-
+        //content = LocalStorageDataProvider.getInitNotesHtmlFile();
         try {
-            urlString = content.toURI().toURL().toString();
-        } catch (MalformedURLException e) {
+            htmlFile = NotesController.createHTMLString(notes, initNotesFile);
+            notesHtmlString = htmlFile.toURI().toURL().toString();
+        } catch (IOException e) {
             e.printStackTrace();
         }
+
 
         createContent();
         initToolWindowMenu();
@@ -84,8 +86,8 @@ public class NotesScreen {
         notesContent = new HandoutPluginFXPanel();
         Platform.setImplicitExit(false);
         Platform.runLater(() -> {
-            webView = webViewController.createWebView(urlString);
-            notesContent.showHTMLEditor(urlString, webView);
+            webView = webViewController.createWebView(notesHtmlString);
+            notesContent.showHTMLEditor(notesHtmlString, webView);
         });
     }
 
