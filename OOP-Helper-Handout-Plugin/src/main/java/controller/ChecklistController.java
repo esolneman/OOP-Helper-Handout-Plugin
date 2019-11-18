@@ -21,7 +21,6 @@ public class ChecklistController {
     public static void saveTableDataInFile(ObservableList<ChecklistTableTask> userData){
         System.out.println("saveTableDataInFile" + userData.toString());
         Checklist updatedChecklist = ParseChecklistJSON.getJsonFromChecklistTableData(userData);
-
         //https://stackoverflow.com/a/29319491
         try (Writer writer = new FileWriter(LocalStorageDataProvider.getChecklistUserData())) {
             Gson gson = new GsonBuilder().create();

@@ -52,13 +52,12 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
         }
 
         //TODO IF AVAILALABLE -> CREATE TXT
-        br = null;
         try {
             br = new BufferedReader(new FileReader(userData));
             JsonParser parser = new JsonParser();
             userChecklistJson = parser.parse(br).getAsJsonObject();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        } catch (FileNotFoundException |IllegalStateException e) {
+            System.out.println("OHOH");
         }
 
         createContent();

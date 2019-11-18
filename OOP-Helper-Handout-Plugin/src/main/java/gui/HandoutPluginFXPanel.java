@@ -131,19 +131,13 @@ public class HandoutPluginFXPanel extends JFXPanel {
         //descriptionCol.setStyle();
         descriptionCol.setCellFactory(TextFieldTableCell.forTableColumn());
         //https://docs.oracle.com/javafx/2/ui_controls/table-view.htm#CEGFCFEB
-        descriptionCol.setOnEditCommit(cellEditEvent -> {
-            System.out.println(" cellEditEvent: ");
-            System.out.println(" cellEditEvent: " + cellEditEvent.getTarget().toString());
-            new EventHandler<TableColumn.CellEditEvent<ChecklistTableTask, String>>() {
-                @Override
-                public void handle(TableColumn.CellEditEvent<ChecklistTableTask, String> checklistTableTaskStringCellEditEvent) {
+        descriptionCol.setOnEditCommit(
+                (EventHandler<TableColumn.CellEditEvent<ChecklistTableTask, String>>) checklistTableTaskStringCellEditEvent -> {
                     System.out.println("OLD VALUE: " + checklistTableTaskStringCellEditEvent.getOldValue());
                     checklistTableTaskStringCellEditEvent.getTableView()
                             .getItems().get(checklistTableTaskStringCellEditEvent.getTablePosition().getRow()).setTaskDescription(checklistTableTaskStringCellEditEvent.getNewValue());
                     System.out.println("NEW VALUE: " + checklistTableTaskStringCellEditEvent.getNewValue());
-                    ChecklistController.saveTableDataInFile((ObservableList<ChecklistTableTask>)checklistTableTaskStringCellEditEvent.getTableView().getUserData());
-                }
-                };
+                    ChecklistController.saveTableDataInFile(userData);
             });
         final TextField addDescription = new TextField();
         addDescription.setPromptText("Neue Aufgabe");

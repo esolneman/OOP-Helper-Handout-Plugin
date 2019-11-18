@@ -2,6 +2,7 @@ package controller;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.components.ServiceManager;
@@ -79,6 +80,10 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
         checklistUserFile.getParentFile().mkdirs();
         try {
             checklistUserFile.createNewFile();
+            JsonObject checklistJson = new JsonObject();
+            JsonArray tasks = new JsonArray();
+            checklistJson.add("checklist", tasks);
+            saveJsonObjectInFile(checklistJson,checklistUserFile);
         } catch (IOException ex) {
             System.out.println("FILE NOT Created");
         }

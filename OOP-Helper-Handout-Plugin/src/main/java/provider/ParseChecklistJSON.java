@@ -34,6 +34,8 @@ public class ParseChecklistJSON {
             tasks.add(task);
         }
 /*
+        JsonObject checklistJson = new JsonObject();
+
         JsonObject task = new JsonObject();
         checklistJson.add("checklist", tasks);
         task.addProperty("task", "Create *Player* class");
@@ -83,7 +85,11 @@ public class ParseChecklistJSON {
     //TODO Combine Methods
     //https://stackoverflow.com/a/34510715
     public static Checklist checklistJSONHandler(JsonObject checklistJson) {
+        System.out.println(checklistJson.toString());
         JsonArray checklist = ((JsonArray) checklistJson.get("checklist"));
+        System.out.println(checklist.toString());
+        System.out.println(checklist.size());
+
         ArrayList<Checklist.Tasks> tasks = new ArrayList<>();
         for (JsonElement task : checklist) {
             String taskName = task.getAsJsonObject().get("taskDescription").toString();

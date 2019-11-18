@@ -189,13 +189,6 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         }
     }
 
-    private void replaceFile(File newData, File oldData) throws IOException {
-        //https://stackoverflow.com/a/17169576
-        Path from = newData.toPath(); //convert from File to Path
-        Path to = Paths.get(oldData.getPath()); //convert from String to Path
-        Files.copy(from, to, StandardCopyOption.REPLACE_EXISTING);
-    }
-
     private void callListener(String message, NotificationType messageType) {
         if (onEventListener != null) {
             onEventListener.onCloningRepositoryEvent(message, messageType);
