@@ -1,5 +1,6 @@
 package gui;
 
+import controller.ChecklistController;
 import controller.NotesController;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.JFXPanel;
@@ -126,6 +127,8 @@ public class HandoutPluginFXPanel extends JFXPanel {
         userTable.setEditable(true);
 
         TableColumn descriptionCol = userTable.getColumns().get(0);
+        //TODO aDD css to table
+        //descriptionCol.setStyle();
         descriptionCol.setCellFactory(TextFieldTableCell.forTableColumn());
         //https://docs.oracle.com/javafx/2/ui_controls/table-view.htm#CEGFCFEB
         descriptionCol.setOnEditCommit(cellEditEvent -> {
@@ -138,12 +141,15 @@ public class HandoutPluginFXPanel extends JFXPanel {
                     checklistTableTaskStringCellEditEvent.getTableView()
                             .getItems().get(checklistTableTaskStringCellEditEvent.getTablePosition().getRow()).setTaskDescription(checklistTableTaskStringCellEditEvent.getNewValue());
                     System.out.println("NEW VALUE: " + checklistTableTaskStringCellEditEvent.getNewValue());
+                    ChecklistController.saveTableDataInFile((ObservableList<ChecklistTableTask>)checklistTableTaskStringCellEditEvent.getTableView().getUserData());
                 }
                 };
             });
         final TextField addDescription = new TextField();
         addDescription.setPromptText("Neue Aufgabe");
         addDescription.setMaxWidth(descriptionCol.getPrefWidth());
+        //TODO ENTER POSSIBLE
+        //addDescription.addEventHandler();
 
         final Button addButton = new Button("Add");
         addButton.setOnAction(actionEvent -> {
@@ -152,6 +158,7 @@ public class HandoutPluginFXPanel extends JFXPanel {
                 //TODO save DATA in Json File :)
                 userData.add(new ChecklistTableTask(addDescription.getText(), false));
                 addDescription.clear();
+                ChecklistController.saveTableDataInFile(userData);
             }
 
         });

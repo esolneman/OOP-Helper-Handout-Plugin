@@ -73,6 +73,16 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
             System.out.println(e);
         }
 
+
+        //TODO create in Checklsit controller
+        File checklistUserFile = LocalStorageDataProvider.getChecklistUserData();
+        checklistUserFile.getParentFile().mkdirs();
+        try {
+            checklistUserFile.createNewFile();
+        } catch (IOException ex) {
+            System.out.println("FILE NOT Created");
+        }
+
         //update toolWindow
         //
         /*Path file = Paths.get(repoFile.getAbsolutePath());

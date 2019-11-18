@@ -3,7 +3,9 @@ package provider;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import javafx.collections.ObservableList;
 import objects.Checklist;
+import objects.ChecklistTableTask;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -84,7 +86,7 @@ public class ParseChecklistJSON {
         JsonArray checklist = ((JsonArray) checklistJson.get("checklist"));
         ArrayList<Checklist.Tasks> tasks = new ArrayList<>();
         for (JsonElement task : checklist) {
-            String taskName = task.getAsJsonObject().get("task").toString();
+            String taskName = task.getAsJsonObject().get("taskDescription").toString();
             System.out.println("taskName: " + taskName);
 
             Boolean checked = task.getAsJsonObject().get("checked").getAsBoolean();
@@ -122,5 +124,20 @@ public class ParseChecklistJSON {
     }
 
 
+    public static Checklist getJsonFromChecklistTableData(ObservableList<ChecklistTableTask> userData) {
+        Checklist updatedChecklist;
+        ArrayList<Checklist.Tasks> tasksArrayList = new ArrayList<>();
+        for (int i = 0; i < userData.size(); i++) {
+            String description = userData.get(i).taskDescription.getValue();
+            Boolean checked = userData.get(i).checked.getValue();
+            Checklist.Tasks newTask = new Checklist.Tasks.TasksBuilder(description, checked).build();
+            tasksArrayList.add(newTask);
+            System.out.println("NEW CHEKLCIST description: " + description);
+            System.out.println("NEW CHEKLCIST: " + tasksArrayList.get(i).taskDescription);
 
+        }
+        updatedChecklist = new Checklist();
+        updatedChecklist.setTasks(tasksArrayList);
+        return updatedChecklist;
+    }
 }
