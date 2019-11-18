@@ -76,6 +76,7 @@ public class NotesScreen {
 
     private JComponent createToolbarPanel() {
         final DefaultActionGroup notesActionGroup = new DefaultActionGroup();
+        //TODO OHHHHHHHHHH
         notesActionGroup.add(ActionManager.getInstance().getAction("Handout.Download"));
         final ActionToolbar actionToolbar = ActionManager.getInstance().createActionToolbar("NotesTool", notesActionGroup, true);
         return actionToolbar.getComponent();

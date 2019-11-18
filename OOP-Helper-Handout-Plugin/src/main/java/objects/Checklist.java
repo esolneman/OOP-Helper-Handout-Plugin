@@ -1,27 +1,43 @@
 package objects;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Checklist {
 
-    private ArrayList<Tasks> tasks;
+    public ArrayList<Tasks> tasks;
 
     public static class Tasks {
-        private String task;
-        private ArrayList<String> childTasks;
+        public String taskDescription;
+        public boolean checked;
+        public String id;
 
-        public Tasks(String task, ArrayList<String> childTasks){
-            this.task = task;
-            this.childTasks = childTasks;
+        //TODO Quelle: Efefective Java Page 13-14 Kapitel 2.2 - Thema 2
+        public static class TasksBuilder {
+
+            private String taskDescription;
+            private boolean checked;
+
+            private String id;
+
+            public TasksBuilder(String taskDescription, boolean checked){
+                this.taskDescription = taskDescription;
+                this.checked = checked;
+            }
+
+            public TasksBuilder id(String id){
+                this.id = id;
+                return this;
+            }
+
+            public Tasks build(){
+                return new Tasks(this);
+            }
         }
 
-        public String getTask(){
-            return task;
-        }
-
-        public ArrayList<String> getChildTasks(){
-            return childTasks;
+        private Tasks (TasksBuilder builder){
+            taskDescription = builder.taskDescription;
+            checked = builder.checked;
+            id = builder.id;
         }
     }
 
@@ -32,5 +48,4 @@ public class Checklist {
     public void setTasks(ArrayList<Tasks>  tasks){
         this.tasks = tasks;
     }
-
 }

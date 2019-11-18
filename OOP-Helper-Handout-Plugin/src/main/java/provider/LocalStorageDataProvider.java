@@ -29,6 +29,10 @@ public class LocalStorageDataProvider implements LocalStorageDataProviderInterfa
         return RepoLocalStorageDataProvider.getChecklistFile();
     }
 
+    public static File getChecklistUserData() {
+        return UserLocalStorageDataProvider.getChecklistFile();
+    }
+
     public static File getCodingStylesFileDirectory() {
         return RepoLocalStorageDataProvider.getCodingStylesFile();
     }
@@ -38,7 +42,7 @@ public class LocalStorageDataProvider implements LocalStorageDataProviderInterfa
     }
 
     public static File getNotesFile() {
-        return  UserLocalStorageDataProvider.getNotesFile();
+        return UserLocalStorageDataProvider.getNotesFile();
     }
 
     public static File getInitNotesHtmlFile() {
