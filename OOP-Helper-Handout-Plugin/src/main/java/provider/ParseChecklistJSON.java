@@ -35,6 +35,7 @@ public class ParseChecklistJSON {
         }
 /*
         JsonObject checklistJson = new JsonObject();
+        JsonArray tasks = new JsonArray();
 
         JsonObject task = new JsonObject();
         checklistJson.add("checklist", tasks);
@@ -85,18 +86,11 @@ public class ParseChecklistJSON {
     //TODO Combine Methods
     //https://stackoverflow.com/a/34510715
     public static Checklist checklistJSONHandler(JsonObject checklistJson) {
-        System.out.println(checklistJson.toString());
         JsonArray checklist = ((JsonArray) checklistJson.get("checklist"));
-        System.out.println(checklist.toString());
-        System.out.println(checklist.size());
-
         ArrayList<Checklist.Tasks> tasks = new ArrayList<>();
         for (JsonElement task : checklist) {
             String taskName = task.getAsJsonObject().get("taskDescription").toString();
-            System.out.println("taskName: " + taskName);
-
             Boolean checked = task.getAsJsonObject().get("checked").getAsBoolean();
-            System.out.println("checked: " + checked);
 
             //TODO Quelle: Efefective Java Page 13-14 Kapitel 2.2 - Thema 2
             Checklist.Tasks newTask = new Checklist.Tasks.TasksBuilder(taskName, checked).build();
@@ -112,13 +106,8 @@ public class ParseChecklistJSON {
         ArrayList<Checklist.Tasks> tasks = new ArrayList<>();
         for (JsonElement task : checklist) {
             String taskName = task.getAsJsonObject().get("task").toString();
-            System.out.println("taskName: " + taskName);
-
             Boolean checked = task.getAsJsonObject().get("checked").getAsBoolean();
-            System.out.println("checked: " + checked);
-
             String id = task.getAsJsonObject().get("id").toString();
-            System.out.println("id: " + id);
             //TODO Quelle: Efefective Java Page 13-14 Kapitel 2.2 - Thema 2
             Checklist.Tasks newTask = new Checklist.Tasks.TasksBuilder(taskName, checked)
                     .id(id).build();
@@ -130,7 +119,7 @@ public class ParseChecklistJSON {
     }
 
 
-    public static Checklist getJsonFromChecklistTableData(ObservableList<ChecklistTableTask> userData) {
+    public static JsonArray getJsonFromChecklistTableData(ObservableList<ChecklistTableTask> userData) {
         Checklist updatedChecklist;
         ArrayList<Checklist.Tasks> tasksArrayList = new ArrayList<>();
         for (int i = 0; i < userData.size(); i++) {
@@ -144,6 +133,16 @@ public class ParseChecklistJSON {
         }
         updatedChecklist = new Checklist();
         updatedChecklist.setTasks(tasksArrayList);
-        return updatedChecklist;
+        JsonObject updatedJson = new JsonObject();
+        JsonArray tasks = new JsonArray();
+        updatedJson.add("checklist", tasks);
+
+        for (int i = 0; i < updatedChecklist.tasks.size(); i++) {
+            JsonObject task = new JsonObject();
+            task.addProperty("taskDescription", updatedChecklist.tasks.get(i).taskDescription);
+            task.addProperty("checked", updatedChecklist.tasks.get(i).checked);
+            tasks.add(task);
+        }
+        return tasks;
     }
 }

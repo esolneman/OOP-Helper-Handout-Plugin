@@ -127,6 +127,12 @@ public class HandoutPluginFXPanel extends JFXPanel {
         userTable.setEditable(true);
 
         TableColumn descriptionCol = userTable.getColumns().get(0);
+
+        //TableColumn deleteButton = new TableColumn();
+        //deleteButton.setMaxWidth(20);
+        //deleteButton.setCellValueFactory();
+       // descriptionCol.getColumns().add(deleteButton);
+
         //TODO aDD css to table
         //descriptionCol.setStyle();
         descriptionCol.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -171,12 +177,18 @@ public class HandoutPluginFXPanel extends JFXPanel {
 
     private TableView<ChecklistTableTask> createTable(ObservableList<ChecklistTableTask> data) {
         TableView<ChecklistTableTask> table = new TableView<>();
+        //TODO MAKE IT RESPONSIVE
+        Double tableWidth = 300.00;
+        System.out.println("PANEL WIDTH " + this.getWidth());
+        System.out.println("TABLE WIDTH " + tableWidth);
+        System.out.println("COL WIDTH " + tableWidth/2);
+
+        table.setMinWidth(tableWidth);
         TableColumn taskDescriptionCol = new TableColumn("Aufgabe");
-        taskDescriptionCol.setMinWidth(100);
         taskDescriptionCol.setCellValueFactory(new PropertyValueFactory<Checklist.Tasks, String>("taskDescription"));
 
         TableColumn taskCheckedCol = new TableColumn("Erledigt");
-        taskCheckedCol.setMinWidth(100);
+        taskCheckedCol.setMaxWidth(25);
         taskCheckedCol.setCellValueFactory(new PropertyValueFactory<Checklist.Tasks, Boolean>("checked"));
         //https://stackoverflow.com/q/20879242
         taskCheckedCol.setCellFactory((Callback<TableColumn<Checklist.Tasks, Boolean>, TableCell<Checklist.Tasks, Boolean>>) p -> new CheckBoxTableCell<>());
