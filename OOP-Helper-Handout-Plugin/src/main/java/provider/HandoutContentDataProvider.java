@@ -185,7 +185,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
             asyncExecutor.runAsyncClone(updateTask);
         } else {
             System.out.println("commitMessages empty");
-            callListenerNotUpdating("Handout Daten sind bereits auf dem aktuellsten Stand." , NotificationType.INFORMATION);
+            callListener(commitMessages);
         }
     }
 
@@ -214,6 +214,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         }
     }
 
+    //TODO test that user not delted
     private void deleteFile(File file) {
         file.delete();
     }

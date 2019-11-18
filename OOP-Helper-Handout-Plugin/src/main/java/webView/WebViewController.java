@@ -18,8 +18,7 @@ public class WebViewController {
     private WebViewLinkListener webViewLinkListener;
     private String urlString;
 
-    public WebViewController(){
-    }
+    public WebViewController(){}
 
     public WebView createWebViewWithListener(String urlString){
         this.urlString = urlString;
@@ -45,6 +44,7 @@ public class WebViewController {
         System.out.println("heading: " + heading);
         //TODO: check or if (class ref)
         if(heading.contains(" ")){
+            System.out.println("heading contains space: " + heading);
             //https://stackoverflow.com/a/1892778
             heading = WordUtils.capitalize(heading);
             //https://stackoverflow.com/a/15633284
@@ -96,6 +96,26 @@ public class WebViewController {
         });
     }
 
+    public void goToHeading(String heading){
+        System.out.println("heading: " + heading);
+        //TODO: check or if (class ref)
+        if(heading.contains(" ")){
+            System.out.println("heading contains space: " + heading);
+            //https://stackoverflow.com/a/1892778
+            heading = WordUtils.capitalize(heading);
+            //https://stackoverflow.com/a/15633284
+            heading = heading.replaceAll("\\s+","");
+        }
+        String newLocation = urlString + "#" + heading;
+        System.out.println(newLocation);
+        Platform.setImplicitExit(false);
+        Platform.runLater(() -> {
+            //TODO new method
+            webView.getEngine().load(newLocation);
+        });
+
+    }
+
     public void updateWebViewContent() {
         // TODO Error once
         // TODO test if load urlAtring is working
@@ -103,6 +123,17 @@ public class WebViewController {
             Platform.setImplicitExit(false);
             Platform.runLater(() -> {
                 webView.getEngine().reload();
+            });
+        }
+    }
+
+    public void changeURL(String url) {
+        // TODO Error once
+        // TODO test if load urlAtring is working
+        if(webView != null){
+            Platform.setImplicitExit(false);
+            Platform.runLater(() -> {
+                webView.getEngine().load(url);
             });
         }
     }

@@ -11,6 +11,7 @@ import com.intellij.ui.content.ContentFactory;
 import eventHandling.OnToolWindowCreatedListener;
 import services.ToolWindowServiceInterface;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,17 +24,19 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, ToolWindowSe
     private ContentFactory contentFactory;
 
     private Content handoutContent;
-    private Content checklistContent;
+    //private Content checklistContent;
     private Content shortcutContent;
     private Content specificCriteriaContent;
     private Content commonAssessmentCriteriaContent;
+    private Content notesContent;
 
 
     private HandoutContentScreen handoutContentScreen;
-    private ChecklistScreen checklistScreen;
+    //private ChecklistScreen checklistScreen;
     private ShortcutScreen shortcutScreen;
     private SpecificAssessmentCriteriaScreen specificAssessmentCriteriaScreen;
     private CommonAssessmentCriteriaScreen commonAssessmentCriteriaScreen;
+    private NotesScreen notesScreen;
 
     // Create the tool window content.
     // is called when user clicks on tool window button
@@ -46,26 +49,28 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, ToolWindowSe
 
     private void initScreens() {
         handoutContentScreen = new HandoutContentScreen(toolWindow);
-        checklistScreen = new ChecklistScreen(toolWindow);
         shortcutScreen = new ShortcutScreen(toolWindow);
         specificAssessmentCriteriaScreen = new SpecificAssessmentCriteriaScreen(toolWindow);
         commonAssessmentCriteriaScreen = new CommonAssessmentCriteriaScreen(toolWindow);
+        notesScreen = new NotesScreen(toolWindow);
         addScreenContent();
     }
 
     private void addScreenContent() {
         handoutContent = contentFactory.createContent(handoutContentScreen.getContent(), "Handout", false);
         handoutContent.setPreferredFocusableComponent(handoutContentScreen.getContent());
-        checklistContent = contentFactory.createContent(checklistScreen.getContent(), "Checklist", false);
+        //checklistContent = contentFactory.createContent(checklistScreen.getContent(), "Checklist", false);
         shortcutContent = contentFactory.createContent(shortcutScreen.getContent(), "Shortcut", false);
         specificCriteriaContent = contentFactory.createContent(specificAssessmentCriteriaScreen.getContent(), "Bewertungskriterien", false);
         commonAssessmentCriteriaContent = contentFactory.createContent(commonAssessmentCriteriaScreen.getContent(), "Allg. Kritierien", false);
+        notesContent = contentFactory.createContent(notesScreen.getContent(), "Notizen", false);
 
         toolWindow.getContentManager().addContent(handoutContent);
-        toolWindow.getContentManager().addContent(checklistContent);
+        //toolWindow.getContentManager().addContent(checklistContent);
         toolWindow.getContentManager().addContent(shortcutContent);
         toolWindow.getContentManager().addContent(specificCriteriaContent);
         toolWindow.getContentManager().addContent(commonAssessmentCriteriaContent);
+        toolWindow.getContentManager().addContent(notesContent);
         //TODO: Decide which Tab is open when start ide
         toolWindow.getContentManager().setSelectedContent(handoutContent);
         callListener();
@@ -82,8 +87,10 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, ToolWindowSe
 
     public void updateContent() {
         System.out.println("Update ToolWindows");
+        //TODO Interface --> alle?
         handoutContentScreen.updateContent();
         specificAssessmentCriteriaScreen.updateContent();
+        commonAssessmentCriteriaScreen.updateContent();
     }
 
     @Override

@@ -10,4 +10,9 @@ public class UserLocalStorageDataProvider implements UserLocalStorageDataProvide
         File checklistFile = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + USER_LOCAL_STORAGE_FILE + CHECKLIST_FILE_NAME);
         return checklistFile;
     }
+
+    public static File getNotesFile() {
+        File notesFile = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + USER_LOCAL_STORAGE_FILE + NOTES_FILE);
+        return notesFile;
+    }
 }

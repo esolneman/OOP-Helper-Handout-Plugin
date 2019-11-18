@@ -50,10 +50,6 @@ public class SpecificAssessmentCriteriaScreen extends SimpleToolWindowPanel{
         });
     }
 
-    public JComponent getToolbar(){
-        return toolWindowPanel.getToolbar();
-    }
-
     public JPanel getContent() {
         return toolWindowPanel;
     }
@@ -61,8 +57,6 @@ public class SpecificAssessmentCriteriaScreen extends SimpleToolWindowPanel{
     public void updateContent() {
         webViewController.updateWebViewContent();
     }
-
-
 }
 
 

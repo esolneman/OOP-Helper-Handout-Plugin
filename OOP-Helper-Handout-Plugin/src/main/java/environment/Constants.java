@@ -14,7 +14,12 @@ public class Constants {
     public static final String HANDOUT_FILE_NAME = "/index.html";
     public static final String CHECKLIST_FILE_NAME = "/checklist.txt";
     public static final String SHORTCUT_FILE_NAME = "/shortcuts.html";
-    public static final String COMMON_ASSESSMENT_CRITERIA_FILE_NAME = "/common-assessment-criteria.md";
+    public static final String CODING_STYLES_FILE = "/CodingStyles/OOP_17WS_Handout_CodingStyle.html";
+    public static final String VARIABLES_FILE = "/Variables/OOP_17WS_Handout_Variablen.html";
+    public static final String NOTES_FILE = "/notes.json";
+
+
+    public static final String COMMON_ASSESSMENT_CRITERIA_FILE_NAME = "/common-assessment-criteria.html";
     public static final String SPECIFIC_ASSESSMENT_CRITERIA_FILE_NAME = "/specific-assessment-criteria.html";
 
     public static final String HANDOUT_PDF_FILE_NAME = "/handout.pdf";
