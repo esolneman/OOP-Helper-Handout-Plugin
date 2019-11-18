@@ -73,60 +73,33 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
 
     private void createContent() {
         checklistContent = new HandoutPluginFXPanel();
-        TableView<ChecklistTableTask> table = new TableView<>();
         Checklist checklist = ParseChecklistJSON.checklistJSONHandler(checklistJson);
         Object[] columnNames = {"Aufgabe",  "Erledigt"};
-        final ObservableList<ChecklistTableTask> data = FXCollections.observableArrayList();
+        final ObservableList<ChecklistTableTask> predefinedData = FXCollections.observableArrayList();
         for (int i = 0; i < checklist.tasks.size(); i++) {
             String taskName = checklist.tasks.get(i).taskDescription;
             Boolean checked = checklist.tasks.get(i).checked;
             ChecklistTableTask newTask = new ChecklistTableTask(taskName, checked);
-            data.add(newTask);
-            System.out.println("OBSERVERABLE: " + data.get(i).taskDescription);
+            predefinedData.add(newTask);
         }
+
+        final ObservableList<ChecklistTableTask> userData = FXCollections.observableArrayList();
+        if(userChecklistJson!= null){
+            Checklist userChecklist = ParseChecklistJSON.checklistJSONHandler(userChecklistJson);
+            for (int i = 0; i < userChecklist.tasks.size(); i++) {
+                String taskName = checklist.tasks.get(i).taskDescription;
+                Boolean checked = checklist.tasks.get(i).checked;
+                ChecklistTableTask newTask = new ChecklistTableTask(taskName, checked);
+                userData.add(newTask);
+            }
+        }
+
 
         Platform.setImplicitExit(false);
         Platform.runLater(() -> {
-            checklistContent.showPredefinedChecklistTable(data, table);
+            checklistContent.showChecklistTable(predefinedData, userData);
         });
 
-
-/*        //https://stackoverflow.com/a/7392163
-        DefaultTableModel model = new DefaultTableModel(data, columnNames);
-        //TODO INIT USER LOCATION FILE WHEN START IDE
-        //predefinedTable.setPreferredScrollableViewportSize(predefinedTable.getMaximumSize());
-        predefinedChecklistTable = new JTable(model) {
-            private static final long serialVersionUID = 1L;
-            @Override
-            public Class getColumnClass(int column) {
-                switch (column) {
-                    case 0:
-                        return String.class;
-                    default:
-                        return Boolean.class;
-                }
-            }
-
-            public boolean isCellEditable(int row, int column) {
-                return column == 1;
-            }
-        };
-        predefinedChecklistTable.setEditingColumn(1);
-        predefinedChecklistTable.setPreferredScrollableViewportSize(predefinedChecklistTable.getPreferredSize());
-        predefinedChecklistTable.setFillsViewportHeight(true);
-        JScrollBar scrollBar = new JScrollBar();
-        scrollBar.add(predefinedChecklistTable);
-        checklistContent.add(predefinedChecklistTable);*/
-
-
-        //create checklist for user data
-        if(userChecklistJson!= null){
-            Checklist userChecklsit = ParseChecklistJSON.checklistJSONHandler(userChecklistJson);
-            for (Checklist.Tasks task : userChecklsit.tasks) {
-               // ChecklistCheckbox checkbox = new ChecklistCheckbox(task.taskDescription);
-               // checklistContent.add(checkbox);
-            }
-        }
     }
 
     private JComponent createToolbarPanel() {
