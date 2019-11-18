@@ -7,7 +7,7 @@ import com.intellij.openapi.actionSystem.ActionToolbar;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
-import gui.ChecklistTable;
+import gui.HandoutPluginFXPanel;
 import objects.Checklist;
 import provider.LocalStorageDataProvider;
 import provider.ParseChecklistJSON;
@@ -20,10 +20,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 
 public class ChecklistScreen extends SimpleToolWindowPanel {
-    private ToolWindow handoutToolWindow;
-    private JPanel checklistContent;
+    private HandoutPluginFXPanel checklistContent;
+    private ToolWindow checklistToolWindow;
     private JTable predefinedChecklistTable;
-    private JTextField predefiniedDataHeader;
     private JsonObject checklistJson;
     private JsonObject userChecklistJson;
 
@@ -33,11 +32,8 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
 
     public ChecklistScreen(ToolWindow toolWindow) {
         super(true, true);
-       //GridLayoutManager contentLayout = new GridLayoutManager(2,1);
-        checklistContent = new JPanel();
-        //checklistContent.setLayout(contentLayout);
         toolWindowPanel = new SimpleToolWindowPanel(true);
-        handoutToolWindow = toolWindow;
+        checklistToolWindow = toolWindow;
         file = LocalStorageDataProvider.getChecklistData();
         userData = LocalStorageDataProvider.getChecklistUserData();
         //TODO Create new Method
@@ -63,7 +59,6 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
 
         createContent();
         initToolWindowMenu();
-        checklistContent.add(predefiniedDataHeader);
     }
 
     private void initToolWindowMenu() {
@@ -127,9 +122,5 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
 
     public JPanel getContent() {
         return toolWindowPanel;
-    }
-
-    private void createUIComponents() {
-        // TODO: place custom component creation code here
     }
 }
