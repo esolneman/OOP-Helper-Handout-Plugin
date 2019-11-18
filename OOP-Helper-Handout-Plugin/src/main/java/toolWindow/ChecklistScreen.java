@@ -8,6 +8,10 @@ import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
 import gui.HandoutPluginFXPanel;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.TableView;
 import objects.Checklist;
 import provider.LocalStorageDataProvider;
 import provider.ParseChecklistJSON;
@@ -68,15 +72,25 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
     }
 
     private void createContent() {
+        checklistContent = new HandoutPluginFXPanel();
+        TableView<Checklist.Tasks> table = new TableView<>();
         Checklist checklist = ParseChecklistJSON.checklistJSONHandler(checklistJson);
-        Object[] columnNames = {"Type",  "Boolean"};
-        Object[][] data;
-        data = new Object[checklist.tasks.size()][2];
+        Object[] columnNames = {"Aufgabe",  "Erledigt"};
+        final ObservableList<Checklist.Tasks> data = FXCollections.observableArrayList();
         for (int i = 0; i < checklist.tasks.size(); i++) {
-            data[i][0] = checklist.tasks.get(i).taskDescription;
-            data [i] [1] = checklist.tasks.get(i).checked;
+            String taskName = checklist.tasks.get(i).taskDescription;
+            Boolean checked = checklist.tasks.get(i).checked;
+            Checklist.Tasks newTask = new Checklist.Tasks.TasksBuilder(taskName, checked).build();
+            data.add(newTask);
         }
-        //https://stackoverflow.com/a/7392163
+
+        Platform.setImplicitExit(false);
+        Platform.runLater(() -> {
+            checklistContent.showChecklistTable(data, table);
+        });
+
+
+/*        //https://stackoverflow.com/a/7392163
         DefaultTableModel model = new DefaultTableModel(data, columnNames);
         //TODO INIT USER LOCATION FILE WHEN START IDE
         //predefinedTable.setPreferredScrollableViewportSize(predefinedTable.getMaximumSize());
@@ -101,9 +115,10 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
         predefinedChecklistTable.setFillsViewportHeight(true);
         JScrollBar scrollBar = new JScrollBar();
         scrollBar.add(predefinedChecklistTable);
-        checklistContent.add(predefinedChecklistTable);
+        checklistContent.add(predefinedChecklistTable);*/
 
 
+        //create checklist for user data
         if(userChecklistJson!= null){
             Checklist userChecklsit = ParseChecklistJSON.checklistJSONHandler(userChecklistJson);
             for (Checklist.Tasks task : userChecklsit.tasks) {

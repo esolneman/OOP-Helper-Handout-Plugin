@@ -50,6 +50,7 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, ToolWindowSe
     private void initScreens() {
         handoutContentScreen = new HandoutContentScreen(toolWindow);
         shortcutScreen = new ShortcutScreen(toolWindow);
+        checklistScreen = new ChecklistScreen(toolWindow);
         specificAssessmentCriteriaScreen = new SpecificAssessmentCriteriaScreen(toolWindow);
         commonAssessmentCriteriaScreen = new CommonAssessmentCriteriaScreen(toolWindow);
         notesScreen = new NotesScreen(toolWindow);
