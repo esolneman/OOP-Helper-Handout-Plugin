@@ -3,6 +3,7 @@ package gui;
 import controller.NotesController;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.JFXPanel;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -10,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -91,12 +93,11 @@ public class HandoutPluginFXPanel extends JFXPanel {
         VBox predefinedDataTable = getPredefinedDataTable(predefinedData);
         VBox userDataTable = getUserDataTable(userData);
 
+        //https://stackoverflow.com/questions/35159841/javafx-centering-vbox-inside-gridpane
         checklistTablesPane.add(predefinedDataTable, 0, 0);
         checklistTablesPane.add(userDataTable, 1, 0);
 
-
         ((Group) scene.getRoot()).getChildren().addAll(checklistTablesPane);
-
 
         this.setScene(scene);
         this.show();
@@ -105,6 +106,8 @@ public class HandoutPluginFXPanel extends JFXPanel {
     private VBox getPredefinedDataTable(ObservableList<ChecklistTableTask> predefinedData) {
         TableView<ChecklistTableTask> predefinedTable;
         predefinedTable = createTable(predefinedData);
+        predefinedTable.setEditable(true);
+
         final Label predefinedDataLabel = new Label("Vordefinierte Checkliste");
         predefinedDataLabel.setFont(new Font("Arial", 20));
         final VBox userDataVBox = new VBox();
@@ -122,9 +125,25 @@ public class HandoutPluginFXPanel extends JFXPanel {
         userTable = createTable(userData);
         userTable.setEditable(true);
 
+        TableColumn descriptionCol = userTable.getColumns().get(0);
+        descriptionCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        //https://docs.oracle.com/javafx/2/ui_controls/table-view.htm#CEGFCFEB
+        descriptionCol.setOnEditCommit(cellEditEvent -> {
+            System.out.println(" cellEditEvent: ");
+            System.out.println(" cellEditEvent: " + cellEditEvent.getTarget().toString());
+            new EventHandler<TableColumn.CellEditEvent<ChecklistTableTask, String>>() {
+                @Override
+                public void handle(TableColumn.CellEditEvent<ChecklistTableTask, String> checklistTableTaskStringCellEditEvent) {
+                    System.out.println("OLD VALUE: " + checklistTableTaskStringCellEditEvent.getOldValue());
+                    checklistTableTaskStringCellEditEvent.getTableView()
+                            .getItems().get(checklistTableTaskStringCellEditEvent.getTablePosition().getRow()).setTaskDescription(checklistTableTaskStringCellEditEvent.getNewValue());
+                    System.out.println("NEW VALUE: " + checklistTableTaskStringCellEditEvent.getNewValue());
+                }
+                };
+            });
         final TextField addDescription = new TextField();
         addDescription.setPromptText("Neue Aufgabe");
-        addDescription.setMaxWidth(userTable.getColumns().get(0).getPrefWidth());
+        addDescription.setMaxWidth(descriptionCol.getPrefWidth());
 
         final Button addButton = new Button("Add");
         addButton.setOnAction(actionEvent -> {

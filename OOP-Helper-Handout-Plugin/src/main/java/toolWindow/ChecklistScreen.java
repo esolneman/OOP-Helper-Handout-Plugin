@@ -74,7 +74,7 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
     private void createContent() {
         checklistContent = new HandoutPluginFXPanel();
         Checklist checklist = ParseChecklistJSON.checklistJSONHandler(checklistJson);
-        Object[] columnNames = {"Aufgabe",  "Erledigt"};
+        Object[] columnNames = {"Aufgabe", "Erledigt"};
         final ObservableList<ChecklistTableTask> predefinedData = FXCollections.observableArrayList();
         for (int i = 0; i < checklist.tasks.size(); i++) {
             String taskName = checklist.tasks.get(i).taskDescription;
@@ -84,7 +84,7 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
         }
 
         final ObservableList<ChecklistTableTask> userData = FXCollections.observableArrayList();
-        if(userChecklistJson!= null){
+        if (userChecklistJson != null) {
             Checklist userChecklist = ParseChecklistJSON.checklistJSONHandler(userChecklistJson);
             for (int i = 0; i < userChecklist.tasks.size(); i++) {
                 String taskName = checklist.tasks.get(i).taskDescription;
