@@ -12,13 +12,16 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.web.HTMLEditor;
 import javafx.scene.web.WebView;
+import javafx.util.Callback;
 import objects.Checklist;
+import objects.ChecklistTableTask;
 import objects.SpecificAssessmentCriteria;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -88,53 +91,68 @@ public class HandoutPluginFXPanel extends JFXPanel {
     }
 
     //https://docs.oracle.com/javafx/2/ui_controls/table-view.htm#CJAGAAEE
-    public void showChecklistTable( ObservableList<Checklist.Tasks> data, TableView table) {
+    public void showPredefinedChecklistTable(ObservableList<ChecklistTableTask> predefinedData, TableView table) {
         Scene scene = new Scene(new Group());
+
+        System.out.println("ObservableList: " + predefinedData.get(0).taskDescription);
+        System.out.println("ObservableList: " + predefinedData.get(0).taskDescription);
+
+
+
         final HBox hb = new HBox();
-        final Label label = new Label("Vordefinierte Checkliste");
-        label.setFont(new Font("Arial", 20));
+        final Label predefinedDataLabel = new Label("Vordefinierte Checkliste");
+        predefinedDataLabel.setFont(new Font("Arial", 20));
+
+        final Label userDataLabel = new Label("Eigene Checkliste");
+        userDataLabel.setFont(new Font("Arial", 20));
 
         table.setEditable(true);
 
         TableColumn taskDescriptionCol = new TableColumn("Aufgabe");
         taskDescriptionCol.setMinWidth(100);
-        taskDescriptionCol.setCellValueFactory(
-                new PropertyValueFactory<Checklist.Tasks, String>("taskDescription"));
+        taskDescriptionCol.setCellValueFactory(new PropertyValueFactory<Checklist.Tasks, String>("taskDescription"));
 
-        TableColumn taskChekcedCol = new TableColumn("Erledigt");
-        taskChekcedCol.setMinWidth(100);
-        taskChekcedCol.setCellValueFactory(
-                new PropertyValueFactory<Checklist.Tasks, Boolean>("checked"));
+        TableColumn taskCheckedCol = new TableColumn("Erledigt");
+        taskCheckedCol.setMinWidth(100);
+        taskCheckedCol.setCellValueFactory(new PropertyValueFactory<Checklist.Tasks, Boolean>("checked"));
+        //https://stackoverflow.com/q/20879242
+        taskCheckedCol.setCellFactory((Callback<TableColumn<Checklist.Tasks, Boolean>, TableCell<Checklist.Tasks, Boolean>>) p -> new CheckBoxTableCell<>());
 
-        table.setItems(data);
-        table.getColumns().addAll(taskDescriptionCol, taskChekcedCol);
+        table.setItems(predefinedData);
+        table.getColumns().addAll(taskDescriptionCol, taskCheckedCol);
 
         final TextField addDescription = new TextField();
-        addDescription.setPromptText("Aufgabe");
+        addDescription.setPromptText("Neue Aufgabe");
         addDescription.setMaxWidth(taskDescriptionCol.getPrefWidth());
 
 
         final Button addButton = new Button("Add");
-        addButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                data.add(new Checklist.Tasks.TasksBuilder(addDescription.getText(), false).build());
-                addDescription.clear();
-            }
+        addButton.setOnAction(actionEvent -> {
+            System.out.println("TEXT: " + addDescription.getText());
+            predefinedData.add(new ChecklistTableTask(addDescription.getText(), false));
+            addDescription.clear();
         });
 
         hb.getChildren().addAll(addDescription, addButton);
         //TODO Maybe switch to 1 or 2
-        hb.setSpacing(3);
+        hb.setSpacing(1);
 
         final VBox vbox = new VBox();
         vbox.setSpacing(5);
         vbox.setPadding(new Insets(10, 0, 0, 10));
-        vbox.getChildren().addAll(label, table, hb);
+        vbox.getChildren().addAll(predefinedDataLabel, table, hb);
 
-        ((Group) scene.getRoot()).getChildren().addAll(vbox);
+        final VBox userDataVBox = new VBox();
+        vbox.setSpacing(5);
+        vbox.setPadding(new Insets(10, 0, 0, 10));
+        vbox.getChildren().addAll(userDataLabel);
+
+        ((Group) scene.getRoot()).getChildren().addAll(vbox, userDataVBox);
+
+        System.out.println("TABLE COLS: "+ table.getColumns().size());
 
         this.setScene(scene);
         this.show();
     }
+
 }

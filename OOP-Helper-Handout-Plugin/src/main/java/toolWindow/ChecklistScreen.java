@@ -13,11 +13,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableView;
 import objects.Checklist;
+import objects.ChecklistTableTask;
 import provider.LocalStorageDataProvider;
 import provider.ParseChecklistJSON;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -73,20 +73,21 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
 
     private void createContent() {
         checklistContent = new HandoutPluginFXPanel();
-        TableView<Checklist.Tasks> table = new TableView<>();
+        TableView<ChecklistTableTask> table = new TableView<>();
         Checklist checklist = ParseChecklistJSON.checklistJSONHandler(checklistJson);
         Object[] columnNames = {"Aufgabe",  "Erledigt"};
-        final ObservableList<Checklist.Tasks> data = FXCollections.observableArrayList();
+        final ObservableList<ChecklistTableTask> data = FXCollections.observableArrayList();
         for (int i = 0; i < checklist.tasks.size(); i++) {
             String taskName = checklist.tasks.get(i).taskDescription;
             Boolean checked = checklist.tasks.get(i).checked;
-            Checklist.Tasks newTask = new Checklist.Tasks.TasksBuilder(taskName, checked).build();
+            ChecklistTableTask newTask = new ChecklistTableTask(taskName, checked);
             data.add(newTask);
+            System.out.println("OBSERVERABLE: " + data.get(i).taskDescription);
         }
 
         Platform.setImplicitExit(false);
         Platform.runLater(() -> {
-            checklistContent.showChecklistTable(data, table);
+            checklistContent.showPredefinedChecklistTable(data, table);
         });
 
 
