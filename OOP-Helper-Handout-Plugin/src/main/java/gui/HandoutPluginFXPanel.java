@@ -128,9 +128,15 @@ public class HandoutPluginFXPanel extends JFXPanel {
 
         final Button addButton = new Button("Add");
         addButton.setOnAction(actionEvent -> {
+            String newDescription = addDescription.getText();
             System.out.println("TEXT: " + addDescription.getText());
-            predefinedData.add(new ChecklistTableTask(addDescription.getText(), false));
-            addDescription.clear();
+            System.out.println("EMPTY: " + newDescription.isEmpty());
+
+            if(!newDescription.isEmpty()){
+                predefinedData.add(new ChecklistTableTask(addDescription.getText(), false));
+                addDescription.clear();
+            }
+
         });
 
         hb.getChildren().addAll(addDescription, addButton);
