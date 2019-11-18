@@ -12,7 +12,7 @@ public class Constants {
     public static final String REPO_PATH_TO_BRANCH = "refs/heads/";
 
     public static final String HANDOUT_FILE_NAME = "/index.html";
-    public static final String CHECKLIST_FILE_NAME = "/checklist.txt";
+    public static final String CHECKLIST_FILE_NAME = "/checklist.json";
     public static final String SHORTCUT_FILE_NAME = "/shortcuts.html";
     public static final String CODING_STYLES_FILE = "/CodingStyles/OOP_17WS_Handout_CodingStyle.html";
     public static final String VARIABLES_FILE = "/Variables/OOP_17WS_Handout_Variablen.html";
