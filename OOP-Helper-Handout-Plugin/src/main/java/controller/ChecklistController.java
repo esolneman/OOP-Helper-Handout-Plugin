@@ -30,22 +30,24 @@ public class ChecklistController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
     public static void savePredefinedDataInFile(ObservableList<ChecklistTableTask> predefinedData) {
-        System.out.println("saveTableDataInFile" + predefinedData.toString());
+        System.out.println("saveTableDataInFile" + predefinedData.get(0).id);
 
         JsonObject updatedDataJson = new JsonObject();
         JsonArray tasks;
         tasks = ParseChecklistJSON.getJsonFromChecklistTableData(predefinedData);
         updatedDataJson.add("checklist", tasks);
+        System.out.println("SAVEPREDEFINED DATA: " + predefinedData.get(2).id.getValue());
+        System.out.println("SAVEPREDEFINED updatedDataJson: " + updatedDataJson.get("checklist").getAsJsonArray().get(2).getAsJsonObject().get("id"));
 
-
-
-        //https://stackoverflow.com/a/29319491
-        try (Writer writer = new FileWriter(LocalStorageDataProvider.getLocalChecklistPredefinedData())) {
-            Gson gson = new GsonBuilder().create();
-            gson.toJson(updatedDataJson, writer);
+        //https://crunchify.com/how-to-write-json-object-to-file-in-java/
+        try (FileWriter file = new FileWriter(LocalStorageDataProvider.getLocalChecklistPredefinedData())) {
+            file.write(updatedDataJson.toString());
+            System.out.println("Successfully Copied JSON Object to File...");
+            System.out.println("\nJSON Object: " + updatedDataJson);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -61,8 +63,8 @@ public class ChecklistController {
         localChecklistData = gson.fromJson(reader, JsonObject.class);
         reader = new JsonReader(new FileReader(LocalStorageDataProvider.getChecklistData()));
         repoChecklistData = gson.fromJson(reader, JsonObject.class);
-        Checklist checklistLocal = ParseChecklistJSON.checklistJSONHandler(localChecklistData);
-        Checklist checklistRepo = ParseChecklistJSON.checklistJSONHandler(repoChecklistData);
+        Checklist checklistLocal = ParseChecklistJSON.predefinedJsonToChecklistParser(localChecklistData);
+        Checklist checklistRepo = ParseChecklistJSON.predefinedJsonToChecklistParser(repoChecklistData);
 
         checklistRepo.tasks.forEach(repoTask -> {
             String currentRepoTaskID = repoTask.id;
