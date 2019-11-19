@@ -1,27 +1,15 @@
 package gui;
 
-import controller.ChecklistController;
 import controller.NotesController;
-import javafx.collections.ObservableList;
 import javafx.embed.swing.JFXPanel;
-import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.control.cell.CheckBoxTableCell;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 import javafx.scene.web.HTMLEditor;
 import javafx.scene.web.WebView;
-import javafx.util.Callback;
-import objects.Checklist;
-import objects.ChecklistTableTask;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -85,118 +73,4 @@ public class HandoutPluginFXPanel extends JFXPanel {
         this.setScene(scene);
         this.show();
     }
-
-    //https://docs.oracle.com/javafx/2/ui_controls/table-view.htm#CJAGAAEE
-    public void showChecklistTable(ObservableList<ChecklistTableTask> predefinedData, ObservableList<ChecklistTableTask> userData) {
-        Scene scene = new Scene(new Group());
-
-        GridPane checklistTablesPane = new GridPane();
-        VBox predefinedDataTable = getPredefinedDataTable(predefinedData);
-        VBox userDataTable = getUserDataTable(userData);
-
-        //https://stackoverflow.com/questions/35159841/javafx-centering-vbox-inside-gridpane
-        checklistTablesPane.add(predefinedDataTable, 0, 0);
-        checklistTablesPane.add(userDataTable, 1, 0);
-
-        ((Group) scene.getRoot()).getChildren().addAll(checklistTablesPane);
-
-        this.setScene(scene);
-        this.show();
-    }
-
-    private VBox getPredefinedDataTable(ObservableList<ChecklistTableTask> predefinedData) {
-        TableView<ChecklistTableTask> predefinedTable;
-        predefinedTable = createTable(predefinedData);
-        predefinedTable.setEditable(true);
-
-        final Label predefinedDataLabel = new Label("Vordefinierte Checkliste");
-        predefinedDataLabel.setFont(new Font("Arial", 20));
-        final VBox userDataVBox = new VBox();
-        userDataVBox.setSpacing(5);
-        userDataVBox.setPadding(new Insets(10, 0, 0, 10));
-        userDataVBox.getChildren().addAll(predefinedDataLabel, predefinedTable);
-        return userDataVBox;
-    }
-
-    private VBox getUserDataTable(ObservableList<ChecklistTableTask> userData) {
-        final HBox hb = new HBox();
-        final Label userDataLabel = new Label("Eigene Checkliste");
-        userDataLabel.setFont(new Font("Arial", 20));
-        TableView<ChecklistTableTask> userTable = new TableView<>();
-        userTable = createTable(userData);
-        userTable.setEditable(true);
-
-        TableColumn descriptionCol = userTable.getColumns().get(0);
-
-        //TableColumn deleteButton = new TableColumn();
-        //deleteButton.setMaxWidth(20);
-        //deleteButton.setCellValueFactory();
-       // descriptionCol.getColumns().add(deleteButton);
-
-        //TODO aDD css to table
-        //descriptionCol.setStyle();
-        descriptionCol.setCellFactory(TextFieldTableCell.forTableColumn());
-        //https://docs.oracle.com/javafx/2/ui_controls/table-view.htm#CEGFCFEB
-        descriptionCol.setOnEditCommit(
-                (EventHandler<TableColumn.CellEditEvent<ChecklistTableTask, String>>) checklistTableTaskStringCellEditEvent -> {
-                    System.out.println("OLD VALUE: " + checklistTableTaskStringCellEditEvent.getOldValue());
-                    checklistTableTaskStringCellEditEvent.getTableView()
-                            .getItems().get(checklistTableTaskStringCellEditEvent.getTablePosition().getRow()).setTaskDescription(checklistTableTaskStringCellEditEvent.getNewValue());
-                    System.out.println("NEW VALUE: " + checklistTableTaskStringCellEditEvent.getNewValue());
-                    ChecklistController.saveTableDataInFile(userData);
-            });
-        final TextField addDescription = new TextField();
-        addDescription.setPromptText("Neue Aufgabe");
-        addDescription.setMaxWidth(descriptionCol.getPrefWidth());
-        //TODO ENTER POSSIBLE
-        //addDescription.addEventHandler();
-
-        final Button addButton = new Button("Add");
-        addButton.setOnAction(actionEvent -> {
-            String newDescription = addDescription.getText();
-            if (!newDescription.isEmpty()) {
-                //TODO save DATA in Json File :)
-                userData.add(new ChecklistTableTask(addDescription.getText(), false));
-                addDescription.clear();
-                ChecklistController.saveTableDataInFile(userData);
-            }
-
-        });
-
-        hb.getChildren().addAll(addDescription, addButton);
-        //TODO Maybe switch to 1 or 2
-        hb.setSpacing(1);
-
-        final VBox vbox = new VBox();
-        vbox.setSpacing(5);
-        vbox.setPadding(new Insets(10, 0, 0, 10));
-        vbox.getChildren().addAll(userDataLabel, userTable, hb);
-
-        return vbox;
-    }
-
-    private TableView<ChecklistTableTask> createTable(ObservableList<ChecklistTableTask> data) {
-        TableView<ChecklistTableTask> table = new TableView<>();
-        //TODO MAKE IT RESPONSIVE
-        Double tableWidth = 300.00;
-        System.out.println("PANEL WIDTH " + this.getWidth());
-        System.out.println("TABLE WIDTH " + tableWidth);
-        System.out.println("COL WIDTH " + tableWidth/2);
-
-        table.setMinWidth(tableWidth);
-        TableColumn taskDescriptionCol = new TableColumn("Aufgabe");
-        taskDescriptionCol.setCellValueFactory(new PropertyValueFactory<Checklist.Tasks, String>("taskDescription"));
-
-        TableColumn taskCheckedCol = new TableColumn("Erledigt");
-        taskCheckedCol.setMaxWidth(25);
-        taskCheckedCol.setCellValueFactory(new PropertyValueFactory<Checklist.Tasks, Boolean>("checked"));
-        //https://stackoverflow.com/q/20879242
-        taskCheckedCol.setCellFactory((Callback<TableColumn<Checklist.Tasks, Boolean>, TableCell<Checklist.Tasks, Boolean>>) p -> new CheckBoxTableCell<>());
-
-        table.setItems(data);
-        table.getColumns().addAll(taskDescriptionCol, taskCheckedCol);
-
-        return table;
-    }
-
 }

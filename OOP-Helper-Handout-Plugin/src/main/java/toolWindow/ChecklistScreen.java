@@ -7,6 +7,7 @@ import com.intellij.openapi.actionSystem.ActionToolbar;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
+import gui.ChecklistFXPanel;
 import gui.HandoutPluginFXPanel;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -24,7 +25,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 
 public class ChecklistScreen extends SimpleToolWindowPanel {
-    private HandoutPluginFXPanel checklistContent;
+    private ChecklistFXPanel checklistContent;
     private ToolWindow checklistToolWindow;
     private JTable predefinedChecklistTable;
     private JsonObject checklistJson;
@@ -71,7 +72,7 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
     }
 
     private void createContent() {
-        checklistContent = new HandoutPluginFXPanel();
+        checklistContent = new ChecklistFXPanel();
         Checklist checklist = ParseChecklistJSON.checklistJSONHandler(checklistJson);
         Object[] columnNames = {"Aufgabe", "Erledigt"};
         final ObservableList<ChecklistTableTask> predefinedData = FXCollections.observableArrayList();
