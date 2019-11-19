@@ -4,12 +4,21 @@ import java.util.ArrayList;
 
 public class Checklist {
 
-    public ArrayList<Tasks> tasks;
+    public ArrayList<Task> tasks;
 
-    public static class Tasks {
+    public boolean containsID() {
+    }
+
+    public Task getTaskWithId() {
+    }
+
+    public static class Task {
         public String taskDescription;
         public boolean checked;
         public String id;
+
+        public void setDescription(String currentRepoTaskDescription) {
+        }
 
         //TODO Quelle: Efefective Java Page 13-14 Kapitel 2.2 - Thema 2
         public static class TasksBuilder {
@@ -29,23 +38,23 @@ public class Checklist {
                 return this;
             }
 
-            public Tasks build(){
-                return new Tasks(this);
+            public Task build(){
+                return new Task(this);
             }
         }
 
-        private Tasks (TasksBuilder builder){
+        private Task(TasksBuilder builder){
             taskDescription = builder.taskDescription;
             checked = builder.checked;
             id = builder.id;
         }
     }
 
-    public ArrayList<Tasks> getTasks(){
+    public ArrayList<Task> getTasks(){
         return tasks;
     }
 
-    public void setTasks(ArrayList<Tasks>  tasks){
+    public void setTasks(ArrayList<Task>  tasks){
         this.tasks = tasks;
     }
 }

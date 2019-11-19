@@ -87,13 +87,13 @@ public class ParseChecklistJSON {
     //https://stackoverflow.com/a/34510715
     public static Checklist checklistJSONHandler(JsonObject checklistJson) {
         JsonArray checklist = ((JsonArray) checklistJson.get("checklist"));
-        ArrayList<Checklist.Tasks> tasks = new ArrayList<>();
+        ArrayList<Checklist.Task> tasks = new ArrayList<>();
         for (JsonElement task : checklist) {
             String taskName = task.getAsJsonObject().get("taskDescription").toString();
             Boolean checked = task.getAsJsonObject().get("checked").getAsBoolean();
 
             //TODO Quelle: Efefective Java Page 13-14 Kapitel 2.2 - Thema 2
-            Checklist.Tasks newTask = new Checklist.Tasks.TasksBuilder(taskName, checked).build();
+            Checklist.Task newTask = new Checklist.Task.TasksBuilder(taskName, checked).build();
             tasks.add(newTask);
         }
         Checklist realChecklist = new Checklist();
@@ -103,13 +103,13 @@ public class ParseChecklistJSON {
 
     public static Checklist predefinedJsonToChecklistParser(JsonObject checklistJson) {
         JsonArray checklist = ((JsonArray) checklistJson.get("checklist"));
-        ArrayList<Checklist.Tasks> tasks = new ArrayList<>();
+        ArrayList<Checklist.Task> tasks = new ArrayList<>();
         for (JsonElement task : checklist) {
             String taskName = task.getAsJsonObject().get("task").toString();
             Boolean checked = task.getAsJsonObject().get("checked").getAsBoolean();
             String id = task.getAsJsonObject().get("id").toString();
             //TODO Quelle: Efefective Java Page 13-14 Kapitel 2.2 - Thema 2
-            Checklist.Tasks newTask = new Checklist.Tasks.TasksBuilder(taskName, checked)
+            Checklist.Task newTask = new Checklist.Task.TasksBuilder(taskName, checked)
                     .id(id).build();
             tasks.add(newTask);
         }
@@ -121,11 +121,11 @@ public class ParseChecklistJSON {
 
     public static JsonArray getJsonFromChecklistTableData(ObservableList<ChecklistTableTask> userData) {
         Checklist updatedChecklist;
-        ArrayList<Checklist.Tasks> tasksArrayList = new ArrayList<>();
+        ArrayList<Checklist.Task> tasksArrayList = new ArrayList<>();
         for (int i = 0; i < userData.size(); i++) {
             String description = userData.get(i).taskDescription.getValue();
             Boolean checked = userData.get(i).checked.getValue();
-            Checklist.Tasks newTask = new Checklist.Tasks.TasksBuilder(description, checked).build();
+            Checklist.Task newTask = new Checklist.Task.TasksBuilder(description, checked).build();
             tasksArrayList.add(newTask);
         }
         updatedChecklist = new Checklist();
