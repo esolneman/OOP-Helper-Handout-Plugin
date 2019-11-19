@@ -20,7 +20,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.util.Callback;
-import objects.Checklist;
 import objects.ChecklistTableTask;
 
 public class ChecklistFXPanel extends JFXPanel {
@@ -60,7 +59,7 @@ public class ChecklistFXPanel extends JFXPanel {
         final HBox hb = new HBox();
         final Label userDataLabel = new Label("Eigene Checkliste");
         userDataLabel.setFont(new Font("Arial", 20));
-        TableView<ChecklistTableTask> userTable = new TableView<>();
+        TableView<ChecklistTableTask> userTable;
         userTable = createTable(userData);
         userTable.setEditable(true);
 
@@ -69,27 +68,12 @@ public class ChecklistFXPanel extends JFXPanel {
         //https://gist.github.com/abhinayagarwal/9735744
         TableColumn deleteButton = new TableColumn<>("Action");
         deleteButton.setCellValueFactory(
-                new Callback<TableColumn.CellDataFeatures<Disposer.Record, Boolean>,
-                        ObservableValue<Boolean>>() {
-
-                    @Override
-                    public ObservableValue<Boolean> call(TableColumn.CellDataFeatures<Disposer.Record, Boolean> p) {
-                        return new SimpleBooleanProperty(p.getValue() != null);
-                    }
-                });
+                (Callback<TableColumn.CellDataFeatures<Disposer.Record, Boolean>, ObservableValue<Boolean>>) p -> new SimpleBooleanProperty(p.getValue() != null));
 
         //Adding the Button to the cell
-        deleteButton.setCellFactory(
-                new Callback<TableColumn<Disposer.Record, Boolean>, ButtonCell>() {
+        deleteButton.setCellFactory((Callback<TableColumn<Disposer.Record, Boolean>, ButtonCell>) p -> new ButtonCell(userData));
 
-                    @Override
-                    public ButtonCell call(TableColumn<Disposer.Record, Boolean> p) {
-                        return new ButtonCell(userData);
-                    }
-
-                });
         userTable.getColumns().add(deleteButton);
-
 
 
         //TODO aDD css to table
@@ -99,10 +83,12 @@ public class ChecklistFXPanel extends JFXPanel {
         descriptionCol.setOnEditCommit(
                 (EventHandler<TableColumn.CellEditEvent<ChecklistTableTask, String>>) checklistTableTaskStringCellEditEvent -> {
                     System.out.println("OLD VALUE: " + checklistTableTaskStringCellEditEvent.getOldValue());
+
                     checklistTableTaskStringCellEditEvent.getTableView()
-                            .getItems().get(checklistTableTaskStringCellEditEvent.getTablePosition().getRow()).setTaskDescription(checklistTableTaskStringCellEditEvent.getNewValue());
+                            .getItems().get(checklistTableTaskStringCellEditEvent.getTablePosition().getRow())
+                            .setTaskDescription(checklistTableTaskStringCellEditEvent.getNewValue());
                     System.out.println("NEW VALUE: " + checklistTableTaskStringCellEditEvent.getNewValue());
-                    ChecklistController.saveTableDataInFile(userData);
+                    ChecklistController.saveUserDataInFile(userData);
                 });
         final TextField addDescription = new TextField();
         addDescription.setPromptText("Neue Aufgabe");
@@ -114,12 +100,9 @@ public class ChecklistFXPanel extends JFXPanel {
         addButton.setOnAction(actionEvent -> {
             String newDescription = addDescription.getText();
             if (!newDescription.isEmpty()) {
-                //TODO save DATA in Json File :)
                 userData.add(new ChecklistTableTask(addDescription.getText(), false));
                 addDescription.clear();
-                ChecklistController.saveTableDataInFile(userData);
             }
-
         });
 
         hb.getChildren().addAll(addDescription, addButton);
@@ -144,16 +127,32 @@ public class ChecklistFXPanel extends JFXPanel {
 
         table.setMinWidth(tableWidth);
         TableColumn taskDescriptionCol = new TableColumn("Aufgabe");
-        taskDescriptionCol.setCellValueFactory(new PropertyValueFactory<Checklist.Tasks, String>("taskDescription"));
+        taskDescriptionCol.setCellValueFactory(new PropertyValueFactory<ChecklistTableTask, String>("taskDescription"));
 
         TableColumn taskCheckedCol = new TableColumn("Erledigt");
         taskCheckedCol.setMaxWidth(25);
-        taskCheckedCol.setCellValueFactory(new PropertyValueFactory<Checklist.Tasks, Boolean>("checked"));
-        //https://stackoverflow.com/q/20879242
-        taskCheckedCol.setCellFactory((Callback<TableColumn<Checklist.Tasks, Boolean>, TableCell<Checklist.Tasks, Boolean>>) p -> new CheckBoxTableCell<>());
+        taskCheckedCol.setCellValueFactory(new PropertyValueFactory<ChecklistTableTask, Boolean>("checked"));
+
+        //https://stackoverflow.com/a/12550850
+        taskCheckedCol.setCellFactory(tc -> new CheckBoxTableCell());
+/*
+        taskCheckedCol.setOnEditCommit((EventHandler<TableColumn.CellEditEvent<ChecklistTableTask, Boolean>>) checklistTableTaskBooleanCellEditEvent -> {
+            System.out.println("CHECKED HANDLER");
+            ChecklistController.saveTableDataInFile(data);
+        });
+*/
+        taskCheckedCol.setCellFactory(CheckBoxTableCell.forTableColumn(param -> {
+            System.out.println("Cours "+ data.get(param).getChecked());
+            return data.get(param).checked;
+        }));
+
 
         table.setItems(data);
         table.getColumns().addAll(taskDescriptionCol, taskCheckedCol);
+
+        /*table.getItems().addListener((ListChangeListener<? super ChecklistTableTask>) change -> {
+            System.out.println("DATA CHANGED");
+        });*/
 
         return table;
     }
@@ -173,7 +172,6 @@ public class ChecklistFXPanel extends JFXPanel {
                     ChecklistTableTask currentPerson = (ChecklistTableTask) ButtonCell.this.getTableView().getItems().get(ButtonCell.this.getIndex());
                     //remove selected item from the table list
                     userData.remove(currentPerson);
-                    ChecklistController.saveTableDataInFile(userData);
                 }
             });
         }
@@ -182,10 +180,9 @@ public class ChecklistFXPanel extends JFXPanel {
         @Override
         protected void updateItem(Boolean t, boolean empty) {
             super.updateItem(t, empty);
-            if(!empty){
+            if (!empty) {
                 setGraphic(cellButton);
-            }
-            else{
+            } else {
                 setGraphic(null);
             }
         }

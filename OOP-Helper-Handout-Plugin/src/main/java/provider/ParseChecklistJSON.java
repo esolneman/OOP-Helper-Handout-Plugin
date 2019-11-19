@@ -127,9 +127,6 @@ public class ParseChecklistJSON {
             Boolean checked = userData.get(i).checked.getValue();
             Checklist.Tasks newTask = new Checklist.Tasks.TasksBuilder(description, checked).build();
             tasksArrayList.add(newTask);
-            System.out.println("NEW CHEKLCIST description: " + description);
-            System.out.println("NEW CHEKLCIST: " + tasksArrayList.get(i).taskDescription);
-
         }
         updatedChecklist = new Checklist();
         updatedChecklist.setTasks(tasksArrayList);

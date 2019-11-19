@@ -7,12 +7,16 @@ import com.intellij.openapi.actionSystem.ActionToolbar;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
+import controller.ChecklistController;
 import gui.ChecklistFXPanel;
 import gui.HandoutPluginFXPanel;
 import javafx.application.Platform;
+import javafx.beans.Observable;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableView;
+import javafx.util.Callback;
 import objects.Checklist;
 import objects.ChecklistTableTask;
 import provider.LocalStorageDataProvider;
@@ -27,7 +31,6 @@ import java.io.FileReader;
 public class ChecklistScreen extends SimpleToolWindowPanel {
     private ChecklistFXPanel checklistContent;
     private ToolWindow checklistToolWindow;
-    private JTable predefinedChecklistTable;
     private JsonObject checklistJson;
     private JsonObject userChecklistJson;
 
@@ -39,7 +42,7 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
         super(true, true);
         toolWindowPanel = new SimpleToolWindowPanel(true);
         checklistToolWindow = toolWindow;
-        file = LocalStorageDataProvider.getChecklistData();
+        file = LocalStorageDataProvider.getLocalChecklistPredefinedData();
         userData = LocalStorageDataProvider.getChecklistUserData();
         //TODO Create new Method
         //https://stackoverflow.com/a/34486879
@@ -75,7 +78,18 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
         checklistContent = new ChecklistFXPanel();
         Checklist checklist = ParseChecklistJSON.checklistJSONHandler(checklistJson);
         Object[] columnNames = {"Aufgabe", "Erledigt"};
-        final ObservableList<ChecklistTableTask> predefinedData = FXCollections.observableArrayList();
+
+        //https://stackoverflow.com/a/28671914
+        final ObservableList<ChecklistTableTask> predefinedData =FXCollections.observableArrayList(param -> new Observable[] {param.checked});
+        predefinedData.addListener((ListChangeListener<? super ChecklistTableTask>) change -> {
+            System.out.println("CHECNGE PREDEFINED DATA: ");
+            while (change.next()) {
+                if (change.wasUpdated()) {
+                    System.out.println("PREDEFINED "+predefinedData.get(change.getFrom()).getChecked()+" changed value to " +predefinedData.get(change.getFrom()).checked);
+                    ChecklistController.savePredefinedDataInFile(predefinedData);
+                }
+            }
+        });
         for (int i = 0; i < checklist.tasks.size(); i++) {
             String taskName = checklist.tasks.get(i).taskDescription;
             Boolean checked = checklist.tasks.get(i).checked;
@@ -83,12 +97,17 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
             predefinedData.add(newTask);
         }
 
-        final ObservableList<ChecklistTableTask> userData = FXCollections.observableArrayList();
+        //https://stackoverflow.com/a/28671914
+        final ObservableList<ChecklistTableTask> userData = FXCollections.observableArrayList(param -> new Observable[] {param.checked});
+        userData.addListener((ListChangeListener<? super ChecklistTableTask>) change -> {
+            System.out.println("CHECNGE USER DATA: ");
+            ChecklistController.saveUserDataInFile(userData);
+        });
         if (userChecklistJson != null) {
             Checklist userChecklist = ParseChecklistJSON.checklistJSONHandler(userChecklistJson);
             for (int i = 0; i < userChecklist.tasks.size(); i++) {
-                String taskName = checklist.tasks.get(i).taskDescription;
-                Boolean checked = checklist.tasks.get(i).checked;
+                String taskName = userChecklist.tasks.get(i).taskDescription;
+                Boolean checked = userChecklist.tasks.get(i).checked;
                 ChecklistTableTask newTask = new ChecklistTableTask(taskName, checked);
                 userData.add(newTask);
             }

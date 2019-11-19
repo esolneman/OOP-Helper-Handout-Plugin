@@ -1,5 +1,7 @@
 package provider;
 
+import com.intellij.sisyphus.api.User;
+
 import java.io.File;
 
 public class LocalStorageDataProvider implements LocalStorageDataProviderInterface {
@@ -33,6 +35,10 @@ public class LocalStorageDataProvider implements LocalStorageDataProviderInterfa
         return UserLocalStorageDataProvider.getChecklistFile();
     }
 
+    public static File getLocalChecklistPredefinedData() {
+        return UserLocalStorageDataProvider.getPredefinedChecklistFile();
+    }
+
     public static File getCodingStylesFileDirectory() {
         return RepoLocalStorageDataProvider.getCodingStylesFile();
     }
@@ -48,4 +54,6 @@ public class LocalStorageDataProvider implements LocalStorageDataProviderInterfa
     public static File getInitNotesHtmlFile() {
         return RepoLocalStorageDataProvider.getNotesInitFile();
     }
+
+
 }
