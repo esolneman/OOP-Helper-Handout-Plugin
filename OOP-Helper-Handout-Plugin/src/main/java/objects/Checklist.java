@@ -6,7 +6,7 @@ public class Checklist {
 
     public ArrayList<Task> tasks;
 
-    public boolean containsID() {
+    public boolean containsID(String currentRepoTaskID) {
     }
 
     public Task getTaskWithId() {

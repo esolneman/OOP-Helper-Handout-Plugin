@@ -68,17 +68,22 @@ public class ChecklistController {
             Integer currentPosition = checklistRepo.tasks.indexOf(repoTask);
 
             //if task exists update description
-            if (checklistLocal.containsID()){
+            if (checklistLocal.containsID(currentRepoTaskID)) {
                 Checklist.Task newTask = checklistLocal.getTaskWithId();
                 newTask.setDescription(currentRepoTaskDescription);
                 checklistLocal.tasks.add(currentPosition, newTask);
                 //if task not exists add new task
-            }else {
+            } else {
                 Checklist.Task newTask = new Checklist.Task.TasksBuilder(currentRepoTaskDescription, false)
                         .id(currentRepoTaskID).build();
                 checklistLocal.tasks.add(currentPosition, newTask);
             }
-
+        });
+        //check if local tasks exists still in the repo
+        checklistLocal.tasks.forEach(localTask -> {
+            if (!checklistRepo.containsID(localTask.id)) {
+                checklistLocal.tasks.remove(localTask);
+            }
         });
     }
 }
