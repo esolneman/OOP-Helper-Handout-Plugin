@@ -69,11 +69,14 @@ public class ChecklistController {
 
             //if task exists update description
             if (checklistLocal.containsID(currentRepoTaskID)) {
-                Checklist.Task newTask = checklistLocal.getTaskWithId();
+                System.out.println("REPO ID EXISTS");
+                //TODO CATCH NULL
+                Checklist.Task newTask = checklistLocal.getTaskWithId(currentRepoTaskID);
                 newTask.setDescription(currentRepoTaskDescription);
                 checklistLocal.tasks.add(currentPosition, newTask);
                 //if task not exists add new task
             } else {
+                System.out.println("REPO ID NOT EXISTS");
                 Checklist.Task newTask = new Checklist.Task.TasksBuilder(currentRepoTaskDescription, false)
                         .id(currentRepoTaskID).build();
                 checklistLocal.tasks.add(currentPosition, newTask);
@@ -82,6 +85,7 @@ public class ChecklistController {
         //check if local tasks exists still in the repo
         checklistLocal.tasks.forEach(localTask -> {
             if (!checklistRepo.containsID(localTask.id)) {
+                System.out.println("LOCAL ID NOT EXISTS");
                 checklistLocal.tasks.remove(localTask);
             }
         });

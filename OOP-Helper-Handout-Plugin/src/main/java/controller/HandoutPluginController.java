@@ -114,7 +114,11 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
     public void onUpdatingRepositoryEvent(ArrayList<String> commitMessages) {
         BalloonPopupController.showNotification(project, "Handout Daten wurden runtergeladen." + commitMessages.toString(), NotificationType.INFORMATION);
         CommitChangesDialog commitChangesDialog = new CommitChangesDialog(commitMessages);
-        ChecklistController.comparePredefinedChecklistVersions();
+        try {
+            ChecklistController.comparePredefinedChecklistVersions();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
         commitChangesDialog.showPanel();
     }
 

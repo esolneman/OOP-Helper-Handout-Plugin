@@ -7,9 +7,21 @@ public class Checklist {
     public ArrayList<Task> tasks;
 
     public boolean containsID(String currentRepoTaskID) {
+        for (Task task : tasks) {
+            if (task.id == currentRepoTaskID) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    public Task getTaskWithId() {
+    public Task getTaskWithId(String currentRepoTaskID) {
+        for (Task task : tasks) {
+            if (task.id == currentRepoTaskID) {
+                return task;
+            }
+        }
+        return null;
     }
 
     public static class Task {
@@ -18,6 +30,7 @@ public class Checklist {
         public String id;
 
         public void setDescription(String currentRepoTaskDescription) {
+            taskDescription = currentRepoTaskDescription;
         }
 
         //TODO Quelle: Efefective Java Page 13-14 Kapitel 2.2 - Thema 2

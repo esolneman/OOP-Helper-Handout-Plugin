@@ -183,9 +183,10 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
                 }
             };
             asyncExecutor.runAsyncClone(updateTask);
+            callListener(commitMessages);
         } else {
             System.out.println("commitMessages empty");
-            callListener(commitMessages);
+            callListenerNotUpdating("Keine Neuen Daten vorhanden", NotificationType.INFORMATION);
         }
     }
 
