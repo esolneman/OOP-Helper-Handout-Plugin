@@ -70,7 +70,6 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
 
     private void initToolWindowMenu() {
         //http://androhi.hatenablog.com/entry/2015/07/23/233932
-        toolWindowPanel.setToolbar(createToolbarPanel());
         toolWindowPanel.setContent(checklistContent);
     }
 
@@ -119,13 +118,6 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
             checklistContent.showChecklistTable(predefinedData, userData);
         });
 
-    }
-
-    private JComponent createToolbarPanel() {
-        final DefaultActionGroup checklistActionGroup = new DefaultActionGroup();
-        checklistActionGroup.add(ActionManager.getInstance().getAction("Checklist.EditContent"));
-        final ActionToolbar checklistActionToolbar = ActionManager.getInstance().createActionToolbar("Checklisttool", checklistActionGroup, true);
-        return checklistActionToolbar.getComponent();
     }
 
     public JPanel getContent() {
