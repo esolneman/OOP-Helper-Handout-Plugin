@@ -92,7 +92,9 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
         for (int i = 0; i < checklist.tasks.size(); i++) {
             String taskName = checklist.tasks.get(i).taskDescription;
             Boolean checked = checklist.tasks.get(i).checked;
-            ChecklistTableTask newTask = new ChecklistTableTask(taskName, checked);
+            String id = checklist.tasks.get(i).id;
+            ChecklistTableTask newTask = new ChecklistTableTask.TasksTableBuilder(taskName, checked)
+                    .id(id).build();
             predefinedData.add(newTask);
         }
 
@@ -107,7 +109,7 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
             for (int i = 0; i < userChecklist.tasks.size(); i++) {
                 String taskName = userChecklist.tasks.get(i).taskDescription;
                 Boolean checked = userChecklist.tasks.get(i).checked;
-                ChecklistTableTask newTask = new ChecklistTableTask(taskName, checked);
+                ChecklistTableTask newTask = new ChecklistTableTask.TasksTableBuilder(taskName, checked).build();
                 userData.add(newTask);
             }
         }

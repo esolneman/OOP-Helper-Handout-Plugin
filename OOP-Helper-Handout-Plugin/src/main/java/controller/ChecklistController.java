@@ -32,18 +32,20 @@ public class ChecklistController {
         }
     }
 
-    public static void savePredefinedDataInFile(ObservableList<ChecklistTableTask> userData) {
-        System.out.println("saveTableDataInFile" + userData.toString());
+    public static void savePredefinedDataInFile(ObservableList<ChecklistTableTask> predefinedData) {
+        System.out.println("saveTableDataInFile" + predefinedData.toString());
 
-        JsonObject checklistJson = new JsonObject();
+        JsonObject updatedDataJson = new JsonObject();
         JsonArray tasks;
-        tasks = ParseChecklistJSON.getJsonFromChecklistTableData(userData);
-        checklistJson.add("checklist", tasks);
+        tasks = ParseChecklistJSON.getJsonFromChecklistTableData(predefinedData);
+        updatedDataJson.add("checklist", tasks);
+
+
 
         //https://stackoverflow.com/a/29319491
         try (Writer writer = new FileWriter(LocalStorageDataProvider.getLocalChecklistPredefinedData())) {
             Gson gson = new GsonBuilder().create();
-            gson.toJson(checklistJson, writer);
+            gson.toJson(updatedDataJson, writer);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -100,7 +100,7 @@ public class ChecklistFXPanel extends JFXPanel {
         addButton.setOnAction(actionEvent -> {
             String newDescription = addDescription.getText();
             if (!newDescription.isEmpty()) {
-                userData.add(new ChecklistTableTask(addDescription.getText(), false));
+                userData.add(new ChecklistTableTask.TasksTableBuilder(addDescription.getText(), false).build());
                 addDescription.clear();
             }
         });
