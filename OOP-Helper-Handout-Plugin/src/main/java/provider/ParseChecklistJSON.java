@@ -34,6 +34,11 @@ public class ParseChecklistJSON {
 
     public static Checklist predefinedJsonToChecklistParser(JsonObject checklistJson) {
         JsonArray checklist = ((JsonArray) checklistJson.get("checklist"));
+        System.out.println("predefinedJsonToChecklistParser: " + checklistJson.toString());
+        System.out.println("isJsonArray: " + checklist.isJsonArray());
+        System.out.println("isJsonArray ebene weiter: " + checklist.get(0).isJsonArray());
+        System.out.println("isJsonObject ebene weiter: " + checklist.get(0).isJsonObject());
+        System.out.println("isJsonNull ebene weiter: " + checklist.get(0).isJsonNull());
         ArrayList<Checklist.Task> tasks = new ArrayList<>();
         for (JsonElement task : checklist) {
             String taskName = task.getAsJsonObject().get("taskDescription").toString();
@@ -58,7 +63,6 @@ public class ParseChecklistJSON {
             Boolean checked = userData.get(i).checked.getValue();
             Checklist.Task newTask;
             if(userData.get(i).id != null){
-                System.out.println("DATA HAS ID WHOOOP WHHOPP: " + description);
                 String id = userData.get(i).id.getValue();
                 newTask = new Checklist.Task.TasksBuilder(description, checked)
                         .id(id)

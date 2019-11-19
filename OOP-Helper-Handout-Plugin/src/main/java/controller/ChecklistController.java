@@ -66,32 +66,29 @@ public class ChecklistController {
         Checklist checklistLocal = ParseChecklistJSON.predefinedJsonToChecklistParser(localChecklistData);
         Checklist checklistRepo = ParseChecklistJSON.predefinedJsonToChecklistParser(repoChecklistData);
 
-        checklistRepo.tasks.forEach(repoTask -> {
+        for (Checklist.Task repoTask : checklistRepo.tasks) {
             String currentRepoTaskID = repoTask.id;
             String currentRepoTaskDescription = repoTask.taskDescription;
-            Integer currentPosition = checklistRepo.tasks.indexOf(repoTask);
-
             //if task exists update description
             if (checklistLocal.containsID(currentRepoTaskID)) {
                 System.out.println("REPO ID EXISTS");
-                //TODO CATCH NULL
-                Checklist.Task newTask = checklistLocal.getTaskWithId(currentRepoTaskID);
-                newTask.setDescription(currentRepoTaskDescription);
-                checklistLocal.tasks.add(currentPosition, newTask);
-                //if task not exists add new task
+                checklistLocal.getTaskWithId(currentRepoTaskID).setDescription(currentRepoTaskDescription);
+                //if task not exists add new task at the end of the list
+                //TODO Think about commetn
             } else {
                 System.out.println("REPO ID NOT EXISTS");
                 Checklist.Task newTask = new Checklist.Task.TasksBuilder(currentRepoTaskDescription, false)
                         .id(currentRepoTaskID).build();
-                checklistLocal.tasks.add(currentPosition, newTask);
+                checklistLocal.tasks.add(newTask);
             }
-        });
+        }
+
         //check if local tasks exists still in the repo
-        checklistLocal.tasks.forEach(localTask -> {
+        for (Checklist.Task localTask : checklistLocal.tasks) {
             if (!checklistRepo.containsID(localTask.id)) {
                 System.out.println("LOCAL ID NOT EXISTS");
                 checklistLocal.tasks.remove(localTask);
             }
-        });
+        }
     }
 }

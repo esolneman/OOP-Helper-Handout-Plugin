@@ -93,8 +93,9 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
             System.out.println("CHECNGE PREDEFINED DATA: ");
             while (change.next()) {
                 if (change.wasUpdated()) {
-                    System.out.println("PREDEFINED "+predefinedData.get(change.getFrom()).getChecked()+" changed value to " +predefinedData.get(change.getFrom()).checked);
+                    System.out.println("PREDEFINED "+ predefinedData.get(change.getFrom()).getChecked()+" changed value to " +predefinedData.get(change.getFrom()).checked);
                     System.out.println("ID BY LISTENER: " + predefinedData.get(0).id);
+                    //TODO CHANGE TO PREFEFINED
                     ChecklistController.savePredefinedDataInFile(predefinedData);
                 }
             }
