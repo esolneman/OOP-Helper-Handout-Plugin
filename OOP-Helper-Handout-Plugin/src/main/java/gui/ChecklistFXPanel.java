@@ -66,8 +66,8 @@ public class ChecklistFXPanel extends JFXPanel {
 
         TableColumn descriptionCol = userTable.getColumns().get(0);
 
+        //https://gist.github.com/abhinayagarwal/9735744
         TableColumn deleteButton = new TableColumn<>("Action");
-
         deleteButton.setCellValueFactory(
                 new Callback<TableColumn.CellDataFeatures<Disposer.Record, Boolean>,
                         ObservableValue<Boolean>>() {
@@ -88,9 +88,9 @@ public class ChecklistFXPanel extends JFXPanel {
                     }
 
                 });
-
-
         userTable.getColumns().add(deleteButton);
+
+
 
         //TODO aDD css to table
         //descriptionCol.setStyle();
@@ -158,6 +158,7 @@ public class ChecklistFXPanel extends JFXPanel {
         return table;
     }
 
+    //https://gist.github.com/abhinayagarwal/9735744
     class ButtonCell extends TableCell<Disposer.Record, Boolean> {
         final Button cellButton = new Button("Delete");
 
@@ -172,6 +173,7 @@ public class ChecklistFXPanel extends JFXPanel {
                     ChecklistTableTask currentPerson = (ChecklistTableTask) ButtonCell.this.getTableView().getItems().get(ButtonCell.this.getIndex());
                     //remove selected item from the table list
                     userData.remove(currentPerson);
+                    ChecklistController.saveTableDataInFile(userData);
                 }
             });
         }
