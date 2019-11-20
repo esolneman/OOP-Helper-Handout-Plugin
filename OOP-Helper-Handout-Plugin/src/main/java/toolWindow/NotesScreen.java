@@ -22,7 +22,7 @@ import java.io.*;
 import java.net.MalformedURLException;
 
 public class NotesScreen extends SimpleToolWindowPanel {
-    private NotesFXPanel notesContent;
+    private HandoutPluginFXPanel notesContent;
     private ToolWindow noteToolWindow;
     private SimpleToolWindowPanel toolWindowPanel;
     private File notesFile;
@@ -87,11 +87,12 @@ public class NotesScreen extends SimpleToolWindowPanel {
     }
 
     private void createContent() {
-        notesContent = new NotesFXPanel();
+        notesContent = new HandoutPluginFXPanel();
         Platform.setImplicitExit(false);
         Platform.runLater(() -> {
             webView = webViewController.createWebView(notesHtmlString);
-            notesContent.showHTMLEditor(notesHtmlString, webView);
+            notesContent.showHandoutWebView(notesHtmlString, webView);
+            //notesContent.showHTMLEditor(notesHtmlString, webView);
         });
     }
 

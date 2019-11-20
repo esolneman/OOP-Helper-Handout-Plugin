@@ -31,6 +31,7 @@ public class NoteAddingFrame {
         createHtmlEditor();
     }
 
+    //https://docs.oracle.com/javafx/2/ui_controls/editor.htm
     private void createHtmlEditor() {
         htmlEditor = new HTMLEditor();
         htmlEditor.setPrefHeight(400);
