@@ -1,85 +1,100 @@
 package controller;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import com.google.gson.stream.JsonReader;
 import objects.Notes;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import provider.LocalStorageDataProvider;
-import provider.contentHandler.ParseNotesJson;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.Scanner;
 
 //TODO LET CONTROLLER CONTROLL
 public class NotesController {
 
+    private static NotesController single_instance = null;
 
-    //TODO
+    public static NotesController getInstance() {
+        if (single_instance == null) {
+            single_instance = new NotesController();
+        }
+        return single_instance;
+    }
+
+    private NotesController(){}
+
     public static void createNotesFile() {
+
+        File notesLocalFile = LocalStorageDataProvider.getNotesFile();
+        notesLocalFile.getParentFile().mkdirs();
+        try {
+            notesLocalFile.createNewFile();
+        } catch (IOException e) {
+            //TODO CATACH
+            System.out.println(e);
+        }
+
+        System.out.println("CREATE NOTES FILE");
+        File notesRepoFile = LocalStorageDataProvider.getInitNotesHtmlFile();
+        BufferedReader inputStream = null;
+        BufferedWriter outputStream = null;
+        try {
+            inputStream = new BufferedReader(new FileReader(
+                    notesRepoFile));
+            File UIFile = notesLocalFile;
+            // if File doesnt exists, then create it
+            if (!UIFile.exists()) {
+                UIFile.createNewFile();
+            }
+            FileWriter filewriter = new FileWriter(UIFile.getAbsoluteFile());
+            outputStream = new BufferedWriter(filewriter);
+            String count;
+            while ((count = inputStream.readLine()) != null) {
+                outputStream.write(count);
+            }
+            outputStream.flush();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                outputStream.close();
+                inputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
     }
 
     public static void saveNewEntryInFile(String htmlText) {
         Document doc = Jsoup.parse(htmlText);
-        String htmlBody = doc.body().html();
-        System.out.println("htmlBody: " + htmlBody);
+        String htmlBody = doc.body().children().toString();
 
         //create new Note
         Notes.Note newNote = new Notes.Note();
         newNote.note = htmlBody;
+        System.out.println("NOTE: " + newNote.note);
         newNote.date = new Date().toString();
 
         try {
-            saveNoteInHtmlFile(newNote, LocalStorageDataProvider.getInitNotesHtmlFile());
+            saveNoteInHtmlFile(htmlBody, LocalStorageDataProvider.getNotesFile());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //Notes.Note newNote = ParseNotesJson.getNoteFromString(htmlText);
-/*        File notesFile = LocalStorageDataProvider.getNotesFile();
 
-        //TODO ADD SOURCE
-        Gson gson = new Gson();
-        JsonReader reader = null;
-        try {
-            reader = new JsonReader(new FileReader(notesFile));
-            Notes allNotes = gson.fromJson(reader, Notes.class);
-            if (allNotes != null) {
-                allNotes.notes.add(newNote);
-            } else {
-                ArrayList<Notes.Note> newNoteArrayLit = new ArrayList<>();
-                newNoteArrayLit.add(newNote);
-                allNotes = new Notes(newNoteArrayLit);
-            }
-            JsonObject notes = ParseNotesJson.getJsonObjectFromNotes(allNotes);
-            //saveNotesInFile(allNotes,notesFile);
-            saveJsonObjectInFile(notes, notesFile);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }*/
     }
 
-    private static void saveJsonObjectInFile(JsonObject jsonObject, File file) {
-        //https://www.baeldung.com/java-write-to-file#write-with-printwriter
-        FileWriter fileWriter = null;
-        try {
-            fileWriter = new FileWriter(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        PrintWriter printWriter = new PrintWriter(fileWriter);
-        printWriter.print(jsonObject);
-        printWriter.close();
-    }
-
-    public static void saveNoteInHtmlFile(Notes.Note note, File initFile) throws IOException {
+    private static void saveNoteInHtmlFile(String htmlBody, File initFile) throws IOException {
         //https://stackoverflow.com/a/30258688
         Document jsoupDoc = Jsoup.parse(initFile, "UTF-8");
-        
+
+        System.out.println("JSOUP DOC HTML : " + jsoupDoc.html());
+        System.out.println("JSOUP DOC text : " + jsoupDoc.text());
+
+        System.out.println("JSOUP DOC toString : " + jsoupDoc.toString());
         //TODO Sometimes Nullpointer
         Element ele = jsoupDoc.getElementById("notesList");
         Element divNote = jsoupDoc.createElement("div");
@@ -87,7 +102,15 @@ public class NotesController {
         ele.appendChild(divNote);
         //https://stackoverflow.com/a/37277534
         //unescape-html-character-entities
-        divNote.text(Jsoup.parse(note.note).text());
+        //divNote.text(Jsoup.parse(note.note).text());
+        divNote.text(htmlBody);
+        System.out.println("ele.: " + ele.text());
+
+        System.out.println("divNote htmlBody: " + divNote.text());
+        System.out.println("text: " + jsoupDoc.text());
+        System.out.println("toString: " + jsoupDoc.toString());
+        System.out.println("html: " + jsoupDoc.html());
+
 
         //https://www.baeldung.com/java-write-to-file#write-with-printwriter
         FileWriter fileWriter = null;

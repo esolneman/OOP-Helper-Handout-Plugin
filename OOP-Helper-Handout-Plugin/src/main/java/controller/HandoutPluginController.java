@@ -59,17 +59,6 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
         BalloonPopupController.showNotification(project, notificationMessage, messageType);
 
 
-        //TODO create in Notes controller
-        File notesFile = LocalStorageDataProvider.getNotesFile();
-        notesFile.getParentFile().mkdirs();
-        try {
-            notesFile.createNewFile();
-        } catch (IOException e) {
-            //TODO CATACH
-            System.out.println(e);
-        }
-
-
         //TODO create in Checklsit controller
         File checklistUserFile = LocalStorageDataProvider.getChecklistUserData();
         checklistUserFile.getParentFile().mkdirs();
@@ -106,6 +95,9 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
             System.out.print(e);
         }
         System.out.println("RepoFile hidden: "+ repoFile.isHidden());*/
+
+        NotesController notesController = NotesController.getInstance();
+        notesController.createNotesFile();
     }
 
 

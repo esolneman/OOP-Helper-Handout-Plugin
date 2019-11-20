@@ -42,7 +42,7 @@ public class NotesScreen extends SimpleToolWindowPanel {
         webViewController = new WebViewController();
 
         //TODO verschiebe to LOCALUSERSTORAGE
-        initNotesFile = LocalStorageDataProvider.getInitNotesHtmlFile();
+        initNotesFile = LocalStorageDataProvider.getNotesFile();
         //notesFile = LocalStorageDataProvider.getNotesFile();
         try {
             notesHtmlString = initNotesFile.toURI().toURL().toString();
@@ -76,7 +76,6 @@ public class NotesScreen extends SimpleToolWindowPanel {
 
     private JComponent createToolbarPanel() {
         final DefaultActionGroup notesActionGroup = new DefaultActionGroup();
-        //TODO OHHHHHHHHHH
         notesActionGroup.add(ActionManager.getInstance().getAction("Notes.AddEntry"));
         final ActionToolbar actionToolbar = ActionManager.getInstance().createActionToolbar("NotesTool", notesActionGroup, true);
         return actionToolbar.getComponent();
