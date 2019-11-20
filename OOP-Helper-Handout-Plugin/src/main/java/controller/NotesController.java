@@ -71,12 +71,12 @@ public class NotesController {
 
     public static void saveNewEntryInFile(String htmlText) {
         Document doc = Jsoup.parse(htmlText);
-        String htmlBody = doc.body().children().toString();
+        String htmlBody = doc.body().html();
+        System.out.println("htmlBody : " + htmlBody);
 
         //create new Note
         Notes.Note newNote = new Notes.Note();
         newNote.note = htmlBody;
-        System.out.println("NOTE: " + newNote.note);
         newNote.date = new Date().toString();
 
         try {
@@ -103,13 +103,14 @@ public class NotesController {
         //https://stackoverflow.com/a/37277534
         //unescape-html-character-entities
         //divNote.text(Jsoup.parse(note.note).text());
-        divNote.text(htmlBody);
-        System.out.println("ele.: " + ele.text());
+        divNote.html(htmlBody);
+        System.out.println("ele text " + ele.text());
+        System.out.println("ele html: " + ele.html());
 
         System.out.println("divNote htmlBody: " + divNote.text());
-        System.out.println("text: " + jsoupDoc.text());
         System.out.println("toString: " + jsoupDoc.toString());
         System.out.println("html: " + jsoupDoc.html());
+        System.out.println("text: " + jsoupDoc.text());
 
 
         //https://www.baeldung.com/java-write-to-file#write-with-printwriter
