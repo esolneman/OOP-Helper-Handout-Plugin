@@ -9,12 +9,14 @@ import javafx.embed.swing.JFXPanel;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -22,20 +24,29 @@ import javafx.scene.text.Font;
 import javafx.util.Callback;
 import objects.ChecklistTableTask;
 
+//TODO MAKE SINGLETON
 public class ChecklistFXPanel extends JFXPanel {
+
     //https://docs.oracle.com/javafx/2/ui_controls/table-view.htm#CJAGAAEE
     public void showChecklistTable(ObservableList<ChecklistTableTask> predefinedData, ObservableList<ChecklistTableTask> userData) {
         Scene scene = new Scene(new Group());
-
-        GridPane checklistTablesPane = new GridPane();
+        BorderPane border = new BorderPane();
+        //GridPane checklistTablesPane = new GridPane();
+        //border.setCenter(checklistTablesPane);
         VBox predefinedDataTable = getPredefinedDataTable(predefinedData);
         VBox userDataTable = getUserDataTable(userData);
 
         //https://stackoverflow.com/questions/35159841/javafx-centering-vbox-inside-gridpane
-        checklistTablesPane.add(predefinedDataTable, 0, 0);
-        checklistTablesPane.add(userDataTable, 1, 0);
+        // checklistTablesPane.add(predefinedDataTable, 0, 0);
+        //checklistTablesPane.add(userDataTable, 1, 0);
 
-        ((Group) scene.getRoot()).getChildren().addAll(checklistTablesPane);
+        border.setLeft(predefinedDataTable);
+        border.setRight(userDataTable);
+        BorderPane.setAlignment(predefinedDataTable, Pos.CENTER_LEFT);
+        BorderPane.setAlignment(userDataTable, Pos.CENTER_RIGHT);
+        BorderPane.setMargin(userDataTable, new Insets(10, 10, 10, 10));
+
+        ((Group) scene.getRoot()).getChildren().addAll(border);
 
         this.setScene(scene);
         this.show();
