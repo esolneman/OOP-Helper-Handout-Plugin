@@ -35,10 +35,7 @@ public class ParseChecklistJSON {
     public static Checklist predefinedJsonToChecklistParser(JsonObject checklistJson) {
         JsonArray checklist = ((JsonArray) checklistJson.get("checklist"));
         System.out.println("predefinedJsonToChecklistParser: " + checklistJson.toString());
-        System.out.println("isJsonArray: " + checklist.isJsonArray());
-        System.out.println("isJsonArray ebene weiter: " + checklist.get(0).isJsonArray());
         System.out.println("isJsonObject ebene weiter: " + checklist.get(0).isJsonObject());
-        System.out.println("isJsonNull ebene weiter: " + checklist.get(0).isJsonNull());
         ArrayList<Checklist.Task> tasks = new ArrayList<>();
         for (JsonElement task : checklist) {
             String taskName = task.getAsJsonObject().get("taskDescription").toString();

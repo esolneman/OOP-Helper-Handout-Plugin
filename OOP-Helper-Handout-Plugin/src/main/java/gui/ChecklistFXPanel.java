@@ -6,7 +6,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.JFXPanel;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -16,10 +15,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.util.Callback;
 import objects.ChecklistTableTask;
@@ -45,6 +41,7 @@ public class ChecklistFXPanel extends JFXPanel {
         BorderPane.setAlignment(predefinedDataTable, Pos.CENTER_LEFT);
         BorderPane.setAlignment(userDataTable, Pos.CENTER_RIGHT);
         BorderPane.setMargin(userDataTable, new Insets(10, 10, 10, 10));
+        BorderPane.setMargin(predefinedDataTable, new Insets(10, 10, 10, 10));
 
         ((Group) scene.getRoot()).getChildren().addAll(border);
 
@@ -56,6 +53,10 @@ public class ChecklistFXPanel extends JFXPanel {
         TableView<ChecklistTableTask> predefinedTable;
         predefinedTable = createTable(predefinedData);
         predefinedTable.setEditable(true);
+
+
+        predefinedTable.getColumns().get(0).setMaxWidth( 1f * Integer.MAX_VALUE * 70 ); // 50% width
+        predefinedTable.getColumns().get(1).setMaxWidth( 1f * Integer.MAX_VALUE * 30 ); // 30% width
 
         final Label predefinedDataLabel = new Label("Vordefinierte Checkliste");
         predefinedDataLabel.setFont(new Font("Arial", 20));
@@ -77,14 +78,14 @@ public class ChecklistFXPanel extends JFXPanel {
         TableColumn descriptionCol = userTable.getColumns().get(0);
 
         //https://gist.github.com/abhinayagarwal/9735744
-        TableColumn deleteButton = new TableColumn<>("Action");
-        deleteButton.setCellValueFactory(
+        TableColumn deleteButtonCol = new TableColumn<>("Action");
+        deleteButtonCol.setCellValueFactory(
                 (Callback<TableColumn.CellDataFeatures<Disposer.Record, Boolean>, ObservableValue<Boolean>>) p -> new SimpleBooleanProperty(p.getValue() != null));
 
         //Adding the Button to the cell
-        deleteButton.setCellFactory((Callback<TableColumn<Disposer.Record, Boolean>, ButtonCell>) p -> new ButtonCell(userData));
+        deleteButtonCol.setCellFactory((Callback<TableColumn<Disposer.Record, Boolean>, ButtonCell>) p -> new ButtonCell(userData));
 
-        userTable.getColumns().add(deleteButton);
+        userTable.getColumns().add(deleteButtonCol);
 
 
         //TODO aDD css to table
@@ -101,6 +102,16 @@ public class ChecklistFXPanel extends JFXPanel {
                     System.out.println("NEW VALUE: " + checklistTableTaskStringCellEditEvent.getNewValue());
                     ChecklistController.saveUserDataInFile(userData);
                 });
+
+        //https://stackoverflow.com/a/35265368
+        descriptionCol.setMaxWidth( 1f * Integer.MAX_VALUE * 60 ); // 50% width
+        userTable.getColumns().get(1).setMaxWidth( 1f * Integer.MAX_VALUE * 20 ); // 30% width
+        deleteButtonCol.setMaxWidth( 1f * Integer.MAX_VALUE * 20 ); // 30% width
+
+
+        //https://stackoverflow.com/a/13456063
+        //Display delete Button in the center of the cell
+        deleteButtonCol.setStyle( "-fx-alignment: CENTER;");
         final TextField addDescription = new TextField();
         addDescription.setPromptText("Neue Aufgabe");
         addDescription.setMaxWidth(descriptionCol.getPrefWidth());
@@ -135,13 +146,14 @@ public class ChecklistFXPanel extends JFXPanel {
         System.out.println("PANEL WIDTH " + this.getWidth());
         System.out.println("TABLE WIDTH " + tableWidth);
         System.out.println("COL WIDTH " + tableWidth / 2);
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        table.setMinWidth(tableWidth);
+
+
         TableColumn taskDescriptionCol = new TableColumn("Aufgabe");
         taskDescriptionCol.setCellValueFactory(new PropertyValueFactory<ChecklistTableTask, String>("taskDescription"));
 
         TableColumn taskCheckedCol = new TableColumn("Erledigt");
-        taskCheckedCol.setMaxWidth(25);
         taskCheckedCol.setCellValueFactory(new PropertyValueFactory<ChecklistTableTask, Boolean>("checked"));
 
         //https://stackoverflow.com/a/12550850
@@ -157,7 +169,6 @@ public class ChecklistFXPanel extends JFXPanel {
             return data.get(param).checked;
         }));
 
-
         table.setItems(data);
         table.getColumns().addAll(taskDescriptionCol, taskCheckedCol);
 
@@ -170,20 +181,20 @@ public class ChecklistFXPanel extends JFXPanel {
 
     //https://gist.github.com/abhinayagarwal/9735744
     class ButtonCell extends TableCell<Disposer.Record, Boolean> {
-        final Button cellButton = new Button("Delete");
+        final Button cellButton = new Button("X");
 
         ButtonCell(ObservableList<ChecklistTableTask> userData) {
 
-            //Action when the button is pressed
-            cellButton.setOnAction(new EventHandler<ActionEvent>() {
+            //adapt layout
+            this.cellButton.setMaxHeight(5);
+            this.cellButton.setMaxWidth(5);
 
-                @Override
-                public void handle(ActionEvent t) {
-                    // get Selected Item
-                    ChecklistTableTask currentPerson = (ChecklistTableTask) ButtonCell.this.getTableView().getItems().get(ButtonCell.this.getIndex());
-                    //remove selected item from the table list
-                    userData.remove(currentPerson);
-                }
+            //Action when the button is pressed
+            cellButton.setOnAction(actionEvent -> {
+                // get Selected Item
+                ChecklistTableTask currentTask = (ChecklistTableTask) ButtonCell.this.getTableView().getItems().get(ButtonCell.this.getIndex());
+                //remove selected item from the table list
+                userData.remove(currentTask);
             });
         }
 

@@ -76,7 +76,6 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
     private void createContent() {
         checklistContent = new ChecklistFXPanel();
         Checklist checklist = ParseChecklistJSON.predefinedJsonToChecklistParser(checklistJson);
-        Object[] columnNames = {"Aufgabe", "Erledigt"};
 
         //https://stackoverflow.com/a/28671914
         final ObservableList<ChecklistTableTask> predefinedData =FXCollections.observableArrayList(param -> new Observable[] {param.checked});
@@ -90,7 +89,7 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
             System.out.println("ID WHEN CREATING: " + predefinedData.get(i).id);
         }
         predefinedData.addListener((ListChangeListener<? super ChecklistTableTask>) change -> {
-            System.out.println("CHECNGE PREDEFINED DATA: ");
+            System.out.println("Chenge PREDEFINED DATA: ");
             while (change.next()) {
                 if (change.wasUpdated()) {
                     System.out.println("PREDEFINED "+ predefinedData.get(change.getFrom()).getChecked()+" changed value to " +predefinedData.get(change.getFrom()).checked);

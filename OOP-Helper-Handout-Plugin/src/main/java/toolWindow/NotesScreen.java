@@ -1,12 +1,12 @@
 package toolWindow;
 
-import com.google.gson.Gson;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.ActionToolbar;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
-import controller.NotesController;
 import gui.HandoutPluginFXPanel;
+import gui.NotesFXPanel;
 import javafx.application.Platform;
 import javafx.scene.web.HTMLEditor;
 import javafx.scene.web.WebView;
@@ -18,10 +18,10 @@ import javax.swing.*;
 import java.io.*;
 import java.net.MalformedURLException;
 
-public class NotesScreen {
-    private HandoutPluginFXPanel notesContent;
+public class NotesScreen extends SimpleToolWindowPanel {
+    private NotesFXPanel notesContent;
     private ToolWindow noteToolWindow;
-   // private SimpleToolWindowPanel toolWindowPanel;
+    private SimpleToolWindowPanel toolWindowPanel;
     private File notesFile;
     private Notes notes;
     private JList notesList;
@@ -36,8 +36,8 @@ public class NotesScreen {
     private static WebView webView;
 
     public NotesScreen(ToolWindow toolWindow) {
-        //super(true, true);
-        //toolWindowPanel = new SimpleToolWindowPanel(true);
+        super(true, true);
+        toolWindowPanel = new SimpleToolWindowPanel(true);
         noteToolWindow = toolWindow;
         webViewController = new WebViewController();
 
@@ -70,20 +70,20 @@ public class NotesScreen {
 
     private void initToolWindowMenu() {
         //http://androhi.hatenablog.com/entry/2015/07/23/233932
-        //toolWindowPanel.setToolbar(createToolbarPanel());
-       // toolWindowPanel.setContent(noteContentPane);
+        toolWindowPanel.setToolbar(createToolbarPanel());
+        toolWindowPanel.setContent(notesContent);
     }
 
     private JComponent createToolbarPanel() {
         final DefaultActionGroup notesActionGroup = new DefaultActionGroup();
         //TODO OHHHHHHHHHH
-        notesActionGroup.add(ActionManager.getInstance().getAction("Handout.Download"));
+        notesActionGroup.add(ActionManager.getInstance().getAction("Notes.AddEntry"));
         final ActionToolbar actionToolbar = ActionManager.getInstance().createActionToolbar("NotesTool", notesActionGroup, true);
         return actionToolbar.getComponent();
     }
 
     private void createContent() {
-        notesContent = new HandoutPluginFXPanel();
+        notesContent = new NotesFXPanel();
         Platform.setImplicitExit(false);
         Platform.runLater(() -> {
             webView = webViewController.createWebView(notesHtmlString);
@@ -94,8 +94,8 @@ public class NotesScreen {
     //@Override
     public void updateContent() { }
 
-    public HandoutPluginFXPanel getContent() {
-        return notesContent;
+    public JPanel getContent() {
+        return toolWindowPanel;
     }
 
 }
