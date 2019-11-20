@@ -2,9 +2,11 @@ package toolWindow;
 
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.ActionToolbar;
+import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
+import cucumber.api.java.en_scouse.An;
 import gui.HandoutPluginFXPanel;
 import gui.NotesFXPanel;
 import javafx.application.Platform;
@@ -12,6 +14,7 @@ import javafx.scene.web.HTMLEditor;
 import javafx.scene.web.WebView;
 import objects.Notes;
 import provider.LocalStorageDataProvider;
+import toolWindow.actions.AddNotesAction;
 import webView.WebViewController;
 
 import javax.swing.*;
@@ -76,7 +79,9 @@ public class NotesScreen extends SimpleToolWindowPanel {
 
     private JComponent createToolbarPanel() {
         final DefaultActionGroup notesActionGroup = new DefaultActionGroup();
-        notesActionGroup.add(ActionManager.getInstance().getAction("Notes.AddEntry"));
+        AddNotesAction notesAction = (AddNotesAction) ActionManager.getInstance().getAction("Notes.AddEntry");
+        notesAction.setNotesScreen(this);
+        notesActionGroup.add(notesAction);
         final ActionToolbar actionToolbar = ActionManager.getInstance().createActionToolbar("NotesTool", notesActionGroup, true);
         return actionToolbar.getComponent();
     }
@@ -97,4 +102,7 @@ public class NotesScreen extends SimpleToolWindowPanel {
         return toolWindowPanel;
     }
 
+    public void reloadWebView() {
+        webViewController.updateWebViewContent();
+    }
 }

@@ -1,6 +1,6 @@
 package controller;
 
-import com.google.gson.JsonObject;
+import javafx.embed.swing.JFXPanel;
 import objects.Notes;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -9,7 +9,6 @@ import provider.LocalStorageDataProvider;
 
 import java.io.*;
 import java.util.Date;
-import java.util.Scanner;
 
 //TODO LET CONTROLLER CONTROLL
 public class NotesController {
@@ -36,7 +35,6 @@ public class NotesController {
             System.out.println(e);
         }
 
-        System.out.println("CREATE NOTES FILE");
         File notesRepoFile = LocalStorageDataProvider.getInitNotesHtmlFile();
         BufferedReader inputStream = null;
         BufferedWriter outputStream = null;
@@ -66,13 +64,11 @@ public class NotesController {
                 e.printStackTrace();
             }
         }
-
     }
 
     public static void saveNewEntryInFile(String htmlText) {
         Document doc = Jsoup.parse(htmlText);
         String htmlBody = doc.body().html();
-        System.out.println("htmlBody : " + htmlBody);
 
         //create new Note
         Notes.Note newNote = new Notes.Note();
@@ -90,28 +86,19 @@ public class NotesController {
     private static void saveNoteInHtmlFile(String htmlBody, File initFile) throws IOException {
         //https://stackoverflow.com/a/30258688
         Document jsoupDoc = Jsoup.parse(initFile, "UTF-8");
-
-        System.out.println("JSOUP DOC HTML : " + jsoupDoc.html());
-        System.out.println("JSOUP DOC text : " + jsoupDoc.text());
-
-        System.out.println("JSOUP DOC toString : " + jsoupDoc.toString());
         //TODO Sometimes Nullpointer
         Element ele = jsoupDoc.getElementById("notesList");
         Element divNote = jsoupDoc.createElement("div");
         divNote.attr("id", "note");
         ele.appendChild(divNote);
+        //add separator between notes
+        Element separator = jsoupDoc.createElement("hr");
+        ele.appendChild(separator);
+
         //https://stackoverflow.com/a/37277534
         //unescape-html-character-entities
         //divNote.text(Jsoup.parse(note.note).text());
         divNote.html(htmlBody);
-        System.out.println("ele text " + ele.text());
-        System.out.println("ele html: " + ele.html());
-
-        System.out.println("divNote htmlBody: " + divNote.text());
-        System.out.println("toString: " + jsoupDoc.toString());
-        System.out.println("html: " + jsoupDoc.html());
-        System.out.println("text: " + jsoupDoc.text());
-
 
         //https://www.baeldung.com/java-write-to-file#write-with-printwriter
         FileWriter fileWriter = null;

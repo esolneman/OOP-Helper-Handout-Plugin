@@ -16,6 +16,7 @@ import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Callback;
 import objects.ChecklistTableTask;
@@ -55,8 +56,8 @@ public class ChecklistFXPanel extends JFXPanel {
         predefinedTable.setEditable(true);
 
 
-        predefinedTable.getColumns().get(0).setMaxWidth( 1f * Integer.MAX_VALUE * 70 ); // 50% width
-        predefinedTable.getColumns().get(1).setMaxWidth( 1f * Integer.MAX_VALUE * 30 ); // 30% width
+        predefinedTable.getColumns().get(0).setMaxWidth(1f * Integer.MAX_VALUE * 70); // 50% width
+        predefinedTable.getColumns().get(1).setMaxWidth(1f * Integer.MAX_VALUE * 30); // 30% width
 
         final Label predefinedDataLabel = new Label("Vordefinierte Checkliste");
         predefinedDataLabel.setFont(new Font("Arial", 20));
@@ -87,10 +88,50 @@ public class ChecklistFXPanel extends JFXPanel {
 
         userTable.getColumns().add(deleteButtonCol);
 
-
         //TODO aDD css to table
-        //descriptionCol.setStyle();
-        descriptionCol.setCellFactory(TextFieldTableCell.forTableColumn());
+        //descriptionCol.setStyle("-fx-border-color: red;");
+
+        //https://stackoverflow.com/a/7720885
+        descriptionCol.setCellFactory(new Callback<TableColumn, TableCell>() {
+            @Override
+            public TextFieldTableCell call(TableColumn tableColumn) {
+                return new TextFieldTableCell<ChecklistTableTask, String>() {
+                    //("-fx-effect: dropshadow(three-pass-box, grey, 10, 0, 0, 10);");
+                    @Override
+                    public void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (!isEmpty()) {
+                            this.setStyle("-fx-underline: true ;");
+                        }
+                    }
+                };
+            }
+        });
+
+        //TextFieldTableCell.forTableColumn()
+
+
+        /*https://stackoverflow.com/a/7720885
+        descriptionCol.setCellFactory(new Callback<TableColumn, TableCell>() {
+            public TableCell call(TableColumn param) {
+                return new TableCell<ChecklistTableTask, String>() {
+
+                    @Override
+                    public void updateItem(String item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (!isEmpty()) {
+                            this.setStyle( "-fx-underline: true ;");
+                            // Get fancy and change color based on data
+                            if(item.contains("@"))
+                                this.setTextFill(Color.BLUEVIOLET);
+                            setText(item);
+                        }
+                    }
+                };
+            }
+        });*/
+
+
         //https://docs.oracle.com/javafx/2/ui_controls/table-view.htm#CEGFCFEB
         descriptionCol.setOnEditCommit(
                 (EventHandler<TableColumn.CellEditEvent<ChecklistTableTask, String>>) checklistTableTaskStringCellEditEvent -> {
@@ -104,14 +145,13 @@ public class ChecklistFXPanel extends JFXPanel {
                 });
 
         //https://stackoverflow.com/a/35265368
-        descriptionCol.setMaxWidth( 1f * Integer.MAX_VALUE * 60 ); // 50% width
-        userTable.getColumns().get(1).setMaxWidth( 1f * Integer.MAX_VALUE * 20 ); // 30% width
-        deleteButtonCol.setMaxWidth( 1f * Integer.MAX_VALUE * 20 ); // 30% width
-
+        descriptionCol.setMaxWidth(1f * Integer.MAX_VALUE * 60); // 50% width
+        userTable.getColumns().get(1).setMaxWidth(1f * Integer.MAX_VALUE * 20); // 30% width
+        deleteButtonCol.setMaxWidth(1f * Integer.MAX_VALUE * 20); // 30% width
 
         //https://stackoverflow.com/a/13456063
         //Display delete Button in the center of the cell
-        deleteButtonCol.setStyle( "-fx-alignment: CENTER;");
+        deleteButtonCol.setStyle("-fx-alignment: CENTER;");
         final TextField addDescription = new TextField();
         addDescription.setPromptText("Neue Aufgabe");
         addDescription.setMaxWidth(descriptionCol.getPrefWidth());
@@ -149,7 +189,6 @@ public class ChecklistFXPanel extends JFXPanel {
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
 
-
         TableColumn taskDescriptionCol = new TableColumn("Aufgabe");
         taskDescriptionCol.setCellValueFactory(new PropertyValueFactory<ChecklistTableTask, String>("taskDescription"));
 
@@ -165,7 +204,7 @@ public class ChecklistFXPanel extends JFXPanel {
         });
 */
         taskCheckedCol.setCellFactory(CheckBoxTableCell.forTableColumn(param -> {
-            System.out.println("Cours "+ data.get(param).getChecked());
+            System.out.println("Cours " + data.get(param).getChecked());
             return data.get(param).checked;
         }));
 
