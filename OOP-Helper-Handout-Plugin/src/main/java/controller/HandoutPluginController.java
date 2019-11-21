@@ -4,25 +4,20 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.stream.JsonReader;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import eventHandling.OnGitEventListener;
+import gherkin.deps.com.google.gson.internal.$Gson$Preconditions;
 import gui.CommitChangesDialog;
-import objects.Notes;
 import provider.HandoutContentDataProviderInterface;
 import provider.LocalStorageDataProvider;
 import provider.RepoLocalStorageDataProvider;
-import provider.contentHandler.ParseNotesJson;
 import toolWindow.HandoutToolWindowFactory;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
-import java.text.ParseException;
+import java.io.*;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class HandoutPluginController implements HandoutPluginControllerInterface, OnGitEventListener {
     private HandoutContentDataProviderInterface handoutDataProvider;
@@ -53,7 +48,7 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
     //TODO Create dummy file for user notes
     //TODO Create dummy file for checklist
 
-    public void onCloningRepositoryEvent(String notificationMessage, NotificationType messageType) {
+    public void onCloningRepositoryEvent(String notificationMessage, NotificationType messageType)   {
         System.out.println("Performing callback after Asynchronous Task");
         File repoFile = new File(RepoLocalStorageDataProvider.getRepoLocalFile());
         repoFile.setExecutable(false);
@@ -62,17 +57,6 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
         repoFile.setReadOnly();
         toolWindowController.updateContent();
         BalloonPopupController.showNotification(project, notificationMessage, messageType);
-
-
-        //TODO create in Notes controller
-        File notesFile = LocalStorageDataProvider.getNotesFile();
-        notesFile.getParentFile().mkdirs();
-        try {
-            notesFile.createNewFile();
-        } catch (IOException e) {
-            //TODO CATACH
-            System.out.println(e);
-        }
 
 
         //TODO create in Checklsit controller
@@ -87,6 +71,20 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
         } catch (IOException ex) {
             System.out.println("FILE NOT Created");
         }
+        File localPredefinedChecklistFile = LocalStorageDataProvider.getLocalChecklistPredefinedData();
+        File predefinedRepoChecklistFile = LocalStorageDataProvider.getChecklistData();
+
+        //TODO create in Checklsit controller
+        //https://stackoverflow.com/a/29965924
+        Gson gson = new Gson();
+        JsonReader reader = null;
+        try {
+            reader = new JsonReader(new FileReader(predefinedRepoChecklistFile));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        JsonObject repoChecklistData = gson.fromJson(reader, JsonObject.class);
+        saveJsonObjectInFile(repoChecklistData, localPredefinedChecklistFile);
 
         //update toolWindow
         //
@@ -97,6 +95,9 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
             System.out.print(e);
         }
         System.out.println("RepoFile hidden: "+ repoFile.isHidden());*/
+
+        NotesController notesController = NotesController.getInstance();
+        notesController.createNotesFile();
     }
 
 
@@ -105,6 +106,11 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
     public void onUpdatingRepositoryEvent(ArrayList<String> commitMessages) {
         BalloonPopupController.showNotification(project, "Handout Daten wurden runtergeladen." + commitMessages.toString(), NotificationType.INFORMATION);
         CommitChangesDialog commitChangesDialog = new CommitChangesDialog(commitMessages);
+        try {
+            ChecklistController.comparePredefinedChecklistVersions();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
         commitChangesDialog.showPanel();
     }
 

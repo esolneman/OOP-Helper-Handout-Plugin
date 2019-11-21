@@ -24,7 +24,7 @@ import static environment.Constants.*;
 public class DownloadTask {
     private String path;
     private static DownloadTask single_instance = null;
-    private static Git clone = null;
+    private static Git clone;
 
    /* public DownloadTask(String path) {
         this.path = path;
@@ -41,6 +41,7 @@ public class DownloadTask {
     private DownloadTask() { }
 
 
+    //TODO ADD SOURCE
     public void run(String repoUrl, File contentRepoFile, String branchPath) throws IOException {
         clone = null;
         {
@@ -74,6 +75,7 @@ public class DownloadTask {
             git.fetch().call();
             System.out.println("git.fetch Branch: " + git.getRepository().getBranch());
             Iterable<RevCommit> logs = git.log().call();
+            //TODO ADD SOURCE
             logs = git.log()
                     .add(repository.resolve("remotes/origin/test"))
                     .call();

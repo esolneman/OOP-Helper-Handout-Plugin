@@ -14,86 +14,17 @@ import java.util.ArrayList;
 
 public class ParseChecklistJSON {
 
-    public static JsonObject getJsonFromTreeModel (TreeModel treeModel){
-        JsonObject checklistJson = new JsonObject();
-        JsonArray tasks = new JsonArray();
-        checklistJson.add("checklist", tasks);
-        JsonObject task;
-        for (int i = 0; i < treeModel.getChildCount(treeModel.getRoot()); i++) {
-            task = new JsonObject();
-            DefaultMutableTreeNode parentNode = (DefaultMutableTreeNode) treeModel.getChild(treeModel.getRoot(), i);
-            System.out.println("Parent: " + parentNode.toString());
-            task.addProperty("task", parentNode.toString());
-            JsonArray childtasks = new JsonArray();
-            for (int j = 0; j < parentNode.getChildCount() ; j++) {
-                DefaultMutableTreeNode childNode = (DefaultMutableTreeNode) parentNode.getChildAt(j);
-                System.out.println("CHILD  : " + childNode.toString());
-                childtasks.add(childNode.toString());
-            }
-            task.add("childtasks", childtasks);
-            tasks.add(task);
-        }
-/*
-        JsonObject checklistJson = new JsonObject();
-        JsonArray tasks = new JsonArray();
-
-        JsonObject task = new JsonObject();
-        checklistJson.add("checklist", tasks);
-        task.addProperty("task", "Create *Player* class");
-        JsonArray childtasks = new JsonArray();
-        childtasks.add("Create *update* method");
-        childtasks.add("Create *setOrbitMovementType* method");
-        childtasks.add("Create *setRangeMovementType* method");
-        task.add("childtasks", childtasks);
-        tasks.add(task);
-
-        task = new JsonObject();
-
-
-        task.addProperty("task", "Create *Projectile* class");
-        JsonArray c = new JsonArray();
-        task.add("childtasks", c);
-        tasks.add(task);
-
-        task = new JsonObject();
-
-        task.addProperty("task", "collision detection between player and projecttile");
-        JsonArray c1 = new JsonArray();
-        task.add("childtasks", c1);
-        tasks.add(task);*/
-        return checklistJson;
-    }
-
-    public static DefaultTreeModel getTreeModelFromJson (JsonObject jsonObject){
-/*        Checklist checklist = checklistJSONHandler(jsonObject);
-        DefaultMutableTreeNode initNode = new DefaultMutableTreeNode("Angabe");
-        for (int i = 0; i < checklist.getTasks().size(); i++) {
-            Checklist.Tasks task = checklist.getTasks().get(i);
-            DefaultMutableTreeNode newParentNode = new DefaultMutableTreeNode(task.getTask());
-            initNode.add(newParentNode);
-            for (String childTask : task.getChildTasks()) {
-                DefaultMutableTreeNode newChildNote = new DefaultMutableTreeNode(childTask);
-                newParentNode.add(newChildNote);
-            }
-        }
-        DefaultTreeModel model = new DefaultTreeModel(initNode);
-        return model;*/
-
-        return null;
-
-    }
-
     //TODO Combine Methods
     //https://stackoverflow.com/a/34510715
     public static Checklist checklistJSONHandler(JsonObject checklistJson) {
         JsonArray checklist = ((JsonArray) checklistJson.get("checklist"));
-        ArrayList<Checklist.Tasks> tasks = new ArrayList<>();
+        ArrayList<Checklist.Task> tasks = new ArrayList<>();
         for (JsonElement task : checklist) {
             String taskName = task.getAsJsonObject().get("taskDescription").toString();
             Boolean checked = task.getAsJsonObject().get("checked").getAsBoolean();
 
             //TODO Quelle: Efefective Java Page 13-14 Kapitel 2.2 - Thema 2
-            Checklist.Tasks newTask = new Checklist.Tasks.TasksBuilder(taskName, checked).build();
+            Checklist.Task newTask = new Checklist.Task.TasksBuilder(taskName, checked).build();
             tasks.add(newTask);
         }
         Checklist realChecklist = new Checklist();
@@ -103,13 +34,15 @@ public class ParseChecklistJSON {
 
     public static Checklist predefinedJsonToChecklistParser(JsonObject checklistJson) {
         JsonArray checklist = ((JsonArray) checklistJson.get("checklist"));
-        ArrayList<Checklist.Tasks> tasks = new ArrayList<>();
+        System.out.println("predefinedJsonToChecklistParser: " + checklistJson.toString());
+        System.out.println("isJsonObject ebene weiter: " + checklist.get(0).isJsonObject());
+        ArrayList<Checklist.Task> tasks = new ArrayList<>();
         for (JsonElement task : checklist) {
-            String taskName = task.getAsJsonObject().get("task").toString();
+            String taskName = task.getAsJsonObject().get("taskDescription").toString();
             Boolean checked = task.getAsJsonObject().get("checked").getAsBoolean();
             String id = task.getAsJsonObject().get("id").toString();
             //TODO Quelle: Efefective Java Page 13-14 Kapitel 2.2 - Thema 2
-            Checklist.Tasks newTask = new Checklist.Tasks.TasksBuilder(taskName, checked)
+            Checklist.Task newTask = new Checklist.Task.TasksBuilder(taskName, checked)
                     .id(id).build();
             tasks.add(newTask);
         }
@@ -121,16 +54,24 @@ public class ParseChecklistJSON {
 
     public static JsonArray getJsonFromChecklistTableData(ObservableList<ChecklistTableTask> userData) {
         Checklist updatedChecklist;
-        ArrayList<Checklist.Tasks> tasksArrayList = new ArrayList<>();
+        ArrayList<Checklist.Task> tasksArrayList = new ArrayList<>();
         for (int i = 0; i < userData.size(); i++) {
             String description = userData.get(i).taskDescription.getValue();
             Boolean checked = userData.get(i).checked.getValue();
-            Checklist.Tasks newTask = new Checklist.Tasks.TasksBuilder(description, checked).build();
+            Checklist.Task newTask;
+            if(userData.get(i).id != null){
+                String id = userData.get(i).id.getValue();
+                newTask = new Checklist.Task.TasksBuilder(description, checked)
+                        .id(id)
+                        .build();
+                System.out.println("getJsonFromChecklistTableData: " + newTask.id);
+            }else{
+                newTask = new Checklist.Task.TasksBuilder(description, checked).build();
+            }
             tasksArrayList.add(newTask);
-            System.out.println("NEW CHEKLCIST description: " + description);
-            System.out.println("NEW CHEKLCIST: " + tasksArrayList.get(i).taskDescription);
-
         }
+
+
         updatedChecklist = new Checklist();
         updatedChecklist.setTasks(tasksArrayList);
         JsonObject updatedJson = new JsonObject();
@@ -141,6 +82,9 @@ public class ParseChecklistJSON {
             JsonObject task = new JsonObject();
             task.addProperty("taskDescription", updatedChecklist.tasks.get(i).taskDescription);
             task.addProperty("checked", updatedChecklist.tasks.get(i).checked);
+            if(updatedChecklist.tasks.get(i).id != null){
+                task.addProperty("id", updatedChecklist.tasks.get(i).id);
+            }
             tasks.add(task);
         }
         return tasks;
