@@ -39,18 +39,16 @@
             <action id="Handout.TableOfContents" class="toolWindow.actionGroups.HandoutContentActionGroup" text="Inhaltsverzeichnis" description="content" icon="/icons/listFiles.svg"> </action>
             <action id ="Handout.Maximize" class="toolWindow.actions.ToolWindowMaximizeAction" text="Maximize" description="maximize Tool Window" icon="/icons/maximize.svg"> </action>
             <action id ="Handout.Minimize" class="toolWindow.actions.ToolWindowMinimizeAction" text="Minimize" description="minimize Tool Window" icon="/icons/minimize.svg"> </action>
-            <action id ="Checklist.EditContent" class="toolWindow.actions.EditChecklist" text="edit checklist" description="editiere die Checkliste" icon="/icons/editSource.svg"> </action>
         </group>
         <action id="CommonAssessmentCriteria.TableOfContents" class="toolWindow.actionGroups.HandoutContentActionGroup" text="Inhaltsverzeichnis" description="content" icon="/icons/listFiles.svg"> </action>
         <group id="CommonInformation" text="test" description="test menu">
             <!--TODO Display only name without default icon -->
-            <action id="CommonInformation.CodingStyles" class="toolWindow.actions.SwitchWebViewUrl" text="CodingStyles" description="CodingStyles" > </action>
+            <action id="CommonInformation.CodingStyles" class="toolWindow.actions.SwitchWebViewUrl" text="Coding Styles" description="CodingStyles" > </action>
             <action id="CommonInformation.Variables" class="toolWindow.actions.SwitchWebViewUrl" text="Variables" description="Variables" > </action>
             <action id ="CommonInformation.Shortcut" class="toolWindow.actions.SwitchWebViewUrl" text="Shortcut" description="Shortcut"> </action>
         </group>
         <group id="NotesAction" text="test" description="test menu">
-            <!--TODO Display only name without default icon -->
-            <action id="Notes.AddEntry" class="toolWindow.actions.SwitchWebViewUrl" text="CodingStyles" description="CodingStyles" > </action>
+            <action id="Notes.AddEntry" class="toolWindow.actions.AddNotesAction" text="AddNote" description="Add note to list" icon="/icons/addNote.svg"> </action>
         </group>
     </actions>
 </idea-plugin>
