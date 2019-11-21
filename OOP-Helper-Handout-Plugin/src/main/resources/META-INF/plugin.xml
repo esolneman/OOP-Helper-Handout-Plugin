@@ -22,7 +22,7 @@
     </project-components>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow id="handoutToolWindow" anchor="right" factoryClass="toolWindow.HandoutToolWindowFactory"/>
+        <toolWindow id="Aufgabe (OOP)" anchor="right" icon="/icons/toolWindowIcon.svg" factoryClass="toolWindow.HandoutToolWindowFactory"/>
         <projectService serviceInterface="provider.HandoutContentDataProviderInterface" serviceImplementation="provider.HandoutContentDataProvider"/>
         <projectService serviceInterface="services.ToolWindowServiceInterface" serviceImplementation="services.ToolWindowService"/>
     </extensions>
