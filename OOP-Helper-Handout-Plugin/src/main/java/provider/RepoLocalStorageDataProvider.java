@@ -1,7 +1,6 @@
 package provider;
 
 import com.intellij.openapi.project.Project;
-import objects.SpecificAssessmentCriteria;
 
 import java.io.File;
 
@@ -53,7 +52,7 @@ public class RepoLocalStorageDataProvider implements RepoLocalStorageDataProvide
 
 
     public static File getCommonAssessmentCriteriaFileDirectory() {
-        File specificAssessmentCriteriaFile = new File(getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE  + COMMON_ASSESSMENT_CRITERIA_FILE_NAME);
+        File specificAssessmentCriteriaFile = new File(getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE  + COMMON_INFORMATION_FILE_NAME);
         return specificAssessmentCriteriaFile;
     }
     public static File getChecklistFile() {
@@ -71,8 +70,14 @@ public class RepoLocalStorageDataProvider implements RepoLocalStorageDataProvide
         return variablesFile;
     }
 
+    //TODO MAKE CONSTANT
     public static File getNotesInitFile() {
         File notesFile = new File(getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE + "/notes.html");
         return notesFile;
+    }
+
+    public static File getHelpStartFile() {
+        File helpStartFile = new File(getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE + COMMON_INFORMATION_FILE_NAME);
+        return helpStartFile;
     }
 }

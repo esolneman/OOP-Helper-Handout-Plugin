@@ -22,6 +22,8 @@ public class AddNotesAction extends AnAction {
         });
     }
 
+    //TODO TRY TO GET TOOLWINDOW VIA https://intellij-support.jetbrains.com/hc/en-us/community/posts/115000534584-Access-toolwindow-from-an-action
+    // ToolWindowManager.getInstance(project).getToolWindow(TOOLWINDOW_ID)
     public void setNotesScreen(NotesScreen notesScreen){
         this.notesScreen = notesScreen;
     }

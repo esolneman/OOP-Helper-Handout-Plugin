@@ -3,6 +3,7 @@ package provider;
 import com.intellij.sisyphus.api.User;
 
 import java.io.File;
+import java.net.URL;
 
 public class LocalStorageDataProvider implements LocalStorageDataProviderInterface {
 
@@ -56,4 +57,6 @@ public class LocalStorageDataProvider implements LocalStorageDataProviderInterfa
     }
 
 
+    public static File getHelpStartDirectory() { return RepoLocalStorageDataProvider.getHelpStartFile();
+    }
 }

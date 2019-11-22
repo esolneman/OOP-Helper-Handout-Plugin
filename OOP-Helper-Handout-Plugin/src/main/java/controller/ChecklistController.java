@@ -84,6 +84,7 @@ public class ChecklistController {
         }
 
         //check if local tasks exists still in the repo
+        //TODO ERROR ConcurrentModificationException
         for (Checklist.Task localTask : checklistLocal.tasks) {
             if (!checklistRepo.containsID(localTask.id)) {
                 System.out.println("LOCAL ID NOT EXISTS");
