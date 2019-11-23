@@ -29,33 +29,34 @@ import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Scanner;
 
-public class WebViewLinkListener {
+public class HandoutWebViewLinkListener {
 
     private WebView webView;
     String urlString;
 
-    public WebViewLinkListener(WebView webView, String urlString) {
+    public HandoutWebViewLinkListener(WebView webView, String urlString) {
         this.webView = webView;
         this.urlString = urlString;
-        createListener();
     }
 
-    private void createListener() {
+    public void createListener() {
         //https://github.com/CodeFX-org/LibFX/wiki/WebViewHyperlinkListener
         WebViewHyperlinkListener eventPrintingListener = event -> {
             //TODO: Refactor variable name
-            String toBeopen = event.getURL().toString();
+            String hyperlink = event.getURL().toString();
+            System.out.println("LINK: " + hyperlink);
             Project project = RepoLocalStorageDataProvider.getProject();
-            System.out.println("WebView: Listener: "+ toBeopen);
-            if (toBeopen.contains("LinkToCode")) {
+            System.out.println("WebView: Listener: "+ hyperlink);
+            if (hyperlink.contains("LinkToCode")) {
                 System.out.println("WebView: LinkToCode");
-                handleLinkToCode(toBeopen, project);
+                handleLinkToCode(hyperlink, project);
             } else {
                 System.out.println("WebView: OtherLink");
-                handleLinkToExternalWebpage(toBeopen);
+                handleLinkToExternalWebpage(hyperlink);
             }
             return false;
         };
+        //TODO METHOD FOR THIS IN WEBVIEW CONTROOLER
         WebViews.addHyperlinkListener(
                 webView, eventPrintingListener,
                 HyperlinkEvent.EventType.ACTIVATED);

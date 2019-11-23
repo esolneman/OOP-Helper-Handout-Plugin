@@ -4,6 +4,9 @@ import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
 import gui.HandoutPluginFXPanel;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Worker;
 import javafx.scene.web.WebView;
 import provider.LocalStorageDataProvider;
 import webView.WebViewController;
@@ -32,7 +35,6 @@ public class HelpScreen extends SimpleToolWindowPanel {
         handoutToolWindow = toolWindow;
         try {
             startPageDirectory = LocalStorageDataProvider.getHelpStartDirectory().toURI().toURL().toString();
-            System.out.println("startPageDirectory: " + startPageDirectory);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -49,12 +51,23 @@ public class HelpScreen extends SimpleToolWindowPanel {
         criteriaContent = new HandoutPluginFXPanel();
         Platform.setImplicitExit(false);
         Platform.runLater(() -> {
-            webView = webViewController.createWebViewWithListener(startPageDirectory);
+            webView = webViewController.createHelpWebView(startPageDirectory);
+/*            webView.getEngine().getLoadWorker().stateProperty().addListener(
+                    (ov, oldState, newState) -> {
+                        if (newState == Worker.State.SUCCEEDED) {
+                            webView.getEngine().executeScript("getNavBar()");
+                        }
+                    }
+            );*/
+
+            //webView.getEngine().load(strpath);
+
             criteriaContent.showHandoutWebView(startPageDirectory, webView);
+
         });
     }
 
-    public JComponent getToolbar(){
+    public JComponent getToolbar() {
         return toolWindowPanel.getToolbar();
     }
 
@@ -64,18 +77,5 @@ public class HelpScreen extends SimpleToolWindowPanel {
 
     public void updateContent() {
         webViewController.updateWebViewContent();
-    }
-
-    //TODO CHANGE NAME
-    public void updateContent(String eventText) {
-        String url;
-        if (eventText.equals("Shortcut")){
-            url = shortcutDirectory;
-        } else if (eventText.equals("CodingStyles")){
-            url = codingstylesDirectory;
-        } else{
-            url = variablesDirectory;
-        }
-        webViewController.changeURL(url);
     }
 }

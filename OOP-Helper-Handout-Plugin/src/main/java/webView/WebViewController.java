@@ -3,7 +3,8 @@ package webView;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowType;
-import eventHandling.WebViewLinkListener;
+import eventHandling.HandoutWebViewLinkListener;
+import eventHandling.HelpWebViewLinkListener;
 import javafx.application.Platform;
 import javafx.scene.web.WebView;
 import org.apache.commons.lang.WordUtils;
@@ -15,17 +16,18 @@ import java.util.concurrent.TimeUnit;
 
 public class WebViewController {
     private WebView webView;
-    private WebViewLinkListener webViewLinkListener;
+    private HandoutWebViewLinkListener webViewLinkListener;
     private String urlString;
 
     public WebViewController(){}
 
-    public WebView createWebViewWithListener(String urlString){
+    public WebView createHandoutWebView(String urlString){
         this.urlString = urlString;
         //Platform.setImplicitExit(false);
         //Platform.runLater(() -> {
             webView = new WebView();
-            WebViewLinkListener webViewLinkListener = new WebViewLinkListener(webView, urlString);
+            HandoutWebViewLinkListener webViewLinkListener = new HandoutWebViewLinkListener(webView, urlString);
+            webViewLinkListener.createListener();
             return webView;
         //});
     }
@@ -35,6 +37,17 @@ public class WebViewController {
         //Platform.setImplicitExit(false);
         //Platform.runLater(() -> {
         webView = new WebView();
+        return webView;
+        //});
+    }
+
+    public WebView createHelpWebView(String urlString){
+        this.urlString = urlString;
+        //Platform.setImplicitExit(false);
+        //Platform.runLater(() -> {
+        webView = new WebView();
+        HelpWebViewLinkListener webViewLinkListener = new HelpWebViewLinkListener(webView, urlString);
+        webViewLinkListener.createListener();
         return webView;
         //});
     }

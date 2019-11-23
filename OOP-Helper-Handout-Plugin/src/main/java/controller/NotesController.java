@@ -89,7 +89,7 @@ public class NotesController {
         //TODO Sometimes Nullpointer
         Element ele = jsoupDoc.getElementById("notesList");
         Element divNote = jsoupDoc.createElement("div");
-        divNote.attr("id", "note");
+        divNote.attr("class", "note");
         ele.appendChild(divNote);
         //add separator between notes
         Element separator = jsoupDoc.createElement("hr");
