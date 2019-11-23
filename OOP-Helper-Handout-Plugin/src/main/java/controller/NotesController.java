@@ -1,19 +1,20 @@
 package controller;
 
-import javafx.embed.swing.JFXPanel;
 import objects.Notes;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import provider.LocalStorageDataProvider;
-
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import static environment.Messages.INITIAL_NOTES_TEXT;
 
 //TODO LET CONTROLLER CONTROLL
 public class NotesController {
 
     private static NotesController single_instance = null;
+    private File notesLocalFile;
 
     public static NotesController getInstance() {
         if (single_instance == null) {
@@ -22,11 +23,11 @@ public class NotesController {
         return single_instance;
     }
 
-    private NotesController(){}
+    private NotesController(){
+        notesLocalFile = LocalStorageDataProvider.getNotesFile();
+    }
 
-    public static void createNotesFile() {
-
-        File notesLocalFile = LocalStorageDataProvider.getNotesFile();
+    public void createNotesFile() {
         notesLocalFile.getParentFile().mkdirs();
         try {
             notesLocalFile.createNewFile();
@@ -68,8 +69,8 @@ public class NotesController {
 
     public static void saveNewEntryInFile(String htmlText) {
         Document doc = Jsoup.parse(htmlText);
-        String htmlBody = doc.body().html();
-
+        String htmlBody = doc.html();
+        System.out.println("DOC: " + htmlBody);
         //create new Note
         Notes.Note newNote = new Notes.Note();
         newNote.note = htmlBody;
@@ -86,7 +87,9 @@ public class NotesController {
     private static void saveNoteInHtmlFile(String htmlBody, File initFile) throws IOException {
         //https://stackoverflow.com/a/30258688
         Document jsoupDoc = Jsoup.parse(initFile, "UTF-8");
-        //TODO Sometimes Nullpointer
+
+
+        /*//TODO Sometimes Nullpointer
         Element ele = jsoupDoc.getElementById("notesList");
         Element divNote = jsoupDoc.createElement("div");
         divNote.attr("class", "note");
@@ -95,10 +98,15 @@ public class NotesController {
         Element separator = jsoupDoc.createElement("hr");
         ele.appendChild(separator);
 
-        //https://stackoverflow.com/a/37277534
+                //https://stackoverflow.com/a/37277534
         //unescape-html-character-entities
         //divNote.text(Jsoup.parse(note.note).text());
         divNote.html(htmlBody);
+
+        */
+
+
+
 
         //https://www.baeldung.com/java-write-to-file#write-with-printwriter
         FileWriter fileWriter = null;
@@ -108,7 +116,18 @@ public class NotesController {
             e.printStackTrace();
         }
         PrintWriter printWriter = new PrintWriter(fileWriter);
-        printWriter.print(jsoupDoc.html());
+        printWriter.print(htmlBody);
         printWriter.close();
+    }
+
+    public Document getCurrentNotesDocument() {
+        //https://jsoup.org/cookbook/input/parse-document-from-string
+        Document doc = null;
+        try {
+            doc = Jsoup.parse(notesLocalFile, "UTF-8");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return doc;
     }
 }

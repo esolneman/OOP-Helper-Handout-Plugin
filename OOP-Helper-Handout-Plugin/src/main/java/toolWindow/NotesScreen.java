@@ -92,6 +92,9 @@ public class NotesScreen extends SimpleToolWindowPanel {
     }
 
     //@Override
+    //TODO NOOOOOO
+    // OVERRITE WHEN HANDOUT DATA IS UPDATED
+    // PREVENT THIS FROM HAPPENING
     public void updateContent() { }
 
     public JPanel getContent() {
