@@ -22,12 +22,10 @@ public class Constants {
     public static final String NOTES_FILE = "/notes.html";
 
 
-    public static final String COMMON_ASSESSMENT_CRITERIA_FILE_NAME = "/common-assessment-criteria.html";
+    public static final String COMMON_INFORMATION_FILE_NAME = "/common_information/index.html";
     public static final String SPECIFIC_ASSESSMENT_CRITERIA_FILE_NAME = "/specific-assessment-criteria.html";
 
     public static final String HANDOUT_PDF_FILE_NAME = "/handout.pdf";
     public static final String URL_BEGIN_FOR_FILE = "file:///";
-
-    public static final String LAST_COMMIT_HASH_FILE = "/lastCommit.txt";
 
 }

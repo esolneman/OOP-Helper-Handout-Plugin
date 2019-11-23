@@ -2,13 +2,10 @@ package toolWindow;
 
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.ActionToolbar;
-import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
-import cucumber.api.java.en_scouse.An;
 import gui.HandoutPluginFXPanel;
-import gui.NotesFXPanel;
 import javafx.application.Platform;
 import javafx.scene.web.HTMLEditor;
 import javafx.scene.web.WebView;
@@ -18,7 +15,7 @@ import toolWindow.actions.AddNotesAction;
 import webView.WebViewController;
 
 import javax.swing.*;
-import java.io.*;
+import java.io.File;
 import java.net.MalformedURLException;
 
 public class NotesScreen extends SimpleToolWindowPanel {
@@ -46,7 +43,6 @@ public class NotesScreen extends SimpleToolWindowPanel {
 
         //TODO verschiebe to LOCALUSERSTORAGE
         initNotesFile = LocalStorageDataProvider.getNotesFile();
-        //notesFile = LocalStorageDataProvider.getNotesFile();
         try {
             notesHtmlString = initNotesFile.toURI().toURL().toString();
         } catch (MalformedURLException e) {
@@ -92,7 +88,6 @@ public class NotesScreen extends SimpleToolWindowPanel {
         Platform.runLater(() -> {
             webView = webViewController.createWebView(notesHtmlString);
             notesContent.showHandoutWebView(notesHtmlString, webView);
-            //notesContent.showHTMLEditor(notesHtmlString, webView);
         });
     }
 
