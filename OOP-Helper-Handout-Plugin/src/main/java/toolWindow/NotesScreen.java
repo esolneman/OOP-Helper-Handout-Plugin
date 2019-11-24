@@ -74,7 +74,7 @@ public class NotesScreen extends SimpleToolWindowPanel {
         //http://androhi.hatenablog.com/entry/2015/07/23/233932
         toolWindowPanel.setContent(notesContent);
     }
-    
+
     private void createContent() {
         notesContent = new PluginWebViewWithHeaderFXPanel();
         Platform.setImplicitExit(false);

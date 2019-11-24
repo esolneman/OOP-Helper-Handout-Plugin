@@ -1,25 +1,33 @@
 package gui;
 
+import com.intellij.openapi.wm.ToolWindowManager;
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.scene.web.WebView;
 import toolWindow.NotesScreen;
 
 public class PluginWebViewWithHeaderFXPanel extends JFXPanel {
 
     private BorderPane root = new BorderPane();
+    private GridPane contentPane = new GridPane();
     private WebView webView;
     private String urlString;
     private String headerText;
-    private Button btnTop;
+    private Text header;
+    private Group group;
 
     public void showWebView(String urlString, WebView webView, String headerText) {
         this.webView = webView;
@@ -47,11 +55,14 @@ public class PluginWebViewWithHeaderFXPanel extends JFXPanel {
                 });
             }
         });
-        HBox notesTopSection = new HBox();
-        notesTopSection.getChildren().addAll(btnTop, notesEditButton);
-        notesEditButton.setAlignment(Pos.BASELINE_RIGHT);
+        //HBox notesTopSection = new HBox();
+        //notesTopSection.getChildren().addAll(header, notesEditButton);
+        //notesEditButton.setAlignment(Pos.BASELINE_RIGHT);
+        //notesEditButton.prefHeight(50);
+        root.setRight(notesEditButton);
+        BorderPane.setAlignment(notesEditButton, Pos.CENTER_RIGHT);
         //notesTopSection.setAlignment(Pos.CENTER);
-        root.setTop(notesTopSection);
+        //root.setTop(notesTopSection);
         setUpScene();
     }
 
@@ -62,20 +73,27 @@ public class PluginWebViewWithHeaderFXPanel extends JFXPanel {
         root = new BorderPane();
         //root.setPadding(new Insets(15, 20, 10, 10));
         // TOP
-        btnTop = new Button(headerText);
+
+
+        header = new Text(headerText);
         //btnTop.setPadding(new Insets(10, 10, 10, 10));
-        root.setTop(btnTop);
-        BorderPane.setAlignment(btnTop, Pos.CENTER);
-        ;
+        //header.maxHeight(50);
+        root.setCenter(header);
+        root.getCenter().prefHeight(10.00);
+        BorderPane.setAlignment(header, Pos.CENTER);
         // Set margin for top area.
-        BorderPane.setMargin(btnTop, new Insets(10, 10, 10, 10));
+        contentPane.add(root, 0, 0);
+        contentPane.add(webView, 0, 1);
+        contentPane.setGridLinesVisible(true);
+        group = new Group();
+        group.getChildren().addAll(root, webView);
     }
 
     private void setUpScene() {
-        root.setCenter(webView);
+        //root.setBottom(webView);
         webView.getEngine().load(urlString);
         webView.getEngine().setJavaScriptEnabled(true);
-        setScene(new Scene(root));
+        setScene(new Scene(group));
     }
 
 
