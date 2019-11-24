@@ -72,19 +72,9 @@ public class NotesScreen extends SimpleToolWindowPanel {
 
     private void initToolWindowMenu() {
         //http://androhi.hatenablog.com/entry/2015/07/23/233932
-        toolWindowPanel.setToolbar(createToolbarPanel());
         toolWindowPanel.setContent(notesContent);
     }
-
-    private JComponent createToolbarPanel() {
-        final DefaultActionGroup notesActionGroup = new DefaultActionGroup();
-        AddNotesAction notesAction = (AddNotesAction) ActionManager.getInstance().getAction("Notes.AddEntry");
-        notesAction.setNotesScreen(this);
-        notesActionGroup.add(notesAction);
-        final ActionToolbar actionToolbar = ActionManager.getInstance().createActionToolbar("NotesTool", notesActionGroup, true);
-        return actionToolbar.getComponent();
-    }
-
+    
     private void createContent() {
         notesContent = new PluginWebViewWithHeaderFXPanel();
         Platform.setImplicitExit(false);
