@@ -29,7 +29,7 @@ public class ChecklistFXPanel extends JFXPanel {
         Scene scene = new Scene(new Group());
         BorderPane border = new BorderPane();
         //GridPane checklistTablesPane = new GridPane();
-        //border.setCenter(checklistTablesPane);
+        //border.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              (checklistTablesPane);
         VBox predefinedDataTable = getPredefinedDataTable(predefinedData);
         VBox userDataTable = getUserDataTable(userData);
 

@@ -7,6 +7,11 @@ public class Messages {
     public static final String FILES_SELECTING_TEXT = "Choose location for PDF";
     public static final String FILES_SELECTING_DESCRIPTION = "Description for Downloading PDF";
 
+    public static final String CHECKLIST_PREDEFINED_HEADER = "Vorgegebene Aufgaben";
+    public static final String CHECKLIST_USER_HEADER = "Deine Aufgaben";
+    public static final String NOTES_HEADER = "Deine Notizen";
+    public static final String ASSESSMENT_CRITERIA_HEADER = "Bewertungskriterien für die Studienleistung";
+
     public static final String INITIAL_NOTES_TEXT = "<p id=\"date\" style=\"text-align: right;\">23.11.2019 14:15</p>\n" + "<p><strong>Die erste Notiz</strong></p>\n" +
             "<p>Hier kannst du Notizen verfassen, zum Beispiel um zu notieren</p>\n" +
             "<ul>\n" +

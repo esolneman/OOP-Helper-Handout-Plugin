@@ -4,7 +4,7 @@ import com.intellij.openapi.project.Project;
 
 import java.io.File;
 
-import static environment.Constants.*;
+import static environment.FileConstants.*;
 
 public class RepoLocalStorageDataProvider implements RepoLocalStorageDataProviderInterface {
 

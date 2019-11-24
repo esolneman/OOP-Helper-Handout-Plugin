@@ -1,10 +1,10 @@
 package environment;
 
-public class Constants {
+public class FileConstants {
 
 
     //prevent instantiation
-    private Constants() {
+    private FileConstants() {
     }
 
     public static final String LOCAL_STORAGE_FILE = "/HelperHandoutPluginContentData";

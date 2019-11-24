@@ -2,7 +2,7 @@ package provider;
 
 import java.io.File;
 
-import static environment.Constants.*;
+import static environment.FileConstants.*;
 
 public class UserLocalStorageDataProvider implements UserLocalStorageDataProviderInterface {
     //TODO PROJECT
