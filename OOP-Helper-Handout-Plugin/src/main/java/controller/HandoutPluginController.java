@@ -8,24 +8,46 @@ import com.google.gson.stream.JsonReader;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
+import de.ur.mi.pluginhelper.logger.LogManager;
 import eventHandling.OnGitEventListener;
-import gherkin.deps.com.google.gson.internal.$Gson$Preconditions;
 import gui.CommitChangesDialog;
 import provider.HandoutContentDataProviderInterface;
 import provider.LocalStorageDataProvider;
 import provider.RepoLocalStorageDataProvider;
-import toolWindow.HandoutToolWindowFactory;
-
 import java.io.*;
 import java.util.ArrayList;
 
 public class HandoutPluginController implements HandoutPluginControllerInterface, OnGitEventListener {
     private HandoutContentDataProviderInterface handoutDataProvider;
-    private HandoutToolWindowFactory handoutToolWindowFactory;
     private ToolWindowController toolWindowController;
     private Project project;
+    private de.ur.mi.pluginhelper.User.User user;
 
     public HandoutPluginController(Project project) {
+
+        // Nutzer erstellen oder laden
+        user = de.ur.mi.pluginhelper.User.User.getLocalUser();
+
+        // Session Log für das Experiment mit dem Titel "Test" erstellen oder öffnen
+        de.ur.mi.pluginhelper.logger.Log log = LogManager.openLog(user.getSessionID(), "MA-Wolfes");
+
+        // Daten im Log speichern
+        log.log(user.getSessionID(), de.ur.mi.pluginhelper.logger.LogDataType.CUSTOM, "demo", "Something happened");
+
+        String serverUrl = "http://regensburger-forscher.de:9999/upload/";
+
+/*        // Log synchronisieren
+        LogManager.syncLog(log, user, serverUrl, new SyncProgressListener() {
+            @Override
+            public void onFinished() {
+                System.out.println("Upload finished");
+            }
+            @Override
+            public void onFailed() {
+                System.out.println("Upload failed");
+            }
+        });*/
+
         this.project = project;
         RepoLocalStorageDataProvider.setUserProjectDirectory(this.project);
         handoutDataProvider = ServiceManager.getService(project, HandoutContentDataProviderInterface.class);
