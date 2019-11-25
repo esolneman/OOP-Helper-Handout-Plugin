@@ -89,7 +89,7 @@ public class NotesController {
     private static void saveNoteInHtmlFile(String htmlBody, File initFile) throws IOException {
         //https://stackoverflow.com/a/30258688
         Document jsoupDoc = Jsoup.parse(initFile, "UTF-8");
-        jsoupDoc.getElementById("notesList").text(htmlBody);
+        jsoupDoc.getElementById("notesList").html(htmlBody);
         /*//TODO Sometimes Nullpointer
         Element ele = jsoupDoc.getElementById("notesList");
         Element divNote = jsoupDoc.createElement("div");
@@ -117,7 +117,7 @@ public class NotesController {
             e.printStackTrace();
         }
         PrintWriter printWriter = new PrintWriter(fileWriter);
-        printWriter.print(htmlBody);
+        printWriter.print(jsoupDoc);
         printWriter.close();
     }
 

@@ -43,6 +43,7 @@ public class NoteAddingFrame {
         htmlEditor = new HTMLEditor();
         htmlEditor.setPrefHeight(400);
         Document notesDocument = notesController.getCurrentNotesDocument();
+        //display html part, that contains the notes
         htmlEditor.setHtmlText(notesDocument.getElementById("notesList").toString());
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.getStyleClass().add("noborder-scroll-pane");
@@ -57,7 +58,6 @@ public class NoteAddingFrame {
         addEntryButton.setOnAction(event -> {
             System.out.println(htmlEditor.getHtmlText());
             NotesController.saveNewEntryInFile(htmlEditor.getHtmlText());
-            //htmlEditor.setHtmlText(notesDocument.toString());
             addNoteFrame.close();
             notesScreen.reloadWebView();
         });
