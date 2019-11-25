@@ -71,7 +71,6 @@ public class NotesController {
     public static void saveNewEntryInFile(String htmlText) {
         Document doc = Jsoup.parse(htmlText);
         String htmlBody = doc.getElementById("notesList").html();
-        System.out.println("DOC: " + htmlBody);
         //create new Note
         //TODO DO I NEED THIS??
         Notes.Note newNote = new Notes.Note();
@@ -90,24 +89,6 @@ public class NotesController {
         //https://stackoverflow.com/a/30258688
         Document jsoupDoc = Jsoup.parse(initFile, "UTF-8");
         jsoupDoc.getElementById("notesList").html(htmlBody);
-        /*//TODO Sometimes Nullpointer
-        Element ele = jsoupDoc.getElementById("notesList");
-        Element divNote = jsoupDoc.createElement("div");
-        divNote.attr("class", "note");
-        ele.appendChild(divNote);
-        //add separator between notes
-        Element separator = jsoupDoc.createElement("hr");
-        ele.appendChild(separator);
-
-                //https://stackoverflow.com/a/37277534
-        //unescape-html-character-entities
-        //divNote.text(Jsoup.parse(note.note).text());
-        divNote.html(htmlBody);
-
-        */
-
-
-
 
         //https://www.baeldung.com/java-write-to-file#write-with-printwriter
         FileWriter fileWriter = null;

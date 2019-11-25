@@ -139,7 +139,8 @@ public class WebViewController {
         if(webView != null){
             Platform.setImplicitExit(false);
             Platform.runLater(() -> {
-                webView.getEngine().reload();
+            webView.getEngine().setJavaScriptEnabled(true);
+            webView.getEngine().reload();
             });
         }
     }
@@ -147,6 +148,7 @@ public class WebViewController {
     public void changeURL(String url) {
         // TODO Error once
         // TODO test if load urlAtring is working
+        //RELOAD
         if(webView != null){
             Platform.setImplicitExit(false);
             Platform.runLater(() -> {

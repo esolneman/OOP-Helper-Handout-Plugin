@@ -75,16 +75,20 @@ public class NotesScreen extends SimpleToolWindowPanel {
         notesContent = new PluginWebViewFXPanel();
         Platform.setImplicitExit(false);
         Platform.runLater(() -> {
-            noteAddingFrame = NoteAddingFrame.getInstance();
-            noteAddingFrame.setNotesScreen(this);
             webView = webViewController.createWebView(notesHtmlString);
             notesContent.showHandoutWebView(notesHtmlString, webView);
-
-            //https://stackoverflow.com/a/34547416
-            //create listener for "edit-notes" button in webView
-            JSObject window = (JSObject) webView.getEngine().executeScript("window");
-            window.setMember("noteAddingFrame", NoteAddingFrame.getInstance());
+            initEditNotesButtonListener();
         });
+    }
+
+    //https://stackoverflow.com/a/34547416
+    //create listener for "edit-notes" button in webView
+    private void initEditNotesButtonListener() {
+        System.out.println("initEditNotesButtonListener");
+        noteAddingFrame = NoteAddingFrame.getInstance();
+        noteAddingFrame.setNotesScreen(this);
+        JSObject window = (JSObject) webView.getEngine().executeScript("window");
+        window.setMember("noteAddingFrame", NoteAddingFrame.getInstance());
     }
 
     //@Override
@@ -97,7 +101,14 @@ public class NotesScreen extends SimpleToolWindowPanel {
         return toolWindowPanel;
     }
 
+    //Todo
+    // Had to be newly created, because when editing the html it is parsed to XHTML
+    // and because of that, the button is not recogniced anymore
     public void reloadWebView() {
-        webViewController.updateWebViewContent();
+        Platform.runLater(() -> {
+            webView = webViewController.createWebView(notesHtmlString);
+            notesContent.showHandoutWebView(notesHtmlString, webView);
+            initEditNotesButtonListener();
+        });
     }
 }

@@ -56,7 +56,6 @@ public class NoteAddingFrame {
         Button addEntryButton = new Button("OK");
         root.setAlignment(Pos.CENTER);
         addEntryButton.setOnAction(event -> {
-            System.out.println(htmlEditor.getHtmlText());
             NotesController.saveNewEntryInFile(htmlEditor.getHtmlText());
             addNoteFrame.close();
             notesScreen.reloadWebView();
@@ -72,6 +71,8 @@ public class NoteAddingFrame {
 
     //called from html
     public void showAddNoteFrame(){
+        System.out.println("showAddNoteFrame");
+
         addNoteFrame.show();
     }
 
