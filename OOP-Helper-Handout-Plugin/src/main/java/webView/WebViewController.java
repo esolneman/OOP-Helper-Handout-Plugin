@@ -5,11 +5,15 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowType;
 import eventHandling.HandoutWebViewLinkListener;
 import eventHandling.HelpWebViewLinkListener;
+import gui.NoteAddingFrame;
 import javafx.application.Platform;
 import javafx.scene.web.WebView;
+import netscape.javascript.JSObject;
 import org.apache.commons.lang.WordUtils;
 import org.w3c.dom.Element;
+import org.w3c.dom.html.HTMLInputElement;
 import toolWindow.HandoutContentScreen;
+import toolWindow.NotesScreen;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -150,5 +154,4 @@ public class WebViewController {
             });
         }
     }
-
 }

@@ -10,19 +10,32 @@ import javafx.scene.layout.VBox;
 import javafx.scene.web.HTMLEditor;
 import javafx.stage.Stage;
 import org.jsoup.nodes.Document;
+import provider.HandoutContentDataProvider;
 import toolWindow.NotesScreen;
 
-//TODO make Singleton
 public class NoteAddingFrame {
     private HTMLEditor htmlEditor;
     private Stage addNoteFrame = new Stage();
     private NotesScreen notesScreen;
     private NotesController notesController;
+    private static NoteAddingFrame single_instance = null;
 
-    public NoteAddingFrame(NotesScreen notesScreen) {
+
+    public static NoteAddingFrame getInstance() {
+        if (single_instance == null) {
+            single_instance = new NoteAddingFrame();
+        }
+        return single_instance;
+    }
+
+    private NoteAddingFrame() {
         notesController = NotesController.getInstance();
-        this.notesScreen = notesScreen;
         createHtmlEditor();
+        //showAddNoteFrame();
+    }
+
+    public void setNotesScreen(NotesScreen notesScreen){
+        this.notesScreen = notesScreen;
     }
 
     //https://docs.oracle.com/javafx/2/ui_controls/editor.htm

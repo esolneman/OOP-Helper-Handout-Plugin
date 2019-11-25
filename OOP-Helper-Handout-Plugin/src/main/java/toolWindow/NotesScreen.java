@@ -1,24 +1,20 @@
 package toolWindow;
 
-import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.actionSystem.ActionToolbar;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
+import gui.NoteAddingFrame;
 import gui.PluginWebViewFXPanel;
 import javafx.application.Platform;
 import javafx.scene.web.HTMLEditor;
 import javafx.scene.web.WebView;
+import netscape.javascript.JSObject;
 import objects.Notes;
 import provider.LocalStorageDataProvider;
-import toolWindow.actions.AddNotesAction;
 import webView.WebViewController;
 
 import javax.swing.*;
 import java.io.File;
 import java.net.MalformedURLException;
-
-import static environment.Messages.NOTES_HEADER;
 
 public class NotesScreen extends SimpleToolWindowPanel {
     private PluginWebViewFXPanel notesContent;
@@ -36,6 +32,7 @@ public class NotesScreen extends SimpleToolWindowPanel {
     private String notesHtmlString;
     private File htmlFile;
     private static WebView webView;
+    private NoteAddingFrame noteAddingFrame;
 
     public NotesScreen(ToolWindow toolWindow) {
         super(true, true);
@@ -78,8 +75,15 @@ public class NotesScreen extends SimpleToolWindowPanel {
         notesContent = new PluginWebViewFXPanel();
         Platform.setImplicitExit(false);
         Platform.runLater(() -> {
+            noteAddingFrame = NoteAddingFrame.getInstance();
+            noteAddingFrame.setNotesScreen(this);
             webView = webViewController.createWebView(notesHtmlString);
             notesContent.showHandoutWebView(notesHtmlString, webView);
+
+            //https://stackoverflow.com/a/34547416
+            //create listener for "edit-notes" button in webView
+            JSObject window = (JSObject) webView.getEngine().executeScript("window");
+            window.setMember("noteAddingFrame", NoteAddingFrame.getInstance());
         });
     }
 
