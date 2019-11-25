@@ -22,6 +22,7 @@ public class LinkToHandoutController{
     private void createListener() {
         System.out.println("Create Listener for Link from Code -> Handout");
         //working but first to register opened editorss
+        //TODO CHECK IF NOT TOLLWINDOW
        ApplicationManager.getApplication().invokeLater(() -> {
            //https://www.programcreek.com/java-api-examples/?api=com.intellij.openapi.editor.EditorFactory
            EditorEventMulticaster editorEventMulticaster = EditorFactory.getInstance().getEventMulticaster();

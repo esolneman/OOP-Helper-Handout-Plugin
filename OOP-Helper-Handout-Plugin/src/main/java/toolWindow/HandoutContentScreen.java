@@ -7,7 +7,7 @@ import com.intellij.openapi.actionSystem.Separator;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
 import controller.LinkToHandoutController;
-import gui.HandoutPluginFXPanel;
+import gui.PluginWebViewFXPanel;
 import javafx.application.Platform;
 import javafx.scene.web.WebView;
 import provider.LocalStorageDataProvider;
@@ -22,7 +22,7 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 
 public class HandoutContentScreen extends SimpleToolWindowPanel implements PluginToolWindowTabsInterface {
-    private HandoutPluginFXPanel handoutContent;
+    private PluginWebViewFXPanel handoutContent;
     private ToolWindow handoutToolWindow;
     private static File content;
     private String urlString;
@@ -69,10 +69,10 @@ public class HandoutContentScreen extends SimpleToolWindowPanel implements Plugi
     }
 
     private void createContent() {
-        handoutContent = new HandoutPluginFXPanel();
+        handoutContent = new PluginWebViewFXPanel();
         Platform.setImplicitExit(false);
         Platform.runLater(() -> {
-            webView = webViewController.createWebViewWithListener(urlString);
+            webView = webViewController.createHandoutWebView(urlString);
             handoutContent.showHandoutWebView(urlString, webView);
         });
     }

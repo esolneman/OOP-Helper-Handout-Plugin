@@ -10,13 +10,9 @@ import provider.helper.DownloadTask;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 
-import static environment.Constants.*;
+import static environment.FileConstants.*;
 
 // is Singleton
 public class HandoutContentDataProvider implements HandoutContentDataProviderInterface {
@@ -83,6 +79,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         //RepoLocalStorageDataProvider.setBranchFolderName(branchFolderName);
     }
 
+    //TODO CHECK UPDATE FUNCTION
     public void updateHandoutData() {
         System.out.println("updateHandoutData");
         controlRetrievingContentData();

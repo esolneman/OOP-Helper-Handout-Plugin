@@ -11,7 +11,6 @@ import com.intellij.ui.content.ContentFactory;
 import eventHandling.OnToolWindowCreatedListener;
 import services.ToolWindowServiceInterface;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +24,7 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, ToolWindowSe
 
     private Content handoutContent;
     private Content checklistContent;
-    private Content shortcutContent;
+    //private Content shortcutContent;
     private Content specificCriteriaContent;
     private Content commonAssessmentCriteriaContent;
     private Content notesContent;
@@ -33,9 +32,9 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, ToolWindowSe
 
     private HandoutContentScreen handoutContentScreen;
     private ChecklistScreen checklistScreen;
-    private ShortcutScreen shortcutScreen;
+    //private ShortcutScreen shortcutScreen;
     private SpecificAssessmentCriteriaScreen specificAssessmentCriteriaScreen;
-    private CommonAssessmentCriteriaScreen commonAssessmentCriteriaScreen;
+    private HelpScreen commonAssessmentCriteriaScreen;
     private NotesScreen notesScreen;
 
     // Create the tool window content.
@@ -49,10 +48,10 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, ToolWindowSe
 
     private void initScreens() {
         handoutContentScreen = new HandoutContentScreen(toolWindow);
-        shortcutScreen = new ShortcutScreen(toolWindow);
+        //shortcutScreen = new ShortcutScreen(toolWindow);
         checklistScreen = new ChecklistScreen(toolWindow);
         specificAssessmentCriteriaScreen = new SpecificAssessmentCriteriaScreen(toolWindow);
-        commonAssessmentCriteriaScreen = new CommonAssessmentCriteriaScreen(toolWindow);
+        commonAssessmentCriteriaScreen = new HelpScreen(toolWindow);
         notesScreen = new NotesScreen(toolWindow);
         addScreenContent();
     }
@@ -60,15 +59,15 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, ToolWindowSe
     private void addScreenContent() {
         handoutContent = contentFactory.createContent(handoutContentScreen.getContent(), "Handout", false);
         handoutContent.setPreferredFocusableComponent(handoutContentScreen.getContent());
-        checklistContent = contentFactory.createContent(checklistScreen.getContent(), "Checklist", false);
-        shortcutContent = contentFactory.createContent(shortcutScreen.getContent(), "Shortcut", false);
+        checklistContent = contentFactory.createContent(checklistScreen.getContent(), "Aufgaben", false);
+        //shortcutContent = contentFactory.createContent(shortcutScreen.getContent(), "Shortcut", false);
         specificCriteriaContent = contentFactory.createContent(specificAssessmentCriteriaScreen.getContent(), "Bewertungskriterien", false);
-        commonAssessmentCriteriaContent = contentFactory.createContent(commonAssessmentCriteriaScreen.getContent(), "Allg. Kritierien", false);
+        commonAssessmentCriteriaContent = contentFactory.createContent(commonAssessmentCriteriaScreen.getContent(), "Hilfe", false);
         notesContent = contentFactory.createContent(notesScreen.getContent(), "Notizen", false);
 
         toolWindow.getContentManager().addContent(handoutContent);
         toolWindow.getContentManager().addContent(checklistContent);
-        toolWindow.getContentManager().addContent(shortcutContent);
+        //toolWindow.getContentManager().addContent(shortcutContent);
         toolWindow.getContentManager().addContent(specificCriteriaContent);
         toolWindow.getContentManager().addContent(commonAssessmentCriteriaContent);
         toolWindow.getContentManager().addContent(notesContent);
