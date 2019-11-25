@@ -67,11 +67,13 @@ public class NotesController {
         }
     }
 
+    //TODO save
     public static void saveNewEntryInFile(String htmlText) {
         Document doc = Jsoup.parse(htmlText);
-        String htmlBody = doc.html();
+        String htmlBody = doc.getElementById("notesList").html();
         System.out.println("DOC: " + htmlBody);
         //create new Note
+        //TODO DO I NEED THIS??
         Notes.Note newNote = new Notes.Note();
         newNote.note = htmlBody;
         newNote.date = new Date().toString();
@@ -87,8 +89,7 @@ public class NotesController {
     private static void saveNoteInHtmlFile(String htmlBody, File initFile) throws IOException {
         //https://stackoverflow.com/a/30258688
         Document jsoupDoc = Jsoup.parse(initFile, "UTF-8");
-
-
+        jsoupDoc.getElementById("notesList").text(htmlBody);
         /*//TODO Sometimes Nullpointer
         Element ele = jsoupDoc.getElementById("notesList");
         Element divNote = jsoupDoc.createElement("div");

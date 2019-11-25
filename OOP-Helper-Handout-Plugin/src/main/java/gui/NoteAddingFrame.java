@@ -43,7 +43,7 @@ public class NoteAddingFrame {
         htmlEditor = new HTMLEditor();
         htmlEditor.setPrefHeight(400);
         Document notesDocument = notesController.getCurrentNotesDocument();
-        htmlEditor.setHtmlText(notesDocument.toString());
+        htmlEditor.setHtmlText(notesDocument.getElementById("notesList").toString());
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.getStyleClass().add("noborder-scroll-pane");
         scrollPane.setStyle("-fx-background-color: white");
@@ -70,6 +70,7 @@ public class NoteAddingFrame {
         addNoteFrame.setScene(scene);
     }
 
+    //called from html
     public void showAddNoteFrame(){
         addNoteFrame.show();
     }
