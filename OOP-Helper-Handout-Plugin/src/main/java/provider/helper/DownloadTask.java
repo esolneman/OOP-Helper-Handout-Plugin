@@ -1,7 +1,5 @@
 package provider.helper;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.net.ntp.TimeStamp;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
@@ -10,15 +8,10 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import provider.RepoLocalStorageDataProvider;
 
 import java.io.*;
-import java.security.DigestInputStream;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.*;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 
-import static environment.Constants.*;
+import static environment.FileConstants.*;
 
 //is singleton
 public class DownloadTask {

@@ -5,11 +5,15 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowType;
 import eventHandling.HandoutWebViewLinkListener;
 import eventHandling.HelpWebViewLinkListener;
+import gui.NoteAddingFrame;
 import javafx.application.Platform;
 import javafx.scene.web.WebView;
+import netscape.javascript.JSObject;
 import org.apache.commons.lang.WordUtils;
 import org.w3c.dom.Element;
+import org.w3c.dom.html.HTMLInputElement;
 import toolWindow.HandoutContentScreen;
+import toolWindow.NotesScreen;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -135,7 +139,8 @@ public class WebViewController {
         if(webView != null){
             Platform.setImplicitExit(false);
             Platform.runLater(() -> {
-                webView.getEngine().reload();
+            webView.getEngine().setJavaScriptEnabled(true);
+            webView.getEngine().reload();
             });
         }
     }
@@ -143,6 +148,7 @@ public class WebViewController {
     public void changeURL(String url) {
         // TODO Error once
         // TODO test if load urlAtring is working
+        //RELOAD
         if(webView != null){
             Platform.setImplicitExit(false);
             Platform.runLater(() -> {
@@ -150,5 +156,4 @@ public class WebViewController {
             });
         }
     }
-
 }

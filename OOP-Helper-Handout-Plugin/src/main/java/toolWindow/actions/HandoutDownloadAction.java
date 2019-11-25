@@ -20,7 +20,7 @@ import javax.swing.*;
 import java.io.File;
 import java.net.MalformedURLException;
 
-import static environment.Constants.*;
+import static environment.FileConstants.*;
 import static environment.Messages.FILES_SELECTING_DESCRIPTION;
 import static environment.Messages.FILES_SELECTING_TEXT;
 

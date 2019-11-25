@@ -2,11 +2,8 @@ package toolWindow;
 
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
-import gui.HandoutPluginFXPanel;
+import gui.PluginWebViewFXPanel;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.concurrent.Worker;
 import javafx.scene.web.WebView;
 import provider.LocalStorageDataProvider;
 import webView.WebViewController;
@@ -15,7 +12,7 @@ import javax.swing.*;
 import java.net.MalformedURLException;
 
 public class HelpScreen extends SimpleToolWindowPanel {
-    private HandoutPluginFXPanel criteriaContent;
+    private PluginWebViewFXPanel criteriaContent;
     private ToolWindow handoutToolWindow;
     private String variablesDirectory;
     private String codingstylesDirectory;
@@ -48,7 +45,7 @@ public class HelpScreen extends SimpleToolWindowPanel {
     }
 
     private void createContent() {
-        criteriaContent = new HandoutPluginFXPanel();
+        criteriaContent = new PluginWebViewFXPanel();
         Platform.setImplicitExit(false);
         Platform.runLater(() -> {
             webView = webViewController.createHelpWebView(startPageDirectory);
