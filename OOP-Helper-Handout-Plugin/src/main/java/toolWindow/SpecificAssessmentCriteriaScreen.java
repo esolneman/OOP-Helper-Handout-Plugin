@@ -3,7 +3,6 @@ package toolWindow;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
 import gui.PluginWebViewFXPanel;
-import gui.PluginWebViewWithHeaderFXPanel;
 import javafx.application.Platform;
 import javafx.scene.web.WebView;
 import provider.LocalStorageDataProvider;
@@ -13,10 +12,8 @@ import javax.swing.*;
 import java.io.File;
 import java.net.MalformedURLException;
 
-import static environment.Messages.ASSESSMENT_CRITERIA_HEADER;
-
 public class SpecificAssessmentCriteriaScreen extends SimpleToolWindowPanel{
-    private PluginWebViewWithHeaderFXPanel assessmentContent;
+    private PluginWebViewFXPanel assessmentContent;
     private ToolWindow handoutToolWindow;
     private static File content;
     private String urlString;
@@ -45,11 +42,11 @@ public class SpecificAssessmentCriteriaScreen extends SimpleToolWindowPanel{
     }
 
     private void createContent() {
-        assessmentContent = new PluginWebViewWithHeaderFXPanel();
+        assessmentContent = new PluginWebViewFXPanel();
         Platform.setImplicitExit(false);
         Platform.runLater(() -> {
             webView = webViewController.createWebView(urlString);;
-            assessmentContent.showWebView(urlString, webView, ASSESSMENT_CRITERIA_HEADER);
+            assessmentContent.showHandoutWebView(urlString, webView);
         });
     }
 

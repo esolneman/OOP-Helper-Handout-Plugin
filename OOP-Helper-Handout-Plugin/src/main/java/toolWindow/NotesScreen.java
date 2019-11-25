@@ -6,7 +6,6 @@ import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
 import gui.PluginWebViewFXPanel;
-import gui.PluginWebViewWithHeaderFXPanel;
 import javafx.application.Platform;
 import javafx.scene.web.HTMLEditor;
 import javafx.scene.web.WebView;
@@ -22,7 +21,7 @@ import java.net.MalformedURLException;
 import static environment.Messages.NOTES_HEADER;
 
 public class NotesScreen extends SimpleToolWindowPanel {
-    private PluginWebViewWithHeaderFXPanel notesContent;
+    private PluginWebViewFXPanel notesContent;
     private ToolWindow noteToolWindow;
     private SimpleToolWindowPanel toolWindowPanel;
     private File notesFile;
@@ -76,11 +75,11 @@ public class NotesScreen extends SimpleToolWindowPanel {
     }
 
     private void createContent() {
-        notesContent = new PluginWebViewWithHeaderFXPanel();
+        notesContent = new PluginWebViewFXPanel();
         Platform.setImplicitExit(false);
         Platform.runLater(() -> {
             webView = webViewController.createWebView(notesHtmlString);
-            notesContent.showWebViewWithTopSectionButton(notesHtmlString, webView, NOTES_HEADER, this);
+            notesContent.showHandoutWebView(notesHtmlString, webView);
         });
     }
 
