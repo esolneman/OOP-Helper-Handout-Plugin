@@ -35,7 +35,7 @@ public class LoggingController {
         return user;
     }
 
-    private void syncLoggingData(Log log){
+    public void syncLoggingData(){
         String serverUrl = "http://regensburger-forscher.de:9999/upload/";
         // Log synchronisieren
         LogManager.syncLog(log, user, serverUrl, new SyncProgressListener() {

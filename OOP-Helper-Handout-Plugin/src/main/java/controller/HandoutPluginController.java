@@ -8,12 +8,15 @@ import com.google.gson.stream.JsonReader;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.project.ProjectManagerListener;
 import de.ur.mi.pluginhelper.logger.Log;
 import de.ur.mi.pluginhelper.logger.LogDataType;
 import de.ur.mi.pluginhelper.logger.LogManager;
 import de.ur.mi.pluginhelper.logger.SyncProgressListener;
 import eventHandling.OnGitEventListener;
 import gui.CommitChangesDialog;
+import org.jetbrains.annotations.NotNull;
 import provider.HandoutContentDataProviderInterface;
 import provider.LocalStorageDataProvider;
 import provider.RepoLocalStorageDataProvider;
@@ -24,10 +27,12 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
     private HandoutContentDataProviderInterface handoutDataProvider;
     private ToolWindowController toolWindowController;
     private Project project;
+    private LoggingController loggingController;
 
     public HandoutPluginController(Project project) {
         this.project = project;
         initLogger();
+        createProjectListener();
         RepoLocalStorageDataProvider.setUserProjectDirectory(this.project);
         handoutDataProvider = ServiceManager.getService(project, HandoutContentDataProviderInterface.class);
         handoutDataProvider.addListener(this);
@@ -37,8 +42,20 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
         // informChangesPanel.showPanel();
     }
 
+    private void createProjectListener() {
+        ProjectManagerListener projectClosedListener = new ProjectManagerListener() {
+            @Override
+            public void projectClosed(@NotNull Project project) {
+                System.out.println("PROJECT LISTENER name: " + project.getName());
+                loggingController.syncLoggingData();
+            }
+        };
+        //https://intellij-support.jetbrains.com/hc/en-us/community/posts/206792155/comments/206204315
+        ProjectManager.getInstance().addProjectManagerListener(project, projectClosedListener );
+    }
+
     private void initLogger() {
-        LoggingController loggingController = LoggingController.getInstance();
+        loggingController = LoggingController.getInstance();
         loggingController.startLogging();
 
     }
