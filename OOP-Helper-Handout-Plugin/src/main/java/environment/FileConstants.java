@@ -14,8 +14,8 @@ public class FileConstants {
     public static final String REPO_PATH_TO_BRANCH = "refs/heads/";
 
     public static final String HANDOUT_FILE_NAME = "/index.html";
-    public static final String CHECKLIST_FILE_NAME = "/checklist.json";
-    public static final String PREDEFINED_CHECKLIST_FILE_NAME = "/predefined_checklist.json";
+    public static final String CHECKLIST_FILE_NAME = "/checklist/checklist.json";
+    public static final String PREDEFINED_CHECKLIST_FILE_NAME = "/checklist/predefined_checklist.json";
     public static final String PREDEFINED_CHECKLIST_HTML_FILE = "/checklist/checklistPredefined.html";
     public static final String USER_CHECKLIST_HTML_FILE = "/checklist/checklistUserData.html";
 

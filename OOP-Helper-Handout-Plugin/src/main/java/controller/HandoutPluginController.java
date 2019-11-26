@@ -78,34 +78,6 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
         toolWindowController.updateContent();
         BalloonPopupController.showNotification(project, notificationMessage, messageType);
 
-
-        //TODO create in Checklsit controller
-        File checklistUserFile = LocalStorageDataProvider.getChecklistUserData();
-        checklistUserFile.getParentFile().mkdirs();
-        try {
-            checklistUserFile.createNewFile();
-            JsonObject checklistJson = new JsonObject();
-            JsonArray tasks = new JsonArray();
-            checklistJson.add("checklist", tasks);
-            saveJsonObjectInFile(checklistJson,checklistUserFile);
-        } catch (IOException ex) {
-            System.out.println("FILE NOT Created");
-        }
-        File localPredefinedChecklistFile = LocalStorageDataProvider.getLocalChecklistPredefinedData();
-        File predefinedRepoChecklistFile = LocalStorageDataProvider.getChecklistData();
-
-        //TODO create in Checklsit controller
-        //https://stackoverflow.com/a/29965924
-        Gson gson = new Gson();
-        JsonReader reader = null;
-        try {
-            reader = new JsonReader(new FileReader(predefinedRepoChecklistFile));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        JsonObject repoChecklistData = gson.fromJson(reader, JsonObject.class);
-        saveJsonObjectInFile(repoChecklistData, localPredefinedChecklistFile);
-
         //update toolWindow
         //
         /*Path file = Paths.get(repoFile.getAbsolutePath());
@@ -121,7 +93,8 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
 
         ChecklistController checklistController = ChecklistController.getInstance();
         System.out.println("checklistController: " + checklistController);
-        checklistController.createChecklistFile();
+        //TODO IS NOTCALLED
+        checklistController.createChecklistFiles();
     }
 
 
@@ -146,13 +119,5 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
     }
 
 
-    private void saveJsonObjectInFile(JsonObject  jsonObject, File file) {
-        //https://stackoverflow.com/a/29319491
-        try (Writer writer = new FileWriter(file)) {
-            Gson gson = new GsonBuilder().create();
-            gson.toJson(jsonObject, writer);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+
 }

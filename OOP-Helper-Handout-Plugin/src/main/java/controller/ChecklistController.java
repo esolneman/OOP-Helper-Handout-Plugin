@@ -26,9 +26,9 @@ public class ChecklistController {
         return single_instance;
     }
 
-    private ChecklistController(){
-        System.out.println("ChecklistController" );
-        createChecklistFile();
+    private ChecklistController() {
+        System.out.println("ChecklistController");
+        createChecklistFiles();
     }
 
     public static void saveUserDataInFile(ObservableList<ChecklistTableTask> userData) {
@@ -109,7 +109,33 @@ public class ChecklistController {
         }
     }
 
-    public void createChecklistFile() {
+    public void createChecklistFiles() {
+
+
+        //TODO create in Checklsit controller
+        File checklistUserFile = LocalStorageDataProvider.getChecklistUserData();
+        CreateFiles.createNewFile(checklistUserFile);
+        JsonObject checklistJson = new JsonObject();
+        JsonArray tasks = new JsonArray();
+        checklistJson.add("checklist", tasks);
+        saveJsonObjectInFile(checklistJson, checklistUserFile);
+
+        File localPredefinedChecklistFile = LocalStorageDataProvider.getLocalChecklistPredefinedData();
+        File predefinedRepoChecklistFile = LocalStorageDataProvider.getChecklistData();
+
+        //TODO create in Checklsit controller
+        //https://stackoverflow.com/a/29965924
+        Gson gson = new Gson();
+        JsonReader reader = null;
+        try {
+            reader = new JsonReader(new FileReader(predefinedRepoChecklistFile));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        JsonObject repoChecklistData = gson.fromJson(reader, JsonObject.class);
+        saveJsonObjectInFile(repoChecklistData, localPredefinedChecklistFile);
+
+
         checklistStartPage = LocalStorageDataProvider.getChecklistStartPageFile();
         userDataChecklistHTMLFile = LocalStorageDataProvider.getLocalUserDataChecklistFile();
 
@@ -123,5 +149,16 @@ public class ChecklistController {
 
         CreateFiles.saveRepoFileInLocalFile(predefinedChecklistRepoFile, checklistStartPage);
         CreateFiles.saveRepoFileInLocalFile(userChecklistRepoFile, userDataChecklistHTMLFile);
+    }
+
+    //TODO IN CLASS CREATES FILES
+    private void saveJsonObjectInFile(JsonObject jsonObject, File file) {
+        //https://stackoverflow.com/a/29319491
+        try (Writer writer = new FileWriter(file)) {
+            Gson gson = new GsonBuilder().create();
+            gson.toJson(jsonObject, writer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

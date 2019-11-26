@@ -5,18 +5,10 @@ import com.google.gson.JsonParser;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
 import controller.ChecklistController;
-import gui.ChecklistFXPanel;
 import gui.PluginWebViewFXPanel;
 import javafx.application.Platform;
-import javafx.beans.Observable;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.scene.web.WebView;
-import objects.Checklist;
-import objects.ChecklistTableTask;
 import provider.LocalStorageDataProvider;
-import provider.ParseChecklistJSON;
 import webView.WebViewController;
 
 import javax.swing.*;
