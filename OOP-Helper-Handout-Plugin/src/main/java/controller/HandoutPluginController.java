@@ -11,6 +11,7 @@ import com.intellij.openapi.project.Project;
 import de.ur.mi.pluginhelper.logger.Log;
 import de.ur.mi.pluginhelper.logger.LogDataType;
 import de.ur.mi.pluginhelper.logger.LogManager;
+import de.ur.mi.pluginhelper.logger.SyncProgressListener;
 import eventHandling.OnGitEventListener;
 import gui.CommitChangesDialog;
 import provider.HandoutContentDataProviderInterface;
@@ -34,11 +35,11 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
         Log log = LogManager.openLog(user.getSessionID(), "MA-Wolfes");
 
         // Daten im Log speichern
-        log.log(user.getSessionID(), LogDataType.CUSTOM, "demo", "Something happened");
+        log.log(user.getSessionID(), LogDataType.CUSTOM, "startIDE", "Opened IDE");
 
         String serverUrl = "http://regensburger-forscher.de:9999/upload/";
 
-/*        // Log synchronisieren
+        // Log synchronisieren
         LogManager.syncLog(log, user, serverUrl, new SyncProgressListener() {
             @Override
             public void onFinished() {
@@ -48,7 +49,7 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
             public void onFailed() {
                 System.out.println("Upload failed");
             }
-        });*/
+        });
 
         this.project = project;
         RepoLocalStorageDataProvider.setUserProjectDirectory(this.project);
