@@ -8,6 +8,8 @@ import com.google.gson.stream.JsonReader;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
+import de.ur.mi.pluginhelper.logger.Log;
+import de.ur.mi.pluginhelper.logger.LogDataType;
 import de.ur.mi.pluginhelper.logger.LogManager;
 import eventHandling.OnGitEventListener;
 import gui.CommitChangesDialog;
@@ -29,10 +31,10 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
         user = de.ur.mi.pluginhelper.User.User.getLocalUser();
 
         // Session Log für das Experiment mit dem Titel "Test" erstellen oder öffnen
-        de.ur.mi.pluginhelper.logger.Log log = LogManager.openLog(user.getSessionID(), "MA-Wolfes");
+        Log log = LogManager.openLog(user.getSessionID(), "MA-Wolfes");
 
         // Daten im Log speichern
-        log.log(user.getSessionID(), de.ur.mi.pluginhelper.logger.LogDataType.CUSTOM, "demo", "Something happened");
+        log.log(user.getSessionID(), LogDataType.CUSTOM, "demo", "Something happened");
 
         String serverUrl = "http://regensburger-forscher.de:9999/upload/";
 
