@@ -8,32 +8,51 @@ import com.google.gson.stream.JsonReader;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.project.ProjectManagerListener;
 import eventHandling.OnGitEventListener;
-import gherkin.deps.com.google.gson.internal.$Gson$Preconditions;
 import gui.CommitChangesDialog;
+import org.jetbrains.annotations.NotNull;
 import provider.HandoutContentDataProviderInterface;
 import provider.LocalStorageDataProvider;
 import provider.RepoLocalStorageDataProvider;
-import toolWindow.HandoutToolWindowFactory;
 
 import java.io.*;
 import java.util.ArrayList;
 
 public class HandoutPluginController implements HandoutPluginControllerInterface, OnGitEventListener {
     private HandoutContentDataProviderInterface handoutDataProvider;
-    private HandoutToolWindowFactory handoutToolWindowFactory;
     private ToolWindowController toolWindowController;
     private Project project;
+    private LoggingController loggingController;
 
     public HandoutPluginController(Project project) {
         this.project = project;
+        initLogger();
+        createProjectListener();
         RepoLocalStorageDataProvider.setUserProjectDirectory(this.project);
         handoutDataProvider = ServiceManager.getService(project, HandoutContentDataProviderInterface.class);
         handoutDataProvider.addListener(this);
         toolWindowController = ToolWindowController.getInstance();
         updateHandoutContent();
-        // InformChangesPanel informChangesPanel = new InformChangesPanel(test);
-        // informChangesPanel.showPanel();
+    }
+
+    private void createProjectListener() {
+        ProjectManagerListener projectClosedListener = new ProjectManagerListener() {
+            @Override
+            public void projectClosed(@NotNull Project project) {
+                System.out.println("PROJECT LISTENER name: " + project.getName());
+                loggingController.syncLoggingData();
+            }
+        };
+        //https://intellij-support.jetbrains.com/hc/en-us/community/posts/206792155/comments/206204315
+        ProjectManager.getInstance().addProjectManagerListener(project, projectClosedListener );
+    }
+
+    private void initLogger() {
+        loggingController = LoggingController.getInstance();
+        loggingController.startLogging();
+
     }
 
     public void updateHandoutContent() {
