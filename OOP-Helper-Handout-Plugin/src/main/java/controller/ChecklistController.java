@@ -17,6 +17,7 @@ public class ChecklistController {
 
     private static ChecklistController single_instance = null;
     private File checklistStartPage;
+    private File userDataChecklistHTMLFile;
 
     public static ChecklistController getInstance() {
         if (single_instance == null) {
@@ -110,47 +111,17 @@ public class ChecklistController {
 
     public void createChecklistFile() {
         checklistStartPage = LocalStorageDataProvider.getChecklistStartPageFile();
+        userDataChecklistHTMLFile = LocalStorageDataProvider.getLocalUserDataChecklistFile();
 
         System.out.println("createChecklistFile: " + checklistStartPage.getPath());
-        try {
-            checklistStartPage.getParentFile().mkdirs();
-            checklistStartPage.createNewFile();
-        } catch (IOException e) {
-            //TODO CATACH
-            System.out.println(e);
-        }
+        CreateFiles.createNewFile(checklistStartPage);
+        CreateFiles.createNewFile(userDataChecklistHTMLFile);
 
         File predefinedChecklistRepoFile = LocalStorageDataProvider.getRepoPredefinedChecklistFile();
         System.out.println("predefinedChecklistRepoFile: " + predefinedChecklistRepoFile.getPath());
+        File userChecklistRepoFile = LocalStorageDataProvider.getRepoUserDataChecklistFile();
 
-        //File userChecklistRepoFile = LocalStorageDataProvider.();
-        BufferedReader inputStream = null;
-        BufferedWriter outputStream = null;
-        try {
-            inputStream = new BufferedReader(new FileReader(
-                    predefinedChecklistRepoFile));
-            File UIFile = checklistStartPage;
-            // if File doesnt exists, then create it
-            if (!UIFile.exists()) {
-                UIFile.createNewFile();
-            }
-            FileWriter filewriter = new FileWriter(UIFile.getAbsoluteFile());
-            outputStream = new BufferedWriter(filewriter);
-            String count;
-            while ((count = inputStream.readLine()) != null) {
-                outputStream.write(count);
-            }
-            outputStream.flush();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                outputStream.close();
-                inputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        CreateFiles.saveRepoFileInLocalFile(predefinedChecklistRepoFile, checklistStartPage);
+        CreateFiles.saveRepoFileInLocalFile(userChecklistRepoFile, userDataChecklistHTMLFile);
     }
 }

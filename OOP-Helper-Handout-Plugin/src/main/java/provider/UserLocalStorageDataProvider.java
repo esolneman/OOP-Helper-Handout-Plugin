@@ -25,4 +25,10 @@ public class UserLocalStorageDataProvider implements UserLocalStorageDataProvide
         File checklistFile = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + USER_LOCAL_STORAGE_FILE + PREDEFINED_CHECKLIST_HTML_FILE);
         return checklistFile;
     }
+
+
+    public static File getUserDataChecklist() {
+        File predefinedChecklist = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + USER_LOCAL_STORAGE_FILE + USER_CHECKLIST_HTML_FILE);
+        return predefinedChecklist;
+    }
 }
