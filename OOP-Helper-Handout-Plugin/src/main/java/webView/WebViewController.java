@@ -84,7 +84,6 @@ public class WebViewController {
                         handoutToolWindow.show(null);
                         //https://intellij-support.jetbrains.com/hc/en-us/community/posts/206383859-How-to-float-tool-window-programatically-
                         handoutToolWindow.setType(ToolWindowType.FLOATING, null);
-                        handoutToolWindow.getContentManager().setSelectedContent(handoutToolWindow.getContentManager().getContent(handoutContentScreen.getContent()));
                     });
                 }
             });

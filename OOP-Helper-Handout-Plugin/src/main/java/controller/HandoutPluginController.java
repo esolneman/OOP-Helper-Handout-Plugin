@@ -10,16 +10,13 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerListener;
-import de.ur.mi.pluginhelper.logger.Log;
-import de.ur.mi.pluginhelper.logger.LogDataType;
-import de.ur.mi.pluginhelper.logger.LogManager;
-import de.ur.mi.pluginhelper.logger.SyncProgressListener;
 import eventHandling.OnGitEventListener;
 import gui.CommitChangesDialog;
 import org.jetbrains.annotations.NotNull;
 import provider.HandoutContentDataProviderInterface;
 import provider.LocalStorageDataProvider;
 import provider.RepoLocalStorageDataProvider;
+
 import java.io.*;
 import java.util.ArrayList;
 
@@ -38,8 +35,6 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
         handoutDataProvider.addListener(this);
         toolWindowController = ToolWindowController.getInstance();
         updateHandoutContent();
-        // InformChangesPanel informChangesPanel = new InformChangesPanel(test);
-        // informChangesPanel.showPanel();
     }
 
     private void createProjectListener() {

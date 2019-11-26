@@ -3,14 +3,31 @@ package toolWindow;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.wm.FocusWatcher;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
+import com.intellij.ui.content.ContentManagerEvent;
+import com.intellij.ui.content.ContentManagerListener;
+import controller.LoggingController;
+import de.ur.mi.pluginhelper.logger.LogDataType;
 import eventHandling.OnToolWindowCreatedListener;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import services.ToolWindowServiceInterface;
 
+import javax.swing.*;
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
+import java.awt.*;
+import java.awt.event.ContainerEvent;
+import java.awt.event.ContainerListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +53,7 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, ToolWindowSe
     private SpecificAssessmentCriteriaScreen specificAssessmentCriteriaScreen;
     private HelpScreen commonAssessmentCriteriaScreen;
     private NotesScreen notesScreen;
+    private LoggingController loggingController;
 
     // Create the tool window content.
     // is called when user clicks on tool window button
@@ -44,6 +62,35 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, ToolWindowSe
         contentFactory = ContentFactory.SERVICE.getInstance();
         initScreens();
         createToolbar();
+        createToolWindowListener();
+        loggingController = LoggingController.getInstance();
+    }
+
+    private void createToolWindowListener() {
+
+
+        toolWindow.getContentManager().addContentManagerListener(new ContentManagerListener() {
+            @Override
+            public void contentAdded(@NotNull ContentManagerEvent event) {}
+
+            @Override
+            public void contentRemoved(@NotNull ContentManagerEvent event) {}
+
+            @Override
+            public void contentRemoveQuery(@NotNull ContentManagerEvent event) {}
+
+            @Override
+            public void selectionChanged(@NotNull ContentManagerEvent event) {
+                System.out.println("in: selectionChanged");
+                if(event.getContent().isSelected()){
+                    System.out.println("Current Component Gained: \"" + event.getContent().getDisplayName() + "\"");
+                    loggingController.saveDataInLogger(LogDataType.CUSTOM, "focus lost", event.getContent().getDisplayName());
+                }else{
+                    System.out.println("Current Component Lost: \"" + event.getContent().getDisplayName() + "\"");
+                    loggingController.saveDataInLogger(LogDataType.CUSTOM, "focus gained", event.getContent().getDisplayName());
+                }
+            }
+        });
     }
 
     private void initScreens() {
@@ -73,6 +120,45 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, ToolWindowSe
         toolWindow.getContentManager().addContent(notesContent);
         //TODO: Decide which Tab is open when start ide
         toolWindow.getContentManager().setSelectedContent(handoutContent);
+
+        System.out.println("toolWindow.getContentManager() Content Length: " + toolWindow.getContentManager().getContents().length);
+
+
+        /*//https://intellij-support.jetbrains.com/hc/en-us/community/posts/360000018010/comments/360000025810
+        for (Content content : toolWindow.getContentManager().getContents()) {
+            System.out.println("toolWindow content: " + content.getDisplayName());
+            System.out.println("toolWindow content Component: " + content.getComponent().getName());
+
+            content.getComponent().addFocusListener(new FocusListener() {
+                @Override
+                public void focusGained(FocusEvent focusEvent) {
+                    System.out.println("focusGained Content: " + content.getDisplayName());
+                }
+
+                @Override
+                public void focusLost(FocusEvent focusEvent) {
+                    System.out.println("focusLost Content: " + content.getDisplayName());
+                }
+            });
+        }*/
+
+
+        /*toolWindow.getComponent().addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent focusEvent) {
+                System.out.println("focusGained: " + focusEvent.toString());
+                System.out.println("focusGained: " + focusEvent.getSource().toString());
+
+            }
+
+            @Override
+            public void focusLost(FocusEvent focusEvent) {
+                System.out.println("focusLost: " + focusEvent.toString());
+                System.out.println("focusLost: " + focusEvent.getSource().toString());
+
+            }
+        });
+*/
         callListener();
 
     }

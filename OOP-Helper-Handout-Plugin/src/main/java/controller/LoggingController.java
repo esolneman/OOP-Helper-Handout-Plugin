@@ -5,6 +5,8 @@ import de.ur.mi.pluginhelper.logger.Log;
 import de.ur.mi.pluginhelper.logger.LogDataType;
 import de.ur.mi.pluginhelper.logger.LogManager;
 import de.ur.mi.pluginhelper.logger.SyncProgressListener;
+import de.ur.mi.pluginhelper.ui.UserDialogManager;
+import de.ur.mi.pluginhelper.ui.UserResponse;
 
 public class LoggingController {
     private static LoggingController single_instance = null;
@@ -38,16 +40,21 @@ public class LoggingController {
     public void syncLoggingData(){
         String serverUrl = "http://regensburger-forscher.de:9999/upload/";
         // Log synchronisieren
-        LogManager.syncLog(log, user, serverUrl, new SyncProgressListener() {
-            @Override
-            public void onFinished() {
-                System.out.println("Upload finished");
-            }
-            @Override
-            public void onFailed() {
-                System.out.println("Upload failed");
-            }
-        });
+        //TODO UI?
+        //UserResponse response = UserDialogManager.showConfirmationDialog("Möchten Sie die Logdatei hochladen?", "Freigegeben der Logdatei");
+        //if (response == UserResponse.ACCEPT) {
+            LogManager.syncLog(log, user, serverUrl, new SyncProgressListener() {
+                @Override
+                public void onFinished() {
+                    System.out.println("Upload finished");
+                }
+
+                @Override
+                public void onFailed() {
+                    System.out.println("Upload failed");
+                }
+            });
+        //}
     }
 
     public void saveDataInLogger(LogDataType type, String label, String payload){
