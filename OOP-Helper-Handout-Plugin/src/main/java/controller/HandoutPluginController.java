@@ -24,34 +24,10 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
     private HandoutContentDataProviderInterface handoutDataProvider;
     private ToolWindowController toolWindowController;
     private Project project;
-    private de.ur.mi.pluginhelper.User.User user;
 
     public HandoutPluginController(Project project) {
-
-        // Nutzer erstellen oder laden
-        user = de.ur.mi.pluginhelper.User.User.getLocalUser();
-
-        // Session Log für das Experiment mit dem Titel "Test" erstellen oder öffnen
-        Log log = LogManager.openLog(user.getSessionID(), "MA-Wolfes");
-
-        // Daten im Log speichern
-        log.log(user.getSessionID(), LogDataType.CUSTOM, "startIDE", "Opened IDE");
-
-        String serverUrl = "http://regensburger-forscher.de:9999/upload/";
-
-        // Log synchronisieren
-        LogManager.syncLog(log, user, serverUrl, new SyncProgressListener() {
-            @Override
-            public void onFinished() {
-                System.out.println("Upload finished");
-            }
-            @Override
-            public void onFailed() {
-                System.out.println("Upload failed");
-            }
-        });
-
         this.project = project;
+        initLogger();
         RepoLocalStorageDataProvider.setUserProjectDirectory(this.project);
         handoutDataProvider = ServiceManager.getService(project, HandoutContentDataProviderInterface.class);
         handoutDataProvider.addListener(this);
@@ -59,6 +35,12 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
         updateHandoutContent();
         // InformChangesPanel informChangesPanel = new InformChangesPanel(test);
         // informChangesPanel.showPanel();
+    }
+
+    private void initLogger() {
+        LoggingController loggingController = LoggingController.getInstance();
+        loggingController.startLogging();
+
     }
 
     public void updateHandoutContent() {
