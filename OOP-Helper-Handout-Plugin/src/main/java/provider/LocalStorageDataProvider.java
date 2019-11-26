@@ -59,4 +59,8 @@ public class LocalStorageDataProvider implements LocalStorageDataProviderInterfa
 
     public static File getHelpStartDirectory() { return RepoLocalStorageDataProvider.getHelpStartFile();
     }
+
+    public static File getChecklistStartPageFile() { return UserLocalStorageDataProvider.getChecklistStartPageFile();}
+
+    public static File getRepoPredefinedChecklistFile() {return RepoLocalStorageDataProvider.getPredefinedChecklist();}
 }

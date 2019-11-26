@@ -23,6 +23,7 @@ import objects.ChecklistTableTask;
 
 //TODO MAKE SINGLETON
 public class ChecklistFXPanel extends JFXPanel {
+    private ChecklistController checklistController;
 
     //https://docs.oracle.com/javafx/2/ui_controls/table-view.htm#CJAGAAEE
     public void showChecklistTable(ObservableList<ChecklistTableTask> predefinedData, ObservableList<ChecklistTableTask> userData) {
@@ -69,6 +70,7 @@ public class ChecklistFXPanel extends JFXPanel {
     }
 
     private VBox getUserDataTable(ObservableList<ChecklistTableTask> userData) {
+        checklistController = ChecklistController.getInstance();
         final HBox hb = new HBox();
         final Label userDataLabel = new Label("Eigene Checkliste");
         userDataLabel.setFont(new Font("Arial", 20));
@@ -141,7 +143,7 @@ public class ChecklistFXPanel extends JFXPanel {
                             .getItems().get(checklistTableTaskStringCellEditEvent.getTablePosition().getRow())
                             .setTaskDescription(checklistTableTaskStringCellEditEvent.getNewValue());
                     System.out.println("NEW VALUE: " + checklistTableTaskStringCellEditEvent.getNewValue());
-                    ChecklistController.saveUserDataInFile(userData);
+                    checklistController.saveUserDataInFile(userData);
                 });
 
         //https://stackoverflow.com/a/35265368

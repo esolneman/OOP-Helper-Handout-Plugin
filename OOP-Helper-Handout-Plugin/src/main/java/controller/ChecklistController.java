@@ -15,6 +15,21 @@ import java.io.*;
 
 public class ChecklistController {
 
+    private static ChecklistController single_instance = null;
+    private File checklistStartPage;
+
+    public static ChecklistController getInstance() {
+        if (single_instance == null) {
+            single_instance = new ChecklistController();
+        }
+        return single_instance;
+    }
+
+    private ChecklistController(){
+        System.out.println("ChecklistController" );
+        createChecklistFile();
+    }
+
     public static void saveUserDataInFile(ObservableList<ChecklistTableTask> userData) {
         System.out.println("saveTableDataInFile" + userData.toString());
 
@@ -89,6 +104,52 @@ public class ChecklistController {
             if (!checklistRepo.containsID(localTask.id)) {
                 System.out.println("LOCAL ID NOT EXISTS");
                 checklistLocal.tasks.remove(localTask);
+            }
+        }
+    }
+
+    public void createChecklistFile() {
+        checklistStartPage = LocalStorageDataProvider.getChecklistStartPageFile();
+
+        System.out.println("createChecklistFile: " + checklistStartPage.getPath());
+        try {
+            checklistStartPage.getParentFile().mkdirs();
+            checklistStartPage.createNewFile();
+        } catch (IOException e) {
+            //TODO CATACH
+            System.out.println(e);
+        }
+
+        File predefinedChecklistRepoFile = LocalStorageDataProvider.getRepoPredefinedChecklistFile();
+        System.out.println("predefinedChecklistRepoFile: " + predefinedChecklistRepoFile.getPath());
+
+        //File userChecklistRepoFile = LocalStorageDataProvider.();
+        BufferedReader inputStream = null;
+        BufferedWriter outputStream = null;
+        try {
+            inputStream = new BufferedReader(new FileReader(
+                    predefinedChecklistRepoFile));
+            File UIFile = checklistStartPage;
+            // if File doesnt exists, then create it
+            if (!UIFile.exists()) {
+                UIFile.createNewFile();
+            }
+            FileWriter filewriter = new FileWriter(UIFile.getAbsoluteFile());
+            outputStream = new BufferedWriter(filewriter);
+            String count;
+            while ((count = inputStream.readLine()) != null) {
+                outputStream.write(count);
+            }
+            outputStream.flush();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                outputStream.close();
+                inputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }

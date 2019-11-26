@@ -42,7 +42,8 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
             @Override
             public void projectClosed(@NotNull Project project) {
                 System.out.println("PROJECT LISTENER name: " + project.getName());
-                loggingController.syncLoggingData();
+                //TODO UNCOMMENT
+                //loggingController.syncLoggingData();
             }
         };
         //https://intellij-support.jetbrains.com/hc/en-us/community/posts/206792155/comments/206204315
@@ -117,16 +118,21 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
 
         NotesController notesController = NotesController.getInstance();
         notesController.createNotesFile();
+
+        ChecklistController checklistController = ChecklistController.getInstance();
+        System.out.println("checklistController: " + checklistController);
+        checklistController.createChecklistFile();
     }
 
 
     @Override
     //TODO add strings to message constants
     public void onUpdatingRepositoryEvent(ArrayList<String> commitMessages) {
+        ChecklistController checklistController = ChecklistController.getInstance();
         BalloonPopupController.showNotification(project, "Handout Daten wurden runtergeladen." + commitMessages.toString(), NotificationType.INFORMATION);
         CommitChangesDialog commitChangesDialog = new CommitChangesDialog(commitMessages);
         try {
-            ChecklistController.comparePredefinedChecklistVersions();
+            checklistController.comparePredefinedChecklistVersions();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

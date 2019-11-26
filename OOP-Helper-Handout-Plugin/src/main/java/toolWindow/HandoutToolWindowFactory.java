@@ -32,14 +32,16 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, ToolWindowSe
     private ContentFactory contentFactory;
 
     private Content handoutContent;
-    private Content checklistContent;
+    private Content refactoredChecklistContent;
+   // private Content checklistContent;
     private Content specificCriteriaContent;
     private Content commonAssessmentCriteriaContent;
     private Content notesContent;
 
 
     private HandoutContentScreen handoutContentScreen;
-    private ChecklistScreen checklistScreen;
+    private RefactoresChecklistScreen refactoresChecklistScreen;
+    //private ChecklistScreen checklistScreen;
     private SpecificAssessmentCriteriaScreen specificAssessmentCriteriaScreen;
     private HelpScreen commonAssessmentCriteriaScreen;
     private NotesScreen notesScreen;
@@ -118,7 +120,8 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, ToolWindowSe
 
     private void initScreens() {
         handoutContentScreen = new HandoutContentScreen(toolWindow);
-        checklistScreen = new ChecklistScreen(toolWindow);
+        refactoresChecklistScreen = new RefactoresChecklistScreen(toolWindow);
+        //checklistScreen = new ChecklistScreen(toolWindow);
         specificAssessmentCriteriaScreen = new SpecificAssessmentCriteriaScreen(toolWindow);
         commonAssessmentCriteriaScreen = new HelpScreen(toolWindow);
         notesScreen = new NotesScreen(toolWindow);
@@ -128,13 +131,15 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, ToolWindowSe
     private void addScreenContent() {
         handoutContent = contentFactory.createContent(handoutContentScreen.getContent(), "Handout", false);
         handoutContent.setPreferredFocusableComponent(handoutContentScreen.getContent());
-        checklistContent = contentFactory.createContent(checklistScreen.getContent(), "Aufgaben", false);
+        refactoredChecklistContent = contentFactory.createContent(refactoresChecklistScreen.getContent(), "refCheck", false);
+        //checklistContent = contentFactory.createContent(checklistScreen.getContent(), "Aufgaben", false);
         specificCriteriaContent = contentFactory.createContent(specificAssessmentCriteriaScreen.getContent(), "Bewertungskriterien", false);
         commonAssessmentCriteriaContent = contentFactory.createContent(commonAssessmentCriteriaScreen.getContent(), "Hilfe", false);
         notesContent = contentFactory.createContent(notesScreen.getContent(), "Notizen", false);
 
         toolWindow.getContentManager().addContent(handoutContent);
-        toolWindow.getContentManager().addContent(checklistContent);
+        toolWindow.getContentManager().addContent(refactoredChecklistContent);
+        //toolWindow.getContentManager().addContent(checklistContent);
         toolWindow.getContentManager().addContent(specificCriteriaContent);
         toolWindow.getContentManager().addContent(commonAssessmentCriteriaContent);
         toolWindow.getContentManager().addContent(notesContent);
