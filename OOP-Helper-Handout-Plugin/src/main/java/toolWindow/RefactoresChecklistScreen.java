@@ -8,7 +8,9 @@ import controller.ChecklistController;
 import gui.PluginWebViewFXPanel;
 import javafx.application.Platform;
 import javafx.scene.web.WebView;
+import objects.Checklist;
 import provider.LocalStorageDataProvider;
+import provider.ParseChecklistJSON;
 import webView.WebViewController;
 
 import javax.swing.*;
@@ -63,7 +65,7 @@ public class RefactoresChecklistScreen extends SimpleToolWindowPanel {
 
 
         try {
-            checklistStartPage = LocalStorageDataProvider.getChecklistStartPageFile().toURI().toURL().toString();
+            checklistStartPage = LocalStorageDataProvider.getLocalPredefinedChecklistFile().toURI().toURL().toString();
             System.out.println("checklistStartPage: " + checklistStartPage);
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -78,10 +80,22 @@ public class RefactoresChecklistScreen extends SimpleToolWindowPanel {
     }
 
     private void createContent() {
-        /*checklistContent = new PluginWebViewFXPanel();
+        checklistContent = new PluginWebViewFXPanel();
         Checklist checklist = ParseChecklistJSON.predefinedJsonToChecklistParser(checklistJson);
+        checklistController.createTaskList("predefined", checklist);
 
-        //https://stackoverflow.com/a/28671914
+        for (int i = 0; i < checklist.tasks.size(); i++) {
+            //TODO fill pr
+        }
+        if (userChecklistJson != null) {
+            Checklist userChecklist = ParseChecklistJSON.checklistJSONHandler(userChecklistJson);
+            //checklistController.createTaskList("user", userChecklist);
+            for (int i = 0; i < userChecklist.tasks.size(); i++) {
+                //TODO fill user html --> PARSE MIST
+            }
+        }
+
+        /* //https://stackoverflow.com/a/28671914
         final ObservableList<ChecklistTableTask> predefinedData = FXCollections.observableArrayList(param -> new Observable[]{param.checked});
         for (int i = 0; i < checklist.tasks.size(); i++) {
             String taskName = checklist.tasks.get(i).taskDescription;
@@ -121,15 +135,35 @@ public class RefactoresChecklistScreen extends SimpleToolWindowPanel {
         });
 
 */
-
-        checklistContent = new PluginWebViewFXPanel();
         Platform.setImplicitExit(false);
         Platform.runLater(() -> {
-            System.out.println("checklistStartPage Run later: " + checklistStartPage);
             webView = webViewController.createWebView(checklistStartPage);
             checklistContent.showHandoutWebView(checklistStartPage, webView);
+            initAddTaskButtonListener();
+            initDeleteTaskButtonListener();
+            initCheckTaskButtonListener();
         });
 
+    }
+
+    private void initCheckTaskButtonListener() {
+        System.out.println("initCheckTaskButtonListener");
+
+    }
+
+    private void initDeleteTaskButtonListener() {
+        System.out.println("initAddTaskButtonListener");
+
+    }
+
+    private void initAddTaskButtonListener() {
+        //https://stackoverflow.com/a/34547416
+        //create listener for "add task" button in webView
+        System.out.println("initAddTaskButtonListener");
+        //noteAddingFrame = NoteAddingFrame.getInstance();
+        //noteAddingFrame.setNotesScreen(this);
+        //JSObject window = (JSObject) webView.getEngine().executeScript("window");
+        //window.setMember("noteAddingFrame", NoteAddingFrame.getInstance());
     }
 
     public JPanel getContent() {

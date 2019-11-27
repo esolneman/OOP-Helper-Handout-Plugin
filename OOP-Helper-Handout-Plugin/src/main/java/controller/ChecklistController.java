@@ -8,6 +8,9 @@ import com.google.gson.stream.JsonReader;
 import javafx.collections.ObservableList;
 import objects.Checklist;
 import objects.ChecklistTableTask;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import provider.LocalStorageDataProvider;
 import provider.ParseChecklistJSON;
 
@@ -110,8 +113,6 @@ public class ChecklistController {
     }
 
     public void createChecklistFiles() {
-
-
         //TODO create in Checklsit controller
         File checklistUserFile = LocalStorageDataProvider.getChecklistUserData();
         CreateFiles.createNewFile(checklistUserFile);
@@ -136,7 +137,7 @@ public class ChecklistController {
         saveJsonObjectInFile(repoChecklistData, localPredefinedChecklistFile);
 
 
-        checklistStartPage = LocalStorageDataProvider.getChecklistStartPageFile();
+        checklistStartPage = LocalStorageDataProvider.getLocalPredefinedChecklistFile();
         userDataChecklistHTMLFile = LocalStorageDataProvider.getLocalUserDataChecklistFile();
 
         System.out.println("createChecklistFile: " + checklistStartPage.getPath());
@@ -157,6 +158,32 @@ public class ChecklistController {
         try (Writer writer = new FileWriter(file)) {
             Gson gson = new GsonBuilder().create();
             gson.toJson(jsonObject, writer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void createTaskList(String predefined, Checklist checklist) {
+        File localPredefinedChecklistFile = LocalStorageDataProvider.getLocalPredefinedChecklistFile();
+        System.out.println(localPredefinedChecklistFile.getPath());
+
+        try {
+            //TODO maybe call javaScript function direccctly
+            Document jsoupDoc = Jsoup.parse(localPredefinedChecklistFile, "UTF-8");
+            //W3CDom w3cDom = new W3CDom();
+            //org.w3c.dom.Document w3cDoc = w3cDom.fromJsoup(jsoupDoc);
+            System.out.println(jsoupDoc.html());
+           Element taskList = jsoupDoc.getElementById("predefinedTaskList");
+           System.out.println("taskLIst: " + taskList.html());
+            for (int i = 0; i < checklist.tasks.size(); i++) {
+                Element newTask = jsoupDoc.createElement("li");
+                newTask.text(checklist.tasks.get(i).taskDescription);
+                if(checklist.tasks.get(i).checked){
+                    //TODO INSERT STYLE CLASS AVTIVE
+                    newTask.addClass("checked");
+                }
+                taskList.appendChild(newTask);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

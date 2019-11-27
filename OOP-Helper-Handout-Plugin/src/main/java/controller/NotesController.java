@@ -3,12 +3,13 @@ package controller;
 import objects.Notes;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import provider.LocalStorageDataProvider;
-import java.io.*;
-import java.text.SimpleDateFormat;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Date;
-import static environment.Messages.INITIAL_NOTES_TEXT;
 
 //TODO LET CONTROLLER CONTROLL
 public class NotesController {
@@ -27,6 +28,7 @@ public class NotesController {
         notesLocalFile = LocalStorageDataProvider.getNotesFile();
     }
 
+    //TODO CALL CREATE FILE CLASS
     public void createNotesFile() {
         notesLocalFile.getParentFile().mkdirs();
         try {
@@ -35,39 +37,10 @@ public class NotesController {
             //TODO CATACH
             System.out.println(e);
         }
-
         File notesRepoFile = LocalStorageDataProvider.getInitNotesHtmlFile();
-        BufferedReader inputStream = null;
-        BufferedWriter outputStream = null;
-        try {
-            inputStream = new BufferedReader(new FileReader(
-                    notesRepoFile));
-            File UIFile = notesLocalFile;
-            // if File doesnt exists, then create it
-            if (!UIFile.exists()) {
-                UIFile.createNewFile();
-            }
-            FileWriter filewriter = new FileWriter(UIFile.getAbsoluteFile());
-            outputStream = new BufferedWriter(filewriter);
-            String count;
-            while ((count = inputStream.readLine()) != null) {
-                outputStream.write(count);
-            }
-            outputStream.flush();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                outputStream.close();
-                inputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        CreateFiles.saveRepoFileInLocalFile(notesRepoFile, notesLocalFile);
     }
 
-    //TODO save
     public static void saveNewEntryInFile(String htmlText) {
         Document doc = Jsoup.parse(htmlText);
         String htmlBody = doc.getElementById("notesList").html();
