@@ -20,6 +20,7 @@ import org.jsoup.safety.Whitelist;
 import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
+import org.w3c.dom.html.HTMLElement;
 import provider.LocalStorageDataProvider;
 import provider.ParseChecklistJSON;
 
@@ -219,17 +220,16 @@ public class ChecklistController {
 
    public void toggleChecked(Event test ) {
         System.out.println("toggleChecked: " +  test.getType() );
-        org.w3c.dom.Element task = (org.w3c.dom.Element) test.getTarget();
+        org.w3c.dom.html.HTMLElement task = (HTMLElement) test.getTarget();
         System.out.println("toggleChecked Element: " + ((org.w3c.dom.Element) test.getTarget()).getTagName());
        System.out.println("toggleChecked node: " + (((org.w3c.dom.Element) test.getTarget()).getParentNode().getNodeName()));
 
-       if(task.hasAttributeNS("class","checked")){
+       if(task.getClassName() != null){
            System.out.println(" Attribute Checked will be removed");
-
-           task.removeAttributeNS("class","checked");
-        } else {
+           task.setClassName("");
+       } else {
            System.out.println(" Attribute Checked will be added");
-            task.setAttribute("class","checked");
+           task.setClassName("checked");
         }
         System.out.println("Task hasAttributeNS: " + task.hasAttributeNS("class","checked"));
     }

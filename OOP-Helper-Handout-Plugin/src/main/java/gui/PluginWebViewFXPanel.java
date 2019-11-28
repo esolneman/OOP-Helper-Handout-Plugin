@@ -10,11 +10,14 @@ import javafx.scene.web.WebView;
 import objects.Checklist;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
 
 import java.io.File;
+import java.util.ArrayList;
 
 public class PluginWebViewFXPanel extends JFXPanel {
     public void showHandoutWebView(String urlString, WebView webView) {
@@ -35,7 +38,6 @@ public class PluginWebViewFXPanel extends JFXPanel {
         final WebView finalWebView1 = webView;
         //https://stackoverflow.com/a/10684168
         webView.getEngine().getLoadWorker().stateProperty().addListener((ov, oldState, newState) -> {
-            finalWebView1.getEngine().executeScript("toogleCheckedClass()");
             if (newState == Worker.State.SUCCEEDED) {
                 System.out.println("oldValue: " + oldState);
                 System.out.println("newValue: " + newState);
@@ -46,12 +48,14 @@ public class PluginWebViewFXPanel extends JFXPanel {
                     ChecklistController.getInstance().toggleChecked(ev);
                 };
                 Document doc = finalWebView1.getEngine().getDocument();
-                System.out.println("W3 Doc: " + webView.getEngine().getDocument());
                 System.out.println("W3 Doc uri: " + webView.getEngine().getDocument().getDocumentURI());
-
-                System.out.println("W3 Doc text: " + webView.getEngine().getDocument().getTextContent());
-                Element el = (Element) doc.getElementsByTagName("li").item(0);
-                //((EventTarget) el).addEventListener("click", listener, false);
+                NodeList taskElements;
+                taskElements = doc.getElementsByTagName("li");
+                for (int i = 0; i < taskElements.getLength(); i++) {
+                    System.out.println("TaskElements: " + i);
+                    Element taskElement = (Element) taskElements.item(i);
+                    ((EventTarget) taskElement).addEventListener("click", listener, false);
+                }
             }
         });
         webView.getEngine().load(urlString);
