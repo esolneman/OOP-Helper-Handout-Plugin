@@ -7,11 +7,20 @@ import com.intellij.openapi.wm.ToolWindow;
 import controller.ChecklistController;
 import gui.PluginWebViewFXPanel;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Worker;
 import javafx.scene.web.WebView;
 import objects.Checklist;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.events.Event;
+import org.w3c.dom.events.EventListener;
+import org.w3c.dom.events.EventTarget;
 import provider.LocalStorageDataProvider;
 import provider.ParseChecklistJSON;
 import webView.WebViewController;
+import netscape.javascript.JSObject;
 
 import javax.swing.*;
 import java.io.BufferedReader;
@@ -138,7 +147,7 @@ public class RefactoresChecklistScreen extends SimpleToolWindowPanel {
         Platform.setImplicitExit(false);
         Platform.runLater(() -> {
             webView = webViewController.createWebView(checklistStartPage);
-            checklistContent.showHandoutWebView(checklistStartPage, webView);
+            checklistContent.showChecklist(checklistStartPage, webView);
             initAddTaskButtonListener();
             initDeleteTaskButtonListener();
             initCheckTaskButtonListener();
@@ -148,12 +157,14 @@ public class RefactoresChecklistScreen extends SimpleToolWindowPanel {
 
     private void initCheckTaskButtonListener() {
         System.out.println("initCheckTaskButtonListener");
-
+        JSObject window = (JSObject) webView.getEngine().executeScript("window");
+        window.setMember("clickTask", ChecklistController.getInstance());
     }
 
     private void initDeleteTaskButtonListener() {
         System.out.println("initAddTaskButtonListener");
-
+        JSObject window = (JSObject) webView.getEngine().executeScript("window");
+        window.setMember("checklistController", ChecklistController.getInstance());
     }
 
     private void initAddTaskButtonListener() {

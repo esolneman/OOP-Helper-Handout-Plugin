@@ -58,6 +58,7 @@ public class NotesController {
 
     }
 
+    //TODO add to File Controller
     private static void saveNoteInHtmlFile(String htmlBody, File initFile) throws IOException {
         //https://stackoverflow.com/a/30258688
         Document jsoupDoc = Jsoup.parse(initFile, "UTF-8");

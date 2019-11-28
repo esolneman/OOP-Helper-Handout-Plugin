@@ -5,12 +5,21 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
+import com.google.protobuf.Any;
 import javafx.collections.ObservableList;
+import javafx.scene.web.WebView;
 import objects.Checklist;
 import objects.ChecklistTableTask;
 import org.jsoup.Jsoup;
+import org.jsoup.helper.W3CDom;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
+import org.jsoup.safety.Cleaner;
+import org.jsoup.safety.Whitelist;
+import org.w3c.dom.events.Event;
+import org.w3c.dom.events.EventListener;
+import org.w3c.dom.events.EventTarget;
 import provider.LocalStorageDataProvider;
 import provider.ParseChecklistJSON;
 
@@ -145,7 +154,6 @@ public class ChecklistController {
         CreateFiles.createNewFile(userDataChecklistHTMLFile);
 
         File predefinedChecklistRepoFile = LocalStorageDataProvider.getRepoPredefinedChecklistFile();
-        System.out.println("predefinedChecklistRepoFile: " + predefinedChecklistRepoFile.getPath());
         File userChecklistRepoFile = LocalStorageDataProvider.getRepoUserDataChecklistFile();
 
         CreateFiles.saveRepoFileInLocalFile(predefinedChecklistRepoFile, checklistStartPage);
@@ -170,22 +178,78 @@ public class ChecklistController {
         try {
             //TODO maybe call javaScript function direccctly
             Document jsoupDoc = Jsoup.parse(localPredefinedChecklistFile, "UTF-8");
+            //TODO TRY THIS FOR NOTES
+            //Whitelist whiteList = Whitelist.relaxed();
+            //Cleaner cleaner = new Cleaner(whiteList);
+            //jsoupDoc = cleaner.clean(jsoupDoc);
             //W3CDom w3cDom = new W3CDom();
             //org.w3c.dom.Document w3cDoc = w3cDom.fromJsoup(jsoupDoc);
             System.out.println(jsoupDoc.html());
-           Element taskList = jsoupDoc.getElementById("predefinedTaskList");
-           System.out.println("taskLIst: " + taskList.html());
+            Element taskList = jsoupDoc.getElementById("predefinedTaskList");
+            System.out.println("taskLIst: " + taskList.toString());
             for (int i = 0; i < checklist.tasks.size(); i++) {
                 Element newTask = jsoupDoc.createElement("li");
+                //Node text = jsoupDoc.createElement(checklist.tasks.get(i).taskDescription);
                 newTask.text(checklist.tasks.get(i).taskDescription);
-                if(checklist.tasks.get(i).checked){
+                newTask.attr("onclick", "clickTask.toggleChecked(this)");
+                if (checklist.tasks.get(i).checked) {
                     //TODO INSERT STYLE CLASS AVTIVE
                     newTask.addClass("checked");
                 }
+                // note next classes are from org.w3c.dom domain
                 taskList.appendChild(newTask);
             }
+
+            //https://stackoverflow.com/a/30258688
+
+            //https://www.baeldung.com/java-write-to-file#write-with-printwriter
+            FileWriter fileWriter = null;
+            try {
+                fileWriter = new FileWriter(localPredefinedChecklistFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            PrintWriter printWriter = new PrintWriter(fileWriter);
+            printWriter.print(jsoupDoc);
+            printWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+   public void toggleChecked(Element test ) {
+        System.out.println("toggleChecked: " +  test.text() );
+
+        //System.out.println("toggleChecked: " + task.text());
+        //task.toggleClass("checked");
+    }
+
+/*    public void toggleChecked() {
+        System.out.println("toggleChecked event: ");
+
+        //System.out.println("toggleChecked: " + task.text());
+        //task.toggleClass("checked");
+    }*/
+
+    public void listenToButton(org.w3c.dom.Document doc) {
+        System.out.println("HELP ME PLEASE: " + doc.getTextContent());
+    }
+
+/*    public void toggleChecked(Event event) {
+        System.out.println("toggleChecked event: "  );
+
+        //System.out.println("toggleChecked: " + task.text());
+        //task.toggleClass("checked");
+    }
+
+    public void toggleChecked(org.w3c.dom.Element test ) {
+        System.out.println("toggleChecked w3c: " +  test.toString() );
+
+        //System.out.println("toggleChecked: " + task.text());
+        //task.toggleClass("checked");
+    }*/
+
+    public void addTask(String taskDescription) {
+        System.out.println(taskDescription);
     }
 }
