@@ -217,18 +217,28 @@ public class ChecklistController {
         }
     }
 
-   public void toggleChecked(Element test ) {
-        System.out.println("toggleChecked: " +  test.text() );
+   public void toggleChecked(Event test ) {
+        System.out.println("toggleChecked: " +  test.getType() );
+        org.w3c.dom.Element task = (org.w3c.dom.Element) test.getTarget();
+        System.out.println("toggleChecked Element: " + ((org.w3c.dom.Element) test.getTarget()).getTagName());
+       System.out.println("toggleChecked node: " + (((org.w3c.dom.Element) test.getTarget()).getParentNode().getNodeName()));
 
-        //System.out.println("toggleChecked: " + task.text());
-        //task.toggleClass("checked");
+       if(task.hasAttributeNS("class","checked")){
+           System.out.println(" Attribute Checked will be removed");
+
+           task.removeAttributeNS("class","checked");
+        } else {
+           System.out.println(" Attribute Checked will be added");
+            task.setAttribute("class","checked");
+        }
+        System.out.println("Task hasAttributeNS: " + task.hasAttributeNS("class","checked"));
     }
 
 /*    public void toggleChecked() {
         System.out.println("toggleChecked event: ");
 
-        //System.out.println("toggleChecked: " + task.text());
-        //task.toggleClass("checked");
+        System.out.println("toggleChecked: " + task.text());
+        task.toggleClass("checked");
     }*/
 
     public void listenToButton(org.w3c.dom.Document doc) {
