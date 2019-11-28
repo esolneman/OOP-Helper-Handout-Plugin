@@ -213,6 +213,7 @@ public class ChecklistController {
 
    public void toggleChecked(Event test ) {
         System.out.println("toggleChecked: " +  test.getType() );
+       //https://stackoverflow.com/a/20093950
         org.w3c.dom.html.HTMLElement task = (HTMLElement) test.getTarget();
         System.out.println("toggleChecked Element: " + ((org.w3c.dom.Element) test.getTarget()).getTagName());
        System.out.println("toggleChecked node: " + (((org.w3c.dom.Element) test.getTarget()).getParentNode().getNodeName()));

@@ -10,6 +10,10 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
+import org.w3c.dom.html.HTMLElement;
+import provider.LocalStorageDataProvider;
+
+import java.net.MalformedURLException;
 
 public class PluginWebViewFXPanel extends JFXPanel {
     public void showHandoutWebView(String urlString, WebView webView) {
@@ -35,18 +39,40 @@ public class PluginWebViewFXPanel extends JFXPanel {
                 System.out.println("newValue: " + newState);
                 // note next classes are from org.w3c.dom domain
                 EventListener listener = ev -> {
-                    System.out.println(ev.getTarget());
-                    System.out.println("gf");
+                    System.out.println("check click list event");
                     ChecklistController.getInstance().toggleChecked(ev);
                 };
+
+
+                EventListener addTaskButtonListener = ev -> {
+                    System.out.println("addTaskButtonListener event");
+
+                    Document doc = finalWebView1.getEngine().getDocument();
+                    Element inputElement = (Element) doc.getElementById("newTaskDescription");
+                    org.w3c.dom.html.HTMLElement task = (HTMLElement) doc.getElementById("newTaskDescription");
+                    System.out.println("task sadd: " + task.getTextContent());
+                    //TODO get text from inout
+                    ChecklistController.getInstance().addTask(inputElement.getTextContent());
+                };
+
                 Document doc = finalWebView1.getEngine().getDocument();
-                System.out.println("W3 Doc uri: " + webView.getEngine().getDocument().getDocumentURI());
+                System.out.println("W3 Doc uri: " + webView.getEngine().getDocument().getDocumentURI().substring(webView.getEngine().getDocument().getDocumentURI().indexOf("C")));
                 NodeList taskElements;
                 taskElements = doc.getElementsByTagName("li");
                 for (int i = 0; i < taskElements.getLength(); i++) {
                     System.out.println("TaskElements: " + i);
                     Element taskElement = (Element) taskElements.item(i);
                     ((EventTarget) taskElement).addEventListener("click", listener, false);
+                }
+                System.out.println("getChecklistUserData uri: " + LocalStorageDataProvider.getLocalUserDataChecklistFile().toURI().toString().substring(LocalStorageDataProvider.getLocalUserDataChecklistFile().toURI().toString().indexOf("C")));
+
+                if (webView.getEngine().getDocument().getDocumentURI().substring(webView.getEngine().getDocument().getDocumentURI().indexOf("C")).equals(LocalStorageDataProvider.getLocalUserDataChecklistFile().toURI().toString().substring(LocalStorageDataProvider.getLocalUserDataChecklistFile().toURI().toString().indexOf("C")))){
+                    System.out.println(" USER DATA URL: ");
+
+                    Element addTaskButton = doc.getElementById("addTaskButton");
+                    ((EventTarget) addTaskButton).addEventListener("click", addTaskButtonListener, false);
+                }else{
+                    System.out.println("Not USER DATA URL: " + LocalStorageDataProvider.getLocalUserDataChecklistFile().toURI());
                 }
             }
         });
