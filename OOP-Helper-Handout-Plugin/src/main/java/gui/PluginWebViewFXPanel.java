@@ -1,23 +1,15 @@
 package gui;
 
 import controller.ChecklistController;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
 import javafx.scene.web.WebView;
-import objects.Checklist;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
-
-import java.io.File;
-import java.util.ArrayList;
 
 public class PluginWebViewFXPanel extends JFXPanel {
     public void showHandoutWebView(String urlString, WebView webView) {

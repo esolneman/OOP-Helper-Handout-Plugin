@@ -5,21 +5,13 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
-import com.google.protobuf.Any;
 import javafx.collections.ObservableList;
-import javafx.scene.web.WebView;
 import objects.Checklist;
 import objects.ChecklistTableTask;
 import org.jsoup.Jsoup;
-import org.jsoup.helper.W3CDom;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Node;
-import org.jsoup.safety.Cleaner;
-import org.jsoup.safety.Whitelist;
 import org.w3c.dom.events.Event;
-import org.w3c.dom.events.EventListener;
-import org.w3c.dom.events.EventTarget;
 import org.w3c.dom.html.HTMLElement;
 import provider.LocalStorageDataProvider;
 import provider.ParseChecklistJSON;
@@ -190,11 +182,12 @@ public class ChecklistController {
             System.out.println("taskLIst: " + taskList.toString());
             for (int i = 0; i < checklist.tasks.size(); i++) {
                 Element newTask = jsoupDoc.createElement("li");
+                newTask.addClass("");
                 //Node text = jsoupDoc.createElement(checklist.tasks.get(i).taskDescription);
                 newTask.text(checklist.tasks.get(i).taskDescription);
                 newTask.attr("onclick", "clickTask.toggleChecked(this)");
                 if (checklist.tasks.get(i).checked) {
-                    //TODO INSERT STYLE CLASS AVTIVE
+                    //TODO INSERT STYLE CLASS AVTIVr
                     newTask.addClass("checked");
                 }
                 // note next classes are from org.w3c.dom domain
@@ -224,7 +217,7 @@ public class ChecklistController {
         System.out.println("toggleChecked Element: " + ((org.w3c.dom.Element) test.getTarget()).getTagName());
        System.out.println("toggleChecked node: " + (((org.w3c.dom.Element) test.getTarget()).getParentNode().getNodeName()));
 
-       if(task.getClassName() != null){
+       if(task.getClassName().equals("checked")){
            System.out.println(" Attribute Checked will be removed");
            task.setClassName("");
        } else {
