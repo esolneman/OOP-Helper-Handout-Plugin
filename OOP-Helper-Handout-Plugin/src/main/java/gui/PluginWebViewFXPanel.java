@@ -11,6 +11,7 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
 import org.w3c.dom.html.HTMLElement;
+import org.w3c.dom.html.HTMLInputElement;
 import provider.LocalStorageDataProvider;
 
 import java.net.MalformedURLException;
@@ -48,11 +49,9 @@ public class PluginWebViewFXPanel extends JFXPanel {
                     System.out.println("addTaskButtonListener event");
 
                     Document doc = finalWebView1.getEngine().getDocument();
-                    Element inputElement = (Element) doc.getElementById("newTaskDescription");
-                    org.w3c.dom.html.HTMLElement task = (HTMLElement) doc.getElementById("newTaskDescription");
-                    System.out.println("task sadd: " + task.getTextContent());
-                    //TODO get text from inout
-                    ChecklistController.getInstance().addTask(inputElement.getTextContent());
+                    org.w3c.dom.html.HTMLInputElement task = (HTMLInputElement) doc.getElementById("newTaskDescription");
+                    System.out.println("task sadd: " + task.getValue());
+                    ChecklistController.getInstance().addTask(task.getValue());
                 };
 
                 Document doc = finalWebView1.getEngine().getDocument();

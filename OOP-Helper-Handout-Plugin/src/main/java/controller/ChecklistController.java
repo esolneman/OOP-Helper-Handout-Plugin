@@ -255,5 +255,8 @@ public class ChecklistController {
 
     public void addTask(String taskDescription) {
         System.out.println(taskDescription);
+        if(taskDescription.equals(""){
+            taskDescription = "Neue Aufgabe";
+        }
     }
 }
