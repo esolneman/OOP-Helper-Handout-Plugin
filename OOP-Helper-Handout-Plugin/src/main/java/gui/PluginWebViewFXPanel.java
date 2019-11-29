@@ -12,6 +12,7 @@ import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
 import org.w3c.dom.html.HTMLElement;
 import org.w3c.dom.html.HTMLInputElement;
+import org.w3c.dom.html.HTMLUListElement;
 import provider.LocalStorageDataProvider;
 
 import java.net.MalformedURLException;
@@ -47,11 +48,11 @@ public class PluginWebViewFXPanel extends JFXPanel {
 
                 EventListener addTaskButtonListener = ev -> {
                     System.out.println("addTaskButtonListener event");
-
                     Document doc = finalWebView1.getEngine().getDocument();
-                    org.w3c.dom.html.HTMLInputElement task = (HTMLInputElement) doc.getElementById("newTaskDescription");
-                    System.out.println("task sadd: " + task.getValue());
-                    ChecklistController.getInstance().addTask(task.getValue());
+                    HTMLUListElement userDataTaskList = (HTMLUListElement) doc.getElementById("userDataTaskList");
+                    org.w3c.dom.html.HTMLInputElement newTAskInputField = (HTMLInputElement) doc.getElementById("newTaskDescription");
+                    System.out.println("task sadd: " + newTAskInputField.getValue());
+                    ChecklistController.getInstance().addTask(newTAskInputField.getValue(), userDataTaskList, doc);
                 };
 
                 Document doc = finalWebView1.getEngine().getDocument();
@@ -67,7 +68,6 @@ public class PluginWebViewFXPanel extends JFXPanel {
 
                 if (webView.getEngine().getDocument().getDocumentURI().substring(webView.getEngine().getDocument().getDocumentURI().indexOf("C")).equals(LocalStorageDataProvider.getLocalUserDataChecklistFile().toURI().toString().substring(LocalStorageDataProvider.getLocalUserDataChecklistFile().toURI().toString().indexOf("C")))){
                     System.out.println(" USER DATA URL: ");
-
                     Element addTaskButton = doc.getElementById("addTaskButton");
                     ((EventTarget) addTaskButton).addEventListener("click", addTaskButtonListener, false);
                 }else{

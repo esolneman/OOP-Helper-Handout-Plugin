@@ -11,8 +11,11 @@ import objects.ChecklistTableTask;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.w3c.dom.Text;
 import org.w3c.dom.events.Event;
 import org.w3c.dom.html.HTMLElement;
+import org.w3c.dom.html.HTMLLIElement;
+import org.w3c.dom.html.HTMLUListElement;
 import provider.LocalStorageDataProvider;
 import provider.ParseChecklistJSON;
 
@@ -211,52 +214,65 @@ public class ChecklistController {
         }
     }
 
-   public void toggleChecked(Event test ) {
+   public void toggleChecked(Event test) {
         System.out.println("toggleChecked: " +  test.getType() );
        //https://stackoverflow.com/a/20093950
-        org.w3c.dom.html.HTMLElement task = (HTMLElement) test.getTarget();
-        System.out.println("toggleChecked Element: " + ((org.w3c.dom.Element) test.getTarget()).getTagName());
-       System.out.println("toggleChecked node: " + (((org.w3c.dom.Element) test.getTarget()).getParentNode().getNodeName()));
-
+        HTMLLIElement task = (HTMLLIElement) test.getTarget();
        if(task.getClassName().equals("checked")){
-           System.out.println(" Attribute Checked will be removed");
            task.setClassName("");
        } else {
-           System.out.println(" Attribute Checked will be added");
            task.setClassName("checked");
         }
-        System.out.println("Task hasAttributeNS: " + task.hasAttributeNS("class","checked"));
     }
 
-/*    public void toggleChecked() {
-        System.out.println("toggleChecked event: ");
-
-        System.out.println("toggleChecked: " + task.text());
-        task.toggleClass("checked");
-    }*/
-
-    public void listenToButton(org.w3c.dom.Document doc) {
-        System.out.println("HELP ME PLEASE: " + doc.getTextContent());
-    }
-
-/*    public void toggleChecked(Event event) {
-        System.out.println("toggleChecked event: "  );
-
-        //System.out.println("toggleChecked: " + task.text());
-        //task.toggleClass("checked");
-    }
-
-    public void toggleChecked(org.w3c.dom.Element test ) {
-        System.out.println("toggleChecked w3c: " +  test.toString() );
-
-        //System.out.println("toggleChecked: " + task.text());
-        //task.toggleClass("checked");
-    }*/
-
-    public void addTask(String taskDescription) {
+    //TODO ADD SOURCE W3 PAGE
+    public void addTask(String taskDescription, HTMLUListElement userDataTaskList, org.w3c.dom.Document doc) {
         System.out.println(taskDescription);
-        if(taskDescription.equals(""){
+        if(taskDescription.equals("")){
             taskDescription = "Neue Aufgabe";
         }
+
+        HTMLLIElement newTask = (HTMLLIElement) doc.createElement("li");
+        Text description = doc.createTextNode(taskDescription);
+        newTask.appendChild(description);
+        userDataTaskList.appendChild(newTask);
+        doc.getElementById("newTaskDescription").setNodeValue("");
+
+        HTMLElement span = (HTMLElement) doc.createElement("span");
+        Text txt = (Text) doc.createTextNode("\u00D7");
+        span.setClassName("close");
+        span.appendChild(txt);
+        newTask.appendChild(span);
+        //TODO Set X ONCLICK
+        //TODO SET LI On Click
+
+
+        /*var li = document.createElement("li");
+        var inputValue = document.getElementById("myInput").value;
+        var t = document.createTextNode(inputValue);
+        li.appendChild(t);
+        if (inputValue === '') {
+            alert("You must write something!");
+        } else {
+            document.getElementById("myUL").appendChild(li);
+        }
+        document.getElementById("myInput").value = "";
+
+        var span = document.createElement("SPAN");
+        var txt = document.createTextNode("\u00D7");
+        span.className = "close";
+        span.appendChild(txt);
+        li.appendChild(span);
+
+        for (i = 0; i < close.length; i++) {
+            close[i].onclick = function() {
+                var div = this.parentElement;
+                div.style.display = "none";
+            }
+        }*/
+    }
+
+    public void deleteTask(Event test ){
+
     }
 }
