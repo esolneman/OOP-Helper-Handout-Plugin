@@ -71,34 +71,7 @@ public class RefactoresChecklistScreen extends SimpleToolWindowPanel {
         Platform.runLater(() -> {
             webView = webViewController.createWebView(checklistStartPage);
             checklistContent.showChecklist(checklistStartPage, webView);
-           // checklistController.createTaskList("predefined", checklist, webView);
-            initAddTaskButtonListener();
-            initDeleteTaskButtonListener();
-            initCheckTaskButtonListener();
         });
-
-    }
-
-    private void initCheckTaskButtonListener() {
-        System.out.println("initCheckTaskButtonListener");
-        JSObject window = (JSObject) webView.getEngine().executeScript("window");
-        window.setMember("clickTask", ChecklistController.getInstance());
-    }
-
-    private void initDeleteTaskButtonListener() {
-        System.out.println("initAddTaskButtonListener");
-        JSObject window = (JSObject) webView.getEngine().executeScript("window");
-        window.setMember("checklistController", ChecklistController.getInstance());
-    }
-
-    private void initAddTaskButtonListener() {
-        //https://stackoverflow.com/a/34547416
-        //create listener for "add task" button in webView
-        System.out.println("initAddTaskButtonListener");
-        //noteAddingFrame = NoteAddingFrame.getInstance();
-        //noteAddingFrame.setNotesScreen(this);
-        //JSObject window = (JSObject) webView.getEngine().executeScript("window");
-        //window.setMember("noteAddingFrame", NoteAddingFrame.getInstance());
     }
 
     public JPanel getContent() {
