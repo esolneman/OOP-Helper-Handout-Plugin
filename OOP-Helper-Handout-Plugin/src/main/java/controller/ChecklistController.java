@@ -2,10 +2,8 @@ package controller;
 
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
-import javafx.collections.ObservableList;
 import javafx.scene.web.WebView;
 import objects.Checklist;
-import objects.ChecklistTableTask;
 import org.w3c.dom.Document;
 import org.w3c.dom.Text;
 import org.w3c.dom.events.EventListener;
@@ -34,10 +32,8 @@ public class ChecklistController {
 
     private ChecklistController() {
         System.out.println("ChecklistController");
-        createChecklistFiles();
+        //createChecklistFiles();
     }
-
-
 
     public static void saveUserDataInFile(Document checklistDocument) {
         System.out.println("saveTableDataInFile");
@@ -179,7 +175,6 @@ public class ChecklistController {
         switch (checklistSource) {
             case "predefined":
                 taskListId = "predefinedTaskList";
-                checklistHTMLFile = LocalStorageDataProvider.getLocalPredefinedChecklistFile();
                 checklistDataFile = LocalStorageDataProvider.getLocalChecklistPredefinedData();
                 //TODO Duplicated Code
                 //https://stackoverflow.com/a/34486879
@@ -194,7 +189,6 @@ public class ChecklistController {
                 break;
             case "userData":
                 taskListId = "userDataTaskList";
-                checklistHTMLFile = LocalStorageDataProvider.getLocalUserDataChecklistFile();
                 checklistDataFile = LocalStorageDataProvider.getChecklistUserData();
                 //https://stackoverflow.com/a/34486879
                 try {
@@ -217,14 +211,25 @@ public class ChecklistController {
         for (int i = 0; i < checklistData.tasks.size(); i++) {
             //TODO METHOD fro creating LI
             HTMLLIElement newTask = (HTMLLIElement) checklistDocument.createElement("li");
+            Text description = checklistDocument.createTextNode(checklistData.tasks.get(i).taskDescription);
+            newTask.appendChild(description);
+            taskList.appendChild(newTask);
             newTask.setClassName("");
-            newTask.setTextContent(checklistData.tasks.get(i).taskDescription);
+            //newTask.setTextContent(checklistData.tasks.get(i).taskDescription);
             ((EventTarget) newTask).addEventListener("click", getToggleCheckTaskListener(checklistSource, finalWebView1), false);
             if (checklistData.tasks.get(i).checked) {
                 newTask.setClassName("checked");
             }
             if(checklistData.tasks.get(i).id != null){
                 newTask.setId(checklistData.tasks.get(i).id);
+            }
+            if(!checklistSource.equals("predefined")){
+                HTMLElement span = (HTMLElement) checklistDocument.createElement("span");
+                Text txt = checklistDocument.createTextNode("\u00D7");
+                span.setClassName("close");
+                span.appendChild(txt);
+                newTask.appendChild(span);
+                ((EventTarget) span).addEventListener("click", getCloseButtonListener(finalWebView1), false);
             }
             taskList.appendChild(newTask);
         }

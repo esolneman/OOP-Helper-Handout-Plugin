@@ -53,45 +53,6 @@ public class ParseChecklistJSON {
         return realChecklist;
     }
 
-
-    public static JsonArray getJsonFromChecklistTableData(ObservableList<ChecklistTableTask> userData) {
-        Checklist updatedChecklist;
-        ArrayList<Checklist.Task> tasksArrayList = new ArrayList<>();
-        for (int i = 0; i < userData.size(); i++) {
-            String description = userData.get(i).taskDescription.getValue();
-            Boolean checked = userData.get(i).checked.getValue();
-            Checklist.Task newTask;
-            if(userData.get(i).id != null){
-                String id = userData.get(i).id.getValue();
-                newTask = new Checklist.Task.TasksBuilder(description, checked)
-                        .id(id)
-                        .build();
-                System.out.println("getJsonFromChecklistTableData: " + newTask.id);
-            }else{
-                newTask = new Checklist.Task.TasksBuilder(description, checked).build();
-            }
-            tasksArrayList.add(newTask);
-        }
-
-
-        updatedChecklist = new Checklist();
-        updatedChecklist.setTasks(tasksArrayList);
-        JsonObject updatedJson = new JsonObject();
-        JsonArray tasks = new JsonArray();
-        updatedJson.add("checklist", tasks);
-
-        for (int i = 0; i < updatedChecklist.tasks.size(); i++) {
-            JsonObject task = new JsonObject();
-            task.addProperty("taskDescription", updatedChecklist.tasks.get(i).taskDescription);
-            task.addProperty("checked", updatedChecklist.tasks.get(i).checked);
-            if(updatedChecklist.tasks.get(i).id != null){
-                task.addProperty("id", updatedChecklist.tasks.get(i).id);
-            }
-            tasks.add(task);
-        }
-        return tasks;
-    }
-
     public static JsonArray getJsonFromLiElement(HTMLUListElement taskList){
         Checklist updatedChecklist;
         JsonArray tasks = new JsonArray();
@@ -101,7 +62,9 @@ public class ParseChecklistJSON {
             HTMLLIElement currentTask = (HTMLLIElement) taskList.getChildNodes().item(i);
             String description = currentTask.getTextContent();
             System.out.println("Description: " + description);
-            if (currentTask.getClassName() == "checked"){
+            System.out.println("getClassName: " + currentTask.getClassName());
+
+            if (currentTask.getClassName().equals("checked")){
                  checked = true;
             } else{
                  checked = false;
