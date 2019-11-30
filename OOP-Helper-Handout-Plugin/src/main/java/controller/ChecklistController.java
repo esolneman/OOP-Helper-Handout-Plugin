@@ -13,7 +13,10 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.w3c.dom.Text;
 import org.w3c.dom.events.Event;
+import org.w3c.dom.events.EventListener;
+import org.w3c.dom.events.EventTarget;
 import org.w3c.dom.html.HTMLElement;
+import org.w3c.dom.html.HTMLInputElement;
 import org.w3c.dom.html.HTMLLIElement;
 import org.w3c.dom.html.HTMLUListElement;
 import provider.LocalStorageDataProvider;
@@ -231,48 +234,48 @@ public class ChecklistController {
         if(taskDescription.equals("")){
             taskDescription = "Neue Aufgabe";
         }
-
         HTMLLIElement newTask = (HTMLLIElement) doc.createElement("li");
+        newTask.setClassName("");
         Text description = doc.createTextNode(taskDescription);
         newTask.appendChild(description);
         userDataTaskList.appendChild(newTask);
-        doc.getElementById("newTaskDescription").setNodeValue("");
-
+        doc.getElementById("newTaskDescription").setTextContent("");
         HTMLElement span = (HTMLElement) doc.createElement("span");
-        Text txt = (Text) doc.createTextNode("\u00D7");
+        Text txt = doc.createTextNode("\u00D7");
         span.setClassName("close");
         span.appendChild(txt);
         newTask.appendChild(span);
-        //TODO Set X ONCLICK
-        //TODO SET LI On Click
+        ((EventTarget) newTask).addEventListener("click", getToggleCheckTaskListener(), false);
+        ((EventTarget) span).removeEventListener("click", getToggleCheckTaskListener(), false);
+        ((EventTarget) span).addEventListener("click", getCloseButtonListener(), false);
+    }
 
-
-        /*var li = document.createElement("li");
-        var inputValue = document.getElementById("myInput").value;
-        var t = document.createTextNode(inputValue);
-        li.appendChild(t);
-        if (inputValue === '') {
-            alert("You must write something!");
-        } else {
-            document.getElementById("myUL").appendChild(li);
-        }
-        document.getElementById("myInput").value = "";
-
-        var span = document.createElement("SPAN");
-        var txt = document.createTextNode("\u00D7");
-        span.className = "close";
-        span.appendChild(txt);
-        li.appendChild(span);
-
-        for (i = 0; i < close.length; i++) {
-            close[i].onclick = function() {
-                var div = this.parentElement;
-                div.style.display = "none";
+    private EventListener getToggleCheckTaskListener() {
+        EventListener toggleCheckListener = ev -> {
+            https://stackoverflow.com/a/13966749
+            ev.stopPropagation();
+            //https://stackoverflow.com/a/20093950d
+            HTMLLIElement task = (HTMLLIElement) ev.getTarget();
+            if(task.getClassName().equals("checked")){
+                task.setClassName("");
+            } else {
+                task.setClassName("checked");
             }
-        }*/
+        };
+        return toggleCheckListener;
     }
 
     public void deleteTask(Event test ){
+    }
 
+    public EventListener getCloseButtonListener(){
+        EventListener closeListener = ev -> {
+            https://stackoverflow.com/a/13966749
+            ev.stopPropagation();
+            HTMLElement closeSpan = (HTMLElement) ev.getTarget();
+            HTMLLIElement task = (HTMLLIElement) closeSpan.getParentNode();
+            task.setAttribute("style", "display:none;");
+        };
+        return closeListener;
     }
 }
