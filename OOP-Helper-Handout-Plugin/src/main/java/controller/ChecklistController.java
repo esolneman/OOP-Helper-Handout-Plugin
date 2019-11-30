@@ -8,7 +8,6 @@ import objects.Checklist;
 import objects.ChecklistTableTask;
 import org.w3c.dom.Document;
 import org.w3c.dom.Text;
-import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
 import org.w3c.dom.html.HTMLElement;
@@ -18,9 +17,6 @@ import org.w3c.dom.html.HTMLUListElement;
 import provider.LocalStorageDataProvider;
 import provider.ParseChecklistJSON;
 
-import javax.xml.transform.*;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 
 public class ChecklistController {
@@ -41,9 +37,10 @@ public class ChecklistController {
         createChecklistFiles();
     }
 
+
+
     public static void saveUserDataInFile(ObservableList<ChecklistTableTask> userData) {
         System.out.println("saveTableDataInFile" + userData.toString());
-
         JsonObject checklistJson = new JsonObject();
         JsonArray tasks;
         tasks = ParseChecklistJSON.getJsonFromChecklistTableData(userData);
@@ -56,12 +53,10 @@ public class ChecklistController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     public static void savePredefinedDataInFile(ObservableList<ChecklistTableTask> predefinedData) {
         System.out.println("saveTableDataInFile" + predefinedData.get(0).id);
-
         JsonObject updatedDataJson = new JsonObject();
         JsonArray tasks;
         tasks = ParseChecklistJSON.getJsonFromChecklistTableData(predefinedData);
@@ -170,17 +165,12 @@ public class ChecklistController {
     }
 
     public void createTaskList(String checklistSource, Document checklistDocument, WebView finalWebView1) {
-        System.out.println("createTaskList - Source: " + checklistSource);
         File checklistHTMLFile;
         File checklistDataFile;
         Checklist checklistData;
         JsonObject checklistJson = null;
         BufferedReader br;
         String taskListId = null;
-        for( int i = 0; i < checklistDocument.getDocumentElement().getLastChild().getLastChild().getChildNodes().getLength(); i++ ){
-            System.out.println("NODE: " + checklistDocument.getDocumentElement().getLastChild().getLastChild().getChildNodes().item(i).getNodeName());
-        }
-        System.out.println(checklistDocument.getDocumentElement().toString());
         // FILE AND CHECKLIST DEPEND ON STRING
         switch (checklistSource) {
             case "predefined":
@@ -199,7 +189,7 @@ public class ChecklistController {
                 checklistData = ParseChecklistJSON.predefinedJsonToChecklistParser(checklistJson);
                 break;
             case "userData":
-                taskListId = "taskList";
+                taskListId = "userDataTaskList";
                 checklistHTMLFile = LocalStorageDataProvider.getLocalUserDataChecklistFile();
                 checklistDataFile = LocalStorageDataProvider.getChecklistUserData();
                 //https://stackoverflow.com/a/34486879
@@ -216,27 +206,28 @@ public class ChecklistController {
                 throw new IllegalStateException("Unexpected value: " + checklistSource);
         }
         HTMLUListElement taskList = (HTMLUListElement) checklistDocument.getElementById(taskListId);
-        System.out.println("checklistDocument: " + checklistDocument);
-        System.out.println("taskList: " + taskList);
-        System.out.println("checklistData: " + checklistData.tasks.size());
+        while (taskList.hasChildNodes()) {
+            taskList.removeChild(taskList.getLastChild());
+        }
         for (int i = 0; i < checklistData.tasks.size(); i++) {
             //TODO METHOD fro creating LI
             HTMLLIElement newTask = (HTMLLIElement) checklistDocument.createElement("li");
             newTask.setClassName("");
             newTask.setTextContent(checklistData.tasks.get(i).taskDescription);
-            ((EventTarget) newTask).addEventListener("click", getToggleCheckTaskListener(finalWebView1), false);
+            ((EventTarget) newTask).addEventListener("click", getToggleCheckTaskListener(checklistSource, finalWebView1), false);
             if (checklistData.tasks.get(i).checked) {
                 newTask.setClassName("checked");
             }
-            System.out.println("taskList: " + taskList);
-            System.out.println("newTask: " + taskList);
+            if(checklistData.tasks.get(i).id != null){
+                newTask.setId(checklistData.tasks.get(i).id);
+            }
             taskList.appendChild(newTask);
         }
         saveDocumentInFile(finalWebView1, checklistHTMLFile);
     }
 
     private void saveDocumentInFile(WebView finalWebView1, File checklistFile) {
-/*        //TODO check source
+        //TODO check source
         //https://stackoverflow.com/a/30258688
         //https://www.baeldung.com/java-write-to-file#write-with-printwriter
         FileWriter fileWriter = null;
@@ -246,10 +237,11 @@ public class ChecklistController {
             e.printStackTrace();
         }
         PrintWriter printWriter = new PrintWriter(fileWriter);
-        printWriter.print(checklistDocument);
-        printWriter.close();*/
+        printWriter.print(finalWebView1.getEngine().executeScript("document.documentElement.outerHTML"));
+        printWriter.close();
 
-        DOMSource domSource = new DOMSource(finalWebView1.getEngine().getDocument());
+        //https://stackoverflow.com/a/52965533
+        /*DOMSource domSource = new DOMSource(finalWebView1.getEngine().getDocument());
         StreamResult result = new StreamResult(checklistFile);
         TransformerFactory tf = TransformerFactory.newInstance();
         Transformer transformer = null;
@@ -261,24 +253,11 @@ public class ChecklistController {
             e.printStackTrace();
         } catch (TransformerException e) {
             e.printStackTrace();
-        }
+        }*/
 
-    }
-
-    public void toggleChecked(Event test) {
-        System.out.println("toggleChecked: " +  test.getType() );
-       //https://stackoverflow.com/a/20093950
-        HTMLLIElement task = (HTMLLIElement) test.getTarget();
-       if(task.getClassName().equals("checked")){
-           task.setClassName("");
-       } else {
-           task.setClassName("checked");
-        }
     }
 
     //TODO ADD SOURCE W3 PAGE
-
-
     //TODO INOUT MAX COUNT CHARS !!!!
     public void addTask(WebView webView) {
         //TODO MAKE EDITIABLE
@@ -287,7 +266,7 @@ public class ChecklistController {
         org.w3c.dom.html.HTMLInputElement newTAskInputField = (HTMLInputElement) doc.getElementById("newTaskDescription");
         String taskDescription = newTAskInputField.getValue();
         System.out.println("taskDescription: " + taskDescription);
-        if(taskDescription == null || taskDescription == " " || taskDescription.equals("") || taskDescription.equals(" ")){
+        if (taskDescription == null || taskDescription == " " || taskDescription.equals("") || taskDescription.equals(" ")) {
             System.out.println("Task Description was null");
             taskDescription = "Neue Aufgabe";
         }
@@ -303,30 +282,36 @@ public class ChecklistController {
         span.appendChild(txt);
         newTask.appendChild(span);
         newTask.setAttribute("contentEditable", "true;");
-        ((EventTarget) newTask).addEventListener("click", getToggleCheckTaskListener(webView), false);
+        ((EventTarget) newTask).addEventListener("click", getToggleCheckTaskListener("userData", webView), false);
         ((EventTarget) span).addEventListener("click", getCloseButtonListener(webView), false);
         saveDocumentInFile(webView, LocalStorageDataProvider.getLocalUserDataChecklistFile());
     }
 
-    private EventListener getToggleCheckTaskListener(WebView webView) {
+    private EventListener getToggleCheckTaskListener(String dataSource, WebView webView) {
         EventListener toggleCheckListener = ev -> {
-            https://stackoverflow.com/a/13966749
+            https:
+//stackoverflow.com/a/13966749
             ev.stopPropagation();
             //https://stackoverflow.com/a/20093950d
             HTMLLIElement task = (HTMLLIElement) ev.getTarget();
-            if(task.getClassName().equals("checked")){
+            if (task.getClassName().equals("checked")) {
                 task.setClassName("");
             } else {
                 task.setClassName("checked");
             }
-            saveDocumentInFile(webView,LocalStorageDataProvider.getLocalPredefinedChecklistFile());
+            if (dataSource.equals("predefined")) {
+                saveDocumentInFile(webView, LocalStorageDataProvider.getLocalPredefinedChecklistFile());
+            } else {
+                saveDocumentInFile(webView, LocalStorageDataProvider.getLocalUserDataChecklistFile());
+            }
         };
         return toggleCheckListener;
     }
 
-    public EventListener getCloseButtonListener(WebView webView){
+    public EventListener getCloseButtonListener(WebView webView) {
         EventListener closeListener = ev -> {
-            https://stackoverflow.com/a/13966749
+            https:
+//stackoverflow.com/a/13966749
             ev.stopPropagation();
             HTMLElement closeSpan = (HTMLElement) ev.getTarget();
             HTMLLIElement task = (HTMLLIElement) closeSpan.getParentNode();
