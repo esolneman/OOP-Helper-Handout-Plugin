@@ -1,16 +1,14 @@
 package controller;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import javafx.collections.ObservableList;
+import javafx.scene.web.WebView;
 import objects.Checklist;
 import objects.ChecklistTableTask;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.w3c.dom.Document;
 import org.w3c.dom.Text;
 import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
@@ -170,54 +168,77 @@ public class ChecklistController {
         }
     }
 
-    public void createTaskList(String predefined, Checklist checklist) {
-        File localPredefinedChecklistFile = LocalStorageDataProvider.getLocalPredefinedChecklistFile();
-        System.out.println(localPredefinedChecklistFile.getPath());
+    public void createTaskList(String predefined, WebView webView) {
+        File checklistHTMLFile;
+        File checklistDataFile;
+        Checklist checklistData;
+        JsonObject checklistJson = null;
+        BufferedReader br = null;
 
-        try {
-            //TODO maybe call javaScript function direccctly
-            Document jsoupDoc = Jsoup.parse(localPredefinedChecklistFile, "UTF-8");
-            //TODO TRY THIS FOR NOTES
-            //Whitelist whiteList = Whitelist.relaxed();
-            //Cleaner cleaner = new Cleaner(whiteList);
-            //jsoupDoc = cleaner.clean(jsoupDoc);
-            //W3CDom w3cDom = new W3CDom();
-            //org.w3c.dom.Document w3cDoc = w3cDom.fromJsoup(jsoupDoc);
-            System.out.println(jsoupDoc.html());
-            Element taskList = jsoupDoc.getElementById("predefinedTaskList");
-            System.out.println("taskLIst: " + taskList.toString());
-            for (int i = 0; i < checklist.tasks.size(); i++) {
-                Element newTask = jsoupDoc.createElement("li");
-                newTask.addClass("");
-                //Node text = jsoupDoc.createElement(checklist.tasks.get(i).taskDescription);
-                newTask.text(checklist.tasks.get(i).taskDescription);
-                newTask.attr("onclick", "clickTask.toggleChecked(this)");
-                if (checklist.tasks.get(i).checked) {
-                    //TODO INSERT STYLE CLASS AVTIVr
-                    newTask.addClass("checked");
+        // FILE AND CHECKLIST DEPEND ON STRING
+        switch (predefined) {
+            case "predefined":
+                checklistHTMLFile = LocalStorageDataProvider.getLocalPredefinedChecklistFile();
+                checklistDataFile = LocalStorageDataProvider.getLocalChecklistPredefinedData();
+                //TODO Duplicated Code
+                //https://stackoverflow.com/a/34486879
+                try {
+                    br = new BufferedReader(new FileReader(checklistDataFile));
+                    JsonParser parser = new JsonParser();
+                    checklistJson = parser.parse(br).getAsJsonObject();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
                 }
-                // note next classes are from org.w3c.dom domain
-                taskList.appendChild(newTask);
+                checklistData = ParseChecklistJSON.predefinedJsonToChecklistParser(checklistJson);
+                break;
+            case "userData":
+                checklistHTMLFile = LocalStorageDataProvider.getLocalUserDataChecklistFile();
+                checklistDataFile = LocalStorageDataProvider.getChecklistUserData();
+                //https://stackoverflow.com/a/34486879
+                try {
+                    br = new BufferedReader(new FileReader(checklistDataFile));
+                    JsonParser parser = new JsonParser();
+                    checklistJson = parser.parse(br).getAsJsonObject();
+                } catch (FileNotFoundException | IllegalStateException e) {
+                    System.out.println("OHOH");
+                }
+                checklistData = ParseChecklistJSON.checklistJSONHandler(checklistJson);
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + predefined);
+        }
+        org.w3c.dom.Document checklistDocument = webView.getEngine().getDocument();
+        HTMLUListElement userDataTaskList = (HTMLUListElement) checklistDocument.getElementById("predefinedTaskList");
+        for (int i = 0; i < checklistData.tasks.size(); i++) {
+            //TODO METHOD fro creating LI
+            HTMLLIElement newTask = (HTMLLIElement) checklistDocument.createElement("li");
+            newTask.setClassName("");
+            newTask.setTextContent(checklistData.tasks.get(i).taskDescription);
+            ((EventTarget) newTask).addEventListener("click", getToggleCheckTaskListener(), false);
+            if (checklistData.tasks.get(i).checked) {
+                newTask.setClassName("checked");
             }
+            userDataTaskList.appendChild(newTask);
+        }
+        saveDocumentInFile(checklistDocument, checklistHTMLFile);
+    }
 
-            //https://stackoverflow.com/a/30258688
-
-            //https://www.baeldung.com/java-write-to-file#write-with-printwriter
-            FileWriter fileWriter = null;
-            try {
-                fileWriter = new FileWriter(localPredefinedChecklistFile);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            PrintWriter printWriter = new PrintWriter(fileWriter);
-            printWriter.print(jsoupDoc);
-            printWriter.close();
+    private void saveDocumentInFile(Document checklistDocument, File checklistFile) {
+        //TODO check source
+        //https://stackoverflow.com/a/30258688
+        //https://www.baeldung.com/java-write-to-file#write-with-printwriter
+        FileWriter fileWriter = null;
+        try {
+            fileWriter = new FileWriter(checklistFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        PrintWriter printWriter = new PrintWriter(fileWriter);
+        printWriter.print(checklistDocument);
+        printWriter.close();
     }
 
-   public void toggleChecked(Event test) {
+    public void toggleChecked(Event test) {
         System.out.println("toggleChecked: " +  test.getType() );
        //https://stackoverflow.com/a/20093950
         HTMLLIElement task = (HTMLLIElement) test.getTarget();
@@ -229,7 +250,11 @@ public class ChecklistController {
     }
 
     //TODO ADD SOURCE W3 PAGE
+
+
+    //TODO INOUT MAX COUNT CHARS !!!!
     public void addTask(String taskDescription, HTMLUListElement userDataTaskList, org.w3c.dom.Document doc) {
+        //TODO MAKE EDITIABLE
         System.out.println("taskDescription: " + taskDescription);
         if(taskDescription == null || taskDescription == " " || taskDescription.equals("") || taskDescription.equals(" ")){
             System.out.println("Task Description was null");
@@ -246,6 +271,7 @@ public class ChecklistController {
         span.setClassName("close");
         span.appendChild(txt);
         newTask.appendChild(span);
+        newTask.setAttribute("contentEditable", "true;");
         ((EventTarget) newTask).addEventListener("click", getToggleCheckTaskListener(), false);
         ((EventTarget) span).addEventListener("click", getCloseButtonListener(), false);
     }
@@ -263,9 +289,6 @@ public class ChecklistController {
             }
         };
         return toggleCheckListener;
-    }
-
-    public void deleteTask(Event test ){
     }
 
     public EventListener getCloseButtonListener(){

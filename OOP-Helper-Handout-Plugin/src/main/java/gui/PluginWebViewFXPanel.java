@@ -5,6 +5,7 @@ import javafx.concurrent.Worker;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
 import javafx.scene.web.WebView;
+import objects.Checklist;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -32,7 +33,6 @@ public class PluginWebViewFXPanel extends JFXPanel {
     public void showChecklist(String urlString, WebView webView) {
         System.out.println("in: showChecklist");
         webView.getEngine().setJavaScriptEnabled(true);
-
         final WebView finalWebView1 = webView;
         //https://stackoverflow.com/a/10684168
         webView.getEngine().getLoadWorker().stateProperty().addListener((ov, oldState, newState) -> {
@@ -64,11 +64,15 @@ public class PluginWebViewFXPanel extends JFXPanel {
                 System.out.println("getChecklistUserData uri: " + LocalStorageDataProvider.getLocalUserDataChecklistFile().toURI().toString().substring(LocalStorageDataProvider.getLocalUserDataChecklistFile().toURI().toString().indexOf("C")));
 
                 if (webView.getEngine().getDocument().getDocumentURI().substring(webView.getEngine().getDocument().getDocumentURI().indexOf("C")).equals(LocalStorageDataProvider.getLocalUserDataChecklistFile().toURI().toString().substring(LocalStorageDataProvider.getLocalUserDataChecklistFile().toURI().toString().indexOf("C")))){
+                    //TODO Load Tasks
+                    ChecklistController.getInstance().createTaskList("userData", webView);
                     System.out.println(" USER DATA URL: ");
                     Element addTaskButton = doc.getElementById("addTaskButton");
                     ((EventTarget) addTaskButton).addEventListener("click", addTaskButtonListener, false);
                 }else{
+                    ChecklistController.getInstance().createTaskList("predefined", webView);
                     System.out.println("Not USER DATA URL: " + LocalStorageDataProvider.getLocalUserDataChecklistFile().toURI());
+
                 }
             }
         });
