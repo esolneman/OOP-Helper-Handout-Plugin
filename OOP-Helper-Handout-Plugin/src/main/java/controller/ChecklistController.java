@@ -230,8 +230,9 @@ public class ChecklistController {
 
     //TODO ADD SOURCE W3 PAGE
     public void addTask(String taskDescription, HTMLUListElement userDataTaskList, org.w3c.dom.Document doc) {
-        System.out.println(taskDescription);
-        if(taskDescription.equals("")){
+        System.out.println("taskDescription: " + taskDescription);
+        if(taskDescription == null || taskDescription == " " || taskDescription.equals("") || taskDescription.equals(" ")){
+            System.out.println("Task Description was null");
             taskDescription = "Neue Aufgabe";
         }
         HTMLLIElement newTask = (HTMLLIElement) doc.createElement("li");
@@ -246,7 +247,6 @@ public class ChecklistController {
         span.appendChild(txt);
         newTask.appendChild(span);
         ((EventTarget) newTask).addEventListener("click", getToggleCheckTaskListener(), false);
-        ((EventTarget) span).removeEventListener("click", getToggleCheckTaskListener(), false);
         ((EventTarget) span).addEventListener("click", getCloseButtonListener(), false);
     }
 

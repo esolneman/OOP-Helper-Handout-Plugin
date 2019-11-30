@@ -41,17 +41,14 @@ public class PluginWebViewFXPanel extends JFXPanel {
                 System.out.println("newValue: " + newState);
                 // note next classes are from org.w3c.dom domain
                 EventListener listener = ev -> {
-                    System.out.println("check click list event");
                     ChecklistController.getInstance().toggleChecked(ev);
                 };
 
 
                 EventListener addTaskButtonListener = ev -> {
-                    System.out.println("addTaskButtonListener event");
                     Document doc = finalWebView1.getEngine().getDocument();
                     HTMLUListElement userDataTaskList = (HTMLUListElement) doc.getElementById("userDataTaskList");
                     org.w3c.dom.html.HTMLInputElement newTAskInputField = (HTMLInputElement) doc.getElementById("newTaskDescription");
-                    System.out.println("task sadd: " + newTAskInputField.getValue());
                     ChecklistController.getInstance().addTask(newTAskInputField.getValue(), userDataTaskList, doc);
                 };
 
