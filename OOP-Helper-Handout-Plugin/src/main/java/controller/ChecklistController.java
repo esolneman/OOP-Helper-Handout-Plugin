@@ -39,11 +39,14 @@ public class ChecklistController {
 
 
 
-    public static void saveUserDataInFile(ObservableList<ChecklistTableTask> userData) {
-        System.out.println("saveTableDataInFile" + userData.toString());
+    public static void saveUserDataInFile(Document checklistDocument) {
+        System.out.println("saveTableDataInFile");
         JsonObject checklistJson = new JsonObject();
         JsonArray tasks;
-        tasks = ParseChecklistJSON.getJsonFromChecklistTableData(userData);
+
+        String taskListId = "userDataTaskList";
+        HTMLUListElement taskList = (HTMLUListElement) checklistDocument.getElementById(taskListId);
+        tasks = ParseChecklistJSON.getJsonFromLiElement(taskList);
         checklistJson.add("checklist", tasks);
 
         //https://stackoverflow.com/a/29319491
@@ -55,14 +58,15 @@ public class ChecklistController {
         }
     }
 
-    public static void savePredefinedDataInFile(ObservableList<ChecklistTableTask> predefinedData) {
-        System.out.println("saveTableDataInFile" + predefinedData.get(0).id);
-        JsonObject updatedDataJson = new JsonObject();
+    public static void savePredefinedDataInFile(Document checklistDocument) {
+        System.out.println("saveTableDataInFile");
+        String taskListId = "predefinedTaskList";
         JsonArray tasks;
-        tasks = ParseChecklistJSON.getJsonFromChecklistTableData(predefinedData);
+        HTMLUListElement taskList = (HTMLUListElement) checklistDocument.getElementById(taskListId);
+        tasks = ParseChecklistJSON.getJsonFromLiElement(taskList);
+        JsonObject updatedDataJson = new JsonObject();
         updatedDataJson.add("checklist", tasks);
-        System.out.println("SAVEPREDEFINED DATA: " + predefinedData.get(2).id.getValue());
-        System.out.println("SAVEPREDEFINED updatedDataJson: " + updatedDataJson.get("checklist").getAsJsonArray().get(2).getAsJsonObject().get("id"));
+
 
         //https://crunchify.com/how-to-write-json-object-to-file-in-java/
         try (FileWriter file = new FileWriter(LocalStorageDataProvider.getLocalChecklistPredefinedData())) {
@@ -206,6 +210,7 @@ public class ChecklistController {
                 throw new IllegalStateException("Unexpected value: " + checklistSource);
         }
         HTMLUListElement taskList = (HTMLUListElement) checklistDocument.getElementById(taskListId);
+        //https://stackoverflow.com/a/3955238
         while (taskList.hasChildNodes()) {
             taskList.removeChild(taskList.getLastChild());
         }
@@ -223,7 +228,6 @@ public class ChecklistController {
             }
             taskList.appendChild(newTask);
         }
-        saveDocumentInFile(finalWebView1, checklistHTMLFile);
     }
 
     private void saveDocumentInFile(WebView finalWebView1, File checklistFile) {
@@ -284,7 +288,8 @@ public class ChecklistController {
         newTask.setAttribute("contentEditable", "true;");
         ((EventTarget) newTask).addEventListener("click", getToggleCheckTaskListener("userData", webView), false);
         ((EventTarget) span).addEventListener("click", getCloseButtonListener(webView), false);
-        saveDocumentInFile(webView, LocalStorageDataProvider.getLocalUserDataChecklistFile());
+        //saveDocumentInFile(webView, LocalStorageDataProvider.getLocalUserDataChecklistFile());
+        saveUserDataInFile(doc);
     }
 
     private EventListener getToggleCheckTaskListener(String dataSource, WebView webView) {
@@ -300,10 +305,13 @@ public class ChecklistController {
                 task.setClassName("checked");
             }
             if (dataSource.equals("predefined")) {
-                saveDocumentInFile(webView, LocalStorageDataProvider.getLocalPredefinedChecklistFile());
+                //saveDocumentInFile(webView, LocalStorageDataProvider.getLocalPredefinedChecklistFile());
+                savePredefinedDataInFile(webView.getEngine().getDocument());
             } else {
-                saveDocumentInFile(webView, LocalStorageDataProvider.getLocalUserDataChecklistFile());
+                //saveDocumentInFile(webView, LocalStorageDataProvider.getLocalUserDataChecklistFile());
+                saveUserDataInFile(webView.getEngine().getDocument());
             }
+
         };
         return toggleCheckListener;
     }
@@ -316,7 +324,8 @@ public class ChecklistController {
             HTMLElement closeSpan = (HTMLElement) ev.getTarget();
             HTMLLIElement task = (HTMLLIElement) closeSpan.getParentNode();
             task.setAttribute("style", "display:none;");
-            saveDocumentInFile(webView, LocalStorageDataProvider.getLocalUserDataChecklistFile());
+            //saveDocumentInFile(webView, LocalStorageDataProvider.getLocalUserDataChecklistFile());
+            saveUserDataInFile(webView.getEngine().getDocument());
 
         };
         return closeListener;

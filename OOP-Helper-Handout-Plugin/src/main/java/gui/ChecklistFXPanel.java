@@ -143,7 +143,7 @@ public class ChecklistFXPanel extends JFXPanel {
                             .getItems().get(checklistTableTaskStringCellEditEvent.getTablePosition().getRow())
                             .setTaskDescription(checklistTableTaskStringCellEditEvent.getNewValue());
                     System.out.println("NEW VALUE: " + checklistTableTaskStringCellEditEvent.getNewValue());
-                    checklistController.saveUserDataInFile(userData);
+                    //checklistController.saveUserDataInFile(userData);
                 });
 
         //https://stackoverflow.com/a/35265368

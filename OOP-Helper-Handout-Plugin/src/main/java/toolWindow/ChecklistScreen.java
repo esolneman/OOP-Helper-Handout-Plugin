@@ -92,7 +92,7 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
                     System.out.println("PREDEFINED "+ predefinedData.get(change.getFrom()).getChecked()+" changed value to " +predefinedData.get(change.getFrom()).checked);
                     System.out.println("ID BY LISTENER: " + predefinedData.get(0).id);
                     //TODO CHANGE TO PREFEFINED
-                    checklistController.savePredefinedDataInFile(predefinedData);
+                    //checklistController.savePredefinedDataInFile(predefinedData);
                 }
             }
         });
@@ -110,7 +110,7 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
         }
         userData.addListener((ListChangeListener<? super ChecklistTableTask>) change -> {
             System.out.println("CHECNGE USER DATA: ");
-            checklistController.saveUserDataInFile(userData);
+            //checklistController.saveUserDataInFile(userData);
         });
 
 

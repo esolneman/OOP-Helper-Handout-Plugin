@@ -6,6 +6,8 @@ import com.google.gson.JsonObject;
 import javafx.collections.ObservableList;
 import objects.Checklist;
 import objects.ChecklistTableTask;
+import org.w3c.dom.html.HTMLLIElement;
+import org.w3c.dom.html.HTMLUListElement;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -76,6 +78,51 @@ public class ParseChecklistJSON {
         updatedChecklist.setTasks(tasksArrayList);
         JsonObject updatedJson = new JsonObject();
         JsonArray tasks = new JsonArray();
+        updatedJson.add("checklist", tasks);
+
+        for (int i = 0; i < updatedChecklist.tasks.size(); i++) {
+            JsonObject task = new JsonObject();
+            task.addProperty("taskDescription", updatedChecklist.tasks.get(i).taskDescription);
+            task.addProperty("checked", updatedChecklist.tasks.get(i).checked);
+            if(updatedChecklist.tasks.get(i).id != null){
+                task.addProperty("id", updatedChecklist.tasks.get(i).id);
+            }
+            tasks.add(task);
+        }
+        return tasks;
+    }
+
+    public static JsonArray getJsonFromLiElement(HTMLUListElement taskList){
+        Checklist updatedChecklist;
+        JsonArray tasks = new JsonArray();
+        ArrayList<Checklist.Task> tasksArrayList = new ArrayList<>();
+        Boolean checked;
+        for (int i = 0; i < taskList.getChildNodes().getLength(); i++) {
+            HTMLLIElement currentTask = (HTMLLIElement) taskList.getChildNodes().item(i);
+            String description = currentTask.getTextContent();
+            System.out.println("Description: " + description);
+            if (currentTask.getClassName() == "checked"){
+                 checked = true;
+            } else{
+                 checked = false;
+            }
+            Checklist.Task newTask;
+            if(currentTask.getId() != null){
+                String id = currentTask.getId();
+                newTask = new Checklist.Task.TasksBuilder(description, checked)
+                        .id(id)
+                        .build();
+                System.out.println("getJsonFromChecklistTableData: " + newTask.id);
+            }else{
+                newTask = new Checklist.Task.TasksBuilder(description, checked).build();
+            }
+            tasksArrayList.add(newTask);
+        }
+
+
+        updatedChecklist = new Checklist();
+        updatedChecklist.setTasks(tasksArrayList);
+        JsonObject updatedJson = new JsonObject();
         updatedJson.add("checklist", tasks);
 
         for (int i = 0; i < updatedChecklist.tasks.size(); i++) {
