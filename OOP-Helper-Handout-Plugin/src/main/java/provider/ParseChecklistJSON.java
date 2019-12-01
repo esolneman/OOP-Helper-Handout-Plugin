@@ -61,9 +61,6 @@ public class ParseChecklistJSON {
         for (int i = 0; i < taskList.getChildNodes().getLength(); i++) {
             HTMLLIElement currentTask = (HTMLLIElement) taskList.getChildNodes().item(i);
             String description = currentTask.getTextContent();
-            System.out.println("Description: " + description);
-            System.out.println("getClassName: " + currentTask.getClassName());
-
             if (currentTask.getClassName().equals("checked")){
                  checked = true;
             } else{

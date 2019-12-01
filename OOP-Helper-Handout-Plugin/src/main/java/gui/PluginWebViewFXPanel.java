@@ -1,5 +1,6 @@
 package gui;
 
+import com.sun.webkit.dom.KeyboardEventImpl;
 import controller.ChecklistController;
 import javafx.concurrent.Worker;
 import javafx.embed.swing.JFXPanel;
@@ -10,6 +11,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
+import org.w3c.dom.html.HTMLElement;
 import org.w3c.dom.html.HTMLInputElement;
 import org.w3c.dom.html.HTMLUListElement;
 import provider.LocalStorageDataProvider;
@@ -17,6 +19,7 @@ import provider.LocalStorageDataProvider;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -45,12 +48,29 @@ public class PluginWebViewFXPanel extends JFXPanel {
                 EventListener addTaskButtonListener = ev -> {
                     ChecklistController.getInstance().addTask(finalWebView1);
                 };
+
+
+                EventListener addTaskButtonFocusListener = ev -> {
+                    System.out.println("in: addTaskButtonFocusListener: " + ev.getType());
+                    System.out.println("in: addTaskButtonFocusListener: " + ev.getCurrentTarget());
+                    System.out.println("in: addTaskButtonFocusListener: " + ev.toString());
+                    KeyboardEventImpl keyboardEvent = (KeyboardEventImpl) ev;
+                    if (keyboardEvent.getKeyCode() == 13){
+                        System.out.println("in: keyboardEvent: " + keyboardEvent.getKeyCode());
+                        ChecklistController.getInstance().addTask(finalWebView1);
+                    }
+                };
+
+
                 Document doc = finalWebView1.getEngine().getDocument();
                 if (doc.getDocumentURI().substring(doc.getDocumentURI().indexOf("C")).equals(LocalStorageDataProvider.getLocalUserDataChecklistFile().toURI().toString().substring(LocalStorageDataProvider.getLocalUserDataChecklistFile().toURI().toString().indexOf("C")))) {
                     //TODO Load Tasks OR NOT - ONLY HTML
                     ChecklistController.getInstance().createTaskList("userData", doc, finalWebView1);
                     Element addTaskButton = doc.getElementById("addTaskButton");
+                    HTMLInputElement initButton = (HTMLInputElement) doc.getElementById("newTaskDescription");
                     ((EventTarget) addTaskButton).addEventListener("click", addTaskButtonListener, false);
+                    ((EventTarget) initButton).addEventListener("keydown", addTaskButtonFocusListener, false);
+
                 } else {
                     ChecklistController.getInstance().createTaskList("predefined", doc, finalWebView1);
                 }

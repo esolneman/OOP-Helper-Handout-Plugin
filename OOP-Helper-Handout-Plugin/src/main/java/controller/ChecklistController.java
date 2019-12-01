@@ -213,11 +213,11 @@ public class ChecklistController {
             Text description = checklistDocument.createTextNode(checklistData.tasks.get(i).taskDescription);
             newTask.appendChild(description);
             taskList.appendChild(newTask);
-            newTask.setClassName("");
-            //newTask.setTextContent(checklistData.tasks.get(i).taskDescription);
             ((EventTarget) newTask).addEventListener("click", getToggleCheckTaskListener(checklistSource, finalWebView1), false);
             if (checklistData.tasks.get(i).checked) {
                 newTask.setClassName("checked");
+            } else {
+                newTask.setClassName("");
             }
             if (checklistData.tasks.get(i).id != null) {
                 newTask.setId(checklistData.tasks.get(i).id);
@@ -228,6 +228,7 @@ public class ChecklistController {
                 span.setClassName("close");
                 span.appendChild(txt);
                 newTask.appendChild(span);
+                newTask.setAttribute("contentEditable", "true;");
                 ((EventTarget) span).addEventListener("click", getCloseButtonListener(finalWebView1), false);
             }
             taskList.appendChild(newTask);
@@ -306,10 +307,8 @@ public class ChecklistController {
                 task.setClassName("checked");
             }
             if (dataSource.equals("predefined")) {
-                //saveDocumentInFile(webView, LocalStorageDataProvider.getLocalPredefinedChecklistFile());
                 savePredefinedDataInFile(webView.getEngine().getDocument());
             } else {
-                //saveDocumentInFile(webView, LocalStorageDataProvider.getLocalUserDataChecklistFile());
                 saveUserDataInFile(webView.getEngine().getDocument());
             }
 
@@ -319,15 +318,13 @@ public class ChecklistController {
 
     public EventListener getCloseButtonListener(WebView webView) {
         EventListener closeListener = ev -> {
-            https:
-            //stackoverflow.com/a/13966749
+            //https://stackoverflow.com/a/13966749
             ev.stopPropagation();
             HTMLElement closeSpan = (HTMLElement) ev.getTarget();
             HTMLLIElement task = (HTMLLIElement) closeSpan.getParentNode();
             HTMLUListElement taskList = (HTMLUListElement) task.getParentNode();
             taskList.removeChild(task);
             saveUserDataInFile(webView.getEngine().getDocument());
-
         };
         return closeListener;
     }

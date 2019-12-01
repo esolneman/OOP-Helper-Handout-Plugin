@@ -10,7 +10,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.web.HTMLEditor;
 import javafx.stage.Stage;
 import org.jsoup.nodes.Document;
-import provider.HandoutContentDataProvider;
 import toolWindow.NotesScreen;
 
 public class NoteAddingFrame {
