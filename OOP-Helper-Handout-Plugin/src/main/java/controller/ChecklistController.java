@@ -320,12 +320,12 @@ public class ChecklistController {
     public EventListener getCloseButtonListener(WebView webView) {
         EventListener closeListener = ev -> {
             https:
-//stackoverflow.com/a/13966749
+            //stackoverflow.com/a/13966749
             ev.stopPropagation();
             HTMLElement closeSpan = (HTMLElement) ev.getTarget();
             HTMLLIElement task = (HTMLLIElement) closeSpan.getParentNode();
-            task.setAttribute("style", "display:none;");
-            //saveDocumentInFile(webView, LocalStorageDataProvider.getLocalUserDataChecklistFile());
+            HTMLUListElement taskList = (HTMLUListElement) task.getParentNode();
+            taskList.removeChild(task);
             saveUserDataInFile(webView.getEngine().getDocument());
 
         };
