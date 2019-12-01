@@ -165,7 +165,6 @@ public class ChecklistController {
     }
 
     public void createTaskList(String checklistSource, Document checklistDocument, WebView finalWebView1) {
-        File checklistHTMLFile;
         File checklistDataFile;
         Checklist checklistData;
         JsonObject checklistJson = null;
@@ -220,10 +219,10 @@ public class ChecklistController {
             if (checklistData.tasks.get(i).checked) {
                 newTask.setClassName("checked");
             }
-            if(checklistData.tasks.get(i).id != null){
+            if (checklistData.tasks.get(i).id != null) {
                 newTask.setId(checklistData.tasks.get(i).id);
             }
-            if(!checklistSource.equals("predefined")){
+            if (!checklistSource.equals("predefined")) {
                 HTMLElement span = (HTMLElement) checklistDocument.createElement("span");
                 Text txt = checklistDocument.createTextNode("\u00D7");
                 span.setClassName("close");
@@ -272,11 +271,9 @@ public class ChecklistController {
         //TODO MAKE EDITIABLE
         Document doc = webView.getEngine().getDocument();
         HTMLUListElement userDataTaskList = (HTMLUListElement) doc.getElementById("userDataTaskList");
-        org.w3c.dom.html.HTMLInputElement newTAskInputField = (HTMLInputElement) doc.getElementById("newTaskDescription");
+        HTMLInputElement newTAskInputField = (HTMLInputElement) doc.getElementById("newTaskDescription");
         String taskDescription = newTAskInputField.getValue();
-        System.out.println("taskDescription: " + taskDescription);
         if (taskDescription == null || taskDescription == " " || taskDescription.equals("") || taskDescription.equals(" ")) {
-            System.out.println("Task Description was null");
             taskDescription = "Neue Aufgabe";
         }
         HTMLLIElement newTask = (HTMLLIElement) doc.createElement("li");
@@ -293,14 +290,13 @@ public class ChecklistController {
         newTask.setAttribute("contentEditable", "true;");
         ((EventTarget) newTask).addEventListener("click", getToggleCheckTaskListener("userData", webView), false);
         ((EventTarget) span).addEventListener("click", getCloseButtonListener(webView), false);
-        //saveDocumentInFile(webView, LocalStorageDataProvider.getLocalUserDataChecklistFile());
+        newTAskInputField.setValue("");
         saveUserDataInFile(doc);
     }
 
     private EventListener getToggleCheckTaskListener(String dataSource, WebView webView) {
         EventListener toggleCheckListener = ev -> {
-            https:
-//stackoverflow.com/a/13966749
+            //https:stackoverflow.com/a/13966749
             ev.stopPropagation();
             //https://stackoverflow.com/a/20093950d
             HTMLLIElement task = (HTMLLIElement) ev.getTarget();
