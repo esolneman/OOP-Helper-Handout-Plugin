@@ -1,6 +1,7 @@
 package controller;
 
 import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import javafx.scene.web.WebView;
 import objects.Checklist;
@@ -8,14 +9,13 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Text;
 import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
-import org.w3c.dom.html.HTMLElement;
-import org.w3c.dom.html.HTMLInputElement;
-import org.w3c.dom.html.HTMLLIElement;
-import org.w3c.dom.html.HTMLUListElement;
+import org.w3c.dom.html.*;
 import provider.LocalStorageDataProvider;
 import provider.ParseChecklistJSON;
 
 import java.io.*;
+import java.lang.reflect.Type;
+import java.util.List;
 
 public class ChecklistController {
 
@@ -45,6 +45,15 @@ public class ChecklistController {
         HTMLUListElement taskList = (HTMLUListElement) checklistDocument.getElementById(taskListId);
         tasks = ParseChecklistJSON.getJsonFromLiElement(taskList);
         checklistJson.add("checklist", tasks);
+/*
+        //https://crunchify.com/how-to-write-json-object-to-file-in-java/
+        try (FileWriter file = new FileWriter(LocalStorageDataProvider.getChecklistUserData())) {
+            file.write(checklistJson.toString());
+            System.out.println("Successfully Copied JSON Object to File...");
+            System.out.println("\nJSON Object: " + checklistJson);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
 
         //https://stackoverflow.com/a/29319491
         try (Writer writer = new FileWriter(LocalStorageDataProvider.getChecklistUserData())) {
@@ -57,19 +66,29 @@ public class ChecklistController {
 
     public static void savePredefinedDataInFile(Document checklistDocument) {
         System.out.println("saveTableDataInFile");
+        Gson gson = new GsonBuilder().create();
+
         String taskListId = "predefinedTaskList";
         JsonArray tasks;
         HTMLUListElement taskList = (HTMLUListElement) checklistDocument.getElementById(taskListId);
         tasks = ParseChecklistJSON.getJsonFromLiElement(taskList);
         JsonObject updatedDataJson = new JsonObject();
-        updatedDataJson.add("checklist", tasks);
+        //updatedDataJson.add("checklist", tasks);
+        updatedDataJson.add("checklist",gson.toJsonTree(tasks) );
+        System.out.println("savePredefinedDataInFile checklist description:" + updatedDataJson.get("checklist").toString());
 
-
-        //https://crunchify.com/how-to-write-json-object-to-file-in-java/
+/*        //https://crunchify.com/how-to-write-json-object-to-file-in-java/
         try (FileWriter file = new FileWriter(LocalStorageDataProvider.getLocalChecklistPredefinedData())) {
             file.write(updatedDataJson.toString());
             System.out.println("Successfully Copied JSON Object to File...");
             System.out.println("\nJSON Object: " + updatedDataJson);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
+        //https://stackoverflow.com/a/29319491
+        try (Writer writer = new FileWriter(LocalStorageDataProvider.getLocalChecklistPredefinedData())) {
+            gson = new GsonBuilder().create();
+            gson.toJson(updatedDataJson, writer);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -78,7 +97,7 @@ public class ChecklistController {
     public static void comparePredefinedChecklistVersions() throws FileNotFoundException {
         //https://stackoverflow.com/a/29965924
         Gson gson = new Gson();
-        JsonReader reader = null;
+        JsonReader reader;
         JsonObject localChecklistData;
         JsonObject repoChecklistData;
         reader = new JsonReader(new FileReader(LocalStorageDataProvider.getLocalChecklistPredefinedData()));
@@ -116,20 +135,22 @@ public class ChecklistController {
     }
 
     public void createChecklistFiles() {
-        //TODO create in Checklsit controller
+        Gson gson = new Gson();
         File checklistUserFile = LocalStorageDataProvider.getChecklistUserData();
         CreateFiles.createNewFile(checklistUserFile);
         JsonObject checklistJson = new JsonObject();
         JsonArray tasks = new JsonArray();
-        checklistJson.add("checklist", tasks);
+        //checklistJson.add("checklist", tasks);
+        checklistJson.add("checklist",gson.toJsonTree(tasks));
         saveJsonObjectInFile(checklistJson, checklistUserFile);
+
 
         File localPredefinedChecklistFile = LocalStorageDataProvider.getLocalChecklistPredefinedData();
         File predefinedRepoChecklistFile = LocalStorageDataProvider.getChecklistData();
 
         //TODO create in Checklsit controller
         //https://stackoverflow.com/a/29965924
-        Gson gson = new Gson();
+        gson = new Gson();
         JsonReader reader = null;
         try {
             reader = new JsonReader(new FileReader(predefinedRepoChecklistFile));
@@ -140,10 +161,11 @@ public class ChecklistController {
         saveJsonObjectInFile(repoChecklistData, localPredefinedChecklistFile);
 
 
+
         checklistStartPage = LocalStorageDataProvider.getLocalPredefinedChecklistFile();
         userDataChecklistHTMLFile = LocalStorageDataProvider.getLocalUserDataChecklistFile();
 
-        System.out.println("createChecklistFile: " + checklistStartPage.getPath());
+
         CreateFiles.createNewFile(checklistStartPage);
         CreateFiles.createNewFile(userDataChecklistHTMLFile);
 
@@ -155,9 +177,9 @@ public class ChecklistController {
     }
 
     //TODO IN CLASS CREATES FILES
-    private void saveJsonObjectInFile(JsonObject jsonObject, File file) {
+    private void saveJsonObjectInFile(JsonObject jsonObject, File outputFile) {
         //https://stackoverflow.com/a/29319491
-        try (Writer writer = new FileWriter(file)) {
+        try (Writer writer = new FileWriter(outputFile)) {
             Gson gson = new GsonBuilder().create();
             gson.toJson(jsonObject, writer);
         } catch (IOException e) {
@@ -165,7 +187,7 @@ public class ChecklistController {
         }
     }
 
-    public void createTaskList(String checklistSource, Document checklistDocument, WebView finalWebView1) {
+    public void createTaskList(String checklistSource, Document checklistDocument, WebView finalWebView1){
         File checklistDataFile;
         Checklist checklistData;
         JsonObject checklistJson = null;
@@ -177,14 +199,35 @@ public class ChecklistController {
                 taskListId = "predefinedTaskList";
                 checklistDataFile = LocalStorageDataProvider.getLocalChecklistPredefinedData();
                 //TODO Duplicated Code
+
+
                 //https://stackoverflow.com/a/34486879
                 try {
                     br = new BufferedReader(new FileReader(checklistDataFile));
                     JsonParser parser = new JsonParser();
                     checklistJson = parser.parse(br).getAsJsonObject();
+                    System.out.println(checklistJson.toString());
+
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
+                System.out.println("Test String");
+
+/*                Gson gson = new Gson();
+                try {
+                    br = new BufferedReader(new FileReader(checklistDataFile));
+                    Type type = new TypeToken<List<Checklist>>(){}.getType();
+                    List<Checklist> checklists = gson.fromJson(br, type);
+                    for (Checklist checklist : checklists) {
+                        checklist.tasks.forEach(task -> {
+                            System.out.println(task.taskDescription);
+                        });
+                    }
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }*/
+
+
                 checklistData = ParseChecklistJSON.predefinedJsonToChecklistParser(checklistJson);
                 break;
             case "userData":
@@ -211,7 +254,13 @@ public class ChecklistController {
         for (int i = 0; i < checklistData.tasks.size(); i++) {
             //TODO METHOD fro creating LI
             HTMLLIElement newTask = (HTMLLIElement) checklistDocument.createElement("li");
-            Text description = checklistDocument.createTextNode(checklistData.tasks.get(i).taskDescription);
+
+            
+            //Text description =  checklistDocument.createTextNode(checklistData.tasks.get(i).taskDescription);
+            HTMLDivElement description = (HTMLDivElement) checklistDocument.createElement("div");
+            description.setTextContent(checklistData.tasks.get(i).taskDescription);
+
+
             newTask.appendChild(description);
             taskList.appendChild(newTask);
             ((EventTarget) newTask).addEventListener("click", getToggleCheckTaskListener(checklistSource, finalWebView1), false);
@@ -229,7 +278,7 @@ public class ChecklistController {
                 span.setClassName("close");
                 span.appendChild(txt);
                 newTask.appendChild(span);
-                newTask.setAttribute("contentEditable", "true");
+                description.setAttribute("contenteditable", "true");
                 ((EventTarget) span).addEventListener("click", getCloseButtonListener(finalWebView1), false);
             }
             taskList.appendChild(newTask);
@@ -293,7 +342,7 @@ public class ChecklistController {
         span.appendChild(txt);
         newTask.appendChild(span);
         newTask.setAttribute("contentEditable", "true");
-        ((EventTarget) newTask).addEventListener("click", getToggleCheckTaskListener("userData", webView), false);
+        //((EventTarget) newTask).addEventListener("click", getToggleCheckTaskListener("userData", webView), false);
         ((EventTarget) span).addEventListener("click", getCloseButtonListener(webView), false);
         newTAskInputField.setValue("");
         saveUserDataInFile(webView.getEngine().getDocument());

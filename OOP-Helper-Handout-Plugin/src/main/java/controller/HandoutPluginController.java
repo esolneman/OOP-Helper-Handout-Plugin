@@ -1,10 +1,5 @@
 package controller;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.stream.JsonReader;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
@@ -14,10 +9,10 @@ import eventHandling.OnGitEventListener;
 import gui.CommitChangesDialog;
 import org.jetbrains.annotations.NotNull;
 import provider.HandoutContentDataProviderInterface;
-import provider.LocalStorageDataProvider;
 import provider.RepoLocalStorageDataProvider;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 public class HandoutPluginController implements HandoutPluginControllerInterface, OnGitEventListener {
