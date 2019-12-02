@@ -18,7 +18,6 @@ public class CommitChangesDialog {
     //TODO REPLACE WITH CONSTANT MESSAGES
     public CommitChangesDialog(ArrayList<String> commitMessages) {
         //https://stackoverflow.com/a/20243062
-
         commitMessagesList = commitMessages;
         for (int i = 0; i < commitMessagesList.size(); i++) {
             byte[] ptext = commitMessagesList.get(i).getBytes();

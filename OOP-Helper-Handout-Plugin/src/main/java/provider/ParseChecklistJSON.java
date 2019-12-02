@@ -14,6 +14,9 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeModel;
 import java.util.ArrayList;
 
+import static java.nio.charset.StandardCharsets.ISO_8859_1;
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 public class ParseChecklistJSON {
 
     //TODO Combine Methods
@@ -41,6 +44,8 @@ public class ParseChecklistJSON {
         ArrayList<Checklist.Task> tasks = new ArrayList<>();
         for (JsonElement task : checklist) {
             String taskName = task.getAsJsonObject().get("taskDescription").toString();
+ /*           byte[] ptext = taskName.getBytes();
+            taskName = new String(ptext, UTF_8);*/
             Boolean checked = task.getAsJsonObject().get("checked").getAsBoolean();
             String id = task.getAsJsonObject().get("id").toString();
             //TODO Quelle: Efefective Java Page 13-14 Kapitel 2.2 - Thema 2
@@ -61,6 +66,8 @@ public class ParseChecklistJSON {
         for (int i = 0; i < taskList.getChildNodes().getLength(); i++) {
             HTMLLIElement currentTask = (HTMLLIElement) taskList.getChildNodes().item(i);
             String description = currentTask.getTextContent();
+          /*  byte[] ptext = description.getBytes();
+            description = new String(ptext, UTF_8);*/
             if (currentTask.getClassName().equals("checked")){
                  checked = true;
             } else{
