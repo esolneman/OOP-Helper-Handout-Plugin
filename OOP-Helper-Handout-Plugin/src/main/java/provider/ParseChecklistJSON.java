@@ -15,7 +15,7 @@ public class ParseChecklistJSON {
         JsonArray checklist = ((JsonArray) checklistJson.get("checklist"));
         ArrayList<Checklist.Task> tasks = new ArrayList<>();
         for (JsonElement task : checklist) {
-            String taskName = task.getAsJsonObject().get("taskDescription").toString();
+            String taskName = task.getAsJsonObject().get("taskDescription").getAsString();
             Boolean checked = task.getAsJsonObject().get("checked").getAsBoolean();
 
             //TODO Quelle: Efefective Java Page 13-14 Kapitel 2.2 - Thema 2
@@ -55,7 +55,7 @@ public class ParseChecklistJSON {
         Boolean checked;
         for (int i = 0; i < taskList.getChildNodes().getLength(); i++) {
             HTMLLIElement currentTask = (HTMLLIElement) taskList.getChildNodes().item(i);
-            String description = currentTask.getTextContent();
+            String description = currentTask.getChildNodes().item(0).getTextContent();
             System.out.println("getJsonFromLiElement tasklist description:" + description);
           /*  byte[] ptext = description.getBytes();
             description = new String(ptext, UTF_8);*/

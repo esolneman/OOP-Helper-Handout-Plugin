@@ -40,21 +40,11 @@ public class ChecklistController {
         System.out.println("saveTableDataInFile");
         JsonObject checklistJson = new JsonObject();
         JsonArray tasks;
-
+        //TODO duplicated code
         String taskListId = "userDataTaskList";
         HTMLUListElement taskList = (HTMLUListElement) checklistDocument.getElementById(taskListId);
         tasks = ParseChecklistJSON.getJsonFromLiElement(taskList);
         checklistJson.add("checklist", tasks);
-/*
-        //https://crunchify.com/how-to-write-json-object-to-file-in-java/
-        try (FileWriter file = new FileWriter(LocalStorageDataProvider.getChecklistUserData())) {
-            file.write(checklistJson.toString());
-            System.out.println("Successfully Copied JSON Object to File...");
-            System.out.println("\nJSON Object: " + checklistJson);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
-
         //https://stackoverflow.com/a/29319491
         try (Writer writer = new FileWriter(LocalStorageDataProvider.getChecklistUserData())) {
             Gson gson = new GsonBuilder().create();
@@ -76,15 +66,6 @@ public class ChecklistController {
         //updatedDataJson.add("checklist", tasks);
         updatedDataJson.add("checklist",gson.toJsonTree(tasks) );
         System.out.println("savePredefinedDataInFile checklist description:" + updatedDataJson.get("checklist").toString());
-
-/*        //https://crunchify.com/how-to-write-json-object-to-file-in-java/
-        try (FileWriter file = new FileWriter(LocalStorageDataProvider.getLocalChecklistPredefinedData())) {
-            file.write(updatedDataJson.toString());
-            System.out.println("Successfully Copied JSON Object to File...");
-            System.out.println("\nJSON Object: " + updatedDataJson);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
         //https://stackoverflow.com/a/29319491
         try (Writer writer = new FileWriter(LocalStorageDataProvider.getLocalChecklistPredefinedData())) {
             gson = new GsonBuilder().create();
@@ -199,8 +180,6 @@ public class ChecklistController {
                 taskListId = "predefinedTaskList";
                 checklistDataFile = LocalStorageDataProvider.getLocalChecklistPredefinedData();
                 //TODO Duplicated Code
-
-
                 //https://stackoverflow.com/a/34486879
                 try {
                     br = new BufferedReader(new FileReader(checklistDataFile));
@@ -211,22 +190,6 @@ public class ChecklistController {
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
-                System.out.println("Test String");
-
-/*                Gson gson = new Gson();
-                try {
-                    br = new BufferedReader(new FileReader(checklistDataFile));
-                    Type type = new TypeToken<List<Checklist>>(){}.getType();
-                    List<Checklist> checklists = gson.fromJson(br, type);
-                    for (Checklist checklist : checklists) {
-                        checklist.tasks.forEach(task -> {
-                            System.out.println(task.taskDescription);
-                        });
-                    }
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }*/
-
 
                 checklistData = ParseChecklistJSON.predefinedJsonToChecklistParser(checklistJson);
                 break;
@@ -255,11 +218,9 @@ public class ChecklistController {
             //TODO METHOD fro creating LI
             HTMLLIElement newTask = (HTMLLIElement) checklistDocument.createElement("li");
 
-            
             //Text description =  checklistDocument.createTextNode(checklistData.tasks.get(i).taskDescription);
             HTMLDivElement description = (HTMLDivElement) checklistDocument.createElement("div");
             description.setTextContent(checklistData.tasks.get(i).taskDescription);
-
 
             newTask.appendChild(description);
             taskList.appendChild(newTask);
@@ -278,42 +239,11 @@ public class ChecklistController {
                 span.setClassName("close");
                 span.appendChild(txt);
                 newTask.appendChild(span);
-                description.setAttribute("contenteditable", "true");
+                //description.setAttribute("contenteditable", "true");
                 ((EventTarget) span).addEventListener("click", getCloseButtonListener(finalWebView1), false);
             }
             taskList.appendChild(newTask);
             System.out.println("HTML        :" + (String) finalWebView1.getEngine().executeScript("document.documentElement.outerHTML"));        }
-    }
-
-    private void saveDocumentInFile(WebView finalWebView1, File checklistFile) {
-        //TODO check source
-        //https://stackoverflow.com/a/30258688
-        //https://www.baeldung.com/java-write-to-file#write-with-printwriter
-        FileWriter fileWriter = null;
-        try {
-            fileWriter = new FileWriter(checklistFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        PrintWriter printWriter = new PrintWriter(fileWriter);
-        printWriter.print(finalWebView1.getEngine().executeScript("document.documentElement.outerHTML"));
-        printWriter.close();
-
-        //https://stackoverflow.com/a/52965533
-        /*DOMSource domSource = new DOMSource(finalWebView1.getEngine().getDocument());
-        StreamResult result = new StreamResult(checklistFile);
-        TransformerFactory tf = TransformerFactory.newInstance();
-        Transformer transformer = null;
-        try {
-            transformer = tf.newTransformer();
-            transformer.setOutputProperty(OutputKeys.METHOD, "html");
-            transformer.transform(domSource, result);
-        } catch (TransformerConfigurationException e) {
-            e.printStackTrace();
-        } catch (TransformerException e) {
-            e.printStackTrace();
-        }*/
-
     }
 
     //TODO ADD SOURCE W3 PAGE
@@ -329,10 +259,12 @@ public class ChecklistController {
         }
         HTMLLIElement newTask = (HTMLLIElement) doc.createElement("li");
         newTask.setClassName("");
-
-        Text description = doc.createTextNode(taskDescription);
+        HTMLDivElement description = (HTMLDivElement) doc.createElement("div");
+        description.setTextContent(taskDescription);
+        newTask.appendChild(description);
+        //Text description = doc.createTextNode(taskDescription);
         //newTask.appendChild(description);
-        newTask.setTextContent(taskDescription);
+        //newTask.setTextContent(taskDescription);
 
         userDataTaskList.appendChild(newTask);
         doc.getElementById("newTaskDescription").setTextContent("");
@@ -341,8 +273,8 @@ public class ChecklistController {
         span.setClassName("close");
         span.appendChild(txt);
         newTask.appendChild(span);
-        newTask.setAttribute("contentEditable", "true");
-        //((EventTarget) newTask).addEventListener("click", getToggleCheckTaskListener("userData", webView), false);
+        //newTask.setAttribute("contentEditable", "true");
+        ((EventTarget) newTask).addEventListener("click", getToggleCheckTaskListener("userData", webView), false);
         ((EventTarget) span).addEventListener("click", getCloseButtonListener(webView), false);
         newTAskInputField.setValue("");
         saveUserDataInFile(webView.getEngine().getDocument());
