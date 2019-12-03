@@ -3,6 +3,7 @@ package controller;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
+import com.sun.jna.platform.unix.X11;
 import javafx.scene.web.WebView;
 import objects.Checklist;
 import org.w3c.dom.Attr;
@@ -108,12 +109,12 @@ public class ChecklistController {
 
         //check if local tasks exists still in the repo
         //TODO ERROR ConcurrentModificationException
-        for (Checklist.Task localTask : checklistLocal.tasks) {
+        /*for (Checklist.Task localTask : checklistLocal.tasks) {
             if (!checklistRepo.containsID(localTask.id)) {
                 System.out.println("LOCAL ID NOT EXISTS");
                 checklistLocal.tasks.remove(localTask);
             }
-        }
+        }*/
     }
 
     public void createChecklistFiles() {
@@ -242,6 +243,7 @@ public class ChecklistController {
                 newTask.appendChild(span);
                 description.setClassName("editableLI");
                 description.setAttribute("contenteditable", "true");
+                ((EventTarget) description).addEventListener("focusout", getEditableTaskListener(finalWebView1), false);
                 ((EventTarget) span).addEventListener("click", getCloseButtonListener(finalWebView1), false);
             }
             taskList.appendChild(newTask);
@@ -276,12 +278,12 @@ public class ChecklistController {
         span.appendChild(txt);
 
 
-        //newTask.appendChild(span);
+        newTask.appendChild(span);
         description.setClassName("editableLI");
         description.setAttribute("contenteditable", "true");
-
-        //((EventTarget) newTask).addEventListener("click", getToggleCheckTaskListener("userData", webView), false);
-        //((EventTarget) span).addEventListener("click", getCloseButtonListener(webView), false);
+        ((EventTarget) description).addEventListener("focusout", getEditableTaskListener(webView), false);
+        ((EventTarget) newTask).addEventListener("click", getToggleCheckTaskListener("userData", webView), false);
+        ((EventTarget) span).addEventListener("click", getCloseButtonListener(webView), false);
         newTAskInputField.setValue("");
         saveUserDataInFile(webView.getEngine().getDocument());
     }
@@ -319,5 +321,15 @@ public class ChecklistController {
             saveUserDataInFile(webView.getEngine().getDocument());
         };
         return closeListener;
+    }
+
+    private EventListener getEditableTaskListener(WebView webView) {
+        EventListener editTaskListener = ev -> {
+            System.out.println("getEditableTaskListener");
+            //https:stackoverflow.com/a/13966749
+            ev.stopPropagation();
+            saveUserDataInFile(webView.getEngine().getDocument());
+        };
+        return editTaskListener;
     }
 }
