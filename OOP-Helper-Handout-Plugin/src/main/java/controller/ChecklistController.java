@@ -277,7 +277,7 @@ public class ChecklistController {
 
 
         //newTask.appendChild(span);
-
+        description.setClassName("editableLI");
         description.setAttribute("contenteditable", "true");
 
         //((EventTarget) newTask).addEventListener("click", getToggleCheckTaskListener("userData", webView), false);
