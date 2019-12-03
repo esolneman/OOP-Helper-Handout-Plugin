@@ -37,17 +37,14 @@ public class PluginWebViewFXPanel extends JFXPanel {
                 };
 
                 EventListener addTaskButtonFocusListener = ev -> {
-                    System.out.println("in: addTaskButtonFocusListener: " + ev.toString());
                     KeyboardEventImpl keyboardEvent = (KeyboardEventImpl) ev;
                     if (keyboardEvent.getKeyCode() == 13){
-                        System.out.println("in: keyboardEvent: " + keyboardEvent.getKeyCode());
                         ChecklistController.getInstance().addTask(finalWebView1);
                     }
                 };
 
                 Document doc = finalWebView1.getEngine().getDocument();
                 if (doc.getDocumentURI().substring(doc.getDocumentURI().indexOf("C")).equals(LocalStorageDataProvider.getLocalUserDataChecklistFile().toURI().toString().substring(LocalStorageDataProvider.getLocalUserDataChecklistFile().toURI().toString().indexOf("C")))) {
-                    //TODO Load Tasks OR NOT - ONLY HTML
                     ChecklistController.getInstance().createTaskList("userData", doc, finalWebView1);
                     Element addTaskButton = doc.getElementById("addTaskButton");
                     HTMLInputElement initButton = (HTMLInputElement) doc.getElementById("newTaskDescription");

@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import javafx.scene.web.WebView;
 import objects.Checklist;
+import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Text;
 import org.w3c.dom.events.EventListener;
@@ -239,7 +240,8 @@ public class ChecklistController {
                 span.setClassName("close");
                 span.appendChild(txt);
                 newTask.appendChild(span);
-                //description.setAttribute("contenteditable", "true");
+                description.setClassName("editableLI");
+                description.setAttribute("contenteditable", "true");
                 ((EventTarget) span).addEventListener("click", getCloseButtonListener(finalWebView1), false);
             }
             taskList.appendChild(newTask);
@@ -272,10 +274,14 @@ public class ChecklistController {
         Text txt = doc.createTextNode("\u00D7");
         span.setClassName("close");
         span.appendChild(txt);
-        newTask.appendChild(span);
-        //newTask.setAttribute("contentEditable", "true");
-        ((EventTarget) newTask).addEventListener("click", getToggleCheckTaskListener("userData", webView), false);
-        ((EventTarget) span).addEventListener("click", getCloseButtonListener(webView), false);
+
+
+        //newTask.appendChild(span);
+
+        description.setAttribute("contenteditable", "true");
+
+        //((EventTarget) newTask).addEventListener("click", getToggleCheckTaskListener("userData", webView), false);
+        //((EventTarget) span).addEventListener("click", getCloseButtonListener(webView), false);
         newTAskInputField.setValue("");
         saveUserDataInFile(webView.getEngine().getDocument());
     }
