@@ -36,6 +36,10 @@ public class DownloadTask {
 
     //TODO ADD SOURCE
     public void run(String repoUrl, File contentRepoFile, String branchPath) throws IOException {
+        System.out.println("repoURL: " + repoUrl);
+        System.out.println("contentRepoFile: " + contentRepoFile.getPath());
+        System.out.println("branchPath: " + branchPath);
+
         clone = null;
         {
             try {
