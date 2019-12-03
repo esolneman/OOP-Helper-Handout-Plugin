@@ -32,6 +32,7 @@ public class HelpScreen extends SimpleToolWindowPanel {
         handoutToolWindow = toolWindow;
         try {
             startPageDirectory = LocalStorageDataProvider.getHelpStartDirectory().toURI().toURL().toString();
+
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }

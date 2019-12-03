@@ -1,10 +1,5 @@
 package controller;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.stream.JsonReader;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
@@ -14,10 +9,10 @@ import eventHandling.OnGitEventListener;
 import gui.CommitChangesDialog;
 import org.jetbrains.annotations.NotNull;
 import provider.HandoutContentDataProviderInterface;
-import provider.LocalStorageDataProvider;
 import provider.RepoLocalStorageDataProvider;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 public class HandoutPluginController implements HandoutPluginControllerInterface, OnGitEventListener {
@@ -42,7 +37,8 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
             @Override
             public void projectClosed(@NotNull Project project) {
                 System.out.println("PROJECT LISTENER name: " + project.getName());
-                loggingController.syncLoggingData();
+                //TODO UNCOMMENT
+                //loggingController.syncLoggingData();
             }
         };
         //https://intellij-support.jetbrains.com/hc/en-us/community/posts/206792155/comments/206204315
@@ -77,34 +73,6 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
         toolWindowController.updateContent();
         BalloonPopupController.showNotification(project, notificationMessage, messageType);
 
-
-        //TODO create in Checklsit controller
-        File checklistUserFile = LocalStorageDataProvider.getChecklistUserData();
-        checklistUserFile.getParentFile().mkdirs();
-        try {
-            checklistUserFile.createNewFile();
-            JsonObject checklistJson = new JsonObject();
-            JsonArray tasks = new JsonArray();
-            checklistJson.add("checklist", tasks);
-            saveJsonObjectInFile(checklistJson,checklistUserFile);
-        } catch (IOException ex) {
-            System.out.println("FILE NOT Created");
-        }
-        File localPredefinedChecklistFile = LocalStorageDataProvider.getLocalChecklistPredefinedData();
-        File predefinedRepoChecklistFile = LocalStorageDataProvider.getChecklistData();
-
-        //TODO create in Checklsit controller
-        //https://stackoverflow.com/a/29965924
-        Gson gson = new Gson();
-        JsonReader reader = null;
-        try {
-            reader = new JsonReader(new FileReader(predefinedRepoChecklistFile));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        JsonObject repoChecklistData = gson.fromJson(reader, JsonObject.class);
-        saveJsonObjectInFile(repoChecklistData, localPredefinedChecklistFile);
-
         //update toolWindow
         //
         /*Path file = Paths.get(repoFile.getAbsolutePath());
@@ -117,16 +85,22 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
 
         NotesController notesController = NotesController.getInstance();
         notesController.createNotesFile();
+
+        ChecklistController checklistController = ChecklistController.getInstance();
+        System.out.println("checklistController: " + checklistController);
+        //TODO IS NOTCALLED
+        checklistController.createChecklistFiles();
     }
 
 
     @Override
     //TODO add strings to message constants
     public void onUpdatingRepositoryEvent(ArrayList<String> commitMessages) {
+        ChecklistController checklistController = ChecklistController.getInstance();
         BalloonPopupController.showNotification(project, "Handout Daten wurden runtergeladen." + commitMessages.toString(), NotificationType.INFORMATION);
         CommitChangesDialog commitChangesDialog = new CommitChangesDialog(commitMessages);
         try {
-            ChecklistController.comparePredefinedChecklistVersions();
+            checklistController.comparePredefinedChecklistVersions();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -137,16 +111,5 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
     public void onNotUpdatingRepositoryEvent(String notificationMessage, NotificationType messageType) {
         System.out.println("onNotUpdatingRepositoryEvent");
         BalloonPopupController.showNotification(project, notificationMessage, messageType);
-    }
-
-
-    private void saveJsonObjectInFile(JsonObject  jsonObject, File file) {
-        //https://stackoverflow.com/a/29319491
-        try (Writer writer = new FileWriter(file)) {
-            Gson gson = new GsonBuilder().create();
-            gson.toJson(jsonObject, writer);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }

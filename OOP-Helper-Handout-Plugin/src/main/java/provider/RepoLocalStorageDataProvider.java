@@ -80,4 +80,14 @@ public class RepoLocalStorageDataProvider implements RepoLocalStorageDataProvide
         File helpStartFile = new File(getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE + COMMON_INFORMATION_FILE_NAME);
         return helpStartFile;
     }
+
+    public static File getPredefinedChecklist() {
+        File predefinedChecklist = new File(getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE + PREDEFINED_CHECKLIST_HTML_FILE);
+        return predefinedChecklist;
+    }
+
+    public static File getUserDataChecklist() {
+        File predefinedChecklist = new File(getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE + USER_CHECKLIST_HTML_FILE);
+        return predefinedChecklist;
+    }
 }

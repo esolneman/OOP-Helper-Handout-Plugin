@@ -9,14 +9,18 @@ import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.ui.popup.JBPopupFactory;
 import com.intellij.ui.awt.RelativePoint;
 
+import static java.nio.charset.StandardCharsets.*;
+
 import javax.swing.*;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 
 public class BalloonPopupController {
 
     //https://stackoverflow.com/a/32928915
     public static final NotificationGroup OOP_HELPER_HANDOUT_NOTIFICATION = new NotificationGroup("OOP-Helper-Handout", NotificationDisplayType.BALLOON, true);
 
-    public static void showBalloonNotification(JComponent component, Balloon.Position position, String notificationText, MessageType messageType){
+    public static void showBalloonNotification(JComponent component, Balloon.Position position, String notificationText, MessageType messageType) {
         JBPopupFactory.getInstance()
                 .createHtmlTextBalloonBuilder(notificationText, messageType, null)
                 .setFadeoutTime(8000)
@@ -32,7 +36,10 @@ public class BalloonPopupController {
     public static void showNotification(Project project, String message, NotificationType messageType) {
         ApplicationManager.getApplication().invokeLater(() -> {
             //TODO Subtitle and Title as param
-            Notification notification = OOP_HELPER_HANDOUT_NOTIFICATION.createNotification("Content Data INromation", "Subtitle", message, messageType);
+            // https://stackoverflow.com/a/20243062
+            byte[] ptext = message.getBytes(ISO_8859_1);
+            String encodedMessage = new String(ptext, UTF_8);
+            Notification notification = OOP_HELPER_HANDOUT_NOTIFICATION.createNotification("Content Data INromation", "Subtitle", encodedMessage, messageType);
             Notifications.Bus.notify(notification, project);
         });
     }

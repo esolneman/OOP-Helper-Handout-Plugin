@@ -18,8 +18,6 @@ import services.ToolWindowServiceInterface;
 
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -129,9 +127,9 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, ToolWindowSe
         handoutContent = contentFactory.createContent(handoutContentScreen.getContent(), "Handout", false);
         handoutContent.setPreferredFocusableComponent(handoutContentScreen.getContent());
         checklistContent = contentFactory.createContent(checklistScreen.getContent(), "Aufgaben", false);
+        notesContent = contentFactory.createContent(notesScreen.getContent(), "Notizen", false);
         specificCriteriaContent = contentFactory.createContent(specificAssessmentCriteriaScreen.getContent(), "Bewertungskriterien", false);
         commonAssessmentCriteriaContent = contentFactory.createContent(commonAssessmentCriteriaScreen.getContent(), "Hilfe", false);
-        notesContent = contentFactory.createContent(notesScreen.getContent(), "Notizen", false);
 
         toolWindow.getContentManager().addContent(handoutContent);
         toolWindow.getContentManager().addContent(checklistContent);
