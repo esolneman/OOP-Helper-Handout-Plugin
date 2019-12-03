@@ -2,6 +2,7 @@ package provider;
 
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.project.Project;
+import de.ur.mi.pluginhelper.tasks.TaskConfiguration;
 import eventHandling.OnGitEventListener;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -71,12 +72,8 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
     //ToDo getRepo Url
     private void getRepoUrl() {
         System.out.println("getRepoUrl");
-        //System.out.println(TaskConfiguration.loadFrom());
-        //repoUrl = TaskConfiguration.loadFrom().getHandoutURL();
-
-
-        //String branchFolderName = "/OOP-Helper-Handout-Template-test";
-        //RepoLocalStorageDataProvider.setBranchFolderName(branchFolderName);
+        //TaskConfiguration taskConfiguration = TaskConfiguration.loadFrom();
+        //repoUrl = taskConfiguration.getHandoutURL();
     }
 
     //TODO CHECK UPDATE FUNCTION
