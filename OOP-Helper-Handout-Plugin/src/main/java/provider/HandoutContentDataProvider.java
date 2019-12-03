@@ -22,11 +22,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
     private static HandoutContentDataProvider single_instance = null;
 
     // TODO: get RepoURL from jar file
-    private String repoUrl = "https://github.com/esolneman/OOP-Helper-Handout-Template";
-    private String repoZipUrl = "https://github.com/esolneman/OOP-Helper-Handout-Template/archive/test.zip";
-    //String CLONE_DIRECTORY_PATH = "refs/heads/test";
-    //String CONTENT_FILE_NAME = "/HelperHandoutPluginContentData/RepoLocalStorage";
-    private String repoFileName;
+    private String repoUrl;
     private String branchPath;
     private Project project;
     private String projectDirectory;
@@ -38,7 +34,6 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
     private File tempVersionOutputDir;
     private File repoLocalData;
     private DownloadTask task;
-    private ArrayList<String> lastCommitMessages;
 
     public static HandoutContentDataProvider getInstance() {
         if (single_instance == null) {
@@ -49,6 +44,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
 
 
     private HandoutContentDataProvider() {
+        //TODO DELETE UNUSED FILES
         this.project = RepoLocalStorageDataProvider.getProject();
         projectDirectory = project.getBasePath();
         contentRepoPath = RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE;
@@ -63,7 +59,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         //getBranchName();
         // ToDo: get BranchName
         //TODO get RepoName
-        branchPath = REPO_PATH_TO_BRANCH + "test";
+       // branchPath = REPO_PATH_TO_BRANCH + "test";
         System.out.println(contentRepoPath);
         task = DownloadTask.getInstance();
     }
@@ -71,9 +67,12 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
 
     //ToDo getRepo Url
     private void getRepoUrl() {
-        System.out.println("getRepoUrl");
-        //TaskConfiguration taskConfiguration = TaskConfiguration.loadFrom();
-        //repoUrl = taskConfiguration.getHandoutURL();
+        TaskConfiguration taskConfiguration = TaskConfiguration.loadFrom(project);
+        repoUrl = taskConfiguration.getHandoutURL();
+        branchPath = taskConfiguration.getBranchPath();
+        System.out.println("getRepoUrl: " + repoUrl);
+        System.out.println("branchPath: " + branchPath);
+
     }
 
     //TODO CHECK UPDATE FUNCTION
@@ -96,9 +95,9 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         }
     }
 
+    //TODO refactor false file --> check data
     private boolean checkRepoContentDataExists() {
         //https://stackoverflow.com/a/15571626
-        //if (!zipFile.exists()) {
         if (!contentRepoFile.exists()) {
             System.out.println("repo doesn't exist");
             return false;

@@ -25,11 +25,11 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
         this.project = project;
         initLogger();
         createProjectListener();
+        //TODO NOT TO REPOLOCALSTORAGE OFOFOFOFOF
         RepoLocalStorageDataProvider.setUserProjectDirectory(this.project);
         handoutDataProvider = ServiceManager.getService(project, HandoutContentDataProviderInterface.class);
         handoutDataProvider.addListener(this);
         toolWindowController = ToolWindowController.getInstance();
-        updateHandoutContent();
     }
 
     private void createProjectListener() {
@@ -39,6 +39,12 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
                 System.out.println("PROJECT LISTENER name: " + project.getName());
                 //TODO UNCOMMENT
                 //loggingController.syncLoggingData();
+            }
+
+            @Override
+            public void projectOpened(@NotNull Project project) {
+                System.out.println("PROJECT Openend name: " + project.getName());
+                updateHandoutContent();
             }
         };
         //https://intellij-support.jetbrains.com/hc/en-us/community/posts/206792155/comments/206204315
@@ -59,9 +65,6 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
     //TODO update Webview and other content of toolWindows
     //TODO enable / disable Actions
 
-
-    //TODO Create dummy file for user notes
-    //TODO Create dummy file for checklist
 
     public void onCloningRepositoryEvent(String notificationMessage, NotificationType messageType)   {
         System.out.println("Performing callback after Asynchronous Task");
