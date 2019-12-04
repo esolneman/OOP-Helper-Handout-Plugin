@@ -1,5 +1,8 @@
 package controller;
 
+import com.intellij.notification.Notification;
+import com.intellij.notification.Notifications;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.project.Project;
@@ -28,11 +31,17 @@ import static environment.FileConstants.HANDOUT_PDF_FILE_NAME;
 import static environment.FileConstants.URL_BEGIN_FOR_FILE;
 import static environment.Messages.FILES_SELECTING_DESCRIPTION;
 import static environment.Messages.FILES_SELECTING_TEXT;
+import static java.nio.charset.StandardCharsets.ISO_8859_1;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class DownloadPDFHelper {
 
+
+
+    boolean success;
+
     private static DownloadPDFHelper single_instance = null;
-    private HandoutContentScreen handoutContentScreen;
+    //private HandoutContentScreen handoutContentScreen;
 
     public static DownloadPDFHelper getInstance() {
         if (single_instance == null) {
@@ -47,7 +56,7 @@ public class DownloadPDFHelper {
     }
 
     public void setContent(HandoutContentScreen handoutContentScreen){
-        this.handoutContentScreen = handoutContentScreen;
+        //this.handoutContentScreen = handoutContentScreen;
     }
 
     //called from html
@@ -70,33 +79,33 @@ public class DownloadPDFHelper {
                 File selectedFile = jfc.getSelectedFile();
                 String handoutPDFDirectory = selectedFile.getPath() + HANDOUT_PDF_FILE_NAME;
                 //https://github.com/wooio/htmltopdf-java
-                boolean success = HtmlToPdf.create()
+                success = HtmlToPdf.create()
                         .object(HtmlToPdfObject.forUrl(URL_BEGIN_FOR_FILE + htmlDirectory))
                         .convert(handoutPDFDirectory);
-                showDownloadDialog(success);
+                showDownloadDialog();
+                return;
             }
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
     }
 
-    private void showDownloadDialog(boolean success) {
-
+    private void showDownloadDialog() {
         System.out.println(" showDownloadDialog");
+        ApplicationManager.getApplication().invokeLater(() -> {
+            JComponent handoutContentScreen = ToolWindowManager.getActiveToolWindow().getComponent();
+            System.out.println(" handoutContentScreen: " + handoutContentScreen.toString());
+            //TODO add Listener for this and display Notification with Listener!!!
+            if (success) {
+                System.out.println("SUCCESS");
+                BalloonPopupController.showBalloonNotification(handoutContentScreen, Balloon.Position.above, "Downloading was successfully", MessageType.INFO);
+                LoggingController.getInstance().saveDataInLogger(LogDataType.HANDOUT, "Download PDF Version", "success");
+            } else {
+                System.out.println("FAILURE");
+                BalloonPopupController.showBalloonNotification(handoutContentScreen, Balloon.Position.above, "Error while downloading the handout. Please try again.", MessageType.ERROR);
+                LoggingController.getInstance().saveDataInLogger(LogDataType.HANDOUT, "Download PDF Version", "error");
+            }
+        });
 
-        //JComponent handoutContentScreen = ToolWindowManager.getActiveToolWindow().getComponent();
-        System.out.println(" handoutContentScreen: " + handoutContentScreen.toString());
-
-        //TODO add Listener for this and display Notification with Listener!!!
-        if (success) {
-            System.out.println("SUCCESS");
-            BalloonPopupController.showBalloonNotification(handoutContentScreen.getComponent(), Balloon.Position.above, "Downloading was successfully", MessageType.INFO);
-
-            LoggingController.getInstance().saveDataInLogger(LogDataType.HANDOUT, "Download PDF Version", "success");
-        } else {
-            System.out.println("FAILURE");
-            BalloonPopupController.showBalloonNotification(handoutContentScreen, Balloon.Position.above, "Error while downloading the handout. Please try again.", MessageType.ERROR);
-            LoggingController.getInstance().saveDataInLogger(LogDataType.HANDOUT, "Download PDF Version", "error");
-        }
     }
 }
