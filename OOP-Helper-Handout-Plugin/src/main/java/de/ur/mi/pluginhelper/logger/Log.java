@@ -71,10 +71,10 @@ public class Log {
             return;
         }
         Timestamp now = new Timestamp(System.currentTimeMillis());
-        String hardwareAddress = getHardwareAddress();
+        //String hardwareAddress = getHardwareAddress();
         Properties properties = new Properties();
         properties.setProperty("Created At", String.valueOf(now));
-        properties.setProperty("Hardware Identifier", hardwareAddress);
+        //properties.setProperty("Hardware Identifier", hardwareAddress);
         properties.setProperty("Identifier", id);
         properties.setProperty("Experiment", experiment);
         try {
@@ -85,7 +85,7 @@ public class Log {
         }
     }
 
-    private String getHardwareAddress() {
+/*    private String getHardwareAddress() {
         try {
             byte[] address = NetworkInterface.getNetworkInterfaces().nextElement().getHardwareAddress();
             StringBuilder addressBuilder = new StringBuilder();
@@ -97,7 +97,7 @@ public class Log {
             e.printStackTrace();
         }
         return "unknown";
-    }
+    }*/
 
     private void writeLineToFile(String line, File file) {
         PrintWriter out = null;

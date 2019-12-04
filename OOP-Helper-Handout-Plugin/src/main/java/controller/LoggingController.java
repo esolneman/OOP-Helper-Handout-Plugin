@@ -22,13 +22,12 @@ public class LoggingController {
 
     private LoggingController() {}
 
-
     public void startLogging() {
         user = getCurrentUser();
         // Session Log für das Experiment mit dem Titel "Test" erstellen oder öffnen
         //TODO user.gestSessionID oder getID
         log = LogManager.openLog(user.getID(), "MA-Wolfes");
-        saveDataInLogger(LogDataType.CUSTOM, "startIDE", "Opened IDE");
+        saveDataInLogger(LogDataType.IDE, "IDE VISIBILITY", "opened IDE");
     }
 
     // Nutzer erstellen oder laden

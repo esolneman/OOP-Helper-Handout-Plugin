@@ -5,6 +5,7 @@ import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerListener;
+import de.ur.mi.pluginhelper.logger.LogDataType;
 import eventHandling.OnGitEventListener;
 import gui.CommitChangesDialog;
 import org.jetbrains.annotations.NotNull;
@@ -15,6 +16,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
+//TODO HIDE ANT TOOL WINDOW
 public class HandoutPluginController implements HandoutPluginControllerInterface, OnGitEventListener {
     private HandoutContentDataProviderInterface handoutDataProvider;
     private ToolWindowController toolWindowController;
@@ -23,7 +25,6 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
 
     public HandoutPluginController(Project project) {
         this.project = project;
-        initLogger();
         createProjectListener();
         //TODO NOT TO REPOLOCALSTORAGE OFOFOFOFOF
         RepoLocalStorageDataProvider.setUserProjectDirectory(this.project);
@@ -37,13 +38,14 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
             @Override
             public void projectClosed(@NotNull Project project) {
                 System.out.println("PROJECT LISTENER name: " + project.getName());
+                loggingController.saveDataInLogger(LogDataType.IDE, "IDE VISIBILITY", "closed IDE");
                 //TODO UNCOMMENT
                 //loggingController.syncLoggingData();
             }
 
             @Override
             public void projectOpened(@NotNull Project project) {
-                System.out.println("PROJECT Openend name: " + project.getName());
+                initLogger();
                 updateHandoutContent();
             }
         };
@@ -54,7 +56,6 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
     private void initLogger() {
         loggingController = LoggingController.getInstance();
         loggingController.startLogging();
-
     }
 
     public void updateHandoutContent() {
@@ -90,8 +91,7 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
         notesController.createNotesFile();
 
         ChecklistController checklistController = ChecklistController.getInstance();
-        System.out.println("checklistController: " + checklistController);
-        //TODO IS NOTCALLED
+        //TODO IS NOTCALLED / Called
         checklistController.createChecklistFiles();
     }
 

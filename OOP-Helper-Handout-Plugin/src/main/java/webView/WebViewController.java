@@ -144,15 +144,4 @@ public class WebViewController {
         }
     }
 
-    public void changeURL(String url) {
-        // TODO Error once
-        // TODO test if load urlAtring is working
-        //RELOAD
-        if(webView != null){
-            Platform.setImplicitExit(false);
-            Platform.runLater(() -> {
-                webView.getEngine().load(url);
-            });
-        }
-    }
 }

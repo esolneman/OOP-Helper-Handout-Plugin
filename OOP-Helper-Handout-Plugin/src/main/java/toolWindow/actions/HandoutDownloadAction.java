@@ -19,6 +19,7 @@ import provider.RepoLocalStorageDataProvider;
 import javax.swing.*;
 import java.io.File;
 import java.net.MalformedURLException;
+import java.util.Objects;
 
 import static environment.FileConstants.*;
 import static environment.Messages.FILES_SELECTING_DESCRIPTION;
@@ -35,12 +36,11 @@ public class HandoutDownloadAction extends AnAction {
     public void actionPerformed(AnActionEvent event) {
         project = event.getProject();
         String handoutHTMLDirectory = RepoLocalStorageDataProvider.getHandoutHtmlString();
-        create (handoutHTMLDirectory, event);
+        create(handoutHTMLDirectory, event);
     }
 
     //https://github.com/wooio/htmltopdf-java
     //TODO: if no content data is available
-    //TODO: close FileChooser
     private void create(String handoutHTMLDirectory, AnActionEvent event) {
         System.out.println(handoutHTMLDirectory);
         File content = LocalStorageDataProvider.getHandoutFileDirectory();
@@ -52,20 +52,24 @@ public class HandoutDownloadAction extends AnAction {
             descriptor.setTitle(FILES_SELECTING_TEXT);
             descriptor.setDescription(FILES_SELECTING_DESCRIPTION);
             descriptor.setForcedToUseIdeaFileChooser(true);
-            VirtualFile file = FileChooser.chooseFile(descriptor, project, null);
-            String handoutPDFDirectory = file.getPath() + HANDOUT_PDF_FILE_NAME;
-            boolean success = HtmlToPdf.create()
-                    .object(HtmlToPdfObject.forUrl(URL_BEGIN_FOR_FILE + handoutHTMLDirectory))
-                    .convert(handoutPDFDirectory);
-            JComponent handoutContentScreen = ToolWindowManager.getActiveToolWindow().getComponent();
+            VirtualFile file = FileChooser.
+                    chooseFile(descriptor, project, null);
+            if (!Objects.isNull(file)) {
+                String handoutPDFDirectory = file.getPath() + HANDOUT_PDF_FILE_NAME;
+                boolean success = HtmlToPdf.create()
+                        .object(HtmlToPdfObject.forUrl(URL_BEGIN_FOR_FILE + handoutHTMLDirectory))
+                        .convert(handoutPDFDirectory);
+                JComponent handoutContentScreen = ToolWindowManager.getActiveToolWindow().getComponent();
 
-            //TODO add Listener for this and display Notification with Listener!!!
+                //TODO add Listener for this and display Notification with Listener!!!
 
-            if(success){
-                BalloonPopupController.showBalloonNotification(handoutContentScreen, Balloon.Position.above, "Downloading was successfully", MessageType.INFO);
-            }else{
-                BalloonPopupController.showBalloonNotification(handoutContentScreen, Balloon.Position.above, "Error while downloading the handout. Please try again.", MessageType.ERROR);
+                if (success) {
+                    BalloonPopupController.showBalloonNotification(handoutContentScreen, Balloon.Position.above, "Downloading was successfully", MessageType.INFO);
+                } else {
+                    BalloonPopupController.showBalloonNotification(handoutContentScreen, Balloon.Position.above, "Error while downloading the handout. Please try again.", MessageType.ERROR);
+                }
             }
+
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }

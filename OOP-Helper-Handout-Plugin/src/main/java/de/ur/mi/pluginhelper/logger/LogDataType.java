@@ -5,5 +5,12 @@ public enum LogDataType {
     PLUGIN,
     USER,
     ERROR,
-    CUSTOM
+    CUSTOM,
+    TOOL_WINDOW,
+    HANDOUT,
+    NOTES,
+    CHECKLIST,
+    HELP,
+    TUTORIAL,
+    ASSESSMENT_CRITERIA,
 }
