@@ -51,7 +51,7 @@ public class HandoutWebViewLinkListener {
                 System.out.println("WebView: LinkToCode");
                 handleLinkToCode(hyperlink, project);
             } else {
-                System.out.println("WebView: OtherLink");
+                System.out.println("WebView: OtherLinkWebView: OtherLink");
                 handleLinkToExternalWebpage(hyperlink);
             }
             return false;
@@ -66,7 +66,7 @@ public class HandoutWebViewLinkListener {
         try {
             Desktop desktop = Desktop.getDesktop();
             URI address = new URI(toBeopen);
-            if (toBeopen.contains("http://") || toBeopen.contains("https://") || toBeopen.contains("mailto") || toBeopen.contains("file:/")) {
+            if (toBeopen.contains("http://") || toBeopen.contains("https://") || toBeopen.contains("mailto")) {
                 System.out.println("open external link: " + toBeopen);
                 Platform.setImplicitExit(false);
                 Platform.runLater(() -> {

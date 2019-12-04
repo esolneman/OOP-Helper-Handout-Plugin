@@ -11,6 +11,8 @@ import com.intellij.openapi.ui.popup.Balloon;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.*;
 import controller.BalloonPopupController;
+import controller.LoggingController;
+import de.ur.mi.pluginhelper.logger.LogDataType;
 import io.woo.htmltopdf.HtmlToPdf;
 import io.woo.htmltopdf.HtmlToPdfObject;
 import provider.LocalStorageDataProvider;
@@ -28,6 +30,7 @@ import static environment.Messages.FILES_SELECTING_TEXT;
 public class HandoutDownloadAction extends AnAction {
 
     private Project project;
+    private LoggingController loggingController;
 
     public HandoutDownloadAction() {
         super("Download");
@@ -36,13 +39,18 @@ public class HandoutDownloadAction extends AnAction {
     public void actionPerformed(AnActionEvent event) {
         project = event.getProject();
         String handoutHTMLDirectory = RepoLocalStorageDataProvider.getHandoutHtmlString();
-        create(handoutHTMLDirectory, event);
+        //create(handoutHTMLDirectory, event);
     }
 
     //https://github.com/wooio/htmltopdf-java
     //TODO: if no content data is available
-    private void create(String handoutHTMLDirectory, AnActionEvent event) {
+    public void downloadHandout() {
+        System.out.println("HandoutDownloadAction downloadHandout");
+
+        String handoutHTMLDirectory = RepoLocalStorageDataProvider.getHandoutHtmlString();
+        Project project = RepoLocalStorageDataProvider.getProject();
         System.out.println(handoutHTMLDirectory);
+
         File content = LocalStorageDataProvider.getHandoutFileDirectory();
         try {
             String urlString = content.toURI().toURL().toString();
@@ -62,11 +70,12 @@ public class HandoutDownloadAction extends AnAction {
                 JComponent handoutContentScreen = ToolWindowManager.getActiveToolWindow().getComponent();
 
                 //TODO add Listener for this and display Notification with Listener!!!
-
                 if (success) {
                     BalloonPopupController.showBalloonNotification(handoutContentScreen, Balloon.Position.above, "Downloading was successfully", MessageType.INFO);
+                    LoggingController.getInstance().saveDataInLogger(LogDataType.HANDOUT, "Download PDF Version", "success");
                 } else {
                     BalloonPopupController.showBalloonNotification(handoutContentScreen, Balloon.Position.above, "Error while downloading the handout. Please try again.", MessageType.ERROR);
+                    LoggingController.getInstance().saveDataInLogger(LogDataType.HANDOUT, "Download PDF Version", "error");
                 }
             }
 

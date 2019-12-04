@@ -71,7 +71,6 @@ public class NoteAddingFrame {
     //called from html
     public void showAddNoteFrame(){
         System.out.println("showAddNoteFrame");
-
         addNoteFrame.show();
     }
 

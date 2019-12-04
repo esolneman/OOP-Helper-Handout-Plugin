@@ -6,10 +6,21 @@ import com.intellij.openapi.actionSystem.DefaultActionGroup;
 import com.intellij.openapi.actionSystem.Separator;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
+import com.sun.webkit.dom.KeyboardEventImpl;
+import controller.ChecklistController;
+import controller.DownloadPDFHelper;
 import controller.LinkToHandoutController;
+import gui.NoteAddingFrame;
 import gui.PluginWebViewFXPanel;
 import javafx.application.Platform;
+import javafx.concurrent.Worker;
 import javafx.scene.web.WebView;
+import netscape.javascript.JSObject;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.events.EventListener;
+import org.w3c.dom.events.EventTarget;
+import org.w3c.dom.html.HTMLInputElement;
 import provider.LocalStorageDataProvider;
 import provider.RepoLocalStorageDataProvider;
 import provider.contentHandler.HandoutContentHandler;
@@ -50,7 +61,7 @@ public class HandoutContentScreen extends SimpleToolWindowPanel implements Plugi
 
     private void initToolWindowMenu() {
         //http://androhi.hatenablog.com/entry/2015/07/23/233932
-        toolWindowPanel.setToolbar(createToolbarPanel());
+        //toolWindowPanel.setToolbar(createToolbarPanel());
         toolWindowPanel.setContent(handoutContent);
     }
 
@@ -73,8 +84,24 @@ public class HandoutContentScreen extends SimpleToolWindowPanel implements Plugi
         Platform.setImplicitExit(false);
         Platform.runLater(() -> {
             webView = webViewController.createHandoutWebView(urlString);
+            //https://stackoverflow.com/a/10684168
+           /* webView.getEngine().getLoadWorker().stateProperty().addListener((ov, oldState, newState) -> {
+                if (newState == Worker.State.SUCCEEDED) {
+                    initDownloadButtonListener();
+            }});*/
+            initDownloadButtonListener();
             handoutContent.showHandoutWebView(urlString, webView);
+
         });
+    }
+
+    //https://stackoverflow.com/a/34547416
+    //create listener for "download handout" button in webView
+    private void initDownloadButtonListener() {
+        System.out.println("initDownloadButtonListener");
+        JSObject window = (JSObject) webView.getEngine().executeScript("window");
+        DownloadPDFHelper.getInstance().setContent(this);
+        window.setMember("downloadHtml", DownloadPDFHelper.getInstance());
     }
 
     public JComponent getToolbar(){

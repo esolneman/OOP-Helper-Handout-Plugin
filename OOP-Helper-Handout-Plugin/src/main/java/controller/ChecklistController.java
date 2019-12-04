@@ -247,7 +247,7 @@ public class ChecklistController {
                 ((EventTarget) span).addEventListener("click", getCloseButtonListener(finalWebView1), false);
             }
             taskList.appendChild(newTask);
-            System.out.println("HTML        :" + (String) finalWebView1.getEngine().executeScript("document.documentElement.outerHTML"));        }
+        }
     }
 
     //TODO ADD SOURCE W3 PAGE
