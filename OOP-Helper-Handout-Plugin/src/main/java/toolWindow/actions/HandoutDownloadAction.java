@@ -2,6 +2,7 @@ package toolWindow.actions;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
@@ -46,6 +47,7 @@ public class HandoutDownloadAction extends AnAction {
     //TODO: if no content data is available
     public void downloadHandout() {
         System.out.println("HandoutDownloadAction downloadHandout");
+        ApplicationManager.getApplication().invokeLater(() -> {
 
         String handoutHTMLDirectory = RepoLocalStorageDataProvider.getHandoutHtmlString();
         Project project = RepoLocalStorageDataProvider.getProject();
@@ -82,5 +84,6 @@ public class HandoutDownloadAction extends AnAction {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
+        });
     }
 }
