@@ -24,7 +24,6 @@ public class ChecklistController {
     private static ChecklistController single_instance = null;
     private File checklistStartPage;
     private File userDataChecklistHTMLFile;
-    private EventListener eventListener;
 
     public static ChecklistController getInstance() {
         if (single_instance == null) {
@@ -39,7 +38,6 @@ public class ChecklistController {
     }
 
     public static void saveUserDataInFile(Document checklistDocument) {
-        System.out.println("saveTableDataInFile");
         JsonObject checklistJson = new JsonObject();
         JsonArray tasks;
         //TODO duplicated code
@@ -57,9 +55,7 @@ public class ChecklistController {
     }
 
     public static void savePredefinedDataInFile(Document checklistDocument) {
-        System.out.println("saveTableDataInFile");
         Gson gson = new GsonBuilder().create();
-
         String taskListId = "predefinedTaskList";
         JsonArray tasks;
         HTMLUListElement taskList = (HTMLUListElement) checklistDocument.getElementById(taskListId);
@@ -292,7 +288,6 @@ public class ChecklistController {
         EventListener toggleCheckListener = ev -> {
             //https:stackoverflow.com/a/13966749
             ev.stopPropagation();
-            System.out.println("getTarget: " + ev.getTarget());
             //https://stackoverflow.com/a/20093950d
             HTMLLIElement task = (HTMLLIElement) ev.getTarget();
             if (task.getClassName().equals("checked")) {
@@ -305,7 +300,6 @@ public class ChecklistController {
             } else {
                 saveUserDataInFile(webView.getEngine().getDocument());
             }
-
         };
         return toggleCheckListener;
     }

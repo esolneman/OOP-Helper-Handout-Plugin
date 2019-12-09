@@ -1,9 +1,6 @@
 package provider;
 
-import com.intellij.sisyphus.api.User;
-
 import java.io.File;
-import java.net.URL;
 
 public class LocalStorageDataProvider implements LocalStorageDataProviderInterface {
 
@@ -11,16 +8,8 @@ public class LocalStorageDataProvider implements LocalStorageDataProviderInterfa
         return RepoLocalStorageDataProvider.getHandoutHtmlFile();
     }
 
-    public static String getHandoutStringDirectory() {
-        return RepoLocalStorageDataProvider.getHandoutHtmlString();
-    }
-
     public static File getSpecificAssessmentCriteriaFileDirectory() {
         return RepoLocalStorageDataProvider.getSpecificAssessmentCriteriaFile();
-    }
-
-    public static File getShortcutFileDirectory() {
-        return RepoLocalStorageDataProvider.getShortcutFileDirectory();
     }
 
     public static File getCommonAssessmentCriteriaFileDirectory() {
@@ -38,14 +27,6 @@ public class LocalStorageDataProvider implements LocalStorageDataProviderInterfa
 
     public static File getLocalChecklistPredefinedData() {
         return UserLocalStorageDataProvider.getPredefinedChecklistFile();
-    }
-
-    public static File getCodingStylesFileDirectory() {
-        return RepoLocalStorageDataProvider.getCodingStylesFile();
-    }
-
-    public static File getVariablesDirectory() {
-        return RepoLocalStorageDataProvider.getVariablesFile();
     }
 
     public static File getNotesFile() {

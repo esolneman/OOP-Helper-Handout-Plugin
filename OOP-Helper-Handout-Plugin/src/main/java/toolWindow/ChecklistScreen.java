@@ -10,7 +10,6 @@ import provider.LocalStorageDataProvider;
 import webView.WebViewController;
 
 import javax.swing.*;
-import java.io.File;
 import java.net.MalformedURLException;
 
 public class ChecklistScreen extends SimpleToolWindowPanel {
@@ -20,8 +19,6 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
     private static WebView webView;
     private WebViewController webViewController;
     private SimpleToolWindowPanel toolWindowPanel;
-    private File file;
-    private File userData;
     private ChecklistController checklistController;
 
 
@@ -34,7 +31,6 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
         checklistToolWindow = toolWindow;
         try {
             checklistStartPage = LocalStorageDataProvider.getLocalPredefinedChecklistFile().toURI().toURL().toString();
-            System.out.println("checklistStartPage: " + checklistStartPage);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }

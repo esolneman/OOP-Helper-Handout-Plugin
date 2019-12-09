@@ -75,7 +75,6 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, ToolWindowSe
 
             @Override
             public void selectionChanged(@NotNull ContentManagerEvent event) {
-                System.out.println("in: selectionChanged");
                 if (event.getContent().isSelected()) {
                     loggingController.saveDataInLogger(LogDataType.TOOL_WINDOW, "tab focus lost", event.getContent().getDisplayName());
                 } else {
