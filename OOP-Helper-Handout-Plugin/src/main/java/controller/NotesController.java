@@ -1,19 +1,13 @@
 package controller;
 
 import javafx.scene.web.WebView;
-import org.htmlcleaner.DomSerializer;
-import org.htmlcleaner.HtmlCleaner;
-import org.htmlcleaner.TagNode;
 import org.jsoup.Jsoup;
-import org.xml.sax.InputSource;
 import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
 import provider.LocalStorageDataProvider;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
+
+import static java.nio.charset.StandardCharsets.ISO_8859_1;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 //TODO LET CONTROLLER CONTROLL
 public class NotesController {
@@ -52,42 +46,24 @@ public class NotesController {
     }
 
     public void saveNewEntryInFile(String htmlText) {
-        // TODO CHANGE TO W3 DOCUJMENT
-        DocumentBuilder db = null;
+        // already false encoded
+        System.out.println("saveNewEntryInFile htmlText: " + htmlText);
+        //TODO Subtitle and Title as param
+        // https://stackoverflow.com/a/20243062
+        byte[] ptext = htmlText.getBytes(ISO_8859_1);
+        String encodedMessage = new String(ptext, UTF_8);
+        System.out.println("saveNewEntryInFile encodedMessage: " + encodedMessage);
+
+        // TODO CHANGE TO W3 DOCUJMENT -> no pass with utf 8
         try {
-            db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            InputSource is = new InputSource();
-            is.setCharacterStream(new StringReader(htmlText));
-            System.out.println("htmlText save: " + htmlText);
-            System.out.println("InputSource save: " + is);
-            System.out.println("db save: " + db);
-           // Document doc = db.parse(is);
-
-            HtmlCleaner cleaner = new HtmlCleaner();
-            TagNode node = cleaner.clean(htmlText);
-            DomSerializer ser = new DomSerializer(cleaner.getProperties());
-            //Document doc = ser.createDOM(node);
-
-            org.jsoup.nodes.Document doc = Jsoup.parse(htmlText);
-            System.out.println("Document save: " + doc.toString());
+            org.jsoup.nodes.Document doc = Jsoup.parse(htmlText, "UTF-8");
             System.out.println("Document body save: " + doc.body().toString());
-
             String htmlBody = doc.body().html();
-
-
-            System.out.println("doc save: " + doc);
-
-            //String htmlBody = doc.getElementById("notesList").toString();
+            System.out.println("saveNewEntryInFile htmlBody: " + htmlBody);
             saveNoteInHtmlFile(htmlBody, LocalStorageDataProvider.getNotesFile());
-        } catch (ParserConfigurationException | IOException e) {
+        } catch ( IOException e) {
             e.printStackTrace();
         }
-
-        //create new Note
-        //TODO DO I NEED THIS??
-/*        Notes.Note newNote = new Notes.Note();
-        newNote.note = htmlBody;
-        newNote.date = new Date().toString();*/
     }
 
     //TODO add to File Controller
@@ -95,6 +71,7 @@ public class NotesController {
         //https://stackoverflow.com/a/30258688
        // Document doc = webView.getEngine().getDocument();
         //doc.getElementById("notesList").setTextContent(htmlBody);
+        //TODO UTF ( encoding
         org.jsoup.nodes.Document doc = Jsoup.parse(initFile, "UTF-8");
         doc.getElementById("notesList").html(htmlBody);
         //https://www.baeldung.com/java-write-to-file#write-with-printwriter
@@ -110,14 +87,14 @@ public class NotesController {
     }
 
     public Document getCurrentNotesDocument() {
+        /*
         //https://jsoup.org/cookbook/input/parse-document-from-string
-        /*        Document doc = null;
+        Document doc = null;
         try {
             doc = Jsoup.parse(notesLocalFile, "UTF-8");
         } catch (IOException e) {
             e.printStackTrace();
         }*/
-        System.out.println("WebView: " + webView.getEngine().getDocument().getDocumentURI());
         Document doc = webView.getEngine().getDocument();
         return doc;
     }

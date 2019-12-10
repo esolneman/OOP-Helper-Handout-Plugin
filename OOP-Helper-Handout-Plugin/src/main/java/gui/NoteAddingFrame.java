@@ -10,8 +10,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.web.HTMLEditor;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
+
 import org.w3c.dom.Document;
-import org.w3c.dom.html.HTMLElement;
 import toolWindow.NotesScreen;
 
 public class NoteAddingFrame {
@@ -40,13 +40,10 @@ public class NoteAddingFrame {
 
     //https://docs.oracle.com/javafx/2/ui_controls/editor.htm
     private void createHtmlEditor() {
-        //TODO W3 NOT JSPUO
         htmlEditor = new HTMLEditor();
         htmlEditor.setPrefHeight(400);
-        Document notesDocument = notesController.getCurrentNotesDocument();
         WebView webView = notesController.getCurrentWebview();
         //display html part, that contains the notes
-        //TODO maybe innerHTML
         htmlEditor.setHtmlText((String)webView.getEngine().executeScript("document.getElementById('notesList').innerHTML"));
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.getStyleClass().add("noborder-scroll-pane");
@@ -56,6 +53,7 @@ public class NoteAddingFrame {
 
         VBox root = new VBox();
         root.setAlignment(Pos.CENTER);
+        //TODO Constant
         Button addEntryButton = new Button("OK");
         root.setAlignment(Pos.CENTER);
         addEntryButton.setOnAction(event -> {
@@ -63,9 +61,6 @@ public class NoteAddingFrame {
             addNoteFrame.close();
             notesScreen.reloadWebView();
         });
-
-        //addNoteFrame.setSize(400,400);
-
         root.getChildren().addAll(scrollPane,addEntryButton);
         Scene scene = new Scene(new Group());
         scene.setRoot(root);
@@ -74,9 +69,6 @@ public class NoteAddingFrame {
 
     //called from html
     public void showAddNoteFrame(){
-        System.out.println("showAddNoteFrame");
         addNoteFrame.show();
     }
-
-
 }

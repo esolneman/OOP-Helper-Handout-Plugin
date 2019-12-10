@@ -1,12 +1,9 @@
 package controller;
 
 import com.google.gson.*;
-import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
-import com.sun.jna.platform.unix.X11;
 import javafx.scene.web.WebView;
 import objects.Checklist;
-import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Text;
 import org.w3c.dom.events.EventListener;
@@ -16,8 +13,6 @@ import provider.LocalStorageDataProvider;
 import provider.ParseChecklistJSON;
 
 import java.io.*;
-import java.lang.reflect.Type;
-import java.util.List;
 
 public class ChecklistController {
 
@@ -102,15 +97,6 @@ public class ChecklistController {
                 checklistLocal.tasks.add(newTask);
             }
         }
-
-        //check if local tasks exists still in the repo
-        //TODO ERROR ConcurrentModificationException
-        /*for (Checklist.Task localTask : checklistLocal.tasks) {
-            if (!checklistRepo.containsID(localTask.id)) {
-                System.out.println("LOCAL ID NOT EXISTS");
-                checklistLocal.tasks.remove(localTask);
-            }
-        }*/
     }
 
     public void createChecklistFiles() {
