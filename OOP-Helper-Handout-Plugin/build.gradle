@@ -20,6 +20,8 @@ dependencies {
     compile 'org.codefx.libfx:LibFX:0.3.0'
     compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '2.2.0.201212191850-r'
     implementation 'com.google.code.gson:gson:2.8.6'
+    // https://mvnrepository.com/artifact/net.sourceforge.htmlcleaner/htmlcleaner
+    compile group: 'net.sourceforge.htmlcleaner', name: 'htmlcleaner', version: '2.6'
 }
 
 

@@ -1,21 +1,26 @@
 package controller;
 
-import objects.Notes;
+import javafx.scene.web.WebView;
+import org.htmlcleaner.DomSerializer;
+import org.htmlcleaner.HtmlCleaner;
+import org.htmlcleaner.TagNode;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
+import org.xml.sax.InputSource;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 import provider.LocalStorageDataProvider;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Date;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.*;
 
 //TODO LET CONTROLLER CONTROLL
 public class NotesController {
 
     private static NotesController single_instance = null;
     private File notesLocalFile;
+    private WebView webView;
 
     public static NotesController getInstance() {
         if (single_instance == null) {
@@ -24,7 +29,7 @@ public class NotesController {
         return single_instance;
     }
 
-    private NotesController(){
+    private NotesController() {
         notesLocalFile = LocalStorageDataProvider.getNotesFile();
     }
 
@@ -41,29 +46,57 @@ public class NotesController {
         CreateFiles.saveRepoFileInLocalFile(notesRepoFile, notesLocalFile);
     }
 
-    public static void saveNewEntryInFile(String htmlText) {
-        Document doc = Jsoup.parse(htmlText);
-        String htmlBody = doc.getElementById("notesList").html();
-        //create new Note
-        //TODO DO I NEED THIS??
-        Notes.Note newNote = new Notes.Note();
-        newNote.note = htmlBody;
-        newNote.date = new Date().toString();
+    public void setWebView(WebView webView) {
+        System.out.println(" setWebView WebView: " + webView);
+        this.webView = webView;
+    }
 
+    public void saveNewEntryInFile(String htmlText) {
+        // TODO CHANGE TO W3 DOCUJMENT
+        DocumentBuilder db = null;
         try {
+            db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            InputSource is = new InputSource();
+            is.setCharacterStream(new StringReader(htmlText));
+            System.out.println("htmlText save: " + htmlText);
+            System.out.println("InputSource save: " + is);
+            System.out.println("db save: " + db);
+           // Document doc = db.parse(is);
+
+            HtmlCleaner cleaner = new HtmlCleaner();
+            TagNode node = cleaner.clean(htmlText);
+            DomSerializer ser = new DomSerializer(cleaner.getProperties());
+            //Document doc = ser.createDOM(node);
+
+            org.jsoup.nodes.Document doc = Jsoup.parse(htmlText);
+            System.out.println("Document save: " + doc.toString());
+            System.out.println("Document body save: " + doc.body().toString());
+
+            String htmlBody = doc.body().html();
+
+
+            System.out.println("doc save: " + doc);
+
+            //String htmlBody = doc.getElementById("notesList").toString();
             saveNoteInHtmlFile(htmlBody, LocalStorageDataProvider.getNotesFile());
-        } catch (IOException e) {
+        } catch (ParserConfigurationException | IOException e) {
             e.printStackTrace();
         }
 
+        //create new Note
+        //TODO DO I NEED THIS??
+/*        Notes.Note newNote = new Notes.Note();
+        newNote.note = htmlBody;
+        newNote.date = new Date().toString();*/
     }
 
     //TODO add to File Controller
-    private static void saveNoteInHtmlFile(String htmlBody, File initFile) throws IOException {
+    private void saveNoteInHtmlFile(String htmlBody, File initFile) throws IOException {
         //https://stackoverflow.com/a/30258688
-        Document jsoupDoc = Jsoup.parse(initFile, "UTF-8");
-        jsoupDoc.getElementById("notesList").html(htmlBody);
-
+       // Document doc = webView.getEngine().getDocument();
+        //doc.getElementById("notesList").setTextContent(htmlBody);
+        org.jsoup.nodes.Document doc = Jsoup.parse(initFile, "UTF-8");
+        doc.getElementById("notesList").html(htmlBody);
         //https://www.baeldung.com/java-write-to-file#write-with-printwriter
         FileWriter fileWriter = null;
         try {
@@ -72,18 +105,24 @@ public class NotesController {
             e.printStackTrace();
         }
         PrintWriter printWriter = new PrintWriter(fileWriter);
-        printWriter.print(jsoupDoc);
+        printWriter.print(doc);
         printWriter.close();
     }
 
     public Document getCurrentNotesDocument() {
         //https://jsoup.org/cookbook/input/parse-document-from-string
-        Document doc = null;
+        /*        Document doc = null;
         try {
             doc = Jsoup.parse(notesLocalFile, "UTF-8");
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
+        System.out.println("WebView: " + webView.getEngine().getDocument().getDocumentURI());
+        Document doc = webView.getEngine().getDocument();
         return doc;
+    }
+
+    public WebView getCurrentWebview() {
+        return webView;
     }
 }
