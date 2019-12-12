@@ -46,20 +46,30 @@ public class NotesController {
     }
 
     public void saveNewEntryInFile(String htmlText) {
-        // already false encoded
-        System.out.println("saveNewEntryInFile htmlText: " + htmlText);
+        //TODO already false encoded
+        PrintStream printStream = null;
+        try {
+            printStream = new PrintStream(System.out, true, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        printStream.println("saveNewEntryInFile htmlText: " + htmlText);
+        //System.out.println("saveNewEntryInFile htmlText: " + htmlText);
         //TODO Subtitle and Title as param
         // https://stackoverflow.com/a/20243062
         byte[] ptext = htmlText.getBytes(ISO_8859_1);
         String encodedMessage = new String(ptext, UTF_8);
-        System.out.println("saveNewEntryInFile encodedMessage: " + encodedMessage);
+        //System.out.println("saveNewEntryInFile encodedMessage: " + encodedMessage);
+        printStream.println("saveNewEntryInFile encodedMessage: " + encodedMessage);
 
         // TODO CHANGE TO W3 DOCUJMENT -> no pass with utf 8
         try {
             org.jsoup.nodes.Document doc = Jsoup.parse(htmlText, "UTF-8");
-            System.out.println("Document body save: " + doc.body().toString());
+            printStream.println("saveNewEntryInFile Document body save: " + doc.body().toString());
+            //System.out.println("Document body save: " + doc.body().toString());
             String htmlBody = doc.body().html();
-            System.out.println("saveNewEntryInFile htmlBody: " + htmlBody);
+            printStream.println("saveNewEntryInFile htmlBody: " +htmlBody);
+            //System.out.println("saveNewEntryInFile htmlBody: " + htmlBody);
             saveNoteInHtmlFile(htmlBody, LocalStorageDataProvider.getNotesFile());
         } catch ( IOException e) {
             e.printStackTrace();
@@ -74,6 +84,19 @@ public class NotesController {
         //TODO UTF ( encoding
         org.jsoup.nodes.Document doc = Jsoup.parse(initFile, "UTF-8");
         doc.getElementById("notesList").html(htmlBody);
+
+
+        //https://stackoverflow.com/a/1001568
+        Writer out = new BufferedWriter(new OutputStreamWriter(
+                new FileOutputStream(initFile), "UTF-8"));
+        try {
+            out.write(String.valueOf(doc));
+        } finally {
+            out.close();
+        }
+
+
+/*
         //https://www.baeldung.com/java-write-to-file#write-with-printwriter
         FileWriter fileWriter = null;
         try {
@@ -83,7 +106,7 @@ public class NotesController {
         }
         PrintWriter printWriter = new PrintWriter(fileWriter);
         printWriter.print(doc);
-        printWriter.close();
+        printWriter.close();*/
     }
 
     public Document getCurrentNotesDocument() {
