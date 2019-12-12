@@ -6,6 +6,7 @@ import controller.DownloadPDFHelper;
 import controller.LinkToHandoutController;
 import gui.PluginWebViewFXPanel;
 import javafx.application.Platform;
+import javafx.concurrent.Worker;
 import javafx.scene.web.WebView;
 import netscape.javascript.JSObject;
 import provider.LocalStorageDataProvider;
@@ -27,13 +28,10 @@ public class HandoutContentScreen extends SimpleToolWindowPanel implements Plugi
     private SimpleToolWindowPanel toolWindowPanel;
     public HandoutContentScreen(ToolWindow toolWindow){
         super(true, true);
-        LinkToHandoutController linkToHandoutController = new LinkToHandoutController(RepoLocalStorageDataProvider.getProject(), this);
         webViewController = new WebViewController();
         toolWindowPanel = new SimpleToolWindowPanel(true);
         handoutToolWindow = toolWindow;
         content = LocalStorageDataProvider.getHandoutFileDirectory();
-        System.out.println("content HandoutContentScreen: " + content);
-
         try {
             urlString = content.toURI().toURL().toString();
         } catch (MalformedURLException e) {
@@ -54,11 +52,12 @@ public class HandoutContentScreen extends SimpleToolWindowPanel implements Plugi
         Platform.runLater(() -> {
             webView = webViewController.createHandoutWebView(urlString);
             //https://stackoverflow.com/a/10684168
-           /* webView.getEngine().getLoadWorker().stateProperty().addListener((ov, oldState, newState) -> {
+           webView.getEngine().getLoadWorker().stateProperty().addListener((ov, oldState, newState) -> {
                 if (newState == Worker.State.SUCCEEDED) {
+                    LinkToHandoutController linkToHandoutController = new LinkToHandoutController(RepoLocalStorageDataProvider.getProject(), this);
                     initDownloadButtonListener();
-            }});*/
-            initDownloadButtonListener();
+            }});
+            //initDownloadButtonListener();
             handoutContent.showHandoutWebView(urlString, webView);
 
         });
@@ -67,7 +66,6 @@ public class HandoutContentScreen extends SimpleToolWindowPanel implements Plugi
     //https://stackoverflow.com/a/34547416
     //create listener for "download handout" button in webView
     private void initDownloadButtonListener() {
-        System.out.println("initDownloadButtonListener");
         JSObject window = (JSObject) webView.getEngine().executeScript("window");
         DownloadPDFHelper.getInstance().setContent(this);
         window.setMember("downloadHtml", DownloadPDFHelper.getInstance());

@@ -13,13 +13,19 @@ import javafx.application.Platform;
 import javafx.scene.web.WebView;
 import netscape.javascript.JSObject;
 import org.apache.commons.lang.WordUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.select.Elements;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.w3c.dom.html.HTMLElement;
 import org.w3c.dom.html.HTMLInputElement;
+import provider.LocalStorageDataProvider;
 import toolWindow.HandoutContentScreen;
 import toolWindow.NotesScreen;
 
+import java.io.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -62,7 +68,7 @@ public class WebViewController {
     }
 
     //https://stackoverflow.com/questions/49070734/javafx-webview-link-to-anchor-in-document-doesnt-work-using-loadcontent
-    public void goToLocation(String heading, ToolWindow handoutToolWindow, HandoutContentScreen handoutContentScreen){
+    public void goToLocation(String heading, ToolWindow handoutToolWindow, HandoutContentScreen handoutContentScreen) {
         System.out.println("goToLocation: " + heading);
         //TODO: check or if (class ref)
         if(heading.contains(" ")){
@@ -97,37 +103,72 @@ public class WebViewController {
                 //TODO check source
                 //https://stackoverflow.com/questions/52960101/how-to-edit-html-page-in-a-webview-from-javafx-without-reloading-the-page
                 //https://stackoverflow.com/a/5882802
-                org.w3c.dom.Document documentJava = webView.getEngine().getDocument();
+                //org.w3c.dom.Document documentJava = webView.getEngine().getDocument();
+
                 webView.getEngine().load(newLocation);
-                //https://stackoverflow.com/a/54905393
-                //((HTMLAnchorElementImpl) ((NodeListImpl) documentJava.getElementById(finalHeading)).item(0)).focus();
+                 //https://jsoup.org/cookbook/input/parse-document-from-string
+                org.jsoup.nodes.Document handoutContentDocument = null;
+                try {
+                    handoutContentDocument = Jsoup.parse(LocalStorageDataProvider.getHandoutFileDirectory(), "UTF-8");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                Elements markElements= handoutContentDocument.getElementsByTag("mark");
+                for (int i = 0; i < markElements.size(); i++) {
+                    //https://stackoverflow.com/a/3149645
+                    String textWithoutMark = Jsoup.parse(markElements.get(i).html()).text();
+                    System.out.println("textWithoutMark: " + textWithoutMark);
+                    System.out.println("markElements: " + markElements.get(i).html());
+                    System.out.println("markElements parent: " + markElements.get(i).parent().tagName());
+                    markElements.get(i).parent().html(textWithoutMark);
+                }
+                //deleteExistingMarkTag(documentJava, handoutContentDocument);
 
 
-                
-                //webView.getEngine().executeScript("document.getElementById(finalHeading).focus()");
-
-
-                //Node element = webView.getEngine().getDocument().getElementById(finalHeading).getFirstChild();
-                //documentJava.
-                /*//TODO Sometimes Nullpointer
-                Element ele = documentJava.getElementById(finalHeading);
-                Element mark = documentJava.createElement("mark");
                 //TODO Sometimes Nullpointer
-                Element parentElement = (Element) ele.getParentNode();
-                parentElement.insertBefore(mark, ele);
-                mark.appendChild(ele);
-                webView.getEngine().load(newLocation);
-                //https://stackoverflow.com/a/53452586
-                //TODO REFACTOR
-                CompletableFuture.delayedExecutor(1, TimeUnit.SECONDS).execute(() -> {
-                    updateWebViewContent();
-                });
-*/
+                if(handoutContentDocument != null){
+                    org.jsoup.nodes.Element ele = handoutContentDocument.getElementById(finalHeading);
+                    org.jsoup.nodes.Element mark = handoutContentDocument.createElement("mark");
+                    //TODO Sometimes Nullpointer
+                    //org.jsoup.nodes.Element parentElement = ele.parent();
+                    //TODO insertBefore mark, ele
+                    ele.before(mark);
+                    mark.appendChild(ele);
+                }
+
+                System.out.println( webView.getEngine().executeScript("document.body.innerHTML"));
+
+                //https://stackoverflow.com/a/1001568
+                Writer out = null;
+                try {
+                    out = new BufferedWriter(new OutputStreamWriter(
+                            new FileOutputStream(LocalStorageDataProvider.getHandoutFileDirectory()), "UTF-8"));
+                    System.out.println(handoutContentDocument.body().html());
+                    out.write(String.valueOf(handoutContentDocument));
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        out.close();
+                        webView.getEngine().load(newLocation);
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
             }else {
                 //TODO new method
                 webView.getEngine().load(newLocation);
             }
         });
+    }
+
+    private void deleteExistingMarkTag(Document documentJava, org.jsoup.nodes.Document document) {
+        NodeList markElement = documentJava.getElementsByTagName("mark");
+
     }
 
     public void goToHeading(String heading){
