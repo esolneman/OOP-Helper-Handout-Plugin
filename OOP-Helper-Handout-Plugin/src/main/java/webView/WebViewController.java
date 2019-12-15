@@ -14,9 +14,9 @@ import javafx.scene.web.WebView;
 import netscape.javascript.JSObject;
 import org.apache.commons.lang.WordUtils;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.html.HTMLElement;
@@ -105,6 +105,7 @@ public class WebViewController {
                 //https://stackoverflow.com/a/5882802
                 //org.w3c.dom.Document documentJava = webView.getEngine().getDocument();
 
+
                 webView.getEngine().load(newLocation);
                  //https://jsoup.org/cookbook/input/parse-document-from-string
                 org.jsoup.nodes.Document handoutContentDocument = null;
@@ -114,30 +115,35 @@ public class WebViewController {
                     e.printStackTrace();
                 }
 
-                Elements markElements= handoutContentDocument.getElementsByTag("mark");
-                for (int i = 0; i < markElements.size(); i++) {
-                    //https://stackoverflow.com/a/3149645
-                    String textWithoutMark = Jsoup.parse(markElements.get(i).html()).text();
-                    System.out.println("textWithoutMark: " + textWithoutMark);
-                    System.out.println("markElements: " + markElements.get(i).html());
-                    System.out.println("markElements parent: " + markElements.get(i).parent().tagName());
-                    markElements.get(i).parent().html(textWithoutMark);
-                }
-                //deleteExistingMarkTag(documentJava, handoutContentDocument);
+                deleteExistingMarkTag(handoutContentDocument);
+
 
 
                 //TODO Sometimes Nullpointer
                 if(handoutContentDocument != null){
+
+
+/*                  Element parentElement = (Element) ele.getParentNode();
+                    parentElement.insertBefore(mark, ele);
+                    mark.appendChild(ele);
+                    */
+
+                    //TODO WRAP
+                    //https://jsoup.org/cookbook/modifying-data/set-html
+
+
                     org.jsoup.nodes.Element ele = handoutContentDocument.getElementById(finalHeading);
                     org.jsoup.nodes.Element mark = handoutContentDocument.createElement("mark");
                     //TODO Sometimes Nullpointer
-                    //org.jsoup.nodes.Element parentElement = ele.parent();
                     //TODO insertBefore mark, ele
-                    ele.before(mark);
-                    mark.appendChild(ele);
-                }
+                    System.out.println("ele : "+ ele);
+                    System.out.println("mark: "+ mark.html());
+                    System.out.println("mark: "+ mark.toString());
 
-                System.out.println( webView.getEngine().executeScript("document.body.innerHTML"));
+                    ele.child(0).wrap(mark.toString());
+
+                    //ele.insertChildren(1,mark);
+                }
 
                 //https://stackoverflow.com/a/1001568
                 Writer out = null;
@@ -166,9 +172,14 @@ public class WebViewController {
         });
     }
 
-    private void deleteExistingMarkTag(Document documentJava, org.jsoup.nodes.Document document) {
-        NodeList markElement = documentJava.getElementsByTagName("mark");
-
+    private void deleteExistingMarkTag(org.jsoup.nodes.Document document) {
+        Elements markElements= document.getElementsByTag("mark");
+        for (int i = 0; i < markElements.size(); i++) {
+            Element link = markElements.get(i);
+            Element codeElement =  document.createElement("code");
+            codeElement.text(link.child(0).text());
+            markElements.parents().get(0).html(codeElement.toString());
+        }
     }
 
     public void goToHeading(String heading){

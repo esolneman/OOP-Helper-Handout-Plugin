@@ -48,6 +48,7 @@ public class LinkToHandoutController{
                 }
             });*/
             //TODO: check Disposable
+           //TODO Remove Listener when close Project
            editorEventMulticaster.addEditorMouseListener(new EditorMouseListener() {
                @Override
                public void mouseClicked(@NotNull EditorMouseEvent event) {
@@ -55,17 +56,15 @@ public class LinkToHandoutController{
                        openHandoutOnPosition();
                    }
                }
-           }, new Disposable() {
-               @Override
-               public void dispose() {
-
-               }
            });
         });
     }
 
     private void openHandoutOnPosition() {
         System.out.println(" openHandoutOnPosition functionAnchor: " + functionAnchor);
+        //https://intellij-support.jetbrains.com/hc/en-us/community/posts/206768435/comments/206128935
+        //https://www.programcreek.com/java-api-examples/?api=com.intellij.openapi.editor.EditorFactory
+
         FileEditor currentFileEditor = FileEditorManager.getInstance(project).getSelectedEditor();
         Editor currentEditor = FileEditorManager.getInstance(project).getSelectedTextEditor();
 

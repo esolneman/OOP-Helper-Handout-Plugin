@@ -32,7 +32,7 @@
             <add-to-group group-id="MainMenu" anchor="last"/>
             <action id="Myplugin.Textboxes.Tutorial" class="handoutMenuActions.HandoutMenuTutorial" text="Tutorial" description="Start Tutorial" icon="/icons/contextHelp.svg"/>
             <action id="Myplugin.Textboxes.Update" class="handoutMenuActions.HandoutMenuUpdateContent" text="Update Handout Data" description="Download latest version of content data" icon="/icons/updateFolders.svg"/>
-            <action id="Myplugin.Textboxes.Export" class="handoutMenuActions.HandoutMenuExport" text="Export" description="Start Export" icon="/icons/export.svg"/>
+           <!-- <action id="Myplugin.Textboxes.Export" class="handoutMenuActions.HandoutMenuExport" text="Export" description="Start Export" icon="/icons/export.svg"/> -->
         </group>
         <group id="HandoutToolWindow" text="test" description="test menu">
             <action id ="Handout.Maximize" class="toolWindow.actions.ToolWindowMaximizeAction" text="Maximize" description="maximize Tool Window" icon="/icons/maximize.svg"> </action>
