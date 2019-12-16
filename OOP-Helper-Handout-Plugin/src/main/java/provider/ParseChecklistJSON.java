@@ -2,6 +2,7 @@ package provider;
 
 import com.google.gson.*;
 import objects.Checklist;
+import org.w3c.dom.html.HTMLElement;
 import org.w3c.dom.html.HTMLLIElement;
 import org.w3c.dom.html.HTMLUListElement;
 
@@ -33,6 +34,7 @@ public class ParseChecklistJSON {
             String taskName = task.getAsJsonObject().get("taskDescription").getAsString();
  /*           byte[] ptext = taskName.getBytes();
             taskName = new String(ptext, UTF_8);*/
+
             Boolean checked = task.getAsJsonObject().get("checked").getAsBoolean();
             String id = task.getAsJsonObject().get("id").getAsString();
             //TODO Quelle: Efefective Java Page 13-14 Kapitel 2.2 - Thema 2
@@ -53,10 +55,21 @@ public class ParseChecklistJSON {
         Boolean checked;
         for (int i = 0; i < taskList.getChildNodes().getLength(); i++) {
             HTMLLIElement currentTask = (HTMLLIElement) taskList.getChildNodes().item(i);
-            String description = currentTask.getChildNodes().item(0).getTextContent();
+
+            System.out.println("currentTask: " + currentTask);
+            System.out.println("currentTask: " + currentTask.getChildNodes().getLength());
+
+            System.out.println("currentTask: " + currentTask.getChildNodes().item(0).toString());
+            System.out.println("currentTask: " + currentTask.getChildNodes().item(1).toString());
+
+
+            HTMLElement checkboxImage = (HTMLElement) currentTask.getChildNodes().item(1).getFirstChild();
+
+            String description = currentTask.getFirstChild().getTextContent();
+            System.out.println("description: " + description);
           /*  byte[] ptext = description.getBytes();
             description = new String(ptext, UTF_8);*/
-            if (currentTask.getClassName().equals("checked")){
+            if (checkboxImage.getClassName().equals("fa fa-check-square")){
                  checked = true;
             } else{
                  checked = false;
