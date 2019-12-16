@@ -81,6 +81,7 @@ public class ChecklistController {
         Checklist checklistLocal = ParseChecklistJSON.predefinedJsonToChecklistParser(localChecklistData);
         Checklist checklistRepo = ParseChecklistJSON.predefinedJsonToChecklistParser(repoChecklistData);
 
+        //TODO THINK AND IMPROVE
         for (Checklist.Task repoTask : checklistRepo.tasks) {
             String currentRepoTaskID = repoTask.id;
             String currentRepoTaskDescription = repoTask.taskDescription;
@@ -221,8 +222,10 @@ public class ChecklistController {
 
             if (checklistData.tasks.get(i).checked) {
                 checkboxImage.setClassName("fa fa-check-square");
+                newTask.setClassName("checked");
             } else {
                 checkboxImage.setClassName("fa fa-square");
+                newTask.setClassName("unchecked");
             }
             if (checklistData.tasks.get(i).id != null) {
                 newTask.setId(checklistData.tasks.get(i).id);
@@ -253,15 +256,12 @@ public class ChecklistController {
         if (taskDescription == null || taskDescription == " " || taskDescription.equals("") || taskDescription.equals(" ")) {
             taskDescription = "Neue Aufgabe";
         }
+
         HTMLLIElement newTask = (HTMLLIElement) doc.createElement("li");
         newTask.setClassName("unchecked");
         HTMLDivElement description = (HTMLDivElement) doc.createElement("div");
         description.setTextContent(taskDescription);
         newTask.appendChild(description);
-        //Text description = doc.createTextNode(taskDescription);
-        //newTask.appendChild(description);
-        //newTask.setTextContent(taskDescription);
-
 
         HTMLElement checkbox = (HTMLElement) doc.createElement("span");
         HTMLElement checkboxImage = (HTMLElement) doc.createElement("i");
@@ -271,15 +271,15 @@ public class ChecklistController {
 /*        Text checkboxText = doc.createTextNode("+");
         checkbox.appendChild(checkboxText);*/
         checkbox.setClassName("checkbox");
+
         userDataTaskList.appendChild(newTask);
         doc.getElementById("newTaskDescription").setTextContent("");
         HTMLElement span = (HTMLElement) doc.createElement("span");
         Text txt = doc.createTextNode("\u00D7");
         span.setClassName("close");
         span.appendChild(txt);
-        newTask.appendChild(checkbox);
         newTask.appendChild(description);
-
+        newTask.appendChild(checkbox);
         newTask.appendChild(span);
         description.setClassName("editableLI");
         description.setAttribute("contenteditable", "true");
@@ -304,16 +304,25 @@ public class ChecklistController {
             System.out.println("EV TARGET checkbox: "+ checkbox.getChildNodes().getLength());
             System.out.println("EV TARGET checkbox: "+ checkbox.getNodeName());
 
+
             if(checkbox.getNodeName().equals("SPAN")) {
+                System.out.println("EV TARGET SPAN: ");
                 checkbox = (HTMLElement) checkbox.getFirstChild();
             }
+
+            HTMLLIElement liElement = (HTMLLIElement) checkbox.getParentNode().getParentNode();
+
+
 
             //https://stackoverflow.com/a/20093950d
             //TODO CONSTANTS
             if (checkbox.getClassName().equals("fa fa-square")) {
                 checkbox.setClassName("fa fa-check-square");
+                liElement.setClassName("checked");
             } else {
                 checkbox.setClassName("fa fa-square");
+                liElement.setClassName("unchecked");
+
             }
             if (dataSource.equals("predefined")) {
                 savePredefinedDataInFile(webView.getEngine().getDocument());
