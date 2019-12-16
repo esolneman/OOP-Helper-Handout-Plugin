@@ -16,11 +16,11 @@ public class HelpScreen extends SimpleToolWindowPanel {
     private ToolWindow handoutToolWindow;
     private String variablesDirectory;
     private String codingstylesDirectory;
-    private String shortcutDirectory;
+    private static String tutorialDirectory;
     private String startPageDirectory;
     private SimpleToolWindowPanel toolWindowPanel;
     private static WebView webView;
-    private WebViewController webViewController;
+    private static WebViewController webViewController;
     private JPanel panel;
 
 
@@ -32,7 +32,7 @@ public class HelpScreen extends SimpleToolWindowPanel {
         handoutToolWindow = toolWindow;
         try {
             startPageDirectory = LocalStorageDataProvider.getHelpStartDirectory().toURI().toURL().toString();
-
+            tutorialDirectory = LocalStorageDataProvider.getTutorialDirectory().toURI().toURL().toString();
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -63,6 +63,10 @@ public class HelpScreen extends SimpleToolWindowPanel {
             criteriaContent.showHandoutWebView(startPageDirectory, webView);
 
         });
+    }
+
+    public static void displayTutorial(){
+        webViewController.loadNewURL(tutorialDirectory);
     }
 
     public JComponent getToolbar() {

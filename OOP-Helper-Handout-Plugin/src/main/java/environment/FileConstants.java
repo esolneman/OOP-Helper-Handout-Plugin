@@ -21,6 +21,9 @@ public class FileConstants {
     public static final String COMMON_INFORMATION_FILE_NAME = "/common_information/index.html";
     public static final String SPECIFIC_ASSESSMENT_CRITERIA_FILE_NAME = "/specific-assessment-criteria.html";
 
+    public static final String TUTORIAL_FILE_NAME = "/common_information/tutorial.html";
+
+
 
     public static final String HANDOUT_PDF_FILE_NAME = "/handout.pdf";
     public static final String URL_BEGIN_FOR_FILE = "file:///";

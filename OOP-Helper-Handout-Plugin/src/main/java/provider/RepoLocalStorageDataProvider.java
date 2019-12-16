@@ -73,4 +73,9 @@ public class RepoLocalStorageDataProvider implements RepoLocalStorageDataProvide
         File predefinedChecklist = new File(getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE + USER_CHECKLIST_HTML_FILE);
         return predefinedChecklist;
     }
+
+    public static File getTutorialFile() {
+        File tutorialFile = new File(getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE + TUTORIAL_FILE_NAME);
+        return tutorialFile;
+    }
 }

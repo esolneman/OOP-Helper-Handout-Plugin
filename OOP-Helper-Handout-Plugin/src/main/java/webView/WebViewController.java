@@ -142,7 +142,6 @@ public class WebViewController {
 
                     ele.child(0).wrap(mark.toString());
 
-                    //ele.insertChildren(1,mark);
                 }
 
                 //https://stackoverflow.com/a/1001568
@@ -212,6 +211,14 @@ public class WebViewController {
             webView.getEngine().reload();
             });
         }
+    }
+
+    public void loadNewURL(String urlString) {
+        Platform.setImplicitExit(false);
+        Platform.runLater(() -> {
+            //TODO new method
+            webView.getEngine().load(urlString);
+        });
     }
 
 }
