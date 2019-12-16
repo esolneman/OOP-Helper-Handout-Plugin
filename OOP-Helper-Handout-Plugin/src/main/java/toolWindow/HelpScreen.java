@@ -2,8 +2,10 @@ package toolWindow;
 
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
+import eventHandling.HelpWebViewLinkListener;
 import gui.PluginWebViewFXPanel;
 import javafx.application.Platform;
+import javafx.concurrent.Worker;
 import javafx.scene.web.WebView;
 import provider.LocalStorageDataProvider;
 import webView.WebViewController;
@@ -50,15 +52,12 @@ public class HelpScreen extends SimpleToolWindowPanel {
         Platform.setImplicitExit(false);
         Platform.runLater(() -> {
             webView = webViewController.createHelpWebView(startPageDirectory);
-/*            webView.getEngine().getLoadWorker().stateProperty().addListener(
-                    (ov, oldState, newState) -> {
+            webView.getEngine().getLoadWorker().stateProperty().addListener((ov, oldState, newState) -> {
                         if (newState == Worker.State.SUCCEEDED) {
-                            webView.getEngine().executeScript("getNavBar()");
+
                         }
                     }
-            );*/
-
-            //webView.getEngine().load(strpath);
+            );
 
             criteriaContent.showHandoutWebView(startPageDirectory, webView);
 

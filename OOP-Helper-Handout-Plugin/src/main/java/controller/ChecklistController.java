@@ -208,11 +208,21 @@ public class ChecklistController {
 
             newTask.appendChild(description);
             taskList.appendChild(newTask);
-            ((EventTarget) newTask).addEventListener("click", getToggleCheckTaskListener(checklistSource, finalWebView1), false);
+
+            HTMLElement checkbox = (HTMLElement) checklistDocument.createElement("span");
+            HTMLElement checkboxImage = (HTMLElement) checklistDocument.createElement("i");
+            //TODO make constant for class name
+            checkbox.appendChild(checkboxImage);
+            checkbox.setClassName("checkbox");
+            newTask.appendChild(checkbox);
+
+            ((EventTarget) checkbox).addEventListener("click", getToggleCheckTaskListener(checklistSource, finalWebView1), false);
+            //((EventTarget) description).addEventListener("click", getToggleCheckTaskListener(checklistSource, finalWebView1), false);
+
             if (checklistData.tasks.get(i).checked) {
-                newTask.setClassName("checked");
+                checkboxImage.setClassName("fa fa-check-square");
             } else {
-                newTask.setClassName("");
+                checkboxImage.setClassName("fa fa-square");
             }
             if (checklistData.tasks.get(i).id != null) {
                 newTask.setId(checklistData.tasks.get(i).id);
@@ -244,7 +254,7 @@ public class ChecklistController {
             taskDescription = "Neue Aufgabe";
         }
         HTMLLIElement newTask = (HTMLLIElement) doc.createElement("li");
-        newTask.setClassName("");
+        newTask.setClassName("unchecked");
         HTMLDivElement description = (HTMLDivElement) doc.createElement("div");
         description.setTextContent(taskDescription);
         newTask.appendChild(description);
@@ -252,34 +262,58 @@ public class ChecklistController {
         //newTask.appendChild(description);
         //newTask.setTextContent(taskDescription);
 
+
+        HTMLElement checkbox = (HTMLElement) doc.createElement("span");
+        HTMLElement checkboxImage = (HTMLElement) doc.createElement("i");
+        //TODO make constant for class name
+        checkboxImage.setClassName("fa fa-square");
+        checkbox.appendChild(checkboxImage);
+/*        Text checkboxText = doc.createTextNode("+");
+        checkbox.appendChild(checkboxText);*/
+        checkbox.setClassName("checkbox");
         userDataTaskList.appendChild(newTask);
         doc.getElementById("newTaskDescription").setTextContent("");
         HTMLElement span = (HTMLElement) doc.createElement("span");
         Text txt = doc.createTextNode("\u00D7");
         span.setClassName("close");
         span.appendChild(txt);
-
+        newTask.appendChild(checkbox);
+        newTask.appendChild(description);
 
         newTask.appendChild(span);
         description.setClassName("editableLI");
         description.setAttribute("contenteditable", "true");
         ((EventTarget) description).addEventListener("focusout", getEditableTaskListener(webView), false);
-        ((EventTarget) newTask).addEventListener("click", getToggleCheckTaskListener("userData", webView), false);
+        ((EventTarget) checkbox).addEventListener("click", getToggleCheckTaskListener("userData", webView), false);
         ((EventTarget) span).addEventListener("click", getCloseButtonListener(webView), false);
         newTAskInputField.setValue("");
+
+        System.out.println("hmmm: " + webView.getEngine().executeScript("document.body.innerHTML"));
         saveUserDataInFile(webView.getEngine().getDocument());
     }
 
     private EventListener getToggleCheckTaskListener(String dataSource, WebView webView) {
         EventListener toggleCheckListener = ev -> {
+            System.out.println("toggleCheckListener: " + webView.getEngine().executeScript("document.body.innerHTML"));
+
             //https:stackoverflow.com/a/13966749
             ev.stopPropagation();
+            System.out.println("EV TARGET: "+ev.getTarget().toString());
+            HTMLElement checkbox = (HTMLElement)ev.getTarget();
+            System.out.println("EV TARGET checkbox: "+ checkbox);
+            System.out.println("EV TARGET checkbox: "+ checkbox.getChildNodes().getLength());
+            System.out.println("EV TARGET checkbox: "+ checkbox.getNodeName());
+
+            if(checkbox.getNodeName().equals("SPAN")) {
+                checkbox = (HTMLElement) checkbox.getFirstChild();
+            }
+
             //https://stackoverflow.com/a/20093950d
-            HTMLLIElement task = (HTMLLIElement) ev.getTarget();
-            if (task.getClassName().equals("checked")) {
-                task.setClassName("");
+            //TODO CONSTANTS
+            if (checkbox.getClassName().equals("fa fa-square")) {
+                checkbox.setClassName("fa fa-check-square");
             } else {
-                task.setClassName("checked");
+                checkbox.setClassName("fa fa-square");
             }
             if (dataSource.equals("predefined")) {
                 savePredefinedDataInFile(webView.getEngine().getDocument());

@@ -1,11 +1,9 @@
 package eventHandling;
 
-import com.intellij.openapi.project.Project;
 import javafx.application.Platform;
 import javafx.scene.web.WebView;
 import org.codefx.libfx.control.webview.WebViewHyperlinkListener;
 import org.codefx.libfx.control.webview.WebViews;
-import provider.RepoLocalStorageDataProvider;
 
 import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
