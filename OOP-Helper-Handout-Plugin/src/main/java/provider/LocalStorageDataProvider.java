@@ -5,7 +5,11 @@ import java.io.File;
 public class LocalStorageDataProvider implements LocalStorageDataProviderInterface {
 
     public static File getHandoutFileDirectory() {
-        return RepoLocalStorageDataProvider.getHandoutHtmlFile();
+        return UserLocalStorageDataProvider.getHandoutHtmlFile();
+    }
+
+    public static File getInitHandoutFileDirectory() {
+        return RepoLocalStorageDataProvider.getHandoutInitFile();
     }
 
     public static File getSpecificAssessmentCriteriaFileDirectory() {

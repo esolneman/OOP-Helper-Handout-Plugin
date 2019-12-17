@@ -24,7 +24,7 @@ public class RepoLocalStorageDataProvider implements RepoLocalStorageDataProvide
         return handoutProject;
     }
 
-    public static File getHandoutHtmlFile(){
+    public static File getHandoutInitFile(){
         File handoutFile = new File(getHandoutHtmlString());
         return handoutFile;
     }

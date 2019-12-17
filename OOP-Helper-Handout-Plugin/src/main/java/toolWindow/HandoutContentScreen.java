@@ -3,6 +3,7 @@ package toolWindow;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
 import controller.DownloadPDFHelper;
+import controller.HandoutController;
 import controller.LinkToHandoutController;
 import gui.PluginWebViewFXPanel;
 import javafx.application.Platform;
@@ -84,6 +85,7 @@ public class HandoutContentScreen extends SimpleToolWindowPanel implements Plugi
     }
 
     public void updateContent() {
+        HandoutController.getInstance().createHandoutFile();
         webViewController.updateWebViewContent();
     }
 }

@@ -58,7 +58,7 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
                 System.out.println("PROJECT LISTENER name: " + project.getName());
                 loggingController.saveDataInLogger(LogDataType.IDE, "IDE VISIBILITY", "closed IDE");
                 //TODO UNCOMMENT
-                //loggingController.syncLoggingData();
+                loggingController.syncLoggingData();
             }
 
             @Override
@@ -95,22 +95,16 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
         toolWindowController.updateContent();
         BalloonPopupController.showNotification(project, notificationMessage, messageType);
 
-        //update toolWindow
-        //
-        /*Path file = Paths.get(repoFile.getAbsolutePath());
-        try {
-            Files.setAttribute(file, "dos:hidden", true);
-        } catch (IOException e) {
-            System.out.print(e);
-        }
-        System.out.println("RepoFile hidden: "+ repoFile.isHidden());*/
+        //TODO Hide Repo File
 
         NotesController notesController = NotesController.getInstance();
         notesController.createNotesFile();
 
         ChecklistController checklistController = ChecklistController.getInstance();
-        //TODO IS NOTCALLED / Called
         checklistController.createChecklistFiles();
+
+        HandoutController handoutController = HandoutController.getInstance();
+        handoutController.createHandoutFile();
     }
 
 

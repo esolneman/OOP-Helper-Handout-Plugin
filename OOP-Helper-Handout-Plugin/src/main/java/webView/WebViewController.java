@@ -135,12 +135,13 @@ public class WebViewController {
                     org.jsoup.nodes.Element ele = handoutContentDocument.getElementById(finalHeading);
                     org.jsoup.nodes.Element mark = handoutContentDocument.createElement("mark");
                     //TODO Sometimes Nullpointer
-                    //TODO insertBefore mark, ele
                     System.out.println("ele : "+ ele);
                     System.out.println("mark: "+ mark.html());
                     System.out.println("mark: "+ mark.toString());
 
-                    ele.child(0).wrap(mark.toString());
+                    if(ele != null){
+                        ele.child(0).wrap(mark.toString());
+                    }
 
                 }
 
@@ -203,7 +204,7 @@ public class WebViewController {
 
     public void updateWebViewContent() {
         // TODO Error once
-        // TODO test if load urlAtring is working
+        // TODO test if load urlstring is working
         if(webView != null){
             Platform.setImplicitExit(false);
             Platform.runLater(() -> {

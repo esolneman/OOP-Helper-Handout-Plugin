@@ -70,7 +70,7 @@ public class HandoutWebViewLinkListener {
                 System.out.println("open external link: " + toBeopen);
                 Platform.setImplicitExit(false);
                 Platform.runLater(() -> {
-                    webView.getEngine().load(urlString);
+                    webView.getEngine().reload();
                 });
                 desktop.browse(address);
             }
