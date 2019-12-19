@@ -68,11 +68,11 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
 
     public void onCloningRepositoryEvent(String notificationMessage, NotificationType messageType)   {
         System.out.println("Performing callback after Asynchronous Task");
-        File repoFile = new File(RepoLocalStorageDataProvider.getRepoLocalFile());
-        repoFile.setExecutable(false);
-        repoFile.setReadable(true);
-        repoFile.setWritable(false);
-        repoFile.setReadOnly();
+        //File repoFile = new File(RepoLocalStorageDataProvider.getRepoLocalFile());
+        //repoFile.setExecutable(false);
+        //repoFile.setReadable(true);
+        //repoFile.setWritable(false);
+        //repoFile.setReadOnly();
         toolWindowController.updateContent();
         BalloonPopupController.showNotification(project, notificationMessage, messageType);
 

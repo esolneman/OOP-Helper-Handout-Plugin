@@ -11,6 +11,9 @@ import provider.helper.DownloadTask;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 
 import static environment.FileConstants.*;
@@ -110,22 +113,17 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
     //https://www.geeksforgeeks.org/checking-internet-connectivity-using-java/
     //TODO Ping Github Repo -> is Repo Available
     public Boolean checkInternetConnection() {
-        Process process;
         try {
-            //TODO was anpingen?
-            process = Runtime.getRuntime().exec("ping www.google.de");
-            int x = process.waitFor();
-            if (x == 0) {
-                System.out.println("Connection Successful, " + "Output was " + x);
-                return true;
-            } else {
-                System.out.println("Internet Not Connected, " + "Output was " + x);
-                return false;
-            }
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            final URL url = new URL("http://www.google.com");
+            final URLConnection conn = url.openConnection();
+            conn.connect();
+            conn.getInputStream().close();
+            return true;
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            return false;
         }
-        return false;
     }
 
     public void addListener(OnGitEventListener listener) {
