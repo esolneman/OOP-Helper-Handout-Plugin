@@ -54,6 +54,7 @@ public class DownloadPDFHelper {
     //called from html
     public void downloadHandout() {
         System.out.println("downloadHandout");
+        LoggingController.getInstance().saveDataInLogger(LogDataType.HANDOUT, "Download PDF", "open File Chooser");
         ApplicationManager.getApplication().invokeLater(() -> {
             String handoutHTMLDirectory = RepoLocalStorageDataProvider.getHandoutHtmlString();
             Project project = RepoLocalStorageDataProvider.getProject();

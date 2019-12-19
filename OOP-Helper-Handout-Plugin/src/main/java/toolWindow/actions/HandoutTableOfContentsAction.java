@@ -16,7 +16,7 @@ public class HandoutTableOfContentsAction extends AnAction {
     @Override
     public void actionPerformed(@NotNull AnActionEvent anActionEvent) {
         String heading = anActionEvent.getPresentation().getText();
-        this.webViewController.goToHeading(heading);
+        //this.webViewController.goToHeading(heading);
     }
 
 }

@@ -67,6 +67,7 @@ public class WebViewController {
         //});
     }
 
+    //TODO remove first if and check if coditions possibilities
     //https://stackoverflow.com/questions/49070734/javafx-webview-link-to-anchor-in-document-doesnt-work-using-loadcontent
     public void goToLocation(String heading, ToolWindow handoutToolWindow, HandoutContentScreen handoutContentScreen) {
         System.out.println("goToLocation: " + heading);
@@ -103,7 +104,6 @@ public class WebViewController {
                 //TODO check source
                 //https://stackoverflow.com/questions/52960101/how-to-edit-html-page-in-a-webview-from-javafx-without-reloading-the-page
                 //https://stackoverflow.com/a/5882802
-                //org.w3c.dom.Document documentJava = webView.getEngine().getDocument();
 
 
                 webView.getEngine().load(newLocation);

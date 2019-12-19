@@ -2,6 +2,7 @@ package controller;
 
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
+import de.ur.mi.pluginhelper.logger.LogDataType;
 import javafx.scene.web.WebView;
 import objects.Checklist;
 import org.w3c.dom.Document;
@@ -290,6 +291,8 @@ public class ChecklistController {
 
         System.out.println("hmmm: " + webView.getEngine().executeScript("document.body.innerHTML"));
         saveUserDataInFile(webView.getEngine().getDocument());
+        LoggingController.getInstance().saveDataInLogger(LogDataType.CHECKLIST, "Checklist add Task", taskDescription);
+
     }
 
     private EventListener getToggleCheckTaskListener(String dataSource, WebView webView) {
@@ -319,7 +322,9 @@ public class ChecklistController {
             if (checkbox.getClassName().equals("fa fa-square")) {
                 checkbox.setClassName("fa fa-check-square");
                 liElement.setClassName("checked");
+                LoggingController.getInstance().saveDataInLogger(LogDataType.CHECKLIST, "Checklist check task", dataSource);
             } else {
+                LoggingController.getInstance().saveDataInLogger(LogDataType.CHECKLIST, "Checklist uncheck task", dataSource);
                 checkbox.setClassName("fa fa-square");
                 liElement.setClassName("unchecked");
 
@@ -342,6 +347,7 @@ public class ChecklistController {
             HTMLUListElement taskList = (HTMLUListElement) task.getParentNode();
             taskList.removeChild(task);
             saveUserDataInFile(webView.getEngine().getDocument());
+            LoggingController.getInstance().saveDataInLogger(LogDataType.CHECKLIST, "Checklist close task", "?");
         };
         return closeListener;
     }
@@ -352,6 +358,8 @@ public class ChecklistController {
             //https:stackoverflow.com/a/13966749
             ev.stopPropagation();
             saveUserDataInFile(webView.getEngine().getDocument());
+            LoggingController.getInstance().saveDataInLogger(LogDataType.CHECKLIST, "Checklist edit task", "?");
+
         };
         return editTaskListener;
     }

@@ -10,6 +10,8 @@ import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import controller.LoggingController;
+import de.ur.mi.pluginhelper.logger.LogDataType;
 import javafx.application.Platform;
 import javafx.scene.web.WebView;
 import org.apache.http.NameValuePair;
@@ -48,10 +50,13 @@ public class HandoutWebViewLinkListener {
             Project project = RepoLocalStorageDataProvider.getProject();
             System.out.println("WebView: Listener: "+ hyperlink);
             if (hyperlink.contains("LinkToCode")) {
+                LoggingController.getInstance().saveDataInLogger(LogDataType.HANDOUT, "Link from Handout To Code", hyperlink);
                 System.out.println("WebView: LinkToCode");
                 handleLinkToCode(hyperlink, project);
             } else {
                 System.out.println("WebView: OtherLinkWebView: OtherLink");
+                LoggingController.getInstance().saveDataInLogger(LogDataType.HANDOUT, "Link to External Webpage", hyperlink);
+
                 handleLinkToExternalWebpage(hyperlink);
             }
             return false;

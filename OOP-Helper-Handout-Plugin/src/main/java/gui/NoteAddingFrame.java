@@ -1,6 +1,8 @@
 package gui;
 
+import controller.LoggingController;
 import controller.NotesController;
+import de.ur.mi.pluginhelper.logger.LogDataType;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -20,6 +22,7 @@ public class NoteAddingFrame {
     private NotesScreen notesScreen;
     private NotesController notesController;
     private static NoteAddingFrame single_instance = null;
+    private LoggingController loggingController;
 
 
     public static NoteAddingFrame getInstance() {
@@ -31,6 +34,7 @@ public class NoteAddingFrame {
 
     private NoteAddingFrame() {
         notesController = NotesController.getInstance();
+        loggingController = LoggingController.getInstance();
         createHtmlEditor();
     }
 
@@ -58,6 +62,7 @@ public class NoteAddingFrame {
         root.setAlignment(Pos.CENTER);
         addEntryButton.setOnAction(event -> {
             NotesController.getInstance().saveNewEntryInFile(htmlEditor.getHtmlText());
+            loggingController.saveDataInLogger(LogDataType.NOTES, "Notes Edited", "htmlEditor.getHtmlText()");
             addNoteFrame.close();
             notesScreen.reloadWebView();
         });
@@ -69,6 +74,7 @@ public class NoteAddingFrame {
 
     //called from html
     public void showAddNoteFrame(){
+        loggingController.saveDataInLogger(LogDataType.NOTES, "Notes Editing Frame", "open");
         addNoteFrame.show();
     }
 }

@@ -9,6 +9,7 @@ import com.intellij.openapi.editor.event.*;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
+import de.ur.mi.pluginhelper.logger.LogDataType;
 import org.jetbrains.annotations.NotNull;
 import toolWindow.HandoutContentScreen;
 
@@ -72,11 +73,13 @@ public class LinkToHandoutController{
         String className = currentFileEditor.getFile().getPresentableName();
         if(selectedText != null) {
             functionAnchor = className + "/" + selectedText;
-            System.out.println("functionAnchorSelect: " + functionAnchor);
         } else {
             functionAnchor = null;
-            System.out.println("functionAnchorSelect: " + functionAnchor);
         }
-        if (functionAnchor != null) {handoutContentScreen.goToLocation(functionAnchor);}
+        System.out.println("functionAnchorSelect: " + functionAnchor);
+        if (functionAnchor != null) {
+            LoggingController.getInstance().saveDataInLogger(LogDataType.HANDOUT, "Link from Code to Handout", functionAnchor);
+            handoutContentScreen.goToLocation(functionAnchor);
+        }
     }
 }
