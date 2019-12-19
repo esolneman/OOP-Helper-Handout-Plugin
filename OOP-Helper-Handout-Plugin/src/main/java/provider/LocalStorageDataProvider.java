@@ -1,26 +1,19 @@
 package provider;
 
-import com.intellij.sisyphus.api.User;
-
 import java.io.File;
-import java.net.URL;
 
 public class LocalStorageDataProvider implements LocalStorageDataProviderInterface {
 
     public static File getHandoutFileDirectory() {
-        return RepoLocalStorageDataProvider.getHandoutHtmlFile();
+        return UserLocalStorageDataProvider.getHandoutHtmlFile();
     }
 
-    public static String getHandoutStringDirectory() {
-        return RepoLocalStorageDataProvider.getHandoutHtmlString();
+    public static File getInitHandoutFileDirectory() {
+        return RepoLocalStorageDataProvider.getHandoutInitFile();
     }
 
     public static File getSpecificAssessmentCriteriaFileDirectory() {
         return RepoLocalStorageDataProvider.getSpecificAssessmentCriteriaFile();
-    }
-
-    public static File getShortcutFileDirectory() {
-        return RepoLocalStorageDataProvider.getShortcutFileDirectory();
     }
 
     public static File getCommonAssessmentCriteriaFileDirectory() {
@@ -38,14 +31,6 @@ public class LocalStorageDataProvider implements LocalStorageDataProviderInterfa
 
     public static File getLocalChecklistPredefinedData() {
         return UserLocalStorageDataProvider.getPredefinedChecklistFile();
-    }
-
-    public static File getCodingStylesFileDirectory() {
-        return RepoLocalStorageDataProvider.getCodingStylesFile();
-    }
-
-    public static File getVariablesDirectory() {
-        return RepoLocalStorageDataProvider.getVariablesFile();
     }
 
     public static File getNotesFile() {
@@ -68,4 +53,6 @@ public class LocalStorageDataProvider implements LocalStorageDataProviderInterfa
 
     public static File getLocalUserDataChecklistFile() { return UserLocalStorageDataProvider.getUserDataChecklist();}
 
+    public static File getTutorialDirectory() { return RepoLocalStorageDataProvider.getTutorialFile();
+    }
 }

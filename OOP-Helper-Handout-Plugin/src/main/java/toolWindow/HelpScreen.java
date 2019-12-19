@@ -2,8 +2,10 @@ package toolWindow;
 
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
+import eventHandling.HelpWebViewLinkListener;
 import gui.PluginWebViewFXPanel;
 import javafx.application.Platform;
+import javafx.concurrent.Worker;
 import javafx.scene.web.WebView;
 import provider.LocalStorageDataProvider;
 import webView.WebViewController;
@@ -16,11 +18,11 @@ public class HelpScreen extends SimpleToolWindowPanel {
     private ToolWindow handoutToolWindow;
     private String variablesDirectory;
     private String codingstylesDirectory;
-    private String shortcutDirectory;
+    private static String tutorialDirectory;
     private String startPageDirectory;
     private SimpleToolWindowPanel toolWindowPanel;
     private static WebView webView;
-    private WebViewController webViewController;
+    private static WebViewController webViewController;
     private JPanel panel;
 
 
@@ -32,7 +34,7 @@ public class HelpScreen extends SimpleToolWindowPanel {
         handoutToolWindow = toolWindow;
         try {
             startPageDirectory = LocalStorageDataProvider.getHelpStartDirectory().toURI().toURL().toString();
-
+            tutorialDirectory = LocalStorageDataProvider.getTutorialDirectory().toURI().toURL().toString();
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -50,19 +52,20 @@ public class HelpScreen extends SimpleToolWindowPanel {
         Platform.setImplicitExit(false);
         Platform.runLater(() -> {
             webView = webViewController.createHelpWebView(startPageDirectory);
-/*            webView.getEngine().getLoadWorker().stateProperty().addListener(
-                    (ov, oldState, newState) -> {
+            webView.getEngine().getLoadWorker().stateProperty().addListener((ov, oldState, newState) -> {
                         if (newState == Worker.State.SUCCEEDED) {
-                            webView.getEngine().executeScript("getNavBar()");
+
                         }
                     }
-            );*/
-
-            //webView.getEngine().load(strpath);
+            );
 
             criteriaContent.showHandoutWebView(startPageDirectory, webView);
 
         });
+    }
+
+    public static void displayTutorial(){
+        webViewController.loadNewURL(tutorialDirectory);
     }
 
     public JComponent getToolbar() {

@@ -1,11 +1,9 @@
 package eventHandling;
 
-import com.intellij.openapi.project.Project;
 import javafx.application.Platform;
 import javafx.scene.web.WebView;
 import org.codefx.libfx.control.webview.WebViewHyperlinkListener;
 import org.codefx.libfx.control.webview.WebViews;
-import provider.RepoLocalStorageDataProvider;
 
 import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
@@ -13,6 +11,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+//TODO Constants
 public class HelpWebViewLinkListener {
 
     private WebView webView;
@@ -28,9 +27,7 @@ public class HelpWebViewLinkListener {
         WebViewHyperlinkListener eventPrintingListener = event -> {
             //TODO: Refactor variable name
             String hyperlink = event.getURL().toString();
-            System.out.println("HELP WebView: Listener: "+ hyperlink);
             if (hyperlink.contains("http://") || hyperlink.contains("https://") || hyperlink.contains("mailto")) {
-                System.out.println("WebView: Link to externalPAge");
                 handleLinkToExternalWebpage(hyperlink);
             }
             return false;
@@ -46,7 +43,6 @@ public class HelpWebViewLinkListener {
         try {
             Desktop desktop = Desktop.getDesktop();
             URI address = new URI(toBeopen);
-                System.out.println("open external link: " + toBeopen);
                 Platform.setImplicitExit(false);
                 Platform.runLater(() -> {
                     webView.getEngine().load(urlString);
