@@ -289,7 +289,6 @@ public class ChecklistController {
         ((EventTarget) span).addEventListener("click", getCloseButtonListener(webView), false);
         newTAskInputField.setValue("");
 
-        System.out.println("hmmm: " + webView.getEngine().executeScript("document.body.innerHTML"));
         saveUserDataInFile(webView.getEngine().getDocument());
         LoggingController.getInstance().saveDataInLogger(LogDataType.CHECKLIST, "Checklist add Task", taskDescription);
 

@@ -46,7 +46,6 @@ public class HandoutWebViewLinkListener {
         WebViewHyperlinkListener eventPrintingListener = event -> {
             //TODO: Refactor variable name
             String hyperlink = event.getURL().toString();
-            System.out.println("LINK: " + hyperlink);
             Project project = RepoLocalStorageDataProvider.getProject();
             System.out.println("WebView: Listener: "+ hyperlink);
             if (hyperlink.contains("LinkToCode")) {

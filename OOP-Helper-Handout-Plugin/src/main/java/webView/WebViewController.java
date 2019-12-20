@@ -61,8 +61,8 @@ public class WebViewController {
         //Platform.setImplicitExit(false);
         //Platform.runLater(() -> {
         webView = new WebView();
-        HelpWebViewLinkListener webViewLinkListener = new HelpWebViewLinkListener(webView, urlString);
-        webViewLinkListener.createListener();
+        //HelpWebViewLinkListener webViewLinkListener = new HelpWebViewLinkListener(webView, urlString);
+        //webViewLinkListener.createListener();
         return webView;
         //});
     }

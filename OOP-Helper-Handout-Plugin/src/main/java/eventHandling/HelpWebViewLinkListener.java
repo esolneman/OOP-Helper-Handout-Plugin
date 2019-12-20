@@ -33,9 +33,7 @@ public class HelpWebViewLinkListener {
             return false;
         };
         //TODO METHOD FOR THIS IN WEBVIEW CONTROOLER
-        WebViews.addHyperlinkListener(
-                webView, eventPrintingListener,
-                HyperlinkEvent.EventType.ACTIVATED);
+            WebViews.addHyperlinkListener(webView, eventPrintingListener, HyperlinkEvent.EventType.ACTIVATED);
     }
 
 

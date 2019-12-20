@@ -52,14 +52,16 @@ public class HelpScreen extends SimpleToolWindowPanel {
         Platform.setImplicitExit(false);
         Platform.runLater(() -> {
             webView = webViewController.createHelpWebView(startPageDirectory);
-            webView.getEngine().getLoadWorker().stateProperty().addListener((ov, oldState, newState) -> {
-                        if (newState == Worker.State.SUCCEEDED) {
-
-                        }
-                    }
-            );
-
             criteriaContent.showHandoutWebView(startPageDirectory, webView);
+            final WebView currentWebView = webView;
+            webView.getEngine().getLoadWorker().stateProperty().addListener((ov, oldState, newState) -> {
+                if (newState == Worker.State.SUCCEEDED) {
+                    if(webView.getEngine().getDocument() != null) {
+                        HelpWebViewLinkListener webViewLinkListener = new HelpWebViewLinkListener(currentWebView, startPageDirectory);
+                        webViewLinkListener.createListener();
+                    }
+                }
+            });
 
         });
     }

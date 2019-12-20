@@ -41,17 +41,10 @@ public class NotesController {
     }
 
     public void setWebView(WebView webView) {
-        System.out.println(" setWebView WebView: " + webView);
         this.webView = webView;
     }
 
     public void saveNewEntryInFile(String htmlText) {
-/*        PrintStream printStream = null;
-        try {
-            printStream = new PrintStream(System.out, true, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }*/
         //TODO Subtitle and Title as param
         // https://stackoverflow.com/a/20243062
         byte[] ptext = htmlText.getBytes(ISO_8859_1);
@@ -82,14 +75,6 @@ public class NotesController {
     }
 
     public Document getCurrentNotesDocument() {
-        /*
-        //https://jsoup.org/cookbook/input/parse-document-from-string
-        Document doc = null;
-        try {
-            doc = Jsoup.parse(notesLocalFile, "UTF-8");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
         Document doc = webView.getEngine().getDocument();
         return doc;
     }
