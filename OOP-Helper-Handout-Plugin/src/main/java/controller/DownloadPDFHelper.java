@@ -39,12 +39,10 @@ public class DownloadPDFHelper {
         if (single_instance == null) {
             single_instance = new DownloadPDFHelper();
         }
-        System.out.println("DownloadPDFHelper getInstance");
         return single_instance;
     }
 
     private DownloadPDFHelper(){
-        System.out.println("DownloadPDFHelper");
     }
 
     public void setContent(HandoutContentScreen handoutContentScreen){
@@ -53,7 +51,6 @@ public class DownloadPDFHelper {
 
     //called from html
     public void downloadHandout() {
-        System.out.println("downloadHandout");
         LoggingController.getInstance().saveDataInLogger(LogDataType.HANDOUT, "Download PDF", "open File Chooser");
         ApplicationManager.getApplication().invokeLater(() -> {
             String handoutHTMLDirectory = RepoLocalStorageDataProvider.getHandoutHtmlString();
@@ -86,7 +83,6 @@ public class DownloadPDFHelper {
     }
 
     private void showDownloadDialog() {
-        System.out.println(" showDownloadDialog");
         ApplicationManager.getApplication().invokeLater(() -> {
             JComponent handoutContentScreen = ToolWindowManager.getActiveToolWindow().getComponent();
             System.out.println(" handoutContentScreen: " + handoutContentScreen.toString());

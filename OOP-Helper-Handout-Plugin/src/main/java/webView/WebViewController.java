@@ -117,32 +117,13 @@ public class WebViewController {
 
                 deleteExistingMarkTag(handoutContentDocument);
 
-
-
-                //TODO Sometimes Nullpointer
                 if(handoutContentDocument != null){
-
-
-/*                  Element parentElement = (Element) ele.getParentNode();
-                    parentElement.insertBefore(mark, ele);
-                    mark.appendChild(ele);
-                    */
-
-                    //TODO WRAP
                     //https://jsoup.org/cookbook/modifying-data/set-html
-
-
                     org.jsoup.nodes.Element ele = handoutContentDocument.getElementById(finalHeading);
                     org.jsoup.nodes.Element mark = handoutContentDocument.createElement("mark");
-                    //TODO Sometimes Nullpointer
-                    System.out.println("ele : "+ ele);
-                    System.out.println("mark: "+ mark.html());
-                    System.out.println("mark: "+ mark.toString());
-
                     if(ele != null){
                         ele.child(0).wrap(mark.toString());
                     }
-
                 }
 
                 //https://stackoverflow.com/a/1001568
@@ -180,26 +161,6 @@ public class WebViewController {
             codeElement.text(link.child(0).text());
             markElements.parents().get(0).html(codeElement.toString());
         }
-    }
-
-    public void goToHeading(String heading){
-        System.out.println("goToHeading heading: " + heading);
-        //TODO: check or if (class ref)
-        if(heading.contains(" ")){
-            System.out.println("goToHeading heading contains space: " + heading);
-            //https://stackoverflow.com/a/1892778
-            heading = WordUtils.capitalize(heading);
-            //https://stackoverflow.com/a/15633284
-            heading = heading.replaceAll("\\s+","");
-        }
-        String newLocation = urlString + "#" + heading;
-        System.out.println(newLocation);
-        Platform.setImplicitExit(false);
-        Platform.runLater(() -> {
-            //TODO new method
-            webView.getEngine().load(newLocation);
-        });
-
     }
 
     public void updateWebViewContent() {
