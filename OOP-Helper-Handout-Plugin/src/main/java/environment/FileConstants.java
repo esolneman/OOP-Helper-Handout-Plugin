@@ -6,7 +6,7 @@ public class FileConstants {
     private FileConstants() {
     }
 
-    public static final String LOCAL_STORAGE_FILE = "/HelperHandoutPluginContentData";
+    public static final String LOCAL_STORAGE_FILE = ".idea/OOP_Plugin";
     public static final String REPO_LOCAL_STORAGE_FILE = "/RepoLocalStorage";
     public static final String USER_LOCAL_STORAGE_FILE = "/UserLocalStorage";
 
