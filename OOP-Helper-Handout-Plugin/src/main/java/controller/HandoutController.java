@@ -23,6 +23,7 @@ public class HandoutController {
     }
 
     public void createHandoutFile() {
+        //TODO TO FILE CONTROLLER MKDIRS
         handoutLocalFile.getParentFile().mkdirs();
         try {
             handoutLocalFile.createNewFile();

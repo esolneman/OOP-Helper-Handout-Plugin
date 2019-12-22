@@ -115,6 +115,8 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
             e.printStackTrace();
         }
         commitChangesDialog.showPanel();
+        QuestionnaireController.getInstance().compareDates();
+
     }
 
     @Override
