@@ -2,11 +2,12 @@ package environment;
 
 public class FileConstants {
 
+
     //prevent instantiation
     private FileConstants() {
     }
 
-    public static final String LOCAL_STORAGE_FILE = ".idea/OOP_Plugin";
+    public static final String LOCAL_STORAGE_FILE = "/.idea/OOP_Plugin";
     public static final String REPO_LOCAL_STORAGE_FILE = "/RepoLocalStorage";
     public static final String USER_LOCAL_STORAGE_FILE = "/UserLocalStorage";
 
@@ -23,6 +24,7 @@ public class FileConstants {
 
     public static final String TUTORIAL_FILE_NAME = "/common_information/tutorial.html";
 
+    public static final String PROJECT_CREATION_DATE_FILE = "creationDate.txt";
 
 
     public static final String HANDOUT_PDF_FILE_NAME = "/handout.pdf";

@@ -55,4 +55,8 @@ public class LocalStorageDataProvider implements LocalStorageDataProviderInterfa
 
     public static File getTutorialDirectory() { return RepoLocalStorageDataProvider.getTutorialFile();
     }
+
+    public static File getProjectCreationDateDirectory() {
+        return UserLocalStorageDataProvider.getProjectCreationDateFile();
+    }
 }
