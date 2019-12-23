@@ -1,5 +1,8 @@
 package controller;
 
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.wm.ToolWindowType;
+import gui.QuestionnaireDialog;
 import provider.LocalStorageDataProvider;
 
 import java.io.File;
@@ -10,7 +13,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -57,8 +59,9 @@ public class QuestionnaireController {
         cal.add(Calendar.DAY_OF_MONTH, 3);
         Date dateForQuestionnaireString = cal.getTime();
         System.out.println("Date Incremented by three: "+ dateForQuestionnaireString);
-
-
+        ApplicationManager.getApplication().invokeLater(() -> {
+            QuestionnaireDialog.main(null);
+        });
 
         //https://stackoverflow.com/a/1053475
         try (PrintWriter out = new PrintWriter(projectCreationDateFile)) {
@@ -76,9 +79,10 @@ public class QuestionnaireController {
         Calendar currentDateCalender = Calendar.getInstance();
         Date currentDate = currentDateCalender.getTime();
         try {
+            //https://www.geeksforgeeks.org/different-ways-reading-text-file-java/
             projectCreationDate = new String(Files.readAllBytes(Paths.get(projectCreationDateFile.getAbsolutePath())));
 
-
+            //https://beginnersbook.com/2017/10/java-add-days-to-date/
             try {
                 cal.setTime(sdf.parse(projectCreationDate));
             } catch (ParseException e) {
@@ -88,10 +92,10 @@ public class QuestionnaireController {
             cal.add(Calendar.DAY_OF_MONTH, 3);
             Date dateForQuestionnaireString = cal.getTime();
             System.out.println("Date Incremented by three: "+ dateForQuestionnaireString);
-
+            //https://www.mkyong.com/java/how-to-compare-dates-in-java/
             if (dateForQuestionnaireString.after(currentDate) || dateForQuestionnaireString.equals(currentDate)) {
                 System.out.println("Date1 is after Date2");
-                //TODO show message with link to q
+                QuestionnaireDialog questionnaireDialog = new QuestionnaireDialog();
                 saveDateInFile(sdf.format(currentDateCalender.getTime()));
             }
 

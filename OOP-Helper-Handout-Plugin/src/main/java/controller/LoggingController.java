@@ -31,7 +31,7 @@ public class LoggingController {
     }
 
     // Nutzer erstellen oder laden
-    private User getCurrentUser(){
+    public User getCurrentUser(){
         user = de.ur.mi.pluginhelper.User.User.getLocalUser();
         return user;
     }
