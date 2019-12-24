@@ -11,7 +11,7 @@ import java.awt.event.*;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-import static environment.Messages.QUESTIONNAIRE_URL_BASE;
+import static environment.Messages.*;
 
 public class QuestionnaireDialog extends JDialog {
     private JPanel contentPane;
@@ -56,14 +56,10 @@ public class QuestionnaireDialog extends JDialog {
     }
 
     private void initDescriptionText() {
-        this.setTitle("Teilnahme am Zwischenfragebogen");
+        this.setTitle(QUESTIONNAIRE_TITLE);
         linkText.setContentType("text/html");
         //https://stackoverflow.com/questions/8348063/clickable-links-in-joptionpane
-        linkText.setText(" <html><body>" //
-                + "Bitte f&uuml;lle den Zwischenfragebogen aus: <br> <br>" +
-                "<a href=" + QUESTIONNAIRE_URL_BASE + LoggingController.getInstance().getCurrentUser().getID() + "> Link zum Zwischenfragebogen </a>" //
-                + "<br> <br> Vielen Dank f&uuml;r deine Teilnahme an der Studie und weiterhin \n viel Erfolg bei der Bearbeitung der Studienleistung" +//
-                "</body> </html>");
+        linkText.setText(QUESTIONNAIRE_DESCRIPTION_START + QUESTIONNAIRE_URL_BASE + LoggingController.getInstance().getCurrentUser().getID() + QUESTIONNAIRE_DESCRIPTION_END);
         linkText.setEditable(false);
     }
 

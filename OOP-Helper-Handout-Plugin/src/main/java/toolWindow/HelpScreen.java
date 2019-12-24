@@ -6,6 +6,7 @@ import eventHandling.HelpWebViewLinkListener;
 import gui.PluginWebViewFXPanel;
 import javafx.application.Platform;
 import javafx.concurrent.Worker;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.web.WebView;
 import provider.LocalStorageDataProvider;
 import webView.WebViewController;
@@ -59,6 +60,12 @@ public class HelpScreen extends SimpleToolWindowPanel {
                     if(webView.getEngine().getDocument() != null) {
                         HelpWebViewLinkListener webViewLinkListener = new HelpWebViewLinkListener(currentWebView, startPageDirectory);
                         webViewLinkListener.createListener();
+                        currentWebView.addEventFilter(ScrollEvent.SCROLL_STARTED, (ScrollEvent e) -> {
+                            System.out.println("Scroll start");
+                        });
+                        currentWebView.addEventFilter(ScrollEvent.SCROLL_FINISHED, (ScrollEvent e) -> {
+                            System.out.println("Scroll finish");
+                        });
                     }
                 }
             });
