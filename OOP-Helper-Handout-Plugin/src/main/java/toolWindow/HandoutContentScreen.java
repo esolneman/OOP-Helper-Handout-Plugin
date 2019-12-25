@@ -2,16 +2,15 @@ package toolWindow;
 
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
-import controller.DownloadPDFHelper;
-import controller.HandoutController;
-import controller.LinkToHandoutController;
-import controller.LoggingController;
+import controller.*;
 import de.ur.mi.pluginhelper.logger.LogDataType;
 import gui.PluginWebViewFXPanel;
 import javafx.application.Platform;
 import javafx.concurrent.Worker;
 import javafx.event.Event;
+import javafx.event.EventType;
 import javafx.scene.control.ScrollBar;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.web.WebView;
@@ -31,6 +30,7 @@ public class HandoutContentScreen extends SimpleToolWindowPanel implements Plugi
     private String urlString;
     private static WebView webView;
     private WebViewController webViewController;
+    private LoggingWebViewController loggingWebViewController;
 
     private SimpleToolWindowPanel toolWindowPanel;
     public HandoutContentScreen(ToolWindow toolWindow){
@@ -63,28 +63,10 @@ public class HandoutContentScreen extends SimpleToolWindowPanel implements Plugi
                 if (newState == Worker.State.SUCCEEDED) {
                     LinkToHandoutController linkToHandoutController = new LinkToHandoutController(RepoLocalStorageDataProvider.getProject(), this);
                     initDownloadButtonListener();
-                    webView.addEventHandler(Event.ANY, e -> {
-                        System.out.println("handoutContent Scroll any: " + e.getEventType().getName());
-                        LoggingController.getInstance().saveDataInLogger(LogDataType.HANDOUT, "Scroll Event", e.getEventType().getName());
-                    });
 
-                    webView.addEventHandler(MouseEvent.MOUSE_ENTERED, mouseEvent -> {
-                        LoggingController.getInstance().saveDataInLogger(LogDataType.HANDOUT, "MOUSE_Event", "MOUSE_ENTERED");
-
-                    });
-
-                    webView.addEventHandler(MouseEvent.MOUSE_EXITED, mouseEvent -> {
-                        LoggingController.getInstance().saveDataInLogger(LogDataType.HANDOUT, "MOUSE_Event", "MOUSE_EXITED");
-
-                    });
-                    final ScrollBar expectedScrollBarV = (ScrollBar)webView.lookup(".scroll-bar:vertical");
-                    System.out.println("expectedScrollBarV : " + expectedScrollBarV);
-                    final ScrollBar actualScrollBarH = (ScrollBar)webView.lookup(".scroll-bar:horizontal");
-                    expectedScrollBarV.setOnScrollStarted(scrollEvent -> {
-                        System.out.println("expectedScrollBarV scrollEvent: " + scrollEvent.getEventType());
-                    });
-
-
+                    loggingWebViewController = new LoggingWebViewController(webView, LogDataType.HANDOUT);
+                    loggingWebViewController.addLoggingKeyEvents();
+                    loggingWebViewController.addLoggingMouseEvents();
                 }
             });
             //initDownloadButtonListener();
