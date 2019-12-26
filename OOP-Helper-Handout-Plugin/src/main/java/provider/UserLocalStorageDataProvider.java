@@ -31,4 +31,14 @@ public class UserLocalStorageDataProvider implements UserLocalStorageDataProvide
         File predefinedChecklist = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + USER_LOCAL_STORAGE_FILE + USER_CHECKLIST_HTML_FILE);
         return predefinedChecklist;
     }
+
+    public static File getHandoutHtmlFile() {
+        File handoutFile = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + USER_LOCAL_STORAGE_FILE + HANDOUT_FILE_NAME);
+        return handoutFile;
+    }
+
+    public static File getProjectCreationDateFile() {
+        File projectCreationDateFile = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + USER_LOCAL_STORAGE_FILE + PROJECT_CREATION_DATE_FILE);
+        return projectCreationDateFile;
+    }
 }

@@ -4,6 +4,10 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.wm.ToolWindow;
+import com.intellij.openapi.wm.ToolWindowManager;
+import com.intellij.openapi.wm.ToolWindowType;
+import toolWindow.HelpScreen;
 
 public class HandoutMenuTutorial extends AnAction {
     public HandoutMenuTutorial() {
@@ -15,6 +19,17 @@ public class HandoutMenuTutorial extends AnAction {
         System.out.println("greetingEvent");
 
         Project project = event.getProject();
-        Messages.showMessageDialog(project, "Hello world!", "Greeting", Messages.getInformationIcon());
+        ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow("Aufgabe (OOP)");
+        if(toolWindow.isVisible()) {
+            //open HandoutToolWindow and select the correct tab
+            toolWindow.getContentManager().setSelectedContent(toolWindow.getContentManager().getContent(3));
+        }else{
+            toolWindow.activate(() -> {
+                toolWindow.show(null);
+                //https://intellij-support.jetbrains.com/hc/en-us/community/posts/206383859-How-to-float-tool-window-programatically-
+                toolWindow.setType(ToolWindowType.DOCKED, null);
+            });
+        }
+        HelpScreen.displayTutorial();
     }
 }
