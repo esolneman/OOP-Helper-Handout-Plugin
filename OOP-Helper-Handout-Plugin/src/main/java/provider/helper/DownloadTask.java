@@ -19,11 +19,6 @@ public class DownloadTask {
     private static DownloadTask single_instance = null;
     private static Git clone;
 
-   /* public DownloadTask(String path) {
-        this.path = path;
-    }*/
-
-
     public static DownloadTask getInstance() {
         if (single_instance == null) {
             single_instance = new DownloadTask();
@@ -32,7 +27,6 @@ public class DownloadTask {
     }
 
     private DownloadTask() { }
-
 
     //TODO ADD SOURCE
     public void run(String repoUrl, File contentRepoFile, String branchPath) throws IOException {
@@ -68,9 +62,7 @@ public class DownloadTask {
             Repository repository = git.getRepository();
             Ref head = repository.getAllRefs().get("HEAD");
             String lastLocalCommitId = head.getObjectId().getName();
-            System.out.println("Ref of HEAD: " + lastLocalCommitId);
             git.fetch().call();
-            System.out.println("git.fetch Branch: " + git.getRepository().getBranch());
             Iterable<RevCommit> logs = git.log().call();
             //TODO ADD SOURCE
             logs = git.log()

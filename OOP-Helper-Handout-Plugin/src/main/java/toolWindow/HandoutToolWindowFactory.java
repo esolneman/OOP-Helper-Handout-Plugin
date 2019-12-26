@@ -3,6 +3,7 @@ package toolWindow;
 import com.intellij.openapi.actionSystem.ActionManager;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.wm.FocusWatcher;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.openapi.wm.ex.ToolWindowEx;
@@ -14,10 +15,14 @@ import controller.LoggingController;
 import de.ur.mi.pluginhelper.logger.LogDataType;
 import eventHandling.OnToolWindowCreatedListener;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import services.ToolWindowServiceInterface;
 
+import javax.swing.*;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
+import java.awt.*;
+import java.awt.event.FocusEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,47 +75,54 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, ToolWindowSe
 
             @Override
             public void selectionChanged(@NotNull ContentManagerEvent event) {
-                System.out.println("in: selectionChanged");
                 if (event.getContent().isSelected()) {
-                    System.out.println("Current Component Gained: \"" + event.getContent().getDisplayName() + "\"");
-                    loggingController.saveDataInLogger(LogDataType.CUSTOM, "focus lost", event.getContent().getDisplayName());
+                    loggingController.saveDataInLogger(LogDataType.TOOL_WINDOW, "tab focus lost", event.getContent().getDisplayName());
                 } else {
-                    System.out.println("Current Component Lost: \"" + event.getContent().getDisplayName() + "\"");
-                    loggingController.saveDataInLogger(LogDataType.CUSTOM, "focus gained", event.getContent().getDisplayName());
+                    loggingController.saveDataInLogger(LogDataType.TOOL_WINDOW, "tab focus gained", event.getContent().getDisplayName());
                 }
             }
         });
 
-/*        new FocusWatcher(){
+        new FocusWatcher(){
             @Override
             protected void focusLostImpl(final FocusEvent e){
-                System.out.println("toolWindow Lost Visi: \"" + toolWindow.getComponent().isVisible());
-                System.out.println("toolWindow Lost: \"" + e.toString());
+                loggingController.saveDataInLogger(LogDataType.TOOL_WINDOW, "tool window focus", "tool window unfocused");
             }
 
             @Override
+            //https://intellij-support.jetbrains.com/hc/en-us/community/posts/360000018010/comments/360000025810
             protected void focusedComponentChanged(Component focusedComponent, @Nullable AWTEvent cause) {
                 if (focusedComponent != null && SwingUtilities.isDescendingFrom(focusedComponent, toolWindow.getComponent())) {
-                    System.out.println("toolWindow Gained: \"" + focusedComponent.isVisible());
+                    loggingController.saveDataInLogger(LogDataType.TOOL_WINDOW, "tool window focus", "tool window focused");
+
                 }
             }
-        }.install(toolWindow.getComponent());*/
+        }.install(toolWindow.getComponent());
 
+        toolWindow.getComponent().addPropertyChangeListener(propertyChangeEvent -> {
+            System.out.println("addPropertyChangeListener toolWindow: " + propertyChangeEvent.getPropertyName());
+
+        });
+
+
+        //TODO MAYBE REFACTOR
+        //logged open and close of tool window
         toolWindow.getComponent().addAncestorListener(new AncestorListener() {
             @Override
             public void ancestorAdded(AncestorEvent ancestorEvent) {
                 System.out.println("ancestorAdded toolWindow: " + toolWindow.isVisible());
-                loggingController.saveDataInLogger(LogDataType.CUSTOM, "Tool Window Visibility", "closed");
+                loggingController.saveDataInLogger(LogDataType.TOOL_WINDOW, "Tool Window Visibility", String.valueOf(toolWindow.isVisible()));
             }
 
             @Override
             public void ancestorRemoved(AncestorEvent ancestorEvent) {
                 System.out.println("ancestorRemoved toolWindow: " + toolWindow.isVisible());
-                loggingController.saveDataInLogger(LogDataType.CUSTOM, "Tool Window Visibility", "opened");
+                loggingController.saveDataInLogger(LogDataType.TOOL_WINDOW, "Tool Window Visibility", String.valueOf(toolWindow.isVisible()));
             }
 
             @Override
-            public void ancestorMoved(AncestorEvent ancestorEvent) {}
+            public void ancestorMoved(AncestorEvent ancestorEvent) {
+            }
         });
     }
 

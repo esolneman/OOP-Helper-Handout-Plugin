@@ -2,10 +2,15 @@ package toolWindow;
 
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
+import controller.LinkToHandoutController;
+import controller.LoggingWebViewController;
+import de.ur.mi.pluginhelper.logger.LogDataType;
 import gui.PluginWebViewFXPanel;
 import javafx.application.Platform;
+import javafx.concurrent.Worker;
 import javafx.scene.web.WebView;
 import provider.LocalStorageDataProvider;
+import provider.RepoLocalStorageDataProvider;
 import webView.WebViewController;
 
 import javax.swing.*;
@@ -20,6 +25,7 @@ public class SpecificAssessmentCriteriaScreen extends SimpleToolWindowPanel{
     private SimpleToolWindowPanel toolWindowPanel;
     private static WebView webView;
     private WebViewController webViewController;
+    private LoggingWebViewController loggingWebViewController;
 
     public SpecificAssessmentCriteriaScreen(ToolWindow toolWindow){
         super(true, true);
@@ -46,6 +52,13 @@ public class SpecificAssessmentCriteriaScreen extends SimpleToolWindowPanel{
         Platform.setImplicitExit(false);
         Platform.runLater(() -> {
             webView = webViewController.createWebView(urlString);;
+            webView.getEngine().getLoadWorker().stateProperty().addListener((ov, oldState, newState) -> {
+                if (newState == Worker.State.SUCCEEDED) {
+                    loggingWebViewController = new LoggingWebViewController(webView, LogDataType.ASSESSMENT_CRITERIA);
+                    loggingWebViewController.addLoggingKeyEvents();
+                    loggingWebViewController.addLoggingMouseEvents();
+                }
+            });
             assessmentContent.showHandoutWebView(urlString, webView);
         });
     }

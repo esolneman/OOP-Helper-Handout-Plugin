@@ -2,14 +2,18 @@ package toolWindow;
 
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
+import controller.LinkToHandoutController;
+import controller.LoggingWebViewController;
+import controller.NotesController;
+import de.ur.mi.pluginhelper.logger.LogDataType;
 import gui.NoteAddingFrame;
 import gui.PluginWebViewFXPanel;
 import javafx.application.Platform;
-import javafx.scene.web.HTMLEditor;
+import javafx.concurrent.Worker;
 import javafx.scene.web.WebView;
 import netscape.javascript.JSObject;
-import objects.Notes;
 import provider.LocalStorageDataProvider;
+import provider.RepoLocalStorageDataProvider;
 import webView.WebViewController;
 
 import javax.swing.*;
@@ -20,19 +24,12 @@ public class NotesScreen extends SimpleToolWindowPanel {
     private PluginWebViewFXPanel notesContent;
     private ToolWindow noteToolWindow;
     private SimpleToolWindowPanel toolWindowPanel;
-    private File notesFile;
-    private Notes notes;
-    private JList notesList;
-    private JPanel noteContentPane;
-    private JScrollPane notesScrollPane;
-    private JTextArea textArea1;
-    private HTMLEditor htmlEditor;
     private static File initNotesFile;
     private WebViewController webViewController;
     private String notesHtmlString;
-    private File htmlFile;
     private static WebView webView;
     private NoteAddingFrame noteAddingFrame;
+    private LoggingWebViewController loggingWebViewController;
 
     public NotesScreen(ToolWindow toolWindow) {
         super(true, true);
@@ -47,21 +44,7 @@ public class NotesScreen extends SimpleToolWindowPanel {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-
-        noteContentPane = new JPanel();
-
         //TODO DISPLAY SOMETHING WHEN FILE IS EMPTY
-/*       //TODO Write in Handler
-        // compare with notesController
-        //https://www.mkyong.com/java/how-do-convert-java-object-to-from-json-format-gson-api/
-        Gson gson = new Gson();
-        try (Reader reader = new FileReader(notesFile.getPath())) {
-            // Convert JSON File to Java Object
-            notes = gson.fromJson(reader, Notes.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
-
         createContent();
         initToolWindowMenu();
     }
@@ -77,14 +60,18 @@ public class NotesScreen extends SimpleToolWindowPanel {
         Platform.runLater(() -> {
             webView = webViewController.createWebView(notesHtmlString);
             notesContent.showHandoutWebView(notesHtmlString, webView);
-            initEditNotesButtonListener();
+            webView.getEngine().getLoadWorker().stateProperty().addListener((ov, oldState, newState) -> {
+                if (newState == Worker.State.SUCCEEDED) {
+                    NotesController.getInstance().setWebView(webView);
+                    initEditNotesButtonListener();
+                }
+            });
         });
     }
 
     //https://stackoverflow.com/a/34547416
     //create listener for "edit-notes" button in webView
     private void initEditNotesButtonListener() {
-        System.out.println("initEditNotesButtonListener");
         noteAddingFrame = NoteAddingFrame.getInstance();
         noteAddingFrame.setNotesScreen(this);
         JSObject window = (JSObject) webView.getEngine().executeScript("window");
@@ -95,7 +82,8 @@ public class NotesScreen extends SimpleToolWindowPanel {
     //TODO NOOOOOO
     // OVERRITE WHEN HANDOUT DATA IS UPDATED
     // PREVENT THIS FROM HAPPENING
-    public void updateContent() { }
+    public void updateContent() {
+    }
 
     public JPanel getContent() {
         return toolWindowPanel;
@@ -107,6 +95,13 @@ public class NotesScreen extends SimpleToolWindowPanel {
     public void reloadWebView() {
         Platform.runLater(() -> {
             webView = webViewController.createWebView(notesHtmlString);
+            webView.getEngine().getLoadWorker().stateProperty().addListener((ov, oldState, newState) -> {
+                if (newState == Worker.State.SUCCEEDED) {
+                    loggingWebViewController = new LoggingWebViewController(webView, LogDataType.NOTES);
+                    loggingWebViewController.addLoggingKeyEvents();
+                    loggingWebViewController.addLoggingMouseEvents();
+                }
+            });
             notesContent.showHandoutWebView(notesHtmlString, webView);
             initEditNotesButtonListener();
         });

@@ -2,6 +2,7 @@ package provider;
 
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.project.Project;
+import controller.QuestionnaireController;
 import de.ur.mi.pluginhelper.tasks.TaskConfiguration;
 import eventHandling.OnGitEventListener;
 import org.apache.commons.io.FileUtils;
@@ -11,6 +12,9 @@ import provider.helper.DownloadTask;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 
 import static environment.FileConstants.*;
@@ -87,8 +91,10 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         if (internetConnection && !repoContentDataExists) {
             cloneRepository();
         } else if (internetConnection && repoContentDataExists) {
+            QuestionnaireController.getInstance().compareDates();
             updateBranch();
         } else if (repoContentDataExists) {
+            QuestionnaireController.getInstance().compareDates();
             callListenerNotUpdating("Keine Internetverbindung vorhanden. Handout Daten können momentan nicht aktualisiert werden." , NotificationType.ERROR);
         } else {
             callListenerNotUpdating("Keine Internetverbindung vorhanden. Handout Daten können momentan nicht heruntergeladen werden.", NotificationType.ERROR);
@@ -110,22 +116,17 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
     //https://www.geeksforgeeks.org/checking-internet-connectivity-using-java/
     //TODO Ping Github Repo -> is Repo Available
     public Boolean checkInternetConnection() {
-        Process process;
         try {
-            //TODO was anpingen?
-            process = Runtime.getRuntime().exec("ping www.google.de");
-            int x = process.waitFor();
-            if (x == 0) {
-                System.out.println("Connection Successful, " + "Output was " + x);
-                return true;
-            } else {
-                System.out.println("Internet Not Connected, " + "Output was " + x);
-                return false;
-            }
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            final URL url = new URL("http://www.google.com");
+            final URLConnection conn = url.openConnection();
+            conn.connect();
+            conn.getInputStream().close();
+            return true;
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            return false;
         }
-        return false;
     }
 
     public void addListener(OnGitEventListener listener) {

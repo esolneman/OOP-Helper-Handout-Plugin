@@ -24,7 +24,7 @@ public class RepoLocalStorageDataProvider implements RepoLocalStorageDataProvide
         return handoutProject;
     }
 
-    public static File getHandoutHtmlFile(){
+    public static File getHandoutInitFile(){
         File handoutFile = new File(getHandoutHtmlString());
         return handoutFile;
     }
@@ -44,13 +44,6 @@ public class RepoLocalStorageDataProvider implements RepoLocalStorageDataProvide
         return getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE;
     }
 
-
-    public static File getShortcutFileDirectory() {
-        File shortcutFile = new File(getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE + SHORTCUT_FILE_NAME);
-        return shortcutFile;
-    }
-
-
     public static File getCommonAssessmentCriteriaFileDirectory() {
         File specificAssessmentCriteriaFile = new File(getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE  + COMMON_INFORMATION_FILE_NAME);
         return specificAssessmentCriteriaFile;
@@ -58,16 +51,6 @@ public class RepoLocalStorageDataProvider implements RepoLocalStorageDataProvide
     public static File getChecklistFile() {
         File checklistFile = new File(getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE + CHECKLIST_FILE_NAME);
         return checklistFile;
-    }
-
-    public static File getCodingStylesFile() {
-        File codingStylesFile = new File(getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE + CODING_STYLES_FILE);
-        return codingStylesFile;
-    }
-
-    public static File getVariablesFile() {
-        File variablesFile = new File(getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE + VARIABLES_FILE);
-        return variablesFile;
     }
 
     //TODO MAKE CONSTANT
@@ -89,5 +72,10 @@ public class RepoLocalStorageDataProvider implements RepoLocalStorageDataProvide
     public static File getUserDataChecklist() {
         File predefinedChecklist = new File(getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE + USER_CHECKLIST_HTML_FILE);
         return predefinedChecklist;
+    }
+
+    public static File getTutorialFile() {
+        File tutorialFile = new File(getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE + TUTORIAL_FILE_NAME);
+        return tutorialFile;
     }
 }

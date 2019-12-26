@@ -1,6 +1,8 @@
 package gui;
 
+import controller.LoggingController;
 import controller.NotesController;
+import de.ur.mi.pluginhelper.logger.LogDataType;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -8,8 +10,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.HTMLEditor;
+import javafx.scene.web.WebView;
 import javafx.stage.Stage;
-import org.jsoup.nodes.Document;
+
+import org.w3c.dom.Document;
 import toolWindow.NotesScreen;
 
 public class NoteAddingFrame {
@@ -18,6 +22,7 @@ public class NoteAddingFrame {
     private NotesScreen notesScreen;
     private NotesController notesController;
     private static NoteAddingFrame single_instance = null;
+    private LoggingController loggingController;
 
 
     public static NoteAddingFrame getInstance() {
@@ -29,8 +34,8 @@ public class NoteAddingFrame {
 
     private NoteAddingFrame() {
         notesController = NotesController.getInstance();
+        loggingController = LoggingController.getInstance();
         createHtmlEditor();
-        //showAddNoteFrame();
     }
 
     public void setNotesScreen(NotesScreen notesScreen){
@@ -41,9 +46,9 @@ public class NoteAddingFrame {
     private void createHtmlEditor() {
         htmlEditor = new HTMLEditor();
         htmlEditor.setPrefHeight(400);
-        Document notesDocument = notesController.getCurrentNotesDocument();
+        WebView webView = notesController.getCurrentWebview();
         //display html part, that contains the notes
-        htmlEditor.setHtmlText(notesDocument.getElementById("notesList").toString());
+        htmlEditor.setHtmlText((String)webView.getEngine().executeScript("document.getElementById('notesList').innerHTML"));
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.getStyleClass().add("noborder-scroll-pane");
         scrollPane.setStyle("-fx-background-color: white");
@@ -52,16 +57,15 @@ public class NoteAddingFrame {
 
         VBox root = new VBox();
         root.setAlignment(Pos.CENTER);
+        //TODO Constant
         Button addEntryButton = new Button("OK");
         root.setAlignment(Pos.CENTER);
         addEntryButton.setOnAction(event -> {
-            NotesController.saveNewEntryInFile(htmlEditor.getHtmlText());
+            NotesController.getInstance().saveNewEntryInFile(htmlEditor.getHtmlText());
+            loggingController.saveDataInLogger(LogDataType.NOTES, "Notes Edited", "htmlEditor.getHtmlText()");
             addNoteFrame.close();
             notesScreen.reloadWebView();
         });
-
-        //addNoteFrame.setSize(400,400);
-
         root.getChildren().addAll(scrollPane,addEntryButton);
         Scene scene = new Scene(new Group());
         scene.setRoot(root);
@@ -70,10 +74,7 @@ public class NoteAddingFrame {
 
     //called from html
     public void showAddNoteFrame(){
-        System.out.println("showAddNoteFrame");
-
+        loggingController.saveDataInLogger(LogDataType.NOTES, "Notes Editing Frame", "open");
         addNoteFrame.show();
     }
-
-
 }

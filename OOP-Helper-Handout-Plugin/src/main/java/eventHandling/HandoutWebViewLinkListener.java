@@ -10,6 +10,8 @@ import com.intellij.openapi.fileEditor.TextEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import controller.LoggingController;
+import de.ur.mi.pluginhelper.logger.LogDataType;
 import javafx.application.Platform;
 import javafx.scene.web.WebView;
 import org.apache.http.NameValuePair;
@@ -44,14 +46,16 @@ public class HandoutWebViewLinkListener {
         WebViewHyperlinkListener eventPrintingListener = event -> {
             //TODO: Refactor variable name
             String hyperlink = event.getURL().toString();
-            System.out.println("LINK: " + hyperlink);
             Project project = RepoLocalStorageDataProvider.getProject();
             System.out.println("WebView: Listener: "+ hyperlink);
             if (hyperlink.contains("LinkToCode")) {
+                LoggingController.getInstance().saveDataInLogger(LogDataType.HANDOUT, "Link from Handout To Code", hyperlink);
                 System.out.println("WebView: LinkToCode");
                 handleLinkToCode(hyperlink, project);
             } else {
-                System.out.println("WebView: OtherLink");
+                System.out.println("WebView: OtherLinkWebView: OtherLink");
+                LoggingController.getInstance().saveDataInLogger(LogDataType.HANDOUT, "Link to External Webpage", hyperlink);
+
                 handleLinkToExternalWebpage(hyperlink);
             }
             return false;
@@ -66,11 +70,11 @@ public class HandoutWebViewLinkListener {
         try {
             Desktop desktop = Desktop.getDesktop();
             URI address = new URI(toBeopen);
-            if (toBeopen.contains("http://") || toBeopen.contains("https://") || toBeopen.contains("mailto") || toBeopen.contains("file:/")) {
+            if (toBeopen.contains("http://") || toBeopen.contains("https://") || toBeopen.contains("mailto")) {
                 System.out.println("open external link: " + toBeopen);
                 Platform.setImplicitExit(false);
                 Platform.runLater(() -> {
-                    webView.getEngine().load(urlString);
+                    webView.getEngine().reload();
                 });
                 desktop.browse(address);
             }
