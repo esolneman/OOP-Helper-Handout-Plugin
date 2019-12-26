@@ -2,6 +2,7 @@ package provider;
 
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.project.Project;
+import controller.QuestionnaireController;
 import de.ur.mi.pluginhelper.tasks.TaskConfiguration;
 import eventHandling.OnGitEventListener;
 import org.apache.commons.io.FileUtils;
@@ -90,8 +91,10 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         if (internetConnection && !repoContentDataExists) {
             cloneRepository();
         } else if (internetConnection && repoContentDataExists) {
+            QuestionnaireController.getInstance().compareDates();
             updateBranch();
         } else if (repoContentDataExists) {
+            QuestionnaireController.getInstance().compareDates();
             callListenerNotUpdating("Keine Internetverbindung vorhanden. Handout Daten können momentan nicht aktualisiert werden." , NotificationType.ERROR);
         } else {
             callListenerNotUpdating("Keine Internetverbindung vorhanden. Handout Daten können momentan nicht heruntergeladen werden.", NotificationType.ERROR);

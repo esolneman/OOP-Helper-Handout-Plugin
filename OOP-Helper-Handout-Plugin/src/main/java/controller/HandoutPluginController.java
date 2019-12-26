@@ -95,10 +95,8 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
 
         ChecklistController checklistController = ChecklistController.getInstance();
         checklistController.createChecklistFiles();
-
         HandoutController handoutController = HandoutController.getInstance();
         handoutController.createHandoutFile();
-
         QuestionnaireController.getInstance().saveProjectCreationDate();
     }
 
@@ -115,8 +113,6 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
             e.printStackTrace();
         }
         commitChangesDialog.showPanel();
-        QuestionnaireController.getInstance().compareDates();
-
     }
 
     @Override
