@@ -1,5 +1,6 @@
 package controller;
 
+import com.intellij.openapi.application.ApplicationManager;
 import gui.QuestionnaireDialog;
 import provider.LocalStorageDataProvider;
 
@@ -25,7 +26,7 @@ public class QuestionnaireController {
         return single_instance;
     }
 
-    private QuestionnaireController(){
+    private QuestionnaireController() {
         projectCreationDateFile = LocalStorageDataProvider.getProjectCreationDateDirectory();
     }
 
@@ -64,7 +65,7 @@ public class QuestionnaireController {
         try {
             //https://www.geeksforgeeks.org/different-ways-reading-text-file-java/
             lastSavedDateString = new String(Files.readAllBytes(Paths.get(projectCreationDateFile.getAbsolutePath())));
-            System.out.println("Date lastSavedDateString: "+ lastSavedDateString);
+            System.out.println("Date lastSavedDateString: " + lastSavedDateString);
 
             //https://beginnersbook.com/2017/10/java-add-days-to-date/
             try {
@@ -74,17 +75,19 @@ public class QuestionnaireController {
             }
             Date lastSavedDate = sdf.parse(lastSavedDateString);
 
-                    //TODO MALE CONSTANT
+            //TODO MALE CONSTANT
             cal.add(Calendar.DAY_OF_MONTH, 3);
             Date dateForQuestionnaireString = cal.getTime();
-            System.out.println("Date Incremented by three: "+ dateForQuestionnaireString);
-            System.out.println("Date currentDate: "+ currentDate);
-            System.out.println("Date lastSavedDate: "+ lastSavedDate);
+            System.out.println("Date Incremented by three: " + dateForQuestionnaireString);
+            System.out.println("Date currentDate: " + currentDate);
+            System.out.println("Date lastSavedDate: " + lastSavedDate);
 
             //https://www.mkyong.com/java/how-to-compare-dates-in-java/
             if (dateForQuestionnaireString.after(lastSavedDate) || dateForQuestionnaireString.equals(lastSavedDate)) {
                 System.out.println("Date1 is after Date2");
-                QuestionnaireDialog questionnaireDialog = new QuestionnaireDialog();
+                ApplicationManager.getApplication().invokeLater(() -> {
+                    QuestionnaireDialog.main(null);
+                });
                 saveDateInFile(sdf.format(currentDate));
             }
 
@@ -96,7 +99,7 @@ public class QuestionnaireController {
 
     }
 
-    private void saveDateInFile(String date){
+    private void saveDateInFile(String date) {
         //https://stackoverflow.com/a/1053475
         try (PrintWriter out = new PrintWriter(projectCreationDateFile)) {
             out.println(date);
