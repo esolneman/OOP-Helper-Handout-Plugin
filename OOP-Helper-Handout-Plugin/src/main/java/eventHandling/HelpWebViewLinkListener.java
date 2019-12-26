@@ -28,8 +28,10 @@ public class HelpWebViewLinkListener {
             //TODO: Refactor variable name
             //TODO Sometimes Nullpointer
             String hyperlink = event.getURL().toString();
-            if (hyperlink.contains("http://") || hyperlink.contains("https://") || hyperlink.contains("mailto")) {
-                handleLinkToExternalWebpage(hyperlink);
+            if(hyperlink != null){
+                if (hyperlink.contains("http://") || hyperlink.contains("https://") || hyperlink.contains("mailto")) {
+                    handleLinkToExternalWebpage(hyperlink);
+                }
             }
             return false;
         };
