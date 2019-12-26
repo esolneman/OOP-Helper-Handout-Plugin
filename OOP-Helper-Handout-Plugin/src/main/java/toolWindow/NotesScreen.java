@@ -2,7 +2,10 @@ package toolWindow;
 
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
+import controller.LinkToHandoutController;
+import controller.LoggingWebViewController;
 import controller.NotesController;
+import de.ur.mi.pluginhelper.logger.LogDataType;
 import gui.NoteAddingFrame;
 import gui.PluginWebViewFXPanel;
 import javafx.application.Platform;
@@ -10,6 +13,7 @@ import javafx.concurrent.Worker;
 import javafx.scene.web.WebView;
 import netscape.javascript.JSObject;
 import provider.LocalStorageDataProvider;
+import provider.RepoLocalStorageDataProvider;
 import webView.WebViewController;
 
 import javax.swing.*;
@@ -25,6 +29,7 @@ public class NotesScreen extends SimpleToolWindowPanel {
     private String notesHtmlString;
     private static WebView webView;
     private NoteAddingFrame noteAddingFrame;
+    private LoggingWebViewController loggingWebViewController;
 
     public NotesScreen(ToolWindow toolWindow) {
         super(true, true);
@@ -90,6 +95,13 @@ public class NotesScreen extends SimpleToolWindowPanel {
     public void reloadWebView() {
         Platform.runLater(() -> {
             webView = webViewController.createWebView(notesHtmlString);
+            webView.getEngine().getLoadWorker().stateProperty().addListener((ov, oldState, newState) -> {
+                if (newState == Worker.State.SUCCEEDED) {
+                    loggingWebViewController = new LoggingWebViewController(webView, LogDataType.NOTES);
+                    loggingWebViewController.addLoggingKeyEvents();
+                    loggingWebViewController.addLoggingMouseEvents();
+                }
+            });
             notesContent.showHandoutWebView(notesHtmlString, webView);
             initEditNotesButtonListener();
         });

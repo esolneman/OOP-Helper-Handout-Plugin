@@ -26,6 +26,7 @@ public class HelpWebViewLinkListener {
         //https://github.com/CodeFX-org/LibFX/wiki/WebViewHyperlinkListener
         WebViewHyperlinkListener eventPrintingListener = event -> {
             //TODO: Refactor variable name
+            //TODO Sometimes Nullpointer
             String hyperlink = event.getURL().toString();
             if (hyperlink.contains("http://") || hyperlink.contains("https://") || hyperlink.contains("mailto")) {
                 handleLinkToExternalWebpage(hyperlink);

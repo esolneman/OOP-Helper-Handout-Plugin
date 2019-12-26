@@ -2,6 +2,10 @@ package toolWindow;
 
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
+import controller.LoggingWebViewController;
+import de.ur.mi.pluginhelper.logger.Log;
+import de.ur.mi.pluginhelper.logger.LogData;
+import de.ur.mi.pluginhelper.logger.LogDataType;
 import eventHandling.HelpWebViewLinkListener;
 import gui.PluginWebViewFXPanel;
 import javafx.application.Platform;
@@ -25,6 +29,7 @@ public class HelpScreen extends SimpleToolWindowPanel {
     private static WebView webView;
     private static WebViewController webViewController;
     private JPanel panel;
+    private LoggingWebViewController loggingWebViewController;
 
 
     public HelpScreen(ToolWindow toolWindow) {
@@ -60,12 +65,23 @@ public class HelpScreen extends SimpleToolWindowPanel {
                     if(webView.getEngine().getDocument() != null) {
                         HelpWebViewLinkListener webViewLinkListener = new HelpWebViewLinkListener(currentWebView, startPageDirectory);
                         webViewLinkListener.createListener();
-                        currentWebView.addEventFilter(ScrollEvent.SCROLL_STARTED, (ScrollEvent e) -> {
-                            System.out.println("Scroll start");
-                        });
-                        currentWebView.addEventFilter(ScrollEvent.SCROLL_FINISHED, (ScrollEvent e) -> {
-                            System.out.println("Scroll finish");
-                        });
+
+                        //log key and mouse events, depends on current page in help-tab
+                        LogDataType logDataType;
+                        if(webView.getEngine().getLocation().contains("shortcuts")){
+                            logDataType = LogDataType.HELP_SHORTCUTS;
+                        } else if (webView.getEngine().getLocation().contains("tutorial")) {
+                            logDataType = LogDataType.HELP_TUTORIAL;
+                        } else if (webView.getEngine().getLocation().contains("CodingStyles")) {
+                            logDataType = LogDataType.HELP_CODINGSTYLES;
+                        }else if (webView.getEngine().getLocation().contains("Variable")) {
+                            logDataType = LogDataType.HELP_VARIABLES;
+                        } else {
+                            logDataType = LogDataType.HELP_INDEX;
+                        }
+                        loggingWebViewController = new LoggingWebViewController(webView, logDataType);
+                        loggingWebViewController.addLoggingKeyEvents();
+                        loggingWebViewController.addLoggingMouseEvents();
                     }
                 }
             });
