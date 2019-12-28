@@ -31,7 +31,15 @@ public class HandoutController {
             //TODO CATACH
             System.out.println(e);
         }
-        File notesRepoFile = LocalStorageDataProvider.getInitHandoutFileDirectory();
-        CreateFiles.saveRepoFileInLocalFile(notesRepoFile, handoutLocalFile);
+        downloadCurrentData();
+    }
+
+    private void downloadCurrentData(){
+        File handoutRepoFile = LocalStorageDataProvider.getInitHandoutFileDirectory();
+        CreateFiles.replaceFile(handoutRepoFile, handoutLocalFile);
+    }
+
+    public void updateLocalData() {
+        downloadCurrentData();
     }
 }

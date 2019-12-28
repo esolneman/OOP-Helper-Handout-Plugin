@@ -21,8 +21,8 @@ public class ToolWindowController implements OnToolWindowCreatedListener{
     }
 
     private ToolWindowController(){
-        toolWindowService = ServiceManager.getService(RepoLocalStorageDataProvider.getProject(), ToolWindowServiceInterface.class);
-        toolWindowService.addListener(this);
+        //toolWindowService = ServiceManager.getService(RepoLocalStorageDataProvider.getProject(), ToolWindowServiceInterface.class);
+        //toolWindowService.addListener(this);
     }
 
     public void updateContent() {

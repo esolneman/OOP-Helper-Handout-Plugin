@@ -44,7 +44,7 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, ToolWindowSe
     private HandoutContentScreen handoutContentScreen;
     private ChecklistScreen checklistScreen;
     private SpecificAssessmentCriteriaScreen specificAssessmentCriteriaScreen;
-    private HelpScreen commonAssessmentCriteriaScreen;
+    private HelpScreen helpScreen;
     private NotesScreen notesScreen;
     private LoggingController loggingController;
 
@@ -130,7 +130,7 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, ToolWindowSe
         handoutContentScreen = new HandoutContentScreen(toolWindow);
         checklistScreen = new ChecklistScreen(toolWindow);
         specificAssessmentCriteriaScreen = new SpecificAssessmentCriteriaScreen(toolWindow);
-        commonAssessmentCriteriaScreen = new HelpScreen(toolWindow);
+        helpScreen = new HelpScreen(toolWindow);
         notesScreen = new NotesScreen(toolWindow);
         addScreenContent();
     }
@@ -141,7 +141,7 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, ToolWindowSe
         checklistContent = contentFactory.createContent(checklistScreen.getContent(), "Aufgaben", false);
         notesContent = contentFactory.createContent(notesScreen.getContent(), "Notizen", false);
         specificCriteriaContent = contentFactory.createContent(specificAssessmentCriteriaScreen.getContent(), "Bewertungskriterien", false);
-        commonAssessmentCriteriaContent = contentFactory.createContent(commonAssessmentCriteriaScreen.getContent(), "Hilfe", false);
+        commonAssessmentCriteriaContent = contentFactory.createContent(helpScreen.getContent(), "Hilfe", false);
 
         toolWindow.getContentManager().addContent(handoutContent);
         toolWindow.getContentManager().addContent(checklistContent);
@@ -150,6 +150,9 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, ToolWindowSe
         toolWindow.getContentManager().addContent(notesContent);
         //TODO: Decide which Tab is open when start ide
         toolWindow.getContentManager().setSelectedContent(handoutContent);
+        handoutContent.setDescription("HMMMMm");
+
+        System.out.println("Desrciption: " + handoutContent.getDescription());
         callListener();
     }
 
@@ -166,7 +169,7 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, ToolWindowSe
         //TODO Interface --> alle?
         handoutContentScreen.updateContent();
         specificAssessmentCriteriaScreen.updateContent();
-        commonAssessmentCriteriaScreen.updateContent();
+        helpScreen.updateContent();
     }
 
     @Override

@@ -18,6 +18,7 @@ import gui.CommitChangesDialog;
 import io.woo.htmltopdf.HtmlToPdf;
 import io.woo.htmltopdf.HtmlToPdfObject;
 import org.jetbrains.annotations.NotNull;
+import provider.HandoutContentDataProvider;
 import provider.HandoutContentDataProviderInterface;
 import provider.LocalStorageDataProvider;
 import provider.RepoLocalStorageDataProvider;
@@ -46,7 +47,7 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
         createProjectListener();
         //TODO NOT TO REPOLOCALSTORAGE OFOFOFOFOF
         RepoLocalStorageDataProvider.setUserProjectDirectory(this.project);
-        handoutDataProvider = ServiceManager.getService(project, HandoutContentDataProviderInterface.class);
+        handoutDataProvider = HandoutContentDataProvider.getInstance();
         handoutDataProvider.addListener(this);
         toolWindowController = ToolWindowController.getInstance();
     }
@@ -104,9 +105,13 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
     @Override
     //TODO add strings to message constants
     public void onUpdatingRepositoryEvent(ArrayList<String> commitMessages) {
+        System.out.println("onUpdatingRepositoryEvent");
+
         ChecklistController checklistController = ChecklistController.getInstance();
         BalloonPopupController.showNotification(project, "Handout Daten wurden runtergeladen." + commitMessages.toString(), NotificationType.INFORMATION);
         CommitChangesDialog commitChangesDialog = new CommitChangesDialog(commitMessages);
+        toolWindowController.updateContent();
+
         try {
             checklistController.comparePredefinedChecklistVersions();
         } catch (FileNotFoundException e) {
@@ -121,43 +126,4 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
         BalloonPopupController.showNotification(project, notificationMessage, messageType);
     }
 
-    public static void downloadHandout() {
-        System.out.println("downloadHandout");
-        String htmlDirectory = RepoLocalStorageDataProvider.getHandoutHtmlString();
-        Project project = RepoLocalStorageDataProvider.getProject();
-
-        //https://github.com/wooio/htmltopdf-java
-        //TODO: if no content data is available
-        System.out.println(htmlDirectory);
-        File content = LocalStorageDataProvider.getHandoutFileDirectory();
-        try {
-            String urlString = content.toURI().toURL().toString();
-            System.out.println(urlString);
-            //https://www.programcreek.com/java-api-examples/?api=com.intellij.openapi.fileChooser.FileChooserDescriptor
-            final FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
-            descriptor.setTitle(FILES_SELECTING_TEXT);
-            descriptor.setDescription(FILES_SELECTING_DESCRIPTION);
-            descriptor.setForcedToUseIdeaFileChooser(true);
-            VirtualFile file = FileChooser.
-                    chooseFile(descriptor, project, null);
-            if (!Objects.isNull(file)) {
-                String handoutPDFDirectory = file.getPath() + HANDOUT_PDF_FILE_NAME;
-                boolean success = HtmlToPdf.create()
-                        .object(HtmlToPdfObject.forUrl(URL_BEGIN_FOR_FILE + htmlDirectory))
-                        .convert(handoutPDFDirectory);
-                JComponent handoutContentScreen = ToolWindowManager.getActiveToolWindow().getComponent();
-
-                //TODO add Listener for this and display Notification with Listener!!!
-                if (success) {
-                    BalloonPopupController.showBalloonNotification(handoutContentScreen, Balloon.Position.above, "Downloading was successfully", MessageType.INFO);
-                    LoggingController.getInstance().saveDataInLogger(LogDataType.HANDOUT, "Download PDF Version", "success");
-                } else {
-                    BalloonPopupController.showBalloonNotification(handoutContentScreen, Balloon.Position.above, "Error while downloading the handout. Please try again.", MessageType.ERROR);
-                    LoggingController.getInstance().saveDataInLogger(LogDataType.HANDOUT, "Download PDF Version", "error");
-                }
-            }
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-    }
 }

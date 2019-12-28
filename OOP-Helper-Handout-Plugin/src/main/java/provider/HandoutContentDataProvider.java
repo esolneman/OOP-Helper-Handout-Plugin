@@ -66,6 +66,8 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
        // branchPath = REPO_PATH_TO_BRANCH + "test";
         System.out.println(contentRepoPath);
         task = DownloadTask.getInstance();
+        System.out.println("HandoutContentDataProvider: " + onEventListener);
+
     }
 
 
@@ -86,6 +88,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
     }
 
     private void controlRetrievingContentData() {
+        System.out.println("ControlRetrievingContentData: " + onEventListener);
         Boolean internetConnection = checkInternetConnection();
         Boolean repoContentDataExists = checkRepoContentDataExists();
         if (internetConnection && !repoContentDataExists) {
@@ -139,11 +142,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         //https://www.vogella.com/tutorials/JGit/article.html#example-for-using-jgit
         Runnable cloneTask = () -> {
             try {
-                //createFolder(zipFile, true);
-                //createFolder(outputDir, false);
                 task.run(repoUrl, contentRepoFile, branchPath);
-                //task.run(zipFile);
-                //task.unzipFile(zipFile, outputDir);
             } catch (IOException e) {
                 //TODO Notification
                 deleteFile(repoLocalData);
@@ -191,7 +190,9 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
     }
 
     private void callListener(ArrayList<String> lastCommitMessages) {
+        System.out.println("listener call commitmessages");
         if (onEventListener != null) {
+            System.out.println("listener call commitmessages not null");
             onEventListener.onUpdatingRepositoryEvent(lastCommitMessages);
         }
     }
@@ -203,6 +204,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
     }
 
     //TODO test that user not delted
+    //TODO FILE CONTROLLER
     private void deleteFile(File file) {
         file.delete();
     }

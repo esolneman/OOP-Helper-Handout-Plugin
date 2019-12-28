@@ -28,12 +28,9 @@ import static environment.Messages.FILES_SELECTING_TEXT;
 
 public class DownloadPDFHelper {
 
-
-
     boolean success;
 
     private static DownloadPDFHelper single_instance = null;
-    //private HandoutContentScreen handoutContentScreen;
 
     public static DownloadPDFHelper getInstance() {
         if (single_instance == null) {
@@ -42,19 +39,19 @@ public class DownloadPDFHelper {
         return single_instance;
     }
 
-    private DownloadPDFHelper(){
-    }
+    private DownloadPDFHelper(){}
 
-    public void setContent(HandoutContentScreen handoutContentScreen){
-        //this.handoutContentScreen = handoutContentScreen;
-    }
 
-    //called from html
+    /*
+    called from html
+    download Handout as PDF in choosed directory
+     */
     public void downloadHandout() {
         LoggingController.getInstance().saveDataInLogger(LogDataType.HANDOUT, "Download PDF", "open File Chooser");
         ApplicationManager.getApplication().invokeLater(() -> {
             String handoutHTMLDirectory = RepoLocalStorageDataProvider.getHandoutHtmlString();
             Project project = RepoLocalStorageDataProvider.getProject();
+            //https://github.com/wooio/htmltopdf-java
             System.out.println(handoutHTMLDirectory);
             File content = LocalStorageDataProvider.getHandoutFileDirectory();
             try {
@@ -70,6 +67,7 @@ public class DownloadPDFHelper {
                 if (!Objects.isNull(file)) {
                     //https://github.com/wooio/htmltopdf-java
                     String handoutPDFDirectory = file.getPath() + HANDOUT_PDF_FILE_NAME;
+                    //TODO add Listener for this and display Notification with Listener!!!
                     success = HtmlToPdf.create()
                             .object(HtmlToPdfObject.forUrl(URL_BEGIN_FOR_FILE + handoutHTMLDirectory))
                             .convert(handoutPDFDirectory);

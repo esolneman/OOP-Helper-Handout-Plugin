@@ -63,7 +63,6 @@ public class HandoutContentScreen extends SimpleToolWindowPanel implements Plugi
                 if (newState == Worker.State.SUCCEEDED) {
                     LinkToHandoutController linkToHandoutController = new LinkToHandoutController(RepoLocalStorageDataProvider.getProject(), this);
                     initDownloadButtonListener();
-
                     loggingWebViewController = new LoggingWebViewController(webView, LogDataType.HANDOUT);
                     loggingWebViewController.addLoggingKeyEvents();
                     loggingWebViewController.addLoggingMouseEvents();
@@ -79,7 +78,6 @@ public class HandoutContentScreen extends SimpleToolWindowPanel implements Plugi
     //create listener for "download handout" button in webView
     private void initDownloadButtonListener() {
         JSObject window = (JSObject) webView.getEngine().executeScript("window");
-        DownloadPDFHelper.getInstance().setContent(this);
         window.setMember("downloadHtml", DownloadPDFHelper.getInstance());
     }
 
@@ -96,7 +94,9 @@ public class HandoutContentScreen extends SimpleToolWindowPanel implements Plugi
     }
 
     public void updateContent() {
-        HandoutController.getInstance().createHandoutFile();
-        webViewController.updateWebViewContent();
+        System.out.println("Update Handout Data");
+
+        HandoutController.getInstance().updateLocalData();
+        webViewController.loadNewURL(urlString);
     }
 }

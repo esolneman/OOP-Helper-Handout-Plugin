@@ -1,6 +1,10 @@
 package controller;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 public class CreateFiles {
 
@@ -16,6 +20,7 @@ public class CreateFiles {
         }
     }
 
+    //TODO SOUREC
     public static void saveRepoFileInLocalFile (File repoFile, File localFile) {
         BufferedReader inputStream = null;
         BufferedWriter outputStream = null;
@@ -43,6 +48,18 @@ public class CreateFiles {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public static void replaceFile(File repoFile, File localFile) {
+        System.out.println("repo: " + repoFile.getPath());
+        System.out.println("localFile: " + localFile.getPath());
+        Path from = repoFile.toPath(); //convert from File to Path
+        Path to = localFile.toPath(); //convert from String to Path
+        try {
+            Files.copy(from, to, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
