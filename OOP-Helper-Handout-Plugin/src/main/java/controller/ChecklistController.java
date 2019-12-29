@@ -90,7 +90,7 @@ public class ChecklistController {
             //if task exists update description
             System.out.println("REPO ID: " + currentRepoTaskID);
             System.out.println("REPO desc: " + currentRepoTaskDescription);
-            if (checklistLocal.containsID(currentRepoTaskID)) {
+            if (checklistLocal.getTaskWithId(currentRepoTaskID) != null) {
                 System.out.println("Checklist REPO ID EXISTS");
                 checklistLocal.getTaskWithId(currentRepoTaskID).setDescription(currentRepoTaskDescription);
                 //if task not exists add new task at the end of the list
