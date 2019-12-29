@@ -166,7 +166,9 @@ public class WebViewController {
     public void updateWebViewContent() {
         // TODO Error once
         // TODO test if load urlstring is working
+        System.out.println("updateWebViewContent");
         if(webView != null){
+            System.out.println("updateWebViewContent not null");
             Platform.setImplicitExit(false);
             Platform.runLater(() -> {
             webView.getEngine().setJavaScriptEnabled(true);

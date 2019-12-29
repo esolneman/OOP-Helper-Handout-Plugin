@@ -12,24 +12,22 @@ import com.intellij.ui.content.ContentFactory;
 import com.intellij.ui.content.ContentManagerEvent;
 import com.intellij.ui.content.ContentManagerListener;
 import controller.LoggingController;
+import controller.UpdateHandoutDataController;
 import de.ur.mi.pluginhelper.logger.LogDataType;
-import eventHandling.OnToolWindowCreatedListener;
+import eventHandling.OnLocalDataUpdatedListener;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import services.ToolWindowServiceInterface;
 
 import javax.swing.*;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import java.awt.*;
 import java.awt.event.FocusEvent;
-import java.util.ArrayList;
-import java.util.List;
 
 
-public class HandoutToolWindowFactory implements ToolWindowFactory, ToolWindowServiceInterface {
+public class HandoutToolWindowFactory implements ToolWindowFactory, OnLocalDataUpdatedListener {
 
-    private List<OnToolWindowCreatedListener> listeners = new ArrayList<>();
+    private OnLocalDataUpdatedListener listener;
 
     private ToolWindow toolWindow;
     private ContentFactory contentFactory;
@@ -47,6 +45,7 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, ToolWindowSe
     private HelpScreen helpScreen;
     private NotesScreen notesScreen;
     private LoggingController loggingController;
+    private UpdateHandoutDataController updateHandoutDataController;
 
     // Create the tool window content.
     // is called when user clicks on tool window button
@@ -57,6 +56,8 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, ToolWindowSe
         createToolbar();
         createToolWindowListener();
         loggingController = LoggingController.getInstance();
+        updateHandoutDataController = UpdateHandoutDataController.getInstance();
+        updateHandoutDataController.addListener(this);
     }
 
     private void createToolWindowListener() {
@@ -83,9 +84,9 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, ToolWindowSe
             }
         });
 
-        new FocusWatcher(){
+        new FocusWatcher() {
             @Override
-            protected void focusLostImpl(final FocusEvent e){
+            protected void focusLostImpl(final FocusEvent e) {
                 loggingController.saveDataInLogger(LogDataType.TOOL_WINDOW, "tool window focus", "tool window unfocused");
             }
 
@@ -164,26 +165,30 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, ToolWindowSe
         ((ToolWindowEx) toolWindow).setTitleActions(new AnAction[]{updateAction, minimizeAction, maximizeAction});
     }
 
-    public void updateContent() {
+    public void updateWebView() {
         System.out.println("Update ToolWindows");
         //TODO Interface --> alle?
         handoutContentScreen.updateContent();
         specificAssessmentCriteriaScreen.updateContent();
         helpScreen.updateContent();
+        checklistScreen.updateContent();
     }
 
-    @Override
-    public void addListener(OnToolWindowCreatedListener listener) {
-        listeners.add(listener);
-    }
 
     private void callListener() {
         System.out.println("toolWindow available");
-        if (listeners != null) {
+        if (listener != null) {
             System.out.println("listener not null");
-            for (OnToolWindowCreatedListener listener : listeners) {
-                listener.OnToolWindowCreatedEvent(this);
-            }
+            System.out.println("OnLocalDataUpdatedEvent not null");
+            listener.OnLocalDataUpdatedEvent();
+        } else {
+            System.out.println("listener  null");
         }
+    }
+
+    @Override
+    public void OnLocalDataUpdatedEvent() {
+        System.out.println("OnLocalDataUpdatedEvent event start");
+        updateWebView();
     }
 }

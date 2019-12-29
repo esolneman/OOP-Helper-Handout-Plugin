@@ -13,18 +13,14 @@ public class AsyncExecutor {
 
     ExecutorService executor = Executors.newSingleThreadExecutor();
 
-    public Future<String> runAsyncClone(Runnable runnableTask){
+    public Future<String> runAsyncClone(Runnable runnableTask) {
         System.out.println("runAsyncClone");
         Future<String> result = executor.submit(runnableTask, "DONE");
-        while(result.isDone() == false)
-        {
-            try
-            {
+        while (result.isDone() == false) {
+            try {
                 System.out.println("The method return value : " + result.get());
                 break;
-            }
-            catch (InterruptedException | ExecutionException e)
-            {
+            } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
 
@@ -36,7 +32,8 @@ public class AsyncExecutor {
             }
         }
 
-        //Shut down the executor service
+        // Shut down the executor service
+        System.out.println("Shutdown Executor");
         executor.shutdownNow();
         return result;
     }

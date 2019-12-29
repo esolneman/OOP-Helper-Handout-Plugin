@@ -74,4 +74,8 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
     public JPanel getContent() {
         return toolWindowPanel;
     }
+
+    public void updateContent() {
+        webViewController.updateWebViewContent();
+    }
 }

@@ -25,6 +25,7 @@ public class NotesController {
 
     private NotesController() {
         notesLocalFile = LocalStorageDataProvider.getNotesFile();
+        System.out.println("Notes Path: " + notesLocalFile.getPath());
     }
 
     //TODO CALL CREATE FILE CLASS

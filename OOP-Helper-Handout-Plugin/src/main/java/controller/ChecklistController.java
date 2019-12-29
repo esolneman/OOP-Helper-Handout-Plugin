@@ -14,6 +14,7 @@ import provider.LocalStorageDataProvider;
 import provider.ParseChecklistJSON;
 
 import java.io.*;
+import java.util.ArrayList;
 
 public class ChecklistController {
 
@@ -87,18 +88,30 @@ public class ChecklistController {
             String currentRepoTaskID = repoTask.id;
             String currentRepoTaskDescription = repoTask.taskDescription;
             //if task exists update description
+            System.out.println("REPO ID: " + currentRepoTaskID);
+            System.out.println("REPO desc: " + currentRepoTaskDescription);
             if (checklistLocal.containsID(currentRepoTaskID)) {
-                System.out.println("REPO ID EXISTS");
+                System.out.println("Checklist REPO ID EXISTS");
                 checklistLocal.getTaskWithId(currentRepoTaskID).setDescription(currentRepoTaskDescription);
                 //if task not exists add new task at the end of the list
                 //TODO Think about commetn
             } else {
-                System.out.println("REPO ID NOT EXISTS");
+                System.out.println("Checklist REPO ID NOT EXISTS");
                 Checklist.Task newTask = new Checklist.Task.TasksBuilder(currentRepoTaskDescription, false)
                         .id(currentRepoTaskID).build();
                 checklistLocal.tasks.add(newTask);
             }
         }
+        saveChecklistInFile(checklistLocal, LocalStorageDataProvider.getLocalChecklistPredefinedData());
+    }
+
+    private static void saveChecklistInFile(Checklist checklist, File file) {
+        Gson gson = new Gson();
+        JsonObject checklistJson = new JsonObject();
+        ArrayList<Checklist.Task> tasksArrayList = checklist.tasks;
+        JsonArray tasks = ParseChecklistJSON.getJsonFromChecklist(checklist, tasksArrayList);
+        checklistJson.add("checklist",gson.toJsonTree(tasks));
+        saveJsonObjectInFile(checklistJson, file);
     }
 
     public void createChecklistFiles() {
@@ -107,7 +120,6 @@ public class ChecklistController {
         CreateFiles.createNewFile(checklistUserFile);
         JsonObject checklistJson = new JsonObject();
         JsonArray tasks = new JsonArray();
-        //checklistJson.add("checklist", tasks);
         checklistJson.add("checklist",gson.toJsonTree(tasks));
         saveJsonObjectInFile(checklistJson, checklistUserFile);
 
@@ -144,7 +156,7 @@ public class ChecklistController {
     }
 
     //TODO IN CLASS CREATES FILES
-    private void saveJsonObjectInFile(JsonObject jsonObject, File outputFile) {
+    private static void saveJsonObjectInFile(JsonObject jsonObject, File outputFile) {
         //https://stackoverflow.com/a/29319491
         try (Writer writer = new FileWriter(outputFile)) {
             Gson gson = new GsonBuilder().create();

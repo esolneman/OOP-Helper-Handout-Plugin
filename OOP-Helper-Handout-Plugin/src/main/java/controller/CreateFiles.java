@@ -51,7 +51,9 @@ public class CreateFiles {
         }
     }
 
+    //TODO REMOVE
     public static void replaceFile(File repoFile, File localFile) {
+        System.out.println("replaceFile: ");
         System.out.println("repo: " + repoFile.getPath());
         System.out.println("localFile: " + localFile.getPath());
         Path from = repoFile.toPath(); //convert from File to Path

@@ -60,25 +60,13 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         tempVersionOutputDir = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE + "/temp");
         repoLocalData = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE);
         getRepoUrl();
-        //getBranchName();
-        // ToDo: get BranchName
-        //TODO get RepoName
-       // branchPath = REPO_PATH_TO_BRANCH + "test";
-        System.out.println(contentRepoPath);
         task = DownloadTask.getInstance();
-        System.out.println("HandoutContentDataProvider: " + onEventListener);
-
     }
 
-
-    //ToDo getRepo Url
     private void getRepoUrl() {
         TaskConfiguration taskConfiguration = TaskConfiguration.loadFrom(project);
         repoUrl = taskConfiguration.getHandoutURL();
         branchPath = taskConfiguration.getBranchPath();
-        System.out.println("getRepoUrl: " + repoUrl);
-        System.out.println("branchPath: " + branchPath);
-
     }
 
     //TODO CHECK UPDATE FUNCTION
@@ -163,9 +151,10 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
 
     private void updateBranch() {
         System.out.println("updateBranch");
+        asyncExecutor = new AsyncExecutor();
         ArrayList<String> commitMessages = task.getLatestCommits();
         System.out.println("updateBranch  commitMessages : " + commitMessages.size());
-        if (commitMessages.size() >= 1) {
+        //if (commitMessages.size() >= 1) {
             System.out.println("commitMessages not empty");
             //TODO ASK USER IF DOWNLOAD IS OK
             Runnable updateTask = () -> {
@@ -177,10 +166,10 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
             };
             asyncExecutor.runAsyncClone(updateTask);
             callListener(commitMessages);
-        } else {
-            System.out.println("commitMessages empty");
-            callListenerNotUpdating("Keine Neuen Daten vorhanden", NotificationType.INFORMATION);
-        }
+       // } else {
+           // System.out.println("commitMessages empty");
+           // callListenerNotUpdating("Keine Neuen Daten vorhanden", NotificationType.INFORMATION);
+        //}
     }
 
     private void callListener(String message, NotificationType messageType) {

@@ -2,7 +2,6 @@ package toolWindow;
 
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
-import controller.LinkToHandoutController;
 import controller.LoggingWebViewController;
 import controller.NotesController;
 import de.ur.mi.pluginhelper.logger.LogDataType;
@@ -13,7 +12,6 @@ import javafx.concurrent.Worker;
 import javafx.scene.web.WebView;
 import netscape.javascript.JSObject;
 import provider.LocalStorageDataProvider;
-import provider.RepoLocalStorageDataProvider;
 import webView.WebViewController;
 
 import javax.swing.*;
@@ -76,13 +74,6 @@ public class NotesScreen extends SimpleToolWindowPanel {
         noteAddingFrame.setNotesScreen(this);
         JSObject window = (JSObject) webView.getEngine().executeScript("window");
         window.setMember("noteAddingFrame", NoteAddingFrame.getInstance());
-    }
-
-    //@Override
-    //TODO NOOOOOO
-    // OVERRITE WHEN HANDOUT DATA IS UPDATED
-    // PREVENT THIS FROM HAPPENING
-    public void updateContent() {
     }
 
     public JPanel getContent() {

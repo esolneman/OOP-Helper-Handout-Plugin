@@ -2,17 +2,14 @@ package toolWindow;
 
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
-import controller.*;
+import controller.DownloadPDFHelper;
+import controller.HandoutController;
+import controller.LinkToHandoutController;
+import controller.LoggingWebViewController;
 import de.ur.mi.pluginhelper.logger.LogDataType;
 import gui.PluginWebViewFXPanel;
 import javafx.application.Platform;
 import javafx.concurrent.Worker;
-import javafx.event.Event;
-import javafx.event.EventType;
-import javafx.scene.control.ScrollBar;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.ScrollEvent;
 import javafx.scene.web.WebView;
 import netscape.javascript.JSObject;
 import provider.LocalStorageDataProvider;
@@ -94,9 +91,7 @@ public class HandoutContentScreen extends SimpleToolWindowPanel implements Plugi
     }
 
     public void updateContent() {
-        System.out.println("Update Handout Data");
-
-        HandoutController.getInstance().updateLocalData();
-        webViewController.loadNewURL(urlString);
+        System.out.println("Handout: Update Handout Data");
+        webViewController.updateWebViewContent();
     }
 }

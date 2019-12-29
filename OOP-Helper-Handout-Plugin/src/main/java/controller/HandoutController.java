@@ -36,7 +36,9 @@ public class HandoutController {
 
     private void downloadCurrentData(){
         File handoutRepoFile = LocalStorageDataProvider.getInitHandoutFileDirectory();
-        CreateFiles.replaceFile(handoutRepoFile, handoutLocalFile);
+        CreateFiles.saveRepoFileInLocalFile(handoutRepoFile, handoutLocalFile);
+
+        //CreateFiles.replaceFile(handoutRepoFile, handoutLocalFile);
     }
 
     public void updateLocalData() {

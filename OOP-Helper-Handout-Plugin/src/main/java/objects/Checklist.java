@@ -8,7 +8,8 @@ public class Checklist {
 
     public boolean containsID(String currentRepoTaskID) {
         for (Task task : tasks) {
-            if (task.id == currentRepoTaskID) {
+            System.out.println("Local ID: " + task.id);
+            if (task.id.equals(currentRepoTaskID)) {
                 return true;
             }
         }

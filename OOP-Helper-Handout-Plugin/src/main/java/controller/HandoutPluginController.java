@@ -1,44 +1,23 @@
 package controller;
 
 import com.intellij.notification.NotificationType;
-import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.fileChooser.FileChooser;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerListener;
-import com.intellij.openapi.ui.MessageType;
-import com.intellij.openapi.ui.popup.Balloon;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.wm.ToolWindowManager;
 import de.ur.mi.pluginhelper.logger.LogDataType;
 import eventHandling.OnGitEventListener;
 import gui.CommitChangesDialog;
-import io.woo.htmltopdf.HtmlToPdf;
-import io.woo.htmltopdf.HtmlToPdfObject;
 import org.jetbrains.annotations.NotNull;
 import provider.HandoutContentDataProvider;
 import provider.HandoutContentDataProviderInterface;
-import provider.LocalStorageDataProvider;
 import provider.RepoLocalStorageDataProvider;
 
-import javax.swing.*;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.Objects;
-
-import static environment.FileConstants.HANDOUT_PDF_FILE_NAME;
-import static environment.FileConstants.URL_BEGIN_FOR_FILE;
-import static environment.Messages.FILES_SELECTING_DESCRIPTION;
-import static environment.Messages.FILES_SELECTING_TEXT;
 
 //TODO HIDE ANT TOOL WINDOW
 public class HandoutPluginController implements HandoutPluginControllerInterface, OnGitEventListener {
     private HandoutContentDataProviderInterface handoutDataProvider;
-    private ToolWindowController toolWindowController;
+    private UpdateHandoutDataController updateHandoutDataController;
     private Project project;
     private LoggingController loggingController;
 
@@ -49,7 +28,7 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
         RepoLocalStorageDataProvider.setUserProjectDirectory(this.project);
         handoutDataProvider = HandoutContentDataProvider.getInstance();
         handoutDataProvider.addListener(this);
-        toolWindowController = ToolWindowController.getInstance();
+        updateHandoutDataController = UpdateHandoutDataController.getInstance();
     }
 
     private void createProjectListener() {
@@ -88,17 +67,21 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
 
     public void onCloningRepositoryEvent(String notificationMessage, NotificationType messageType)   {
         System.out.println("Performing callback after Asynchronous Task");
-        toolWindowController.updateContent();
-        BalloonPopupController.showNotification(project, notificationMessage, messageType);
-
-        NotesController notesController = NotesController.getInstance();
-        notesController.createNotesFile();
-
-        ChecklistController checklistController = ChecklistController.getInstance();
-        checklistController.createChecklistFiles();
-        HandoutController handoutController = HandoutController.getInstance();
-        handoutController.createHandoutFile();
+        initHtmlFiles();
+        updateContentData();
         QuestionnaireController.getInstance().saveProjectCreationDate();
+        BalloonPopupController.showNotification(project, notificationMessage, messageType);
+    }
+
+    private void initHtmlFiles() {
+        System.out.println("initHtmlFiles");
+        NotesController.getInstance().createNotesFile();
+        ChecklistController.getInstance().createChecklistFiles();
+        HandoutController.getInstance().createHandoutFile();
+    }
+
+    private void updateContentData() {
+        updateHandoutDataController.updateLocalStorageData();
     }
 
 
@@ -106,17 +89,9 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
     //TODO add strings to message constants
     public void onUpdatingRepositoryEvent(ArrayList<String> commitMessages) {
         System.out.println("onUpdatingRepositoryEvent");
-
-        ChecklistController checklistController = ChecklistController.getInstance();
-        BalloonPopupController.showNotification(project, "Handout Daten wurden runtergeladen." + commitMessages.toString(), NotificationType.INFORMATION);
+        updateContentData();
         CommitChangesDialog commitChangesDialog = new CommitChangesDialog(commitMessages);
-        toolWindowController.updateContent();
-
-        try {
-            checklistController.comparePredefinedChecklistVersions();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        BalloonPopupController.showNotification(project, "Handout Daten wurden runtergeladen." + commitMessages.toString(), NotificationType.INFORMATION);
         commitChangesDialog.showPanel();
     }
 
