@@ -1,6 +1,9 @@
 package provider;
 
 import com.intellij.notification.NotificationType;
+import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.progress.ProgressManager;
+import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import controller.QuestionnaireController;
 import de.ur.mi.pluginhelper.tasks.TaskConfiguration;
@@ -127,6 +130,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
     //TODO
     private void cloneRepository() {
         System.out.println("start cloning branch");
+
         //https://www.vogella.com/tutorials/JGit/article.html#example-for-using-jgit
         Runnable cloneTask = () -> {
             try {
@@ -166,10 +170,6 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
             };
             asyncExecutor.runAsyncClone(updateTask);
             callListener(commitMessages);
-       // } else {
-           // System.out.println("commitMessages empty");
-           // callListenerNotUpdating("Keine Neuen Daten vorhanden", NotificationType.INFORMATION);
-        //}
     }
 
     private void callListener(String message, NotificationType messageType) {

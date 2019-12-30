@@ -1,5 +1,12 @@
 package provider.helper;
 
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.progress.ProgressIndicator;
+import com.intellij.openapi.progress.ProgressManager;
+import com.intellij.openapi.progress.Task;
+import org.jetbrains.annotations.NotNull;
+import provider.RepoLocalStorageDataProvider;
+
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -13,9 +20,13 @@ public class AsyncExecutor {
 
     ExecutorService executor = Executors.newSingleThreadExecutor();
 
-    public Future<String> runAsyncClone(Runnable runnableTask) {
+    public void runAsyncClone(Runnable runnableTask) {
         System.out.println("runAsyncClone");
-        Future<String> result = executor.submit(runnableTask, "DONE");
+        //https://intellij-support.jetbrains.com/hc/en-us/community/posts/360000718619--Problem-with-the-IntelliL-IDEA-progress-bar
+        ProgressManager.getInstance().runProcessWithProgressSynchronously(runnableTask, "Handout Daten werden heruntergeladen", true, RepoLocalStorageDataProvider.getProject());
+
+
+        /* Future<String> result = executor.submit(runnableTask, "DONE OHOH");
         while (result.isDone() == false) {
             try {
                 System.out.println("The method return value : " + result.get());
@@ -35,7 +46,7 @@ public class AsyncExecutor {
         // Shut down the executor service
         System.out.println("Shutdown Executor");
         executor.shutdownNow();
-        return result;
+        return result;*/
     }
 }
 
