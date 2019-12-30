@@ -59,7 +59,7 @@ public class ChecklistController {
         tasks = ParseChecklistJSON.getJsonFromLiElement(taskList);
         JsonObject updatedDataJson = new JsonObject();
         //updatedDataJson.add("checklist", tasks);
-        updatedDataJson.add("checklist",gson.toJsonTree(tasks) );
+        updatedDataJson.add("checklist", gson.toJsonTree(tasks));
         System.out.println("savePredefinedDataInFile checklist description:" + updatedDataJson.get("checklist").toString());
         //https://stackoverflow.com/a/29319491
         try (Writer writer = new FileWriter(LocalStorageDataProvider.getLocalChecklistPredefinedData())) {
@@ -102,7 +102,18 @@ public class ChecklistController {
                 checklistLocal.tasks.add(newTask);
             }
         }
-        saveChecklistInFile(checklistLocal, LocalStorageDataProvider.getLocalChecklistPredefinedData());
+        //delete task, if no tasks exist with this ID anymore
+        System.out.println("Check exist");
+        Checklist updatedLocalChecklist = checklistLocal;
+        for (Checklist.Task localTask : checklistLocal.tasks) {
+            String currentLocalTaskID = localTask.id;
+            System.out.println("localTask ID: " + currentLocalTaskID);
+            if (checklistRepo.getTaskWithId(currentLocalTaskID) == null) {
+                System.out.println("Checklist not EXISTS anymore");
+                updatedLocalChecklist.tasks.remove(updatedLocalChecklist.getTaskWithId(currentLocalTaskID));
+            }
+        }
+        saveChecklistInFile(updatedLocalChecklist, LocalStorageDataProvider.getLocalChecklistPredefinedData());
     }
 
     private static void saveChecklistInFile(Checklist checklist, File file) {
@@ -110,7 +121,7 @@ public class ChecklistController {
         JsonObject checklistJson = new JsonObject();
         ArrayList<Checklist.Task> tasksArrayList = checklist.tasks;
         JsonArray tasks = ParseChecklistJSON.getJsonFromChecklist(checklist, tasksArrayList);
-        checklistJson.add("checklist",gson.toJsonTree(tasks));
+        checklistJson.add("checklist", gson.toJsonTree(tasks));
         saveJsonObjectInFile(checklistJson, file);
     }
 
@@ -120,7 +131,7 @@ public class ChecklistController {
         CreateFiles.createNewFile(checklistUserFile);
         JsonObject checklistJson = new JsonObject();
         JsonArray tasks = new JsonArray();
-        checklistJson.add("checklist",gson.toJsonTree(tasks));
+        checklistJson.add("checklist", gson.toJsonTree(tasks));
         saveJsonObjectInFile(checklistJson, checklistUserFile);
 
 
@@ -138,7 +149,6 @@ public class ChecklistController {
         }
         JsonObject repoChecklistData = gson.fromJson(reader, JsonObject.class);
         saveJsonObjectInFile(repoChecklistData, localPredefinedChecklistFile);
-
 
 
         checklistStartPage = LocalStorageDataProvider.getLocalPredefinedChecklistFile();
@@ -166,7 +176,7 @@ public class ChecklistController {
         }
     }
 
-    public void createTaskList(String checklistSource, Document checklistDocument, WebView finalWebView1){
+    public void createTaskList(String checklistSource, Document checklistDocument, WebView finalWebView1) {
         File checklistDataFile;
         Checklist checklistData;
         JsonObject checklistJson = null;
@@ -312,20 +322,19 @@ public class ChecklistController {
 
             //https:stackoverflow.com/a/13966749
             ev.stopPropagation();
-            System.out.println("EV TARGET: "+ev.getTarget().toString());
-            HTMLElement checkbox = (HTMLElement)ev.getTarget();
-            System.out.println("EV TARGET checkbox: "+ checkbox);
-            System.out.println("EV TARGET checkbox: "+ checkbox.getChildNodes().getLength());
-            System.out.println("EV TARGET checkbox: "+ checkbox.getNodeName());
+            System.out.println("EV TARGET: " + ev.getTarget().toString());
+            HTMLElement checkbox = (HTMLElement) ev.getTarget();
+            System.out.println("EV TARGET checkbox: " + checkbox);
+            System.out.println("EV TARGET checkbox: " + checkbox.getChildNodes().getLength());
+            System.out.println("EV TARGET checkbox: " + checkbox.getNodeName());
 
 
-            if(checkbox.getNodeName().equals("SPAN")) {
+            if (checkbox.getNodeName().equals("SPAN")) {
                 System.out.println("EV TARGET SPAN: ");
                 checkbox = (HTMLElement) checkbox.getFirstChild();
             }
 
             HTMLLIElement liElement = (HTMLLIElement) checkbox.getParentNode().getParentNode();
-
 
 
             //https://stackoverflow.com/a/20093950d

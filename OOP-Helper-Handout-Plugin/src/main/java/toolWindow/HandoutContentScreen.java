@@ -91,7 +91,6 @@ public class HandoutContentScreen extends SimpleToolWindowPanel implements Plugi
     }
 
     public void updateContent() {
-        System.out.println("Handout: Update Handout Data");
         webViewController.updateWebViewContent();
     }
 }
