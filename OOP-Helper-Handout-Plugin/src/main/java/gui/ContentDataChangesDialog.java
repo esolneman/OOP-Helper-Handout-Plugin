@@ -6,7 +6,7 @@ import java.awt.event.*;
 public class ContentDataChangesDialog extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
-    private JTextArea textArea1;
+    private JList list1;
     private JButton buttonCancel;
 
     public ContentDataChangesDialog() {

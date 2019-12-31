@@ -30,15 +30,9 @@ public class NotesController {
 
     //TODO CALL CREATE FILE CLASS
     public void createNotesFile() {
-        notesLocalFile.getParentFile().mkdirs();
-        try {
-            notesLocalFile.createNewFile();
-        } catch (IOException e) {
-            //TODO CATACH
-            System.out.println(e);
-        }
+        FileHandleController.createNewFile(notesLocalFile);
         File notesRepoFile = LocalStorageDataProvider.getInitNotesHtmlFile();
-        CreateFiles.saveRepoFileInLocalFile(notesRepoFile, notesLocalFile);
+        FileHandleController.saveRepoFileInLocalFile(notesRepoFile, notesLocalFile);
     }
 
     public void setWebView(WebView webView) {

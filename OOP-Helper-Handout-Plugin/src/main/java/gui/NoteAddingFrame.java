@@ -23,7 +23,7 @@ public class NoteAddingFrame {
     private NotesController notesController;
     private static NoteAddingFrame single_instance = null;
     private LoggingController loggingController;
-
+    private static String OK_BUTTON_LABEL = "OK";
 
     public static NoteAddingFrame getInstance() {
         if (single_instance == null) {
@@ -58,7 +58,7 @@ public class NoteAddingFrame {
         VBox root = new VBox();
         root.setAlignment(Pos.CENTER);
         //TODO Constant
-        Button addEntryButton = new Button("OK");
+        Button addEntryButton = new Button(OK_BUTTON_LABEL);
         root.setAlignment(Pos.CENTER);
         addEntryButton.setOnAction(event -> {
             NotesController.getInstance().saveNewEntryInFile(htmlEditor.getHtmlText());

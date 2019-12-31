@@ -18,7 +18,8 @@ import java.util.Date;
 public class QuestionnaireController {
     private static QuestionnaireController single_instance = null;
     private File projectCreationDateFile;
-    SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+    private static Integer DAYS_TILL_QUESTIONNAIRE = 3;
 
     public static QuestionnaireController getInstance() {
         if (single_instance == null) {
@@ -32,13 +33,7 @@ public class QuestionnaireController {
     }
 
     public void saveProjectCreationDate() {
-        projectCreationDateFile.getParentFile().mkdirs();
-        try {
-            projectCreationDateFile.createNewFile();
-        } catch (IOException e) {
-            //TODO CATACH
-            System.out.println(e);
-        }
+        FileHandleController.createNewFile(projectCreationDateFile);
         System.out.println("saveProjectCreationDate run");
         //Getting current date
         Calendar cal = Calendar.getInstance();
@@ -74,15 +69,11 @@ public class QuestionnaireController {
 
             //TODO MAKE CONSTANT
             dateForQuestionnaireCal = lastSavedDateCal;
-            dateForQuestionnaireCal.add(Calendar.DAY_OF_MONTH, 3);
+            dateForQuestionnaireCal.add(Calendar.DAY_OF_MONTH, DAYS_TILL_QUESTIONNAIRE);
             Date dateForQuestionnaireString = lastSavedDateCal.getTime();
-            System.out.println("Date Incremented by three: " + dateForQuestionnaireString);
-            System.out.println("Date currentDate: " + currentDate);
-            System.out.println("Date lastSavedDate: " + lastSavedDate);
 
             //https://www.mkyong.com/java/how-to-compare-dates-in-java/
             if (lastSavedDate.after(dateForQuestionnaireString) || lastSavedDate.equals(dateForQuestionnaireString)) {
-                System.out.println("Date1 is after Date2");
                 ApplicationManager.getApplication().invokeLater(() -> {
                     QuestionnaireDialog.main(null);
                 });

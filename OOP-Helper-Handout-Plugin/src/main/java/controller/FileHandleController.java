@@ -1,22 +1,16 @@
 package controller;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 
-public class CreateFiles {
+public class FileHandleController {
 
 
     public static void createNewFile(File file){
         try {
-            //TODO SEARCH FOR DUPLICATED CODE
             file.getParentFile().mkdirs();
             file.createNewFile();
         } catch (IOException e) {
-            //TODO CATACH
-            System.out.println(e);
+            e.printStackTrace();
         }
     }
 
@@ -48,20 +42,6 @@ public class CreateFiles {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-    }
-
-    //TODO REMOVE
-    public static void replaceFile(File repoFile, File localFile) {
-        System.out.println("replaceFile: ");
-        System.out.println("repo: " + repoFile.getPath());
-        System.out.println("localFile: " + localFile.getPath());
-        Path from = repoFile.toPath(); //convert from File to Path
-        Path to = localFile.toPath(); //convert from String to Path
-        try {
-            Files.copy(from, to, StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 }

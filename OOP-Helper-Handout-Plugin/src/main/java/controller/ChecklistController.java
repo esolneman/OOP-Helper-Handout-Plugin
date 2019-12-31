@@ -128,7 +128,7 @@ public class ChecklistController {
     public void createChecklistFiles() {
         Gson gson = new Gson();
         File checklistUserFile = LocalStorageDataProvider.getChecklistUserData();
-        CreateFiles.createNewFile(checklistUserFile);
+        FileHandleController.createNewFile(checklistUserFile);
         JsonObject checklistJson = new JsonObject();
         JsonArray tasks = new JsonArray();
         checklistJson.add("checklist", gson.toJsonTree(tasks));
@@ -155,14 +155,14 @@ public class ChecklistController {
         userDataChecklistHTMLFile = LocalStorageDataProvider.getLocalUserDataChecklistFile();
 
 
-        CreateFiles.createNewFile(checklistStartPage);
-        CreateFiles.createNewFile(userDataChecklistHTMLFile);
+        FileHandleController.createNewFile(checklistStartPage);
+        FileHandleController.createNewFile(userDataChecklistHTMLFile);
 
         File predefinedChecklistRepoFile = LocalStorageDataProvider.getRepoPredefinedChecklistFile();
         File userChecklistRepoFile = LocalStorageDataProvider.getRepoUserDataChecklistFile();
 
-        CreateFiles.saveRepoFileInLocalFile(predefinedChecklistRepoFile, checklistStartPage);
-        CreateFiles.saveRepoFileInLocalFile(userChecklistRepoFile, userDataChecklistHTMLFile);
+        FileHandleController.saveRepoFileInLocalFile(predefinedChecklistRepoFile, checklistStartPage);
+        FileHandleController.saveRepoFileInLocalFile(userChecklistRepoFile, userDataChecklistHTMLFile);
     }
 
     //TODO IN CLASS CREATES FILES
