@@ -16,6 +16,8 @@ import javafx.stage.Stage;
 import org.w3c.dom.Document;
 import toolWindow.NotesScreen;
 
+import static environment.LoggingMessageConstants.*;
+
 public class NoteAddingFrame {
     private HTMLEditor htmlEditor;
     private Stage addNoteFrame = new Stage();
@@ -62,7 +64,7 @@ public class NoteAddingFrame {
         root.setAlignment(Pos.CENTER);
         addEntryButton.setOnAction(event -> {
             NotesController.getInstance().saveNewEntryInFile(htmlEditor.getHtmlText());
-            loggingController.saveDataInLogger(LogDataType.NOTES, "Notes Edited", "htmlEditor.getHtmlText()");
+            loggingController.saveDataInLogger(LogDataType.NOTES, NOTES_EDITED, htmlEditor.getHtmlText());
             addNoteFrame.close();
             notesScreen.reloadWebView();
         });
@@ -74,7 +76,7 @@ public class NoteAddingFrame {
 
     //called from html
     public void showAddNoteFrame(){
-        loggingController.saveDataInLogger(LogDataType.NOTES, "Notes Editing Frame", "open");
+        loggingController.saveDataInLogger(LogDataType.NOTES, NOTES_EDITING, OPEN_NOTES_EDITING);
         addNoteFrame.show();
     }
 }

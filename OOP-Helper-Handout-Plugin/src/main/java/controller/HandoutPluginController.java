@@ -14,6 +14,9 @@ import provider.RepoLocalStorageDataProvider;
 
 import java.util.ArrayList;
 
+import static environment.LoggingMessageConstants.IDE_CLOSED;
+import static environment.LoggingMessageConstants.IDE_VISABILITY;
+
 //TODO HIDE ANT TOOL WINDOW
 public class HandoutPluginController implements HandoutPluginControllerInterface, OnGitEventListener {
     private HandoutContentDataProviderInterface handoutDataProvider;
@@ -35,9 +38,7 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
         ProjectManagerListener projectClosedListener = new ProjectManagerListener() {
             @Override
             public void projectClosed(@NotNull Project project) {
-                System.out.println("PROJECT LISTENER name: " + project.getName());
-                loggingController.saveDataInLogger(LogDataType.IDE, "IDE VISIBILITY", "closed IDE");
-                //TODO UNCOMMENT
+                loggingController.saveDataInLogger(LogDataType.IDE, IDE_VISABILITY, IDE_CLOSED);
                 loggingController.syncLoggingData();
             }
 
@@ -66,7 +67,6 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
 
 
     public void onCloningRepositoryEvent(String notificationMessage, NotificationType messageType)   {
-        System.out.println("Performing callback after Asynchronous Task");
         initHtmlFiles();
         updateContentData();
         QuestionnaireController.getInstance().saveProjectCreationDate();
@@ -88,7 +88,6 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
     @Override
     //TODO add strings to message constants
     public void onUpdatingRepositoryEvent(ArrayList<String> commitMessages) {
-        System.out.println("onUpdatingRepositoryEvent");
         updateContentData();
         CommitChangesDialog commitChangesDialog = new CommitChangesDialog(commitMessages);
         BalloonPopupController.showNotification(project, "Handout Daten wurden runtergeladen." + commitMessages.toString(), NotificationType.INFORMATION);
@@ -97,7 +96,6 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
 
     @Override
     public void onNotUpdatingRepositoryEvent(String notificationMessage, NotificationType messageType) {
-        System.out.println("onNotUpdatingRepositoryEvent");
         BalloonPopupController.showNotification(project, notificationMessage, messageType);
     }
 

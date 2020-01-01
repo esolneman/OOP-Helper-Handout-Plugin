@@ -15,7 +15,6 @@ import provider.LocalStorageDataProvider;
 
 public class PluginWebViewFXPanel extends JFXPanel {
     public void showHandoutWebView(String urlString, WebView webView) {
-        //TODO NULLPOiNTER ? GET URLS TO GET
         //Platform.setImplicitExit(false);
         //Platform.runLater(() -> {
         webView.getEngine().load(urlString);

@@ -77,7 +77,6 @@ public class NotesScreen extends SimpleToolWindowPanel {
         return toolWindowPanel;
     }
 
-    //Todo
     // Had to be newly created, because when editing the html it is parsed to XHTML
     // and because of that, the button is not recogniced anymore
     public void reloadWebView() {
