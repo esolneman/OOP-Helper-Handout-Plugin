@@ -23,6 +23,7 @@ import java.util.Objects;
 
 import static environment.FileConstants.HANDOUT_PDF_FILE_NAME;
 import static environment.FileConstants.URL_BEGIN_FOR_FILE;
+import static environment.LoggingMessageConstants.*;
 import static environment.Messages.FILES_SELECTING_DESCRIPTION;
 import static environment.Messages.FILES_SELECTING_TEXT;
 
@@ -47,7 +48,7 @@ public class DownloadPDFHelper {
     download Handout as PDF in choosed directory
      */
     public void downloadHandout() {
-        LoggingController.getInstance().saveDataInLogger(LogDataType.HANDOUT, "Download PDF", "open File Chooser");
+        LoggingController.getInstance().saveDataInLogger(LogDataType.HANDOUT, DOWNLOAD_PDF, OPEN_FILE_CHOOSER);
         ApplicationManager.getApplication().invokeLater(() -> {
             String handoutHTMLDirectory = RepoLocalStorageDataProvider.getHandoutHtmlString();
             Project project = RepoLocalStorageDataProvider.getProject();
@@ -88,11 +89,11 @@ public class DownloadPDFHelper {
             if (success) {
                 System.out.println("SUCCESS");
                 BalloonPopupController.showBalloonNotification(handoutContentScreen, Balloon.Position.above, "Downloading was successfully", MessageType.INFO);
-                LoggingController.getInstance().saveDataInLogger(LogDataType.HANDOUT, "Download PDF Version", "success");
+                LoggingController.getInstance().saveDataInLogger(LogDataType.HANDOUT, DOWNLOAD_PDF, PDF_DOWNLOAD_SUCCESS);
             } else {
                 System.out.println("FAILURE");
                 BalloonPopupController.showBalloonNotification(handoutContentScreen, Balloon.Position.above, "Error while downloading the handout. Please try again.", MessageType.ERROR);
-                LoggingController.getInstance().saveDataInLogger(LogDataType.HANDOUT, "Download PDF Version", "error");
+                LoggingController.getInstance().saveDataInLogger(LogDataType.HANDOUT, DOWNLOAD_PDF, PDF_DOWNLOAD_ERROR);
             }
         });
 

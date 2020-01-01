@@ -24,6 +24,8 @@ import javax.swing.event.AncestorListener;
 import java.awt.*;
 import java.awt.event.FocusEvent;
 
+import static environment.LoggingMessageConstants.*;
+
 
 public class HandoutToolWindowFactory implements ToolWindowFactory, OnLocalDataUpdatedListener {
 
@@ -77,9 +79,9 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, OnLocalDataU
             @Override
             public void selectionChanged(@NotNull ContentManagerEvent event) {
                 if (event.getContent().isSelected()) {
-                    loggingController.saveDataInLogger(LogDataType.TOOL_WINDOW, "tab focus lost", event.getContent().getDisplayName());
+                    loggingController.saveDataInLogger(LogDataType.TOOL_WINDOW, TAB_FOCUS_LOST, event.getContent().getDisplayName());
                 } else {
-                    loggingController.saveDataInLogger(LogDataType.TOOL_WINDOW, "tab focus gained", event.getContent().getDisplayName());
+                    loggingController.saveDataInLogger(LogDataType.TOOL_WINDOW, TAB_FOCUS_GAINED, event.getContent().getDisplayName());
                 }
             }
         });
@@ -87,14 +89,14 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, OnLocalDataU
         new FocusWatcher() {
             @Override
             protected void focusLostImpl(final FocusEvent e) {
-                loggingController.saveDataInLogger(LogDataType.TOOL_WINDOW, "tool window focus", "tool window unfocused");
+                loggingController.saveDataInLogger(LogDataType.TOOL_WINDOW, TOOL_WINDOW_FOCUS,  UNFOCUSED);
             }
 
             @Override
             //https://intellij-support.jetbrains.com/hc/en-us/community/posts/360000018010/comments/360000025810
             protected void focusedComponentChanged(Component focusedComponent, @Nullable AWTEvent cause) {
                 if (focusedComponent != null && SwingUtilities.isDescendingFrom(focusedComponent, toolWindow.getComponent())) {
-                    loggingController.saveDataInLogger(LogDataType.TOOL_WINDOW, "tool window focus", "tool window focused");
+                    loggingController.saveDataInLogger(LogDataType.TOOL_WINDOW, TOOL_WINDOW_FOCUS, FOCUSED);
 
                 }
             }
@@ -112,13 +114,13 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, OnLocalDataU
             @Override
             public void ancestorAdded(AncestorEvent ancestorEvent) {
                 System.out.println("ancestorAdded toolWindow: " + toolWindow.isVisible());
-                loggingController.saveDataInLogger(LogDataType.TOOL_WINDOW, "Tool Window Visibility", String.valueOf(toolWindow.isVisible()));
+                loggingController.saveDataInLogger(LogDataType.TOOL_WINDOW,TOOL_WINDOW_VISIBILITY, String.valueOf(toolWindow.isVisible()));
             }
 
             @Override
             public void ancestorRemoved(AncestorEvent ancestorEvent) {
                 System.out.println("ancestorRemoved toolWindow: " + toolWindow.isVisible());
-                loggingController.saveDataInLogger(LogDataType.TOOL_WINDOW, "Tool Window Visibility", String.valueOf(toolWindow.isVisible()));
+                loggingController.saveDataInLogger(LogDataType.TOOL_WINDOW, TOOL_WINDOW_VISIBILITY, String.valueOf(toolWindow.isVisible()));
             }
 
             @Override

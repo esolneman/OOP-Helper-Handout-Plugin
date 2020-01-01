@@ -15,7 +15,7 @@ import provider.RepoLocalStorageDataProvider;
 import java.util.ArrayList;
 
 import static environment.LoggingMessageConstants.IDE_CLOSED;
-import static environment.LoggingMessageConstants.IDE_VISABILITY;
+import static environment.LoggingMessageConstants.IDE_VISIBILITY;
 
 //TODO HIDE ANT TOOL WINDOW
 public class HandoutPluginController implements HandoutPluginControllerInterface, OnGitEventListener {
@@ -38,7 +38,7 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
         ProjectManagerListener projectClosedListener = new ProjectManagerListener() {
             @Override
             public void projectClosed(@NotNull Project project) {
-                loggingController.saveDataInLogger(LogDataType.IDE, IDE_VISABILITY, IDE_CLOSED);
+                loggingController.saveDataInLogger(LogDataType.IDE, IDE_VISIBILITY, IDE_CLOSED);
                 loggingController.syncLoggingData();
             }
 
