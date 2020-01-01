@@ -1,16 +1,13 @@
 package provider;
 
 import com.intellij.notification.NotificationType;
-import com.intellij.openapi.progress.ProgressIndicator;
-import com.intellij.openapi.progress.ProgressManager;
-import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
 import controller.QuestionnaireController;
 import de.ur.mi.pluginhelper.tasks.TaskConfiguration;
 import eventHandling.OnGitEventListener;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import provider.helper.AsyncExecutor;
+import provider.helper.ProgressExecutor;
 import provider.helper.DownloadTask;
 
 import java.io.File;
@@ -25,20 +22,15 @@ import static environment.FileConstants.*;
 // is Singleton
 public class HandoutContentDataProvider implements HandoutContentDataProviderInterface {
     private OnGitEventListener onEventListener;
-    private AsyncExecutor asyncExecutor = new AsyncExecutor();
+    private ProgressExecutor progressExecutor = new ProgressExecutor();
     private static HandoutContentDataProvider single_instance = null;
 
-    // TODO: get RepoURL from jar file
     private String repoUrl;
     private String branchPath;
     private Project project;
     private String projectDirectory;
     private String contentRepoPath;
     private File contentRepoFile;
-    private File zipFile;
-    private File outputDir;
-    private File tempVersionZipFile;
-    private File tempVersionOutputDir;
     private File repoLocalData;
     private DownloadTask task;
 
@@ -54,13 +46,9 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         //TODO DELETE UNUSED FILES
         this.project = RepoLocalStorageDataProvider.getProject();
         projectDirectory = project.getBasePath();
+        //TODO MOve To Constants
         contentRepoPath = RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE;
         contentRepoFile = new File(contentRepoPath);
-        zipFile = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE);
-        outputDir = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE);
-        //TODO: TEMP-File
-        tempVersionZipFile = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE + "/temp" + "/repo.zip");
-        tempVersionOutputDir = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE + "/temp");
         repoLocalData = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE);
         getRepoUrl();
         task = DownloadTask.getInstance();
@@ -72,14 +60,11 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         branchPath = taskConfiguration.getBranchPath();
     }
 
-    //TODO CHECK UPDATE FUNCTION
     public void updateHandoutData() {
-        System.out.println("updateHandoutData");
         controlRetrievingContentData();
     }
 
     private void controlRetrievingContentData() {
-        System.out.println("ControlRetrievingContentData: " + onEventListener);
         Boolean internetConnection = checkInternetConnection();
         Boolean repoContentDataExists = checkRepoContentDataExists();
         if (internetConnection && !repoContentDataExists) {
@@ -107,7 +92,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         }
     }
 
-    //https://www.geeksforgeeks.org/checking-internet-connectivity-using-java/
+    //https://www.it-swarm.net/de/java/wie-pruefe-ich-ob-eine-internetverbindung-java-vorhanden-ist/967034905/
     //TODO Ping Github Repo -> is Repo Available
     public Boolean checkInternetConnection() {
         try {
@@ -127,7 +112,6 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         this.onEventListener = listener;
     }
 
-    //TODO
     private void cloneRepository() {
         System.out.println("start cloning branch");
 
@@ -149,13 +133,13 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
                 callListener("Handout Daten wurden runtergeladen.", NotificationType.INFORMATION);
             }
         };
-        asyncExecutor.runAsyncClone(cloneTask);
+        progressExecutor.runSynchronousProcess(cloneTask);
     }
 
 
     private void updateBranch() {
         System.out.println("updateBranch");
-        asyncExecutor = new AsyncExecutor();
+        progressExecutor = new ProgressExecutor();
         ArrayList<String> commitMessages = task.getLatestCommits();
         System.out.println("updateBranch  commitMessages : " + commitMessages.size());
         //if (commitMessages.size() >= 1) {
@@ -168,7 +152,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
                     e.printStackTrace();
                 }
             };
-            asyncExecutor.runAsyncClone(updateTask);
+            progressExecutor.runSynchronousProcess(updateTask);
             callListener(commitMessages);
     }
 

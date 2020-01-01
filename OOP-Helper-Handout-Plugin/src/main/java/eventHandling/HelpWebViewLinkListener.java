@@ -25,7 +25,6 @@ public class HelpWebViewLinkListener {
     public void createListener() {
         //https://github.com/CodeFX-org/LibFX/wiki/WebViewHyperlinkListener
         WebViewHyperlinkListener eventPrintingListener = event -> {
-            //TODO: Refactor variable name
             String hyperlink = event.getURL().toString();
             if(hyperlink != null){
                 if (hyperlink.contains("http://") || hyperlink.contains("https://") || hyperlink.contains("mailto")) {
@@ -35,7 +34,7 @@ public class HelpWebViewLinkListener {
             return false;
         };
         //TODO METHOD FOR THIS IN WEBVIEW CONTROOLER
-            WebViews.addHyperlinkListener(webView, eventPrintingListener, HyperlinkEvent.EventType.ACTIVATED);
+        WebViews.addHyperlinkListener(webView, eventPrintingListener, HyperlinkEvent.EventType.ACTIVATED);
     }
 
 

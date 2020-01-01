@@ -31,7 +31,6 @@ import java.util.concurrent.TimeUnit;
 
 public class WebViewController {
     private WebView webView;
-    private HandoutWebViewLinkListener webViewLinkListener;
     private String urlString;
 
     public WebViewController(){}

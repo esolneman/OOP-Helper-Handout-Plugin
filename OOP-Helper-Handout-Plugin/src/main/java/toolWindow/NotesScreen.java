@@ -34,15 +34,12 @@ public class NotesScreen extends SimpleToolWindowPanel {
         toolWindowPanel = new SimpleToolWindowPanel(true);
         noteToolWindow = toolWindow;
         webViewController = new WebViewController();
-
-        //TODO verschiebe to LOCALUSERSTORAGE
         initNotesFile = LocalStorageDataProvider.getNotesFile();
         try {
             notesHtmlString = initNotesFile.toURI().toURL().toString();
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-        //TODO DISPLAY SOMETHING WHEN FILE IS EMPTY
         createContent();
         initToolWindowMenu();
     }
