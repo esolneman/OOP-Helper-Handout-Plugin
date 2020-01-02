@@ -1,5 +1,9 @@
 package controller;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+
 import java.io.*;
 
 public class FileHandleController {
@@ -42,6 +46,16 @@ public class FileHandleController {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public static void saveJsonObjectInFile(JsonObject jsonObject, File outputFile) {
+        //https://stackoverflow.com/a/29319491
+        try (Writer writer = new FileWriter(outputFile)) {
+            Gson gson = new GsonBuilder().create();
+            gson.toJson(jsonObject, writer);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

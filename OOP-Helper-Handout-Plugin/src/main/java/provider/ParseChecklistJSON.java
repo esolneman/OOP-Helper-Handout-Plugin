@@ -48,16 +48,14 @@ public class ParseChecklistJSON {
     }
 
     public static JsonArray getJsonFromLiElement(HTMLUListElement taskList){
-        /* JsonArray tasks = new JsonArray();
-        Gson gson = new GsonBuilder().create();*/
         ArrayList<Checklist.Task> tasksArrayList = new ArrayList<>();
         Boolean checked;
         for (int i = 0; i < taskList.getChildNodes().getLength(); i++) {
             HTMLLIElement currentTask = (HTMLLIElement) taskList.getChildNodes().item(i);
+            System.out.println("TASKLIST CURRENT: " + currentTask);
+            System.out.println("TASKLIST CURRENT inhalt: " + currentTask.getChildNodes().item(1));
             HTMLElement checkboxImage = (HTMLElement) currentTask.getChildNodes().item(1).getFirstChild();
             String description = currentTask.getFirstChild().getTextContent();
-          /*  byte[] ptext = description.getBytes();
-            description = new String(ptext, UTF_8);*/
             if (checkboxImage.getClassName().equals("fa fa-check-square")){
                  checked = true;
             } else{
@@ -76,25 +74,6 @@ public class ParseChecklistJSON {
         }
         Checklist updatedChecklist;
         updatedChecklist = new Checklist();
-
-/*
-        //TODO mehtod checklist -> JSON
-        updatedChecklist.setTasks(tasksArrayList);
-
-        for (int i = 0; i < updatedChecklist.tasks.size(); i++) {
-            JsonObject task = new JsonObject();
-            //task.addProperty("taskDescription", updatedChecklist.tasks.get(i).taskDescription);
-            //task.addProperty("checked", updatedChecklist.tasks.get(i).checked);
-            task.add("taskDescription", gson.toJsonTree(updatedChecklist.tasks.get(i).taskDescription));
-            task.add("checked", gson.toJsonTree(updatedChecklist.tasks.get(i).checked));
-            if(updatedChecklist.tasks.get(i).id != null){
-                //task.addProperty("id", updatedChecklist.tasks.get(i).id);
-                task.add("id", gson.toJsonTree(updatedChecklist.tasks.get(i).id));
-            }
-            tasks.add(task);
-
-        }*/
-        //return tasks;
         return getJsonFromChecklist(updatedChecklist, tasksArrayList);
     }
 
