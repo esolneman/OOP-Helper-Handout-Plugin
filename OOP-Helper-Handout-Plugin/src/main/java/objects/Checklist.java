@@ -6,18 +6,8 @@ public class Checklist {
 
     public ArrayList<Task> tasks;
 
-    public boolean containsID(String currentRepoTaskID) {
-        for (Task task : tasks) {
-            if (task.id.equals(currentRepoTaskID)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public Task getTaskWithId(String currentRepoTaskID) {
         for (Task task : tasks) {
-            System.out.println("Local ID: " + task.id);
             if (task.id.equals(currentRepoTaskID)) {
                 return task;
             }
