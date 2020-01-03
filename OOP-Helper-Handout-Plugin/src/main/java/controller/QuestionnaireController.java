@@ -34,7 +34,6 @@ public class QuestionnaireController {
 
     public void saveProjectCreationDate() {
         FileHandleController.createNewFile(projectCreationDateFile);
-        System.out.println("saveProjectCreationDate run");
         //Getting current date
         Calendar cal = Calendar.getInstance();
         //https://stackoverflow.com/a/1053475
@@ -46,8 +45,6 @@ public class QuestionnaireController {
     }
 
     public void compareDates() {
-        System.out.println("Date compareDatesg");
-
         String lastSavedDateString = "";
         //Getting current date
         Calendar lastSavedDateCal = Calendar.getInstance();
@@ -57,7 +54,6 @@ public class QuestionnaireController {
         try {
             //https://www.geeksforgeeks.org/different-ways-reading-text-file-java/
             lastSavedDateString = new String(Files.readAllBytes(Paths.get(projectCreationDateFile.getAbsolutePath())));
-            System.out.println("Date lastSavedDateString: " + lastSavedDateString);
 
             //https://beginnersbook.com/2017/10/java-add-days-to-date/
             try {
@@ -67,19 +63,19 @@ public class QuestionnaireController {
             }
             Date lastSavedDate = dateFormat.parse(lastSavedDateString);
 
-            //TODO MAKE CONSTANT
             dateForQuestionnaireCal = lastSavedDateCal;
             dateForQuestionnaireCal.add(Calendar.DAY_OF_MONTH, DAYS_TILL_QUESTIONNAIRE);
-            Date dateForQuestionnaireString = lastSavedDateCal.getTime();
+            Date dateForQuestionnaire = lastSavedDateCal.getTime();
+            String dateForQuestionnaireString = dateFormat.format(dateForQuestionnaire);
+            Date dateForQuestionnaireShortVersion = dateFormat.parse(dateForQuestionnaireString);
 
             //https://www.mkyong.com/java/how-to-compare-dates-in-java/
-            if (lastSavedDate.after(dateForQuestionnaireString) || lastSavedDate.equals(dateForQuestionnaireString)) {
+            if (currentDate.after(dateForQuestionnaireShortVersion) || currentDate.equals(dateForQuestionnaireShortVersion)) {
                 ApplicationManager.getApplication().invokeLater(() -> {
                     QuestionnaireDialog.main(null);
                 });
                 saveDateInFile(dateFormat.format(currentDate));
             }
-
             //TODO Not After Abgabetermin!!!
 
         } catch (IOException | ParseException e) {

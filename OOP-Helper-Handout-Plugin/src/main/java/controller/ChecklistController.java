@@ -224,65 +224,6 @@ public class ChecklistController {
         }
     }
 
-
-
-    private void testClass(){
-        /*HTMLUListElement taskList = (HTMLUListElement) checklistDocument.getElementById(taskListId);
-        //https://stackoverflow.com/a/3955238
-        while (taskList.hasChildNodes()) {
-            taskList.removeChild(taskList.getLastChild());
-        }
-        for (int i = 0; i < checklistData.tasks.size(); i++) {
-            //TODO METHOD fro creating LI
-            HTMLLIElement newTask = (HTMLLIElement) checklistDocument.createElement("li");
-
-            //Text description =  checklistDocument.createTextNode(checklistData.tasks.get(i).taskDescription);
-            HTMLDivElement description = (HTMLDivElement) checklistDocument.createElement("div");
-            description.setTextContent(checklistData.tasks.get(i).taskDescription);
-
-            newTask.appendChild(description);
-            taskList.appendChild(newTask);
-
-            HTMLElement checkbox = (HTMLElement) checklistDocument.createElement("span");
-            HTMLElement checkboxImage = (HTMLElement) checklistDocument.createElement("i");
-            //TODO make constant for class name
-            checkbox.appendChild(checkboxImage);
-            checkbox.setClassName("checkbox");
-            newTask.appendChild(checkbox);
-
-            ((EventTarget) checkbox).addEventListener("click", getToggleCheckTaskListener(checklistSource, finalWebView1), false);
-            //((EventTarget) description).addEventListener("click", getToggleCheckTaskListener(checklistSource, finalWebView1), false);
-
-            if (checklistData.tasks.get(i).checked) {
-                checkboxImage.setClassName("fa fa-check-square");
-                newTask.setClassName("checked");
-            } else {
-                checkboxImage.setClassName("fa fa-square");
-                newTask.setClassName("unchecked");
-            }
-            if (checklistData.tasks.get(i).id != null) {
-                newTask.setId(checklistData.tasks.get(i).id);
-            }
-            if (!checklistSource.equals("predefined")) {
-                HTMLElement span = (HTMLElement) checklistDocument.createElement("span");
-                Text txt = checklistDocument.createTextNode("\u00D7");
-                span.setClassName("close");
-                span.appendChild(txt);
-                newTask.appendChild(span);
-                description.setClassName("editableLI");
-                description.setAttribute("contenteditable", "true");
-                ((EventTarget) description).addEventListener("focusout", getEditableTaskListener(finalWebView1), false);
-                ((EventTarget) span).addEventListener("click", getCloseButtonListener(finalWebView1), false);
-            }
-            taskList.appendChild(newTask);
-        }*/
-    }
-
-
-
-
-
-
     //TODO ADD SOURCE W3 PAGE
     public void addTask(WebView webView) {
         Document doc = webView.getEngine().getDocument();
@@ -368,14 +309,7 @@ public class ChecklistController {
                 liElement.setClassName(UNCHECKED_CLASS);
                 LoggingController.getInstance().saveDataInLogger(logDataType, CHECKLIST_UNCHECKED, liElement.getTextContent());
             }
-            System.out.println(webView);
-            System.out.println(webView.getEngine().getDocument());
-            System.out.println(webView.getEngine().getDocument().getBaseURI());
-            System.out.println(webView.getEngine().executeScript("document.body.innerHTML"));
-            System.out.println(webView.getEngine().executeScript("document.body.html"));
-
             saveDocumentInFile(webView.getEngine().getDocument(), dataSource);
-
         };
         return toggleCheckListener;
     }
