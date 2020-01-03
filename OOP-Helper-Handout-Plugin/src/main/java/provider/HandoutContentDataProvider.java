@@ -27,6 +27,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
 
     private String repoUrl;
     private String branchPath;
+    private String branchName;
     private Project project;
     private String projectDirectory;
     private String contentRepoPath;
@@ -58,6 +59,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         TaskConfiguration taskConfiguration = TaskConfiguration.loadFrom(project);
         repoUrl = taskConfiguration.getHandoutURL();
         branchPath = taskConfiguration.getBranchPath();
+        branchName = branchPath.substring(branchPath.lastIndexOf("/"));
     }
 
     public void updateHandoutData() {
@@ -114,7 +116,6 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
 
     private void cloneRepository() {
         System.out.println("start cloning branch");
-
         //https://www.vogella.com/tutorials/JGit/article.html#example-for-using-jgit
         Runnable cloneTask = () -> {
             try {
@@ -138,12 +139,9 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
 
 
     private void updateBranch() {
-        System.out.println("updateBranch");
         progressExecutor = new ProgressExecutor();
-        ArrayList<String> commitMessages = task.getLatestCommits();
-        System.out.println("updateBranch  commitMessages : " + commitMessages.size());
-        //if (commitMessages.size() >= 1) {
-            System.out.println("commitMessages not empty");
+        ArrayList<String> commitMessages = task.getLatestCommits(branchName);
+        if (commitMessages.size() >= 1) {
             //TODO ASK USER IF DOWNLOAD IS OK
             Runnable updateTask = () -> {
                 try {
@@ -154,6 +152,9 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
             };
             progressExecutor.runSynchronousProcess(updateTask);
             callListener(commitMessages);
+        }else{
+            callListenerNotUpdating("Handoutdaten sind bereits auf dem aktuellsten Stand" , NotificationType.INFORMATION);
+        }
     }
 
     private void callListener(String message, NotificationType messageType) {
@@ -163,9 +164,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
     }
 
     private void callListener(ArrayList<String> lastCommitMessages) {
-        System.out.println("listener call commitmessages");
         if (onEventListener != null) {
-            System.out.println("listener call commitmessages not null");
             onEventListener.onUpdatingRepositoryEvent(lastCommitMessages);
         }
     }

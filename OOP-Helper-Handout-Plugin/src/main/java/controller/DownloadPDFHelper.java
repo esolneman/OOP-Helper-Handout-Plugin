@@ -40,7 +40,8 @@ public class DownloadPDFHelper {
         return single_instance;
     }
 
-    private DownloadPDFHelper(){}
+    private DownloadPDFHelper() {
+    }
 
 
     /*
@@ -88,11 +89,11 @@ public class DownloadPDFHelper {
             //TODO add Listener for this and display Notification with Listener!!!
             if (success) {
                 System.out.println("SUCCESS");
-                BalloonPopupController.showBalloonNotification(handoutContentScreen, Balloon.Position.above, "Downloading was successfully", MessageType.INFO);
+                BalloonPopupController.showBalloonNotification(Balloon.Position.above, "Downloading was successfully", "Download des Handouts", MessageType.INFO);
                 LoggingController.getInstance().saveDataInLogger(LogDataType.HANDOUT, DOWNLOAD_PDF, PDF_DOWNLOAD_SUCCESS);
             } else {
                 System.out.println("FAILURE");
-                BalloonPopupController.showBalloonNotification(handoutContentScreen, Balloon.Position.above, "Error while downloading the handout. Please try again.", MessageType.ERROR);
+                BalloonPopupController.showBalloonNotification(Balloon.Position.above, "Error while downloading the handout. Please try again.", "Download des Handouts", MessageType.ERROR);
                 LoggingController.getInstance().saveDataInLogger(LogDataType.HANDOUT, DOWNLOAD_PDF, PDF_DOWNLOAD_ERROR);
             }
         });

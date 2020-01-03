@@ -61,8 +61,6 @@ public class QuestionnaireController {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            Date lastSavedDate = dateFormat.parse(lastSavedDateString);
-
             dateForQuestionnaireCal = lastSavedDateCal;
             dateForQuestionnaireCal.add(Calendar.DAY_OF_MONTH, DAYS_TILL_QUESTIONNAIRE);
             Date dateForQuestionnaire = lastSavedDateCal.getTime();

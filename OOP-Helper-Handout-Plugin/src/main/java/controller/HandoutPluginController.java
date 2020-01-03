@@ -1,12 +1,19 @@
 package controller;
 
 import com.intellij.notification.NotificationType;
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.components.ComponentManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerListener;
+import com.intellij.openapi.ui.MessageType;
+import com.intellij.openapi.ui.popup.Balloon;
 import de.ur.mi.pluginhelper.logger.LogDataType;
 import eventHandling.OnGitEventListener;
 import gui.CommitChangesDialog;
+import gui.ContentDataChangesDialog;
+import gui.QuestionnaireDialog;
+import org.apache.batik.bridge.svg12.ContentManager;
 import org.jetbrains.annotations.NotNull;
 import provider.HandoutContentDataProvider;
 import provider.HandoutContentDataProviderInterface;
@@ -70,7 +77,7 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
         initHtmlFiles();
         updateContentData();
         QuestionnaireController.getInstance().saveProjectCreationDate();
-        BalloonPopupController.showNotification(project, notificationMessage, messageType);
+        BalloonPopupController.showBalloonNotification( Balloon.Position.above, notificationMessage, "Status des Handouts", MessageType.INFO);
     }
 
     private void initHtmlFiles() {
@@ -89,14 +96,21 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
     //TODO add strings to message constants
     public void onUpdatingRepositoryEvent(ArrayList<String> commitMessages) {
         updateContentData();
-        CommitChangesDialog commitChangesDialog = new CommitChangesDialog(commitMessages);
-        BalloonPopupController.showNotification(project, "Handout Daten wurden runtergeladen." + commitMessages.toString(), NotificationType.INFORMATION);
-        commitChangesDialog.showPanel();
+        //CommitChangesDialog commitChangesDialog = new CommitChangesDialog(commitMessages);
+        ApplicationManager.getApplication().invokeLater(() -> {
+            ContentDataChangesDialog.main(commitMessages);
+        });
+        BalloonPopupController.showBalloonNotification( Balloon.Position.above, "Handout Daten wurden runtergeladen.", "Status des Handouts", MessageType.INFO);
+
+        //  BalloonPopupController.showNotification(project, "Handout Daten wurden runtergeladen." + commitMessages.toString(), NotificationType.INFORMATION);
+        //commitChangesDialog.showPanel();
     }
 
     @Override
     public void onNotUpdatingRepositoryEvent(String notificationMessage, NotificationType messageType) {
-        BalloonPopupController.showNotification(project, notificationMessage, messageType);
+       // BalloonPopupController.showNotification(project, notificationMessage, messageType);
+        BalloonPopupController.showBalloonNotification( Balloon.Position.above, notificationMessage, "Status des Handouts", MessageType.ERROR);
+
     }
 
 }

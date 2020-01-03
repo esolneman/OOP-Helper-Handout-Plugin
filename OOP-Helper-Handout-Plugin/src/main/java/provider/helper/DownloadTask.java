@@ -84,7 +84,7 @@ public class DownloadTask {
     }
 
     //get commit messages ahead of local repository
-    public ArrayList<String> getLatestCommits() {
+    public ArrayList<String> getLatestCommits(String branchName) {
         System.out.println("checkIfNewVersionIsAvailable");
         //https://github.com/centic9/jgit-cookbook/blob/master/src/main/java/org/dstadler/jgit/porcelain/ShowLog.java
         ArrayList<String> commitMessages = new ArrayList<>();
@@ -96,9 +96,12 @@ public class DownloadTask {
             String lastLocalCommitId = head.getObjectId().getName();
             git.fetch().call();
             Iterable<RevCommit> logs = git.log().call();
+            String resolvedRepository = "remotes/origin" + branchName;
             //TODO ADD SOURCE
             logs = git.log()
-                    .add(repository.resolve("remotes/origin/test"))
+                    //TODO GET BRANCH FROM TASK DATA
+                    //.add(repository.resolve("remotes/origin/test"))
+                    .add(repository.resolve(resolvedRepository))
                     .call();
             for (RevCommit rev : logs) {
                 String currentRevID = rev.getId().getName();
