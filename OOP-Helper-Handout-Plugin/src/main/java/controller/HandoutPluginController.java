@@ -107,9 +107,9 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
     }
 
     @Override
-    public void onNotUpdatingRepositoryEvent(String notificationMessage, NotificationType messageType) {
+    public void onNotUpdatingRepositoryEvent(String notificationMessage, MessageType messageType) {
        // BalloonPopupController.showNotification(project, notificationMessage, messageType);
-        BalloonPopupController.showBalloonNotification( Balloon.Position.above, notificationMessage, "Status des Handouts", MessageType.ERROR);
+        BalloonPopupController.showBalloonNotification( Balloon.Position.above, notificationMessage, "Status des Handouts", messageType);
 
     }
 

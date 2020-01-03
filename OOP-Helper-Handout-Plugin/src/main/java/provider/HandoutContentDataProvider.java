@@ -2,6 +2,7 @@ package provider;
 
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.MessageType;
 import controller.QuestionnaireController;
 import de.ur.mi.pluginhelper.tasks.TaskConfiguration;
 import eventHandling.OnGitEventListener;
@@ -76,9 +77,9 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
             updateBranch();
         } else if (repoContentDataExists) {
             QuestionnaireController.getInstance().compareDates();
-            callListenerNotUpdating("Keine Internetverbindung vorhanden. Handout Daten können momentan nicht aktualisiert werden." , NotificationType.ERROR);
+            callListenerNotUpdating("Keine Internetverbindung vorhanden. Handout Daten können momentan nicht aktualisiert werden." , MessageType.ERROR);
         } else {
-            callListenerNotUpdating("Keine Internetverbindung vorhanden. Handout Daten können momentan nicht heruntergeladen werden.", NotificationType.ERROR);
+            callListenerNotUpdating("Keine Internetverbindung vorhanden. Handout Daten können momentan nicht heruntergeladen werden.", MessageType.ERROR);
         }
     }
 
@@ -153,7 +154,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
             progressExecutor.runSynchronousProcess(updateTask);
             callListener(commitMessages);
         }else{
-            callListenerNotUpdating("Handoutdaten sind bereits auf dem aktuellsten Stand" , NotificationType.INFORMATION);
+            callListenerNotUpdating("Handoutdaten sind bereits auf dem aktuellsten Stand" , MessageType.INFO);
         }
     }
 
@@ -169,7 +170,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         }
     }
 
-    private void callListenerNotUpdating(String message, NotificationType messageType) {
+    private void callListenerNotUpdating(String message, MessageType messageType) {
         if (onEventListener != null) {
             onEventListener.onNotUpdatingRepositoryEvent(message, messageType);
         }
