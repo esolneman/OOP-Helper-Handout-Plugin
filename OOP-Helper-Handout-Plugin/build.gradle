@@ -8,8 +8,6 @@ plugins {
 
 version '1.0'
 
-sourceCompatibility = 1.8
-
 repositories {
     mavenCentral()
 }
@@ -21,6 +19,8 @@ dependencies {
     compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '2.2.0.201212191850-r'
     implementation 'com.google.code.gson:gson:2.8.6'
 }
+
+sourceCompatibility = 1.8
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {

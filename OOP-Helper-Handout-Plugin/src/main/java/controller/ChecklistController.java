@@ -217,8 +217,8 @@ public class ChecklistController {
                 newTask.appendChild(createCheckBoxElement(checklistDocument, finalWebView1, checklistSource, checkBoxIcon));
                 newTask.appendChild(createCloseElement(checklistDocument, finalWebView1));
             } else {
-                newTask.appendChild(createCheckBoxElement(checklistDocument, finalWebView1, checklistSource, checkBoxIcon));
                 newTask.appendChild(createDescriptionElement(checklistDocument, checklistData.tasks.get(i).taskDescription));
+                newTask.appendChild(createCheckBoxElement(checklistDocument, finalWebView1, checklistSource, checkBoxIcon));
             }
             taskList.appendChild(newTask);
         }

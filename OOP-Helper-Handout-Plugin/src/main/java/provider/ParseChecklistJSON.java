@@ -52,6 +52,7 @@ public class ParseChecklistJSON {
         Boolean checked;
         for (int i = 0; i < taskList.getChildNodes().getLength(); i++) {
             HTMLLIElement currentTask = (HTMLLIElement) taskList.getChildNodes().item(i);
+            System.out.println("Child 1: " + (HTMLElement) currentTask.getChildNodes().item(1).getFirstChild());
             HTMLElement checkboxImage = (HTMLElement) currentTask.getChildNodes().item(1).getFirstChild();
             String description = currentTask.getFirstChild().getTextContent();
             if (checkboxImage.getClassName().equals("fa fa-check-square")){
