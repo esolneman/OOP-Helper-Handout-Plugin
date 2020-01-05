@@ -230,7 +230,8 @@ public class ChecklistController {
         HTMLUListElement userDataTaskList = (HTMLUListElement) doc.getElementById("userDataTaskList");
         HTMLInputElement newTaskInputField = (HTMLInputElement) doc.getElementById("newTaskDescription");
         String taskDescription = newTaskInputField.getValue();
-        if (taskDescription == null || taskDescription == " " || taskDescription.equals("") || taskDescription.equals(" ")) {
+        // source for detect if string contains only whitespaces: https://stackoverflow.com/a/3247081
+        if (taskDescription == null || taskDescription.trim().length() == 0) {
             taskDescription = "Neue Aufgabe";
         }
         HTMLLIElement newTask = (HTMLLIElement) doc.createElement("li");
