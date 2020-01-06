@@ -153,9 +153,6 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, OnLocalDataU
         toolWindow.getContentManager().addContent(notesContent);
         //TODO: Decide which Tab is open when start ide
         toolWindow.getContentManager().setSelectedContent(handoutContent);
-        handoutContent.setDescription("HMMMMm");
-
-        System.out.println("Desrciption: " + handoutContent.getDescription());
         callListener();
     }
 
@@ -168,7 +165,6 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, OnLocalDataU
     }
 
     public void updateWebView() {
-        System.out.println("Update ToolWindows");
         //TODO Interface --> alle?
         handoutContentScreen.updateContent();
         specificAssessmentCriteriaScreen.updateContent();
@@ -178,19 +174,13 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, OnLocalDataU
 
 
     private void callListener() {
-        System.out.println("toolWindow available");
         if (listener != null) {
-            System.out.println("listener not null");
-            System.out.println("OnLocalDataUpdatedEvent not null");
             listener.OnLocalDataUpdatedEvent();
-        } else {
-            System.out.println("listener  null");
         }
     }
 
     @Override
     public void OnLocalDataUpdatedEvent() {
-        System.out.println("OnLocalDataUpdatedEvent event start");
         updateWebView();
     }
 }

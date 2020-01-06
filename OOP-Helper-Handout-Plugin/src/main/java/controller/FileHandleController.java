@@ -58,4 +58,9 @@ public class FileHandleController {
             e.printStackTrace();
         }
     }
+
+    public static void deleteFile(File file) {
+        file.delete();
+    }
+
 }

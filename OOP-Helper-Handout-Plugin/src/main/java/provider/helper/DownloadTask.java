@@ -37,9 +37,6 @@ public class DownloadTask {
 
     //TODO ADD SOURCE
     public void run(String repoUrl, File contentRepoFile, String branchPath) throws IOException {
-        System.out.println("repoURL: " + repoUrl);
-        System.out.println("contentRepoFile: " + contentRepoFile.getPath());
-        System.out.println("branchPath: " + branchPath);
         clone = null;
         {
             try {
@@ -48,34 +45,9 @@ public class DownloadTask {
                         .setDirectory(contentRepoFile)
                         .setBranchesToClone(Arrays.asList(branchPath))
                         .setBranch(branchPath)
-/*                        .setProgressMonitor(new ProgressMonitor() {
-                            @Override
-                            public void start(int totalTasks) {
-                                System.out.println("Starting work on " + totalTasks + " tasks");
-                            }
-
-                            @Override
-                            public void beginTask(String title, int totalWork) {
-                                System.out.println("Start " + title + ": " + totalWork);
-                            }
-
-                            @Override
-                            public void update(int completed) {
-                                System.out.print(completed + "-");
-                            }
-
-                            @Override
-                            public void endTask() {
-                                System.out.println("Done");
-                            }
-
-                            @Override
-                            public boolean isCancelled() {
-                                return false;
-                            }
-                        })*/
                         .call();
             } catch (GitAPIException e) {
+                System.out.println("run failed");
                 e.printStackTrace();
             } finally {
                 System.out.println("clone run");
@@ -114,6 +86,7 @@ public class DownloadTask {
             repository.close();
         } catch (IOException | GitAPIException e) {
             e.printStackTrace();
+            System.out.println("getLatestCommits failed Ohoh");
             System.out.println(e);
         }
         return commitMessages;

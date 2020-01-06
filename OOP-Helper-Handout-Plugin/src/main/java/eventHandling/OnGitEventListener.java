@@ -15,4 +15,5 @@ public interface OnGitEventListener {
 
     void onNotUpdatingRepositoryEvent(String notificationMessage, MessageType messageType);
 
+    void onCloneCanceledRepositoryEvent(String notificationMessage, MessageType messageType, File file);
 }

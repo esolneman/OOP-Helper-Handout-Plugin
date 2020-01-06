@@ -3,6 +3,7 @@ package provider;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
+import controller.FileHandleController;
 import controller.QuestionnaireController;
 import de.ur.mi.pluginhelper.tasks.TaskConfiguration;
 import eventHandling.OnGitEventListener;
@@ -87,10 +88,8 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
     private boolean checkRepoContentDataExists() {
         //https://stackoverflow.com/a/15571626
         if (!contentRepoFile.exists()) {
-            System.out.println("repo doesn't exist");
             return false;
         } else {
-            System.out.println("repo exist");
             return true;
         }
     }
@@ -123,14 +122,8 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
                 task.run(repoUrl, contentRepoFile, branchPath);
             } catch (IOException e) {
                 //TODO Notification
-                deleteFile(repoLocalData);
                 e.printStackTrace();
-                try {
-                    FileUtils.deleteDirectory(contentRepoFile);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                    System.out.println(ex);
-                }
+                cloneCanceledListener("Fehler beim Herunterladen. Bitte versuche es erneut.");
             } finally {
                 callListener("Handout Daten wurden runtergeladen.", NotificationType.INFORMATION);
             }
@@ -148,6 +141,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
                 try {
                     task.updateRepository(repoUrl);
                 } catch (IOException | GitAPIException e) {
+                    cloneCanceledListener("Fehler beim Herunterladen. Bitte versuche es erneut.");
                     e.printStackTrace();
                 }
             };
@@ -176,9 +170,9 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         }
     }
 
-    //TODO test that user not delted
-    //TODO FILE CONTROLLER
-    private void deleteFile(File file) {
-        file.delete();
+    private void cloneCanceledListener(String message) {
+        if (onEventListener != null) {
+            onEventListener.onCloneCanceledRepositoryEvent(message, MessageType.ERROR, contentRepoFile);
+        }
     }
 }

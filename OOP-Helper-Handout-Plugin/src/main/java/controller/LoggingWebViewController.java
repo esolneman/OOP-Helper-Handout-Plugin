@@ -21,6 +21,7 @@ public class LoggingWebViewController {
 
     public void addLoggingKeyEvents() {
         webView.addEventHandler(KeyEvent.KEY_RELEASED, e -> {
+            System.out.println("KeyEvent: " + e.getCode().toString());
             LoggingController.getInstance().saveDataInLogger(logDataType, KEY_EVENT, e.getCode().toString());
         });
 
