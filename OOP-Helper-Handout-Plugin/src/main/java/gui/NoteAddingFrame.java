@@ -25,7 +25,7 @@ public class NoteAddingFrame {
     private NotesController notesController;
     private static NoteAddingFrame single_instance = null;
     private LoggingController loggingController;
-    private static String OK_BUTTON_LABEL = "OK";
+    private static String OK_BUTTON_LABEL = "Speichern";
 
     public static NoteAddingFrame getInstance() {
         if (single_instance == null) {
@@ -64,7 +64,7 @@ public class NoteAddingFrame {
         root.setAlignment(Pos.CENTER);
         addEntryButton.setOnAction(event -> {
             NotesController.getInstance().saveNewEntryInFile(htmlEditor.getHtmlText());
-            loggingController.saveDataInLogger(LogDataType.NOTES, NOTES_EDITED, htmlEditor.getHtmlText());
+            loggingController.saveDataInLogger(LogDataType.NOTES, NOTES_EDITED, NOTES_EDITED);
             addNoteFrame.close();
             notesScreen.reloadWebView();
         });

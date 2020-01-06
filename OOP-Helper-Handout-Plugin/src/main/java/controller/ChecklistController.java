@@ -12,8 +12,6 @@ import org.w3c.dom.events.EventTarget;
 import org.w3c.dom.html.*;
 import provider.LocalStorageDataProvider;
 import provider.ParseChecklistJSON;
-
-import javax.print.Doc;
 import java.io.*;
 import java.util.ArrayList;
 
@@ -243,7 +241,7 @@ public class ChecklistController {
         newTask.appendChild(createCloseElement(doc, webView));
         newTaskInputField.setValue("");
         saveDocumentInFile(webView.getEngine().getDocument(), USER_DATA_SOURCE);
-        LoggingController.getInstance().saveDataInLogger(LogDataType.CHECKLIST, CHECKLIST_ADD_TASK, taskDescription);
+        LoggingController.getInstance().saveDataInLogger(LogDataType.CHECKLIST, USER_DATA_SOURCE, CHECKLIST_ADD_TASK);
     }
 
     private HTMLElement createCloseElement(Document doc, WebView webView) {
@@ -295,20 +293,14 @@ public class ChecklistController {
             }
             HTMLLIElement liElement = (HTMLLIElement) checkbox.getParentNode().getParentNode();
             //https://stackoverflow.com/a/20093950d
-            LogDataType logDataType;
-            if (dataSource.equals(USER_DATA_SOURCE)) {
-                logDataType = LogDataType.CHECKLIST_USER;
-            } else {
-                logDataType = LogDataType.CHECKLIST_PREDEFINED;
-            }
             if (checkbox.getClassName().equals(UNCHECKED_CHECKBOX_CLASS)) {
                 checkbox.setClassName(CHECKED_CHECKBOX_CLASS);
                 liElement.setClassName(CHECKED_CLASS);
-                LoggingController.getInstance().saveDataInLogger(logDataType, CHECKLIST_CHECKED, liElement.getTextContent());
+                LoggingController.getInstance().saveDataInLogger(LogDataType.CHECKLIST, USER_DATA_SOURCE, CHECKLIST_CHECKED);
             } else {
                 checkbox.setClassName(UNCHECKED_CHECKBOX_CLASS);
                 liElement.setClassName(UNCHECKED_CLASS);
-                LoggingController.getInstance().saveDataInLogger(logDataType, CHECKLIST_UNCHECKED, liElement.getTextContent());
+                LoggingController.getInstance().saveDataInLogger(LogDataType.CHECKLIST, USER_DATA_SOURCE, CHECKLIST_UNCHECKED);
             }
             saveDocumentInFile(webView.getEngine().getDocument(), dataSource);
         };
@@ -324,7 +316,7 @@ public class ChecklistController {
             HTMLUListElement taskList = (HTMLUListElement) task.getParentNode();
             taskList.removeChild(task);
             saveDocumentInFile(webView.getEngine().getDocument(), USER_DATA_SOURCE);
-            LoggingController.getInstance().saveDataInLogger(LogDataType.CHECKLIST_USER, CHECKLIST_CLOSE_TASK, (((HTMLElement) eventListener.getTarget()).getParentNode().getTextContent()));
+            LoggingController.getInstance().saveDataInLogger(LogDataType.CHECKLIST, USER_DATA_SOURCE, CHECKLIST_CLOSE_TASK);
         };
         return closeListener;
     }
@@ -334,7 +326,7 @@ public class ChecklistController {
             //https:stackoverflow.com/a/13966749
             ev.stopPropagation();
             saveDocumentInFile(webView.getEngine().getDocument(), USER_DATA_SOURCE);
-            LoggingController.getInstance().saveDataInLogger(LogDataType.CHECKLIST_USER, CHECKLIST_EDIT_TASK, (((HTMLElement) ev.getTarget()).getParentNode().getTextContent()));
+            LoggingController.getInstance().saveDataInLogger(LogDataType.CHECKLIST, USER_DATA_SOURCE, CHECKLIST_EDIT_TASK);
         };
         return editTaskListener;
     }
