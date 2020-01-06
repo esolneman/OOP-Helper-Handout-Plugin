@@ -68,7 +68,7 @@ public class DownloadTask {
             String lastLocalCommitId = head.getObjectId().getName();
             git.fetch().call();
             Iterable<RevCommit> logs = git.log().call();
-            String resolvedRepository = "remotes/origin" + branchName;
+            String resolvedRepository = "remotes/origin/" + branchName;
             //TODO ADD SOURCE
             logs = git.log()
                     //TODO GET BRANCH FROM TASK DATA

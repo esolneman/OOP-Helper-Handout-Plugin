@@ -16,15 +16,20 @@ public class TaskConfiguration {
     private static final String HANDOUT_URL_KEY = "HANDOUT_URL";
     private static final String HANDOUT_URL_DEFAULT_VALUE = "https://github.com/esolneman/OOP-Helper-Handout-Template";
     private static final String BRANCH_PATH_DEFAULT_VALUE = "refs/heads/test" ;
+    private static final String BRANCH_NAME_DEFAULT_VALUE= "test" ;
+
 
     private static final String TASK_TITLE_KEY = "TASK";
     private static final String TASK_TITLE_DEFAULT_VALUE = "Demo Task";
     private static final String DEFAULT_CONFIGURATION_NAME = ".task";
     private static final String BRANCH_PATH_KEY = "HANDOUT_BRANCH_PATH" ;
+    private static final String BRANCH_NAME_KEY = "HANDOUT_BRANCH_NAME" ;
 
     private String handoutURL;
     private String taskTitle;
     private String branchPath;
+    private String branchName;
+
 
     private TaskConfiguration() {
     }
@@ -40,6 +45,10 @@ public class TaskConfiguration {
     public void setBranchPath(String branchPath) {this.branchPath = branchPath;}
 
     public String getBranchPath() {return  branchPath;}
+
+    public void setBranchName(String branchName) {this.branchName = branchName;}
+
+    public String getBranchName() {return branchName;}
 
     public void setTaskTitle(String taskTitle) {
         this.taskTitle = taskTitle;
@@ -84,9 +93,11 @@ public class TaskConfiguration {
             String taskTitle = properties.getProperty(TASK_TITLE_KEY, TASK_TITLE_DEFAULT_VALUE);
             String handoutURL = properties.getProperty(HANDOUT_URL_KEY, HANDOUT_URL_DEFAULT_VALUE);
             String branchPath = properties.getProperty(BRANCH_PATH_KEY, BRANCH_PATH_DEFAULT_VALUE);
+            String branchName = properties.getProperty(BRANCH_NAME_KEY, BRANCH_NAME_DEFAULT_VALUE);
             config.setTaskTitle(taskTitle);
             config.setHandoutURL(handoutURL);
             config.setBranchPath(branchPath);
+            config.setBranchName(branchName);
         } catch (IOException e) {
             e.printStackTrace();
         }

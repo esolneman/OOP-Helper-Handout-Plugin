@@ -25,7 +25,6 @@ public class LoggingController {
     public void startLogging() {
         user = getCurrentUser();
         // Session Log für das Experiment mit dem Titel "Test" erstellen oder öffnen
-        //TODO user.gestSessionID oder getID
         log = LogManager.openLog(user.getID(), EXPERIMENT_NAME);
         saveDataInLogger(LogDataType.IDE, IDE_VISIBILITY, IDE_OPENED);
     }

@@ -61,7 +61,7 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         TaskConfiguration taskConfiguration = TaskConfiguration.loadFrom(project);
         repoUrl = taskConfiguration.getHandoutURL();
         branchPath = taskConfiguration.getBranchPath();
-        branchName = branchPath.substring(branchPath.lastIndexOf("/"));
+        branchName = taskConfiguration.getBranchName();
     }
 
     public void updateHandoutData() {

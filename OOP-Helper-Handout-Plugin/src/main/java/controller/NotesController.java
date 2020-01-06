@@ -45,7 +45,7 @@ public class NotesController {
         byte[] ptext = htmlText.getBytes(ISO_8859_1);
         String encodedMessage = new String(ptext, UTF_8);
         try {
-            org.jsoup.nodes.Document doc = Jsoup.parse(htmlText, "UTF-8");
+            org.jsoup.nodes.Document doc = Jsoup.parse(encodedMessage, "UTF-8");
             String htmlBody = doc.body().html();
             saveNoteInHtmlFile(htmlBody, LocalStorageDataProvider.getNotesFile());
         } catch ( IOException e) {
