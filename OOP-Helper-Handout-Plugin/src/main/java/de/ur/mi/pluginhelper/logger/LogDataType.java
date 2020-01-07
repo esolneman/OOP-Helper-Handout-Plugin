@@ -10,6 +10,8 @@ public enum LogDataType {
     HANDOUT,
     NOTES,
     CHECKLIST,
+    CHECKLIST_PREDEFINED,
+    CHECKLIST_USER,
     HELP,
     HELP_INDEX,
     HELP_VARIABLES,
