@@ -1,21 +1,24 @@
 package controller;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+
 import java.io.*;
 
-public class CreateFiles {
+public class FileHandleController {
 
 
     public static void createNewFile(File file){
         try {
-            //TODO SEARCH FOR DUPLICATED CODE
             file.getParentFile().mkdirs();
             file.createNewFile();
         } catch (IOException e) {
-            //TODO CATACH
-            System.out.println(e);
+            e.printStackTrace();
         }
     }
 
+    //TODO SOUREC
     public static void saveRepoFileInLocalFile (File repoFile, File localFile) {
         BufferedReader inputStream = null;
         BufferedWriter outputStream = null;
@@ -45,4 +48,19 @@ public class CreateFiles {
             }
         }
     }
+
+    public static void saveJsonObjectInFile(JsonObject jsonObject, File outputFile) {
+        //https://stackoverflow.com/a/29319491
+        try (Writer writer = new FileWriter(outputFile)) {
+            Gson gson = new GsonBuilder().create();
+            gson.toJson(jsonObject, writer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void deleteFile(File file) {
+        file.delete();
+    }
+
 }

@@ -2,17 +2,14 @@ package toolWindow;
 
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
-import controller.*;
+import controller.DownloadPDFHelper;
+import controller.HandoutController;
+import controller.LinkToHandoutController;
+import controller.LoggingWebViewController;
 import de.ur.mi.pluginhelper.logger.LogDataType;
 import gui.PluginWebViewFXPanel;
 import javafx.application.Platform;
 import javafx.concurrent.Worker;
-import javafx.event.Event;
-import javafx.event.EventType;
-import javafx.scene.control.ScrollBar;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.ScrollEvent;
 import javafx.scene.web.WebView;
 import netscape.javascript.JSObject;
 import provider.LocalStorageDataProvider;
@@ -63,7 +60,6 @@ public class HandoutContentScreen extends SimpleToolWindowPanel implements Plugi
                 if (newState == Worker.State.SUCCEEDED) {
                     LinkToHandoutController linkToHandoutController = new LinkToHandoutController(RepoLocalStorageDataProvider.getProject(), this);
                     initDownloadButtonListener();
-
                     loggingWebViewController = new LoggingWebViewController(webView, LogDataType.HANDOUT);
                     loggingWebViewController.addLoggingKeyEvents();
                     loggingWebViewController.addLoggingMouseEvents();
@@ -79,7 +75,6 @@ public class HandoutContentScreen extends SimpleToolWindowPanel implements Plugi
     //create listener for "download handout" button in webView
     private void initDownloadButtonListener() {
         JSObject window = (JSObject) webView.getEngine().executeScript("window");
-        DownloadPDFHelper.getInstance().setContent(this);
         window.setMember("downloadHtml", DownloadPDFHelper.getInstance());
     }
 
@@ -96,7 +91,6 @@ public class HandoutContentScreen extends SimpleToolWindowPanel implements Plugi
     }
 
     public void updateContent() {
-        HandoutController.getInstance().createHandoutFile();
         webViewController.updateWebViewContent();
     }
 }

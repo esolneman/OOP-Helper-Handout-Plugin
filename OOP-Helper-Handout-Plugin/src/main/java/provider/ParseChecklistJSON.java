@@ -48,27 +48,13 @@ public class ParseChecklistJSON {
     }
 
     public static JsonArray getJsonFromLiElement(HTMLUListElement taskList){
-        Checklist updatedChecklist;
-        JsonArray tasks = new JsonArray();
-        Gson gson = new GsonBuilder().create();
         ArrayList<Checklist.Task> tasksArrayList = new ArrayList<>();
         Boolean checked;
         for (int i = 0; i < taskList.getChildNodes().getLength(); i++) {
             HTMLLIElement currentTask = (HTMLLIElement) taskList.getChildNodes().item(i);
-
-            System.out.println("currentTask: " + currentTask);
-            System.out.println("currentTask: " + currentTask.getChildNodes().getLength());
-
-            System.out.println("currentTask: " + currentTask.getChildNodes().item(0).toString());
-            System.out.println("currentTask: " + currentTask.getChildNodes().item(1).toString());
-
-
+            System.out.println("Child 1: " + (HTMLElement) currentTask.getChildNodes().item(1).getFirstChild());
             HTMLElement checkboxImage = (HTMLElement) currentTask.getChildNodes().item(1).getFirstChild();
-
             String description = currentTask.getFirstChild().getTextContent();
-            System.out.println("description: " + description);
-          /*  byte[] ptext = description.getBytes();
-            description = new String(ptext, UTF_8);*/
             if (checkboxImage.getClassName().equals("fa fa-check-square")){
                  checked = true;
             } else{
@@ -85,20 +71,23 @@ public class ParseChecklistJSON {
             }
             tasksArrayList.add(newTask);
         }
-
-
+        Checklist updatedChecklist;
         updatedChecklist = new Checklist();
-        updatedChecklist.setTasks(tasksArrayList);
+        return getJsonFromChecklist(updatedChecklist, tasksArrayList);
+    }
 
-        for (int i = 0; i < updatedChecklist.tasks.size(); i++) {
+
+    public static JsonArray getJsonFromChecklist(Checklist checklist, ArrayList<Checklist.Task> tasksArrayList) {
+        JsonArray tasks = new JsonArray();
+        Gson gson = new GsonBuilder().create();
+        checklist.setTasks(tasksArrayList);
+        for (int i = 0; i < checklist.tasks.size(); i++) {
             JsonObject task = new JsonObject();
-            //task.addProperty("taskDescription", updatedChecklist.tasks.get(i).taskDescription);
-            //task.addProperty("checked", updatedChecklist.tasks.get(i).checked);
-            task.add("taskDescription", gson.toJsonTree(updatedChecklist.tasks.get(i).taskDescription));
-            task.add("checked", gson.toJsonTree(updatedChecklist.tasks.get(i).checked));
-            if(updatedChecklist.tasks.get(i).id != null){
+            task.add("taskDescription", gson.toJsonTree(checklist.tasks.get(i).taskDescription));
+            task.add("checked", gson.toJsonTree(checklist.tasks.get(i).checked));
+            if(checklist.tasks.get(i).id != null){
                 //task.addProperty("id", updatedChecklist.tasks.get(i).id);
-                task.add("id", gson.toJsonTree(updatedChecklist.tasks.get(i).id));
+                task.add("id", gson.toJsonTree(checklist.tasks.get(i).id));
             }
             tasks.add(task);
 

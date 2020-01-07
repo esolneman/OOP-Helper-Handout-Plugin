@@ -1,14 +1,12 @@
 plugins {
     id 'java'
-    //id 'org.jetbrains.intellij' version '0.4.10'
+    id 'org.jetbrains.intellij' version '0.4.10'
     //https://intellij-support.jetbrains.com/hc/en-us/community/posts/360004401620-Error-in-buildPlugin-execution-time
     // https://youtrack.jetbrains.com/issue/KT-32401
-    id 'org.jetbrains.intellij' version '0.4.1'
+   //id 'org.jetbrains.intellij' version '0.4.1'
 }
 
 version '1.0'
-
-sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
@@ -21,6 +19,8 @@ dependencies {
     compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '2.2.0.201212191850-r'
     implementation 'com.google.code.gson:gson:2.8.6'
 }
+
+sourceCompatibility = 1.8
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {

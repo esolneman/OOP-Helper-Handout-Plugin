@@ -53,9 +53,8 @@ public class RepoLocalStorageDataProvider implements RepoLocalStorageDataProvide
         return checklistFile;
     }
 
-    //TODO MAKE CONSTANT
     public static File getNotesInitFile() {
-        File notesFile = new File(getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE + "/notes.html");
+        File notesFile = new File(getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE + NOTES_FILE);
         return notesFile;
     }
 

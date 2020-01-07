@@ -3,7 +3,6 @@ package controller;
 import provider.LocalStorageDataProvider;
 
 import java.io.File;
-import java.io.IOException;
 
 public class HandoutController {
 
@@ -23,15 +22,16 @@ public class HandoutController {
     }
 
     public void createHandoutFile() {
-        //TODO TO FILE CONTROLLER MKDIRS
-        handoutLocalFile.getParentFile().mkdirs();
-        try {
-            handoutLocalFile.createNewFile();
-        } catch (IOException e) {
-            //TODO CATACH
-            System.out.println(e);
-        }
-        File notesRepoFile = LocalStorageDataProvider.getInitHandoutFileDirectory();
-        CreateFiles.saveRepoFileInLocalFile(notesRepoFile, handoutLocalFile);
+        FileHandleController.createNewFile(handoutLocalFile);
+        downloadCurrentData();
+    }
+
+    private void downloadCurrentData(){
+        File handoutRepoFile = LocalStorageDataProvider.getInitHandoutFileDirectory();
+        FileHandleController.saveRepoFileInLocalFile(handoutRepoFile, handoutLocalFile);
+    }
+
+    public void updateLocalData() {
+        downloadCurrentData();
     }
 }

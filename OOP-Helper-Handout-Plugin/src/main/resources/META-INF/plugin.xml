@@ -1,11 +1,12 @@
 <idea-plugin>
-    <id>oop_helper_handout</id>
-    <name>oop_helper_handout</name>
+    <id>oop_handout_plugin</id>
+    <name>oop_handout_plugin</name>
     <vendor email="marlena.wolfes@stud.uni-regensburg.de">Marlena Wolfes</vendor>
 
     <description><![CDATA[
     Unterstützt die Studenten des OOP-Kurses der Univerität Regensburg bei der Bearbeitung von Studienleistung und Übungsaufgben<br>
-    <em>Mehr erklärung folgt</em>
+    <em>Dieses Plugin integriert das Handout der Studienleistung interaktiv in die IDE. Zudem werden auch Bewertungskriterien, Shortcuts und weitere Informationen bereitgestellt,
+    die während der Bearebitung eder Studienleistung nützlich sein können. Des Weiteren besteht die Möglichkeit ToDo-Listen und Notizen zu nutzen.</em>
     ]]></description>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
@@ -23,8 +24,8 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow id="Aufgabe (OOP)" anchor="right" icon="/icons/toolWindowIcon.svg" factoryClass="toolWindow.HandoutToolWindowFactory"/>
-        <projectService serviceInterface="provider.HandoutContentDataProviderInterface" serviceImplementation="provider.HandoutContentDataProvider"/>
-        <projectService serviceInterface="services.ToolWindowServiceInterface" serviceImplementation="services.ToolWindowService"/>
+        <!--<projectService serviceInterface="provider.HandoutContentDataProviderInterface" serviceImplementation="provider.HandoutContentDataProvider"/>-->
+        <!--<projectService serviceInterface="services.ToolWindowServiceInterface" serviceImplementation="services.ToolWindowService"/>-->
     </extensions>
 
     <actions>

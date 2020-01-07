@@ -5,8 +5,8 @@ import de.ur.mi.pluginhelper.logger.Log;
 import de.ur.mi.pluginhelper.logger.LogDataType;
 import de.ur.mi.pluginhelper.logger.LogManager;
 import de.ur.mi.pluginhelper.logger.SyncProgressListener;
-import de.ur.mi.pluginhelper.ui.UserDialogManager;
-import de.ur.mi.pluginhelper.ui.UserResponse;
+
+import static environment.LoggingMessageConstants.*;
 
 public class LoggingController {
     private static LoggingController single_instance = null;
@@ -20,43 +20,37 @@ public class LoggingController {
         return single_instance;
     }
 
-    private LoggingController() {}
+    private LoggingController() {
+    }
 
     public void startLogging() {
         user = getCurrentUser();
         // Session Log für das Experiment mit dem Titel "Test" erstellen oder öffnen
-        //TODO user.gestSessionID oder getID
-        log = LogManager.openLog(user.getID(), "MA-Wolfes");
-        saveDataInLogger(LogDataType.IDE, "IDE VISIBILITY", "opened IDE");
+        log = LogManager.openLog(user.getID(), EXPERIMENT_NAME);
+        saveDataInLogger(LogDataType.IDE, IDE_VISIBILITY, IDE_OPENED);
     }
 
     // Nutzer erstellen oder laden
-    public User getCurrentUser(){
+    public User getCurrentUser() {
         user = de.ur.mi.pluginhelper.User.User.getLocalUser();
         return user;
     }
 
-    public void syncLoggingData(){
-        String serverUrl = "http://regensburger-forscher.de:9999/upload/";
-        // Log synchronisieren
-        //TODO UI?
-        //UserResponse response = UserDialogManager.showConfirmationDialog("Möchten Sie die Logdatei hochladen?", "Freigegeben der Logdatei");
-        //if (response == UserResponse.ACCEPT) {
-            LogManager.syncLog(log, user, serverUrl, new SyncProgressListener() {
-                @Override
-                public void onFinished() {
-                    System.out.println("Upload finished");
-                }
+    public void syncLoggingData() {
+        LogManager.syncLog(log, user, UPLOAD_SERVER_URL, new SyncProgressListener() {
+            @Override
+            public void onFinished() {
+                System.out.println("Upload finished");
+            }
 
-                @Override
-                public void onFailed() {
-                    System.out.println("Upload failed");
-                }
-            });
-        //}
+            @Override
+            public void onFailed() {
+                System.out.println("Upload failed");
+            }
+        });
     }
 
-    public void saveDataInLogger(LogDataType type, String label, String payload){
+    public void saveDataInLogger(LogDataType type, String label, String payload) {
         // Daten im Log speichern
         log.log(user.getSessionID(), type, label, payload);
     }

@@ -3,14 +3,11 @@ package toolWindow;
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
 import controller.LoggingWebViewController;
-import de.ur.mi.pluginhelper.logger.Log;
-import de.ur.mi.pluginhelper.logger.LogData;
 import de.ur.mi.pluginhelper.logger.LogDataType;
 import eventHandling.HelpWebViewLinkListener;
 import gui.PluginWebViewFXPanel;
 import javafx.application.Platform;
 import javafx.concurrent.Worker;
-import javafx.scene.input.ScrollEvent;
 import javafx.scene.web.WebView;
 import provider.LocalStorageDataProvider;
 import webView.WebViewController;
@@ -73,7 +70,7 @@ public class HelpScreen extends SimpleToolWindowPanel {
                         } else if (webView.getEngine().getLocation().contains("tutorial")) {
                             logDataType = LogDataType.HELP_TUTORIAL;
                         } else if (webView.getEngine().getLocation().contains("CodingStyles")) {
-                            logDataType = LogDataType.HELP_CODINGSTYLES;
+                            logDataType = LogDataType.HELP_CODING_STYLES;
                         }else if (webView.getEngine().getLocation().contains("Variable")) {
                             logDataType = LogDataType.HELP_VARIABLES;
                         } else {

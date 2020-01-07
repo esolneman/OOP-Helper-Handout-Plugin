@@ -1,23 +1,48 @@
 package gui;
 
+import controller.LoggingController;
+
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
+
+import static environment.Messages.*;
+import static environment.Messages.QUESTIONNAIRE_DESCRIPTION_END;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class ContentDataChangesDialog extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
-    private JTextArea textArea1;
-    private JButton buttonCancel;
+    private JList list1;
+    private ArrayList<String> commitMessages;
+    private Integer numCommits;
 
-    public ContentDataChangesDialog() {
+    public ContentDataChangesDialog(ArrayList<String> commitMessages) {
+        this.commitMessages = commitMessages;
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
+        initDescriptionText();
+        initCommitMessages();
+        initButton();
+    }
 
+    private void initCommitMessages() {
+        for (int i = 0; i < commitMessages.size(); i++) {
+            byte[] ptext = commitMessages.get(i).getBytes();
+            commitMessages.set(i, new String(ptext, UTF_8));
+        }
+        numCommits = commitMessages.size();
+        list1.setListData(commitMessages.toArray());
+    }
+
+    private void initDescriptionText() {
+        this.setTitle("Eine Aktuelle Version des Handouts wurde heruntergeladen");
+    }
+
+    private void initButton(){
         buttonOK.addActionListener(e -> onOK());
-
-        buttonCancel.addActionListener(e -> onCancel());
-
         // call onCancel() when cross is clicked
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
@@ -25,7 +50,6 @@ public class ContentDataChangesDialog extends JDialog {
                 onCancel();
             }
         });
-
         // call onCancel() on ESCAPE
         contentPane.registerKeyboardAction(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -35,19 +59,17 @@ public class ContentDataChangesDialog extends JDialog {
     }
 
     private void onOK() {
-        // add your code here
-        dispose();
+        setVisible(false);
     }
 
     private void onCancel() {
-        // add your code here if necessary
-        dispose();
+        setVisible(false);
     }
 
-    public static void main(String[] args) {
-        ContentDataChangesDialog dialog = new ContentDataChangesDialog();
+    public static void main(ArrayList<String> commitMessages) {
+        ContentDataChangesDialog dialog = new ContentDataChangesDialog(commitMessages);
         dialog.pack();
+        dialog.setMaximumSize(new Dimension(400, 250));
         dialog.setVisible(true);
-        System.exit(0);
     }
 }

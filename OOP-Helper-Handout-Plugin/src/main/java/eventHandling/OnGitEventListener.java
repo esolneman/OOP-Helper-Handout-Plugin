@@ -1,6 +1,7 @@
 package eventHandling;
 
 import com.intellij.notification.NotificationType;
+import com.intellij.openapi.ui.MessageType;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ public interface OnGitEventListener {
 
     void onUpdatingRepositoryEvent(ArrayList<String> commitMessages);
 
-    void onNotUpdatingRepositoryEvent(String notificationMessage, NotificationType messageType);
+    void onNotUpdatingRepositoryEvent(String notificationMessage, MessageType messageType);
 
+    void onCloneCanceledRepositoryEvent(String notificationMessage, MessageType messageType, File file);
 }
