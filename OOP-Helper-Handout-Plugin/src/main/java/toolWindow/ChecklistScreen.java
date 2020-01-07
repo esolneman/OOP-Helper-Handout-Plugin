@@ -54,8 +54,6 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
             webView = webViewController.createWebView(checklistStartPage);
             webView.getEngine().getLoadWorker().stateProperty().addListener((ov, oldState, newState) -> {
                 if (newState == Worker.State.SUCCEEDED) {
-                    //TODO Other property detection to get url wit new state without engine
-                    System.out.println("stateProperty Checklist: " + webView.getEngine().getLocation());
                     LogDataType logDataType;
                     if(webView.getEngine().getLocation().contains("Predefined")){
                         logDataType = LogDataType.CHECKLIST_PREDEFINED;
@@ -73,5 +71,9 @@ public class ChecklistScreen extends SimpleToolWindowPanel {
 
     public JPanel getContent() {
         return toolWindowPanel;
+    }
+
+    public void updateContent() {
+        webViewController.updateWebViewContent();
     }
 }

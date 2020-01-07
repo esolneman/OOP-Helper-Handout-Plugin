@@ -9,20 +9,22 @@ import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.openapi.wm.ToolWindowType;
 import toolWindow.HelpScreen;
 
+import static environment.Messages.TOOL_WINDOW_NAME;
+
 public class HandoutMenuTutorial extends AnAction {
+
+    private static String MENU_TEXT = "Tutorial";
+    private static int TUTORIAL_ID = 3;
+
     public HandoutMenuTutorial() {
-        super("Tutorial");
+        super(MENU_TEXT);
     }
-
-
     public void actionPerformed(AnActionEvent event) {
-        System.out.println("greetingEvent");
-
         Project project = event.getProject();
-        ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow("Aufgabe (OOP)");
+        ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow(TOOL_WINDOW_NAME);
         if(toolWindow.isVisible()) {
             //open HandoutToolWindow and select the correct tab
-            toolWindow.getContentManager().setSelectedContent(toolWindow.getContentManager().getContent(3));
+            toolWindow.getContentManager().setSelectedContent(toolWindow.getContentManager().getContent(TUTORIAL_ID));
         }else{
             toolWindow.activate(() -> {
                 toolWindow.show(null);

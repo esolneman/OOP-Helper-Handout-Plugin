@@ -2,7 +2,6 @@ package toolWindow;
 
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
-import controller.LinkToHandoutController;
 import controller.LoggingWebViewController;
 import controller.NotesController;
 import de.ur.mi.pluginhelper.logger.LogDataType;
@@ -13,7 +12,6 @@ import javafx.concurrent.Worker;
 import javafx.scene.web.WebView;
 import netscape.javascript.JSObject;
 import provider.LocalStorageDataProvider;
-import provider.RepoLocalStorageDataProvider;
 import webView.WebViewController;
 
 import javax.swing.*;
@@ -36,15 +34,12 @@ public class NotesScreen extends SimpleToolWindowPanel {
         toolWindowPanel = new SimpleToolWindowPanel(true);
         noteToolWindow = toolWindow;
         webViewController = new WebViewController();
-
-        //TODO verschiebe to LOCALUSERSTORAGE
         initNotesFile = LocalStorageDataProvider.getNotesFile();
         try {
             notesHtmlString = initNotesFile.toURI().toURL().toString();
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-        //TODO DISPLAY SOMETHING WHEN FILE IS EMPTY
         createContent();
         initToolWindowMenu();
     }
@@ -78,18 +73,10 @@ public class NotesScreen extends SimpleToolWindowPanel {
         window.setMember("noteAddingFrame", NoteAddingFrame.getInstance());
     }
 
-    //@Override
-    //TODO NOOOOOO
-    // OVERRITE WHEN HANDOUT DATA IS UPDATED
-    // PREVENT THIS FROM HAPPENING
-    public void updateContent() {
-    }
-
     public JPanel getContent() {
         return toolWindowPanel;
     }
 
-    //Todo
     // Had to be newly created, because when editing the html it is parsed to XHTML
     // and because of that, the button is not recogniced anymore
     public void reloadWebView() {

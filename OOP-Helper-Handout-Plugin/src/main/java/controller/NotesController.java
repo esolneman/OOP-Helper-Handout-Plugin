@@ -25,19 +25,14 @@ public class NotesController {
 
     private NotesController() {
         notesLocalFile = LocalStorageDataProvider.getNotesFile();
+        System.out.println("Notes Path: " + notesLocalFile.getPath());
     }
 
     //TODO CALL CREATE FILE CLASS
     public void createNotesFile() {
-        notesLocalFile.getParentFile().mkdirs();
-        try {
-            notesLocalFile.createNewFile();
-        } catch (IOException e) {
-            //TODO CATACH
-            System.out.println(e);
-        }
+        FileHandleController.createNewFile(notesLocalFile);
         File notesRepoFile = LocalStorageDataProvider.getInitNotesHtmlFile();
-        CreateFiles.saveRepoFileInLocalFile(notesRepoFile, notesLocalFile);
+        FileHandleController.saveRepoFileInLocalFile(notesRepoFile, notesLocalFile);
     }
 
     public void setWebView(WebView webView) {
@@ -47,8 +42,6 @@ public class NotesController {
     public void saveNewEntryInFile(String htmlText) {
         //TODO Subtitle and Title as param
         // https://stackoverflow.com/a/20243062
-        byte[] ptext = htmlText.getBytes(ISO_8859_1);
-        String encodedMessage = new String(ptext, UTF_8);
         try {
             org.jsoup.nodes.Document doc = Jsoup.parse(htmlText, "UTF-8");
             String htmlBody = doc.body().html();

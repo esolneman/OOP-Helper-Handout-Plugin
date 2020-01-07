@@ -3,35 +3,20 @@ package webView;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowType;
-import com.sun.webkit.dom.HTMLAnchorElementImpl;
-import com.sun.webkit.dom.HTMLBodyElementImpl;
-import com.sun.webkit.dom.NodeListImpl;
 import eventHandling.HandoutWebViewLinkListener;
-import eventHandling.HelpWebViewLinkListener;
-import gui.NoteAddingFrame;
 import javafx.application.Platform;
 import javafx.scene.web.WebView;
-import netscape.javascript.JSObject;
 import org.apache.commons.lang.WordUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.html.HTMLElement;
-import org.w3c.dom.html.HTMLInputElement;
 import provider.LocalStorageDataProvider;
 import toolWindow.HandoutContentScreen;
-import toolWindow.NotesScreen;
 
 import java.io.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
 
 public class WebViewController {
     private WebView webView;
-    private HandoutWebViewLinkListener webViewLinkListener;
     private String urlString;
 
     public WebViewController(){}
@@ -164,7 +149,6 @@ public class WebViewController {
     }
 
     public void updateWebViewContent() {
-        // TODO Error once
         // TODO test if load urlstring is working
         if(webView != null){
             Platform.setImplicitExit(false);

@@ -2,12 +2,14 @@ package provider;
 
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.MessageType;
+import controller.FileHandleController;
 import controller.QuestionnaireController;
 import de.ur.mi.pluginhelper.tasks.TaskConfiguration;
 import eventHandling.OnGitEventListener;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import provider.helper.AsyncExecutor;
+import provider.helper.ProgressExecutor;
 import provider.helper.DownloadTask;
 
 import java.io.File;
@@ -22,20 +24,16 @@ import static environment.FileConstants.*;
 // is Singleton
 public class HandoutContentDataProvider implements HandoutContentDataProviderInterface {
     private OnGitEventListener onEventListener;
-    private AsyncExecutor asyncExecutor = new AsyncExecutor();
+    private ProgressExecutor progressExecutor = new ProgressExecutor();
     private static HandoutContentDataProvider single_instance = null;
 
-    // TODO: get RepoURL from jar file
     private String repoUrl;
     private String branchPath;
+    private String branchName;
     private Project project;
     private String projectDirectory;
     private String contentRepoPath;
     private File contentRepoFile;
-    private File zipFile;
-    private File outputDir;
-    private File tempVersionZipFile;
-    private File tempVersionOutputDir;
     private File repoLocalData;
     private DownloadTask task;
 
@@ -51,37 +49,22 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         //TODO DELETE UNUSED FILES
         this.project = RepoLocalStorageDataProvider.getProject();
         projectDirectory = project.getBasePath();
+        //TODO MOve To Constants
         contentRepoPath = RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE;
         contentRepoFile = new File(contentRepoPath);
-        zipFile = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE);
-        outputDir = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE);
-        //TODO: TEMP-File
-        tempVersionZipFile = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE + "/temp" + "/repo.zip");
-        tempVersionOutputDir = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE + "/temp");
         repoLocalData = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE);
         getRepoUrl();
-        //getBranchName();
-        // ToDo: get BranchName
-        //TODO get RepoName
-       // branchPath = REPO_PATH_TO_BRANCH + "test";
-        System.out.println(contentRepoPath);
         task = DownloadTask.getInstance();
     }
 
-
-    //ToDo getRepo Url
     private void getRepoUrl() {
         TaskConfiguration taskConfiguration = TaskConfiguration.loadFrom(project);
         repoUrl = taskConfiguration.getHandoutURL();
         branchPath = taskConfiguration.getBranchPath();
-        System.out.println("getRepoUrl: " + repoUrl);
-        System.out.println("branchPath: " + branchPath);
-
+        branchName = taskConfiguration.getBranchName();
     }
 
-    //TODO CHECK UPDATE FUNCTION
     public void updateHandoutData() {
-        System.out.println("updateHandoutData");
         controlRetrievingContentData();
     }
 
@@ -95,9 +78,9 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
             updateBranch();
         } else if (repoContentDataExists) {
             QuestionnaireController.getInstance().compareDates();
-            callListenerNotUpdating("Keine Internetverbindung vorhanden. Handout Daten können momentan nicht aktualisiert werden." , NotificationType.ERROR);
+            callListenerNotUpdating("Keine Internetverbindung vorhanden. Handout Daten können momentan nicht aktualisiert werden." , MessageType.ERROR);
         } else {
-            callListenerNotUpdating("Keine Internetverbindung vorhanden. Handout Daten können momentan nicht heruntergeladen werden.", NotificationType.ERROR);
+            callListenerNotUpdating("Keine Internetverbindung vorhanden. Handout Daten können momentan nicht heruntergeladen werden.", MessageType.ERROR);
         }
     }
 
@@ -105,15 +88,13 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
     private boolean checkRepoContentDataExists() {
         //https://stackoverflow.com/a/15571626
         if (!contentRepoFile.exists()) {
-            System.out.println("repo doesn't exist");
             return false;
         } else {
-            System.out.println("repo exist");
             return true;
         }
     }
 
-    //https://www.geeksforgeeks.org/checking-internet-connectivity-using-java/
+    //https://www.it-swarm.net/de/java/wie-pruefe-ich-ob-eine-internetverbindung-java-vorhanden-ist/967034905/
     //TODO Ping Github Repo -> is Repo Available
     public Boolean checkInternetConnection() {
         try {
@@ -133,54 +114,41 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         this.onEventListener = listener;
     }
 
-    //TODO
     private void cloneRepository() {
         System.out.println("start cloning branch");
         //https://www.vogella.com/tutorials/JGit/article.html#example-for-using-jgit
         Runnable cloneTask = () -> {
             try {
-                //createFolder(zipFile, true);
-                //createFolder(outputDir, false);
                 task.run(repoUrl, contentRepoFile, branchPath);
-                //task.run(zipFile);
-                //task.unzipFile(zipFile, outputDir);
             } catch (IOException e) {
                 //TODO Notification
-                deleteFile(repoLocalData);
                 e.printStackTrace();
-                try {
-                    FileUtils.deleteDirectory(contentRepoFile);
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                    System.out.println(ex);
-                }
+                cloneCanceledListener("Fehler beim Herunterladen. Bitte versuche es erneut.");
             } finally {
                 callListener("Handout Daten wurden runtergeladen.", NotificationType.INFORMATION);
             }
         };
-        asyncExecutor.runAsyncClone(cloneTask);
+        progressExecutor.runSynchronousProcess(cloneTask);
     }
 
 
     private void updateBranch() {
-        System.out.println("updateBranch");
-        ArrayList<String> commitMessages = task.getLatestCommits();
-        System.out.println("updateBranch  commitMessages : " + commitMessages.size());
+        progressExecutor = new ProgressExecutor();
+        ArrayList<String> commitMessages = task.getLatestCommits(branchName);
         if (commitMessages.size() >= 1) {
-            System.out.println("commitMessages not empty");
             //TODO ASK USER IF DOWNLOAD IS OK
             Runnable updateTask = () -> {
                 try {
                     task.updateRepository(repoUrl);
                 } catch (IOException | GitAPIException e) {
+                    cloneCanceledListener("Fehler beim Herunterladen. Bitte versuche es erneut.");
                     e.printStackTrace();
                 }
             };
-            asyncExecutor.runAsyncClone(updateTask);
+            progressExecutor.runSynchronousProcess(updateTask);
             callListener(commitMessages);
-        } else {
-            System.out.println("commitMessages empty");
-            callListenerNotUpdating("Keine Neuen Daten vorhanden", NotificationType.INFORMATION);
+        }else{
+            callListenerNotUpdating("Handoutdaten sind bereits auf dem aktuellsten Stand" , MessageType.INFO);
         }
     }
 
@@ -196,14 +164,15 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         }
     }
 
-    private void callListenerNotUpdating(String message, NotificationType messageType) {
+    private void callListenerNotUpdating(String message, MessageType messageType) {
         if (onEventListener != null) {
             onEventListener.onNotUpdatingRepositoryEvent(message, messageType);
         }
     }
 
-    //TODO test that user not delted
-    private void deleteFile(File file) {
-        file.delete();
+    private void cloneCanceledListener(String message) {
+        if (onEventListener != null) {
+            onEventListener.onCloneCanceledRepositoryEvent(message, MessageType.ERROR, contentRepoFile);
+        }
     }
 }

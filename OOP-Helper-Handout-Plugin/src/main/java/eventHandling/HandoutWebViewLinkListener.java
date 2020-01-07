@@ -31,6 +31,9 @@ import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Scanner;
 
+import static environment.LoggingMessageConstants.HANDOUT_LINK_TO_CODE;
+import static environment.LoggingMessageConstants.HANDOUT_LINK_TO_EXTERNAL_PAGE;
+
 public class HandoutWebViewLinkListener {
 
     private WebView webView;
@@ -47,14 +50,11 @@ public class HandoutWebViewLinkListener {
             //TODO: Refactor variable name
             String hyperlink = event.getURL().toString();
             Project project = RepoLocalStorageDataProvider.getProject();
-            System.out.println("WebView: Listener: "+ hyperlink);
             if (hyperlink.contains("LinkToCode")) {
-                LoggingController.getInstance().saveDataInLogger(LogDataType.HANDOUT, "Link from Handout To Code", hyperlink);
-                System.out.println("WebView: LinkToCode");
+                LoggingController.getInstance().saveDataInLogger(LogDataType.HANDOUT, HANDOUT_LINK_TO_CODE, hyperlink);
                 handleLinkToCode(hyperlink, project);
             } else {
-                System.out.println("WebView: OtherLinkWebView: OtherLink");
-                LoggingController.getInstance().saveDataInLogger(LogDataType.HANDOUT, "Link to External Webpage", hyperlink);
+                LoggingController.getInstance().saveDataInLogger(LogDataType.HANDOUT, HANDOUT_LINK_TO_EXTERNAL_PAGE, hyperlink);
 
                 handleLinkToExternalWebpage(hyperlink);
             }
@@ -71,7 +71,6 @@ public class HandoutWebViewLinkListener {
             Desktop desktop = Desktop.getDesktop();
             URI address = new URI(toBeopen);
             if (toBeopen.contains("http://") || toBeopen.contains("https://") || toBeopen.contains("mailto")) {
-                System.out.println("open external link: " + toBeopen);
                 Platform.setImplicitExit(false);
                 Platform.runLater(() -> {
                     webView.getEngine().reload();
@@ -114,8 +113,6 @@ public class HandoutWebViewLinkListener {
                     // TODO: I have a Problem if this happens
             }
         }
-
-        System.out.println("File string: " + RepoLocalStorageDataProvider.getUserProjectDirectory() + pathToClass + className);
         newFile = LocalFileSystem.getInstance().findFileByPath(RepoLocalStorageDataProvider.getUserProjectDirectory() + pathToClass + className);
         pathToClass = RepoLocalStorageDataProvider.getUserProjectDirectory() + pathToClass + className;
 

@@ -1,10 +1,17 @@
 package provider.helper;
 
+import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.progress.ProcessCanceledException;
+import com.intellij.openapi.progress.ProgressIndicator;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.ProgressMonitor;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.lib.TextProgressMonitor;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import provider.RepoLocalStorageDataProvider;
 
 import java.io.*;
@@ -30,10 +37,6 @@ public class DownloadTask {
 
     //TODO ADD SOURCE
     public void run(String repoUrl, File contentRepoFile, String branchPath) throws IOException {
-        System.out.println("repoURL: " + repoUrl);
-        System.out.println("contentRepoFile: " + contentRepoFile.getPath());
-        System.out.println("branchPath: " + branchPath);
-
         clone = null;
         {
             try {
@@ -44,6 +47,7 @@ public class DownloadTask {
                         .setBranch(branchPath)
                         .call();
             } catch (GitAPIException e) {
+                System.out.println("run failed");
                 e.printStackTrace();
             } finally {
                 System.out.println("clone run");
@@ -52,7 +56,7 @@ public class DownloadTask {
     }
 
     //get commit messages ahead of local repository
-    public ArrayList<String> getLatestCommits() {
+    public ArrayList<String> getLatestCommits(String branchName) {
         System.out.println("checkIfNewVersionIsAvailable");
         //https://github.com/centic9/jgit-cookbook/blob/master/src/main/java/org/dstadler/jgit/porcelain/ShowLog.java
         ArrayList<String> commitMessages = new ArrayList<>();
@@ -64,9 +68,12 @@ public class DownloadTask {
             String lastLocalCommitId = head.getObjectId().getName();
             git.fetch().call();
             Iterable<RevCommit> logs = git.log().call();
+            String resolvedRepository = "remotes/origin/" + branchName;
             //TODO ADD SOURCE
             logs = git.log()
-                    .add(repository.resolve("remotes/origin/test"))
+                    //TODO GET BRANCH FROM TASK DATA
+                    //.add(repository.resolve("remotes/origin/test"))
+                    .add(repository.resolve(resolvedRepository))
                     .call();
             for (RevCommit rev : logs) {
                 String currentRevID = rev.getId().getName();
@@ -79,6 +86,7 @@ public class DownloadTask {
             repository.close();
         } catch (IOException | GitAPIException e) {
             e.printStackTrace();
+            System.out.println("getLatestCommits failed Ohoh");
             System.out.println(e);
         }
         return commitMessages;

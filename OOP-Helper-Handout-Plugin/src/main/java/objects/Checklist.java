@@ -6,18 +6,9 @@ public class Checklist {
 
     public ArrayList<Task> tasks;
 
-    public boolean containsID(String currentRepoTaskID) {
-        for (Task task : tasks) {
-            if (task.id == currentRepoTaskID) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public Task getTaskWithId(String currentRepoTaskID) {
         for (Task task : tasks) {
-            if (task.id == currentRepoTaskID) {
+            if (task.id.equals(currentRepoTaskID)) {
                 return task;
             }
         }

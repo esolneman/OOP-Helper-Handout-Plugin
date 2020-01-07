@@ -8,8 +8,8 @@ public class FileConstants {
     }
 
     public static final String LOCAL_STORAGE_FILE = "/.idea/OOP_Plugin";
-    public static final String REPO_LOCAL_STORAGE_FILE = "/RepoLocalStorage";
-    public static final String USER_LOCAL_STORAGE_FILE = "/UserLocalStorage";
+    public static final String REPO_LOCAL_STORAGE_FILE = "/LocalStorage";
+    public static final String USER_LOCAL_STORAGE_FILE = "/UserData";
 
     public static final String HANDOUT_FILE_NAME = "/index.html";
     public static final String CHECKLIST_FILE_NAME = "/checklist/checklist.json";

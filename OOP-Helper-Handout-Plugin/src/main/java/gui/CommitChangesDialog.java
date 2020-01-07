@@ -25,7 +25,7 @@ public class CommitChangesDialog {
         }
         numCommits = commitMessagesList.size();
         changesPanel = new JPanel();
-        titleString = "Eine Aktuelle Version der Content Daten wurde heruntergeladen";
+        titleString = "Eine Aktuelle Version des Handoutes wurde heruntergeladen";
         subtitleString = numCommits + " Änderungen wurden hinzugefügt:";
         //https://stackoverflow.com/a/20243062
         byte[] ptext = subtitleString.getBytes();

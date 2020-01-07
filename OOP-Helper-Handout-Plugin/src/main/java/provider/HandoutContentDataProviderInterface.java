@@ -1,13 +1,10 @@
 package provider;
 
-import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.project.Project;
 import eventHandling.OnGitEventListener;
-import org.jetbrains.annotations.NotNull;
 
 public interface HandoutContentDataProviderInterface {
-    static HandoutContentDataProviderInterface getInstance(@NotNull Project project) {
-        return ServiceManager.getService(project, HandoutContentDataProviderInterface.class);
+    static HandoutContentDataProvider getInstance() {
+        return null;
     }
 
     void updateHandoutData();

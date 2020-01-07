@@ -23,17 +23,15 @@ import java.util.Objects;
 
 import static environment.FileConstants.HANDOUT_PDF_FILE_NAME;
 import static environment.FileConstants.URL_BEGIN_FOR_FILE;
+import static environment.LoggingMessageConstants.*;
 import static environment.Messages.FILES_SELECTING_DESCRIPTION;
 import static environment.Messages.FILES_SELECTING_TEXT;
 
 public class DownloadPDFHelper {
 
-
-
     boolean success;
 
     private static DownloadPDFHelper single_instance = null;
-    //private HandoutContentScreen handoutContentScreen;
 
     public static DownloadPDFHelper getInstance() {
         if (single_instance == null) {
@@ -42,19 +40,20 @@ public class DownloadPDFHelper {
         return single_instance;
     }
 
-    private DownloadPDFHelper(){
+    private DownloadPDFHelper() {
     }
 
-    public void setContent(HandoutContentScreen handoutContentScreen){
-        //this.handoutContentScreen = handoutContentScreen;
-    }
 
-    //called from html
+    /*
+    called from html
+    download Handout as PDF in choosed directory
+     */
     public void downloadHandout() {
-        LoggingController.getInstance().saveDataInLogger(LogDataType.HANDOUT, "Download PDF", "open File Chooser");
+        LoggingController.getInstance().saveDataInLogger(LogDataType.HANDOUT, DOWNLOAD_PDF, OPEN_FILE_CHOOSER);
         ApplicationManager.getApplication().invokeLater(() -> {
             String handoutHTMLDirectory = RepoLocalStorageDataProvider.getHandoutHtmlString();
             Project project = RepoLocalStorageDataProvider.getProject();
+            //https://github.com/wooio/htmltopdf-java
             System.out.println(handoutHTMLDirectory);
             File content = LocalStorageDataProvider.getHandoutFileDirectory();
             try {
@@ -70,6 +69,7 @@ public class DownloadPDFHelper {
                 if (!Objects.isNull(file)) {
                     //https://github.com/wooio/htmltopdf-java
                     String handoutPDFDirectory = file.getPath() + HANDOUT_PDF_FILE_NAME;
+                    //TODO add Listener for this and display Notification with Listener!!!
                     success = HtmlToPdf.create()
                             .object(HtmlToPdfObject.forUrl(URL_BEGIN_FOR_FILE + handoutHTMLDirectory))
                             .convert(handoutPDFDirectory);
@@ -89,12 +89,12 @@ public class DownloadPDFHelper {
             //TODO add Listener for this and display Notification with Listener!!!
             if (success) {
                 System.out.println("SUCCESS");
-                BalloonPopupController.showBalloonNotification(handoutContentScreen, Balloon.Position.above, "Downloading was successfully", MessageType.INFO);
-                LoggingController.getInstance().saveDataInLogger(LogDataType.HANDOUT, "Download PDF Version", "success");
+                BalloonPopupController.showBalloonNotification(Balloon.Position.above, "Downloading was successfully", "Download des Handouts", MessageType.INFO);
+                LoggingController.getInstance().saveDataInLogger(LogDataType.HANDOUT, DOWNLOAD_PDF, PDF_DOWNLOAD_SUCCESS);
             } else {
                 System.out.println("FAILURE");
-                BalloonPopupController.showBalloonNotification(handoutContentScreen, Balloon.Position.above, "Error while downloading the handout. Please try again.", MessageType.ERROR);
-                LoggingController.getInstance().saveDataInLogger(LogDataType.HANDOUT, "Download PDF Version", "error");
+                BalloonPopupController.showBalloonNotification(Balloon.Position.above, "Error while downloading the handout. Please try again.", "Download des Handouts", MessageType.ERROR);
+                LoggingController.getInstance().saveDataInLogger(LogDataType.HANDOUT, DOWNLOAD_PDF, PDF_DOWNLOAD_ERROR);
             }
         });
 

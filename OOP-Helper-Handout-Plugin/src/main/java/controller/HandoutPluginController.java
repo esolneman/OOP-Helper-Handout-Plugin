@@ -1,43 +1,30 @@
 package controller;
 
 import com.intellij.notification.NotificationType;
-import com.intellij.openapi.components.ServiceManager;
-import com.intellij.openapi.fileChooser.FileChooser;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerListener;
 import com.intellij.openapi.ui.MessageType;
 import com.intellij.openapi.ui.popup.Balloon;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.wm.ToolWindowManager;
 import de.ur.mi.pluginhelper.logger.LogDataType;
 import eventHandling.OnGitEventListener;
-import gui.CommitChangesDialog;
-import io.woo.htmltopdf.HtmlToPdf;
-import io.woo.htmltopdf.HtmlToPdfObject;
+import gui.ContentDataChangesDialog;
 import org.jetbrains.annotations.NotNull;
+import provider.HandoutContentDataProvider;
 import provider.HandoutContentDataProviderInterface;
-import provider.LocalStorageDataProvider;
 import provider.RepoLocalStorageDataProvider;
 
-import javax.swing.*;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.Objects;
 
-import static environment.FileConstants.HANDOUT_PDF_FILE_NAME;
-import static environment.FileConstants.URL_BEGIN_FOR_FILE;
-import static environment.Messages.FILES_SELECTING_DESCRIPTION;
-import static environment.Messages.FILES_SELECTING_TEXT;
+import static environment.LoggingMessageConstants.IDE_CLOSED;
+import static environment.LoggingMessageConstants.IDE_VISIBILITY;
 
 //TODO HIDE ANT TOOL WINDOW
 public class HandoutPluginController implements HandoutPluginControllerInterface, OnGitEventListener {
     private HandoutContentDataProviderInterface handoutDataProvider;
-    private ToolWindowController toolWindowController;
+    private UpdateHandoutDataController updateHandoutDataController;
     private Project project;
     private LoggingController loggingController;
 
@@ -46,18 +33,16 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
         createProjectListener();
         //TODO NOT TO REPOLOCALSTORAGE OFOFOFOFOF
         RepoLocalStorageDataProvider.setUserProjectDirectory(this.project);
-        handoutDataProvider = ServiceManager.getService(project, HandoutContentDataProviderInterface.class);
+        handoutDataProvider = HandoutContentDataProvider.getInstance();
         handoutDataProvider.addListener(this);
-        toolWindowController = ToolWindowController.getInstance();
+        updateHandoutDataController = UpdateHandoutDataController.getInstance();
     }
 
     private void createProjectListener() {
         ProjectManagerListener projectClosedListener = new ProjectManagerListener() {
             @Override
             public void projectClosed(@NotNull Project project) {
-                System.out.println("PROJECT LISTENER name: " + project.getName());
-                loggingController.saveDataInLogger(LogDataType.IDE, "IDE VISIBILITY", "closed IDE");
-                //TODO UNCOMMENT
+                loggingController.saveDataInLogger(LogDataType.IDE, IDE_VISIBILITY, IDE_CLOSED);
                 loggingController.syncLoggingData();
             }
 
@@ -86,78 +71,46 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
 
 
     public void onCloningRepositoryEvent(String notificationMessage, NotificationType messageType)   {
-        System.out.println("Performing callback after Asynchronous Task");
-        toolWindowController.updateContent();
-        BalloonPopupController.showNotification(project, notificationMessage, messageType);
-
-        NotesController notesController = NotesController.getInstance();
-        notesController.createNotesFile();
-
-        ChecklistController checklistController = ChecklistController.getInstance();
-        checklistController.createChecklistFiles();
-        HandoutController handoutController = HandoutController.getInstance();
-        handoutController.createHandoutFile();
+        initHtmlFiles();
+        updateContentData();
         QuestionnaireController.getInstance().saveProjectCreationDate();
+        BalloonPopupController.showBalloonNotification( Balloon.Position.above, notificationMessage, "Status des Handouts", MessageType.INFO);
+        loggingController.saveDataInLogger(LogDataType.HANDOUT, "Download Repo", "Cloned Repo");
+    }
+
+    private void initHtmlFiles() {
+        NotesController.getInstance().createNotesFile();
+        ChecklistController.getInstance().createChecklistFiles();
+        HandoutController.getInstance().createHandoutFile();
+    }
+
+    private void updateContentData() {
+        updateHandoutDataController.updateLocalStorageData();
     }
 
 
     @Override
     //TODO add strings to message constants
     public void onUpdatingRepositoryEvent(ArrayList<String> commitMessages) {
-        ChecklistController checklistController = ChecklistController.getInstance();
-        BalloonPopupController.showNotification(project, "Handout Daten wurden runtergeladen." + commitMessages.toString(), NotificationType.INFORMATION);
-        CommitChangesDialog commitChangesDialog = new CommitChangesDialog(commitMessages);
-        try {
-            checklistController.comparePredefinedChecklistVersions();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        commitChangesDialog.showPanel();
+        updateContentData();
+        ApplicationManager.getApplication().invokeLater(() -> {
+            ContentDataChangesDialog.main(commitMessages);
+        });
+        BalloonPopupController.showBalloonNotification( Balloon.Position.above, "Handout Daten wurden runtergeladen.", "Status des Handouts", MessageType.INFO);
+        loggingController.saveDataInLogger(LogDataType.HANDOUT, "Download Repo", "Updated Repo");
+
     }
 
     @Override
-    public void onNotUpdatingRepositoryEvent(String notificationMessage, NotificationType messageType) {
-        System.out.println("onNotUpdatingRepositoryEvent");
-        BalloonPopupController.showNotification(project, notificationMessage, messageType);
+    public void onNotUpdatingRepositoryEvent(String notificationMessage, MessageType messageType) {
+        BalloonPopupController.showBalloonNotification( Balloon.Position.above, notificationMessage, "Status des Handouts", messageType);
+        loggingController.saveDataInLogger(LogDataType.HANDOUT, "Download Repo", "Not Updated Repo");
     }
 
-    public static void downloadHandout() {
-        System.out.println("downloadHandout");
-        String htmlDirectory = RepoLocalStorageDataProvider.getHandoutHtmlString();
-        Project project = RepoLocalStorageDataProvider.getProject();
-
-        //https://github.com/wooio/htmltopdf-java
-        //TODO: if no content data is available
-        System.out.println(htmlDirectory);
-        File content = LocalStorageDataProvider.getHandoutFileDirectory();
-        try {
-            String urlString = content.toURI().toURL().toString();
-            System.out.println(urlString);
-            //https://www.programcreek.com/java-api-examples/?api=com.intellij.openapi.fileChooser.FileChooserDescriptor
-            final FileChooserDescriptor descriptor = FileChooserDescriptorFactory.createSingleFolderDescriptor();
-            descriptor.setTitle(FILES_SELECTING_TEXT);
-            descriptor.setDescription(FILES_SELECTING_DESCRIPTION);
-            descriptor.setForcedToUseIdeaFileChooser(true);
-            VirtualFile file = FileChooser.
-                    chooseFile(descriptor, project, null);
-            if (!Objects.isNull(file)) {
-                String handoutPDFDirectory = file.getPath() + HANDOUT_PDF_FILE_NAME;
-                boolean success = HtmlToPdf.create()
-                        .object(HtmlToPdfObject.forUrl(URL_BEGIN_FOR_FILE + htmlDirectory))
-                        .convert(handoutPDFDirectory);
-                JComponent handoutContentScreen = ToolWindowManager.getActiveToolWindow().getComponent();
-
-                //TODO add Listener for this and display Notification with Listener!!!
-                if (success) {
-                    BalloonPopupController.showBalloonNotification(handoutContentScreen, Balloon.Position.above, "Downloading was successfully", MessageType.INFO);
-                    LoggingController.getInstance().saveDataInLogger(LogDataType.HANDOUT, "Download PDF Version", "success");
-                } else {
-                    BalloonPopupController.showBalloonNotification(handoutContentScreen, Balloon.Position.above, "Error while downloading the handout. Please try again.", MessageType.ERROR);
-                    LoggingController.getInstance().saveDataInLogger(LogDataType.HANDOUT, "Download PDF Version", "error");
-                }
-            }
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
+    @Override
+    public void onCloneCanceledRepositoryEvent(String notificationMessage, MessageType messageType, File file) {
+        BalloonPopupController.showBalloonNotification( Balloon.Position.above, notificationMessage, "Status des Handouts", messageType);
+        FileHandleController.deleteFile(file);
+        loggingController.saveDataInLogger(LogDataType.HANDOUT, "Download Repo", "Canceled");
     }
 }
