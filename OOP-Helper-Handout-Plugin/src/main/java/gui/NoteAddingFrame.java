@@ -24,6 +24,8 @@ import org.w3c.dom.Document;
 import toolWindow.NotesScreen;
 
 import static environment.LoggingMessageConstants.*;
+import static java.nio.charset.StandardCharsets.ISO_8859_1;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class NoteAddingFrame {
     private HTMLEditor htmlEditor;
@@ -49,6 +51,8 @@ public class NoteAddingFrame {
         setCancelRequest();
     }
 
+    //https://blog.axxg.de/javafx-stage-dialog-beenden-mit-abfrage/
+    //https://stackoverflow.com/questions/23160573/javafx-stage-setoncloserequest-without-function
     private void setCancelRequest() {
         System.out.println("FAGFG");
         addNoteFrame.setOnCloseRequest(event -> {
@@ -56,12 +60,14 @@ public class NoteAddingFrame {
             //Stage init
             final Stage dialog = new Stage();
             dialog.initModality(Modality.APPLICATION_MODAL);
+            String requestLabel = "Willst du die Bearbeitung wirklich abbrechen? Deine \u00c4nderungen werden nicht gespeichert";
             // Frage - Label
-            Label label = new Label("Deine Änderungen werden verworfen. Willst du wirklich die Bearbeitung abbrechen?");
+            Label label = new Label(requestLabel);
             // Antwort-Button JA
             Button okBtn = new Button("Ja");
             okBtn.setOnAction(event12 -> {
-                addNoteFrame.hide();
+                setTextContent();
+                addNoteFrame.close();
                 dialog.close();
             });
 
@@ -99,15 +105,13 @@ public class NoteAddingFrame {
     private void createHtmlEditor() {
         htmlEditor = new HTMLEditor();
         htmlEditor.setPrefHeight(400);
-        WebView webView = notesController.getCurrentWebview();
+        setTextContent();
         //display html part, that contains the notes
-        htmlEditor.setHtmlText((String) webView.getEngine().executeScript("document.getElementById('notesList').innerHTML"));
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.getStyleClass().add("noborder-scroll-pane");
         scrollPane.setStyle("-fx-background-color: white");
         scrollPane.setContent(htmlEditor);
         scrollPane.setFitToWidth(true);
-
         VBox root = new VBox();
         root.setAlignment(Pos.CENTER);
         //TODO Constant
@@ -126,6 +130,12 @@ public class NoteAddingFrame {
         scene.setRoot(root);
         addNoteFrame.setTitle(EDIT_FRAME_TITLE);
         addNoteFrame.setScene(scene);
+    }
+
+    private void setTextContent() {
+        WebView webView = notesController.getCurrentWebview();
+        htmlEditor.setHtmlText((String) webView.getEngine().executeScript("document.getElementById('notesList').innerHTML"));
+
     }
 
     //called from html
