@@ -75,6 +75,7 @@ public class QuestionnaireDialog extends JDialog {
         QuestionnaireDialog dialog = new QuestionnaireDialog();
         dialog.pack();
         dialog.setMinimumSize(new Dimension(500, 250));
+        dialog.setLocationRelativeTo(null);
         dialog.setVisible(true);
     }
 }
