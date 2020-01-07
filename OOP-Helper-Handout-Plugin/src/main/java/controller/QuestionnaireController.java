@@ -33,6 +33,7 @@ public class QuestionnaireController {
     }
 
     public void saveProjectCreationDate() {
+        System.out.println("QUestionnaire File");
         FileHandleController.createNewFile(projectCreationDateFile);
         //Getting current date
         Calendar cal = Calendar.getInstance();

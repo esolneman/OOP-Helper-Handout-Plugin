@@ -116,7 +116,6 @@ public class WebViewController {
                 try {
                     out = new BufferedWriter(new OutputStreamWriter(
                             new FileOutputStream(LocalStorageDataProvider.getHandoutFileDirectory()), "UTF-8"));
-                    System.out.println(handoutContentDocument.body().html());
                     out.write(String.valueOf(handoutContentDocument));
 
                 } catch (IOException e) {
