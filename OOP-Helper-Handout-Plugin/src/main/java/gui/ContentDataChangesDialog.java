@@ -70,6 +70,7 @@ public class ContentDataChangesDialog extends JDialog {
         ContentDataChangesDialog dialog = new ContentDataChangesDialog(commitMessages);
         dialog.pack();
         dialog.setMaximumSize(new Dimension(400, 250));
+        dialog.setLocationRelativeTo(null);
         dialog.setVisible(true);
     }
 }
