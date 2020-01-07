@@ -70,7 +70,7 @@ public class HelpScreen extends SimpleToolWindowPanel {
                         } else if (webView.getEngine().getLocation().contains("tutorial")) {
                             logDataType = LogDataType.HELP_TUTORIAL;
                         } else if (webView.getEngine().getLocation().contains("CodingStyles")) {
-                            logDataType = LogDataType.HELP_CODINGSTYLES;
+                            logDataType = LogDataType.HELP_CODING_STYLES;
                         }else if (webView.getEngine().getLocation().contains("Variable")) {
                             logDataType = LogDataType.HELP_VARIABLES;
                         } else {

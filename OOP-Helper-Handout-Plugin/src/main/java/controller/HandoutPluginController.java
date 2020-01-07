@@ -75,6 +75,7 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
         updateContentData();
         QuestionnaireController.getInstance().saveProjectCreationDate();
         BalloonPopupController.showBalloonNotification( Balloon.Position.above, notificationMessage, "Status des Handouts", MessageType.INFO);
+        loggingController.saveDataInLogger(LogDataType.HANDOUT, "Download Repo", "Cloned Repo");
     }
 
     private void initHtmlFiles() {
@@ -96,17 +97,20 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
             ContentDataChangesDialog.main(commitMessages);
         });
         BalloonPopupController.showBalloonNotification( Balloon.Position.above, "Handout Daten wurden runtergeladen.", "Status des Handouts", MessageType.INFO);
+        loggingController.saveDataInLogger(LogDataType.HANDOUT, "Download Repo", "Updated Repo");
+
     }
 
     @Override
     public void onNotUpdatingRepositoryEvent(String notificationMessage, MessageType messageType) {
         BalloonPopupController.showBalloonNotification( Balloon.Position.above, notificationMessage, "Status des Handouts", messageType);
+        loggingController.saveDataInLogger(LogDataType.HANDOUT, "Download Repo", "Not Updated Repo");
     }
 
     @Override
     public void onCloneCanceledRepositoryEvent(String notificationMessage, MessageType messageType, File file) {
         BalloonPopupController.showBalloonNotification( Balloon.Position.above, notificationMessage, "Status des Handouts", messageType);
         FileHandleController.deleteFile(file);
+        loggingController.saveDataInLogger(LogDataType.HANDOUT, "Download Repo", "Canceled");
     }
-
 }

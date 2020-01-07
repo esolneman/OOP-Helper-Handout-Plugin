@@ -20,7 +20,8 @@ public class LoggingController {
         return single_instance;
     }
 
-    private LoggingController() {}
+    private LoggingController() {
+    }
 
     public void startLogging() {
         user = getCurrentUser();
@@ -30,30 +31,26 @@ public class LoggingController {
     }
 
     // Nutzer erstellen oder laden
-    public User getCurrentUser(){
+    public User getCurrentUser() {
         user = de.ur.mi.pluginhelper.User.User.getLocalUser();
         return user;
     }
 
-    public void syncLoggingData(){
-        //TODO UI?
-        //UserResponse response = UserDialogManager.showConfirmationDialog("Möchten Sie die Logdatei hochladen?", "Freigegeben der Logdatei");
-        //if (response == UserResponse.ACCEPT) {
-            LogManager.syncLog(log, user, UPLOAD_SERVER_URL, new SyncProgressListener() {
-                @Override
-                public void onFinished() {
-                    System.out.println("Upload finished");
-                }
+    public void syncLoggingData() {
+        LogManager.syncLog(log, user, UPLOAD_SERVER_URL, new SyncProgressListener() {
+            @Override
+            public void onFinished() {
+                System.out.println("Upload finished");
+            }
 
-                @Override
-                public void onFailed() {
-                    System.out.println("Upload failed");
-                }
-            });
-        //}
+            @Override
+            public void onFailed() {
+                System.out.println("Upload failed");
+            }
+        });
     }
 
-    public void saveDataInLogger(LogDataType type, String label, String payload){
+    public void saveDataInLogger(LogDataType type, String label, String payload) {
         // Daten im Log speichern
         log.log(user.getSessionID(), type, label, payload);
     }

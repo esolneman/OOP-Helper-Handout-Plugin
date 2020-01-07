@@ -54,7 +54,6 @@ public class NoteAddingFrame {
     //https://blog.axxg.de/javafx-stage-dialog-beenden-mit-abfrage/
     //https://stackoverflow.com/questions/23160573/javafx-stage-setoncloserequest-without-function
     private void setCancelRequest() {
-        System.out.println("FAGFG");
         addNoteFrame.setOnCloseRequest(event -> {
             event.consume();
             //Stage init
