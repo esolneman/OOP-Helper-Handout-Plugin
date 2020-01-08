@@ -64,7 +64,6 @@ public class LinkToHandoutController{
         }
         System.out.println("functionAnchorSelect: " + functionAnchor);
         if (functionAnchor != null) {
-            LoggingController.getInstance().saveDataInLogger(LogDataType.HANDOUT, LINK_TO_HANDOUT, functionAnchor);
             handoutContentScreen.goToLocation(functionAnchor);
         }
     }
