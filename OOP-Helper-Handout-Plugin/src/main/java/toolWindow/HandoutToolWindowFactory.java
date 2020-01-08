@@ -102,12 +102,6 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, OnLocalDataU
             }
         }.install(toolWindow.getComponent());
 
-        toolWindow.getComponent().addPropertyChangeListener(propertyChangeEvent -> {
-            System.out.println("addPropertyChangeListener toolWindow: " + propertyChangeEvent.getPropertyName());
-
-        });
-
-
         //TODO MAYBE REFACTOR
         //logged open and close of tool window
         toolWindow.getComponent().addAncestorListener(new AncestorListener() {

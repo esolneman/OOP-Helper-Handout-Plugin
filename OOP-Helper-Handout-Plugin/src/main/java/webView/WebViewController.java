@@ -3,6 +3,8 @@ package webView;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowType;
+import controller.LoggingController;
+import de.ur.mi.pluginhelper.logger.LogDataType;
 import eventHandling.HandoutWebViewLinkListener;
 import javafx.application.Platform;
 import javafx.scene.web.WebView;
@@ -14,6 +16,8 @@ import provider.LocalStorageDataProvider;
 import toolWindow.HandoutContentScreen;
 
 import java.io.*;
+
+import static environment.LoggingMessageConstants.LINK_TO_HANDOUT;
 
 public class WebViewController {
     private WebView webView;
@@ -77,6 +81,7 @@ public class WebViewController {
             e.printStackTrace();
         }
         if (testDoc.getElementById(heading) != null) {
+            LoggingController.getInstance().saveDataInLogger(LogDataType.HANDOUT, LINK_TO_HANDOUT, heading);
             Platform.runLater(() -> {
                 ApplicationManager.getApplication().invokeLater(() -> {
                     if (handoutToolWindow.isVisible()) {
