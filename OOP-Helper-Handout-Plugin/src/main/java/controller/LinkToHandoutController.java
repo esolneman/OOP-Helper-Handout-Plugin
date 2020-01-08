@@ -34,22 +34,6 @@ public class LinkToHandoutController{
        ApplicationManager.getApplication().invokeLater(() -> {
            //https://www.programcreek.com/java-api-examples/?api=com.intellij.openapi.editor.EditorFactory
            EditorEventMulticaster editorEventMulticaster = EditorFactory.getInstance().getEventMulticaster();
-           /*editorEventMulticaster.addSelectionListener(new SelectionListener() {
-                @Override
-                public void selectionChanged(@NotNull SelectionEvent e) {
-                    String selectedText = e.getEditor().getSelectionModel().getSelectedText();
-                    String className = FileEditorManager.getInstance(project).getSelectedEditor().getFile().getPresentableName();
-                    System.out.println("selectedText: " + selectedText);
-                    System.out.println("className: " + className);
-                    if(selectedText != null) {
-                        functionAnchor = className + "/" + selectedText;
-                        System.out.println("functionAnchorSelect: " + functionAnchor);
-                    } else {
-                        functionAnchor = null;
-                        System.out.println("functionAnchorSelect: " + functionAnchor);
-                    }
-                }
-            });*/
             //TODO: check Disposable
            //TODO Remove Listener when close Project
            editorEventMulticaster.addEditorMouseListener(new EditorMouseListener() {
