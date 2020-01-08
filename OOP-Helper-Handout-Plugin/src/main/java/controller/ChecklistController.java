@@ -12,6 +12,7 @@ import org.w3c.dom.events.EventTarget;
 import org.w3c.dom.html.*;
 import provider.LocalStorageDataProvider;
 import provider.ParseChecklistJSON;
+
 import java.io.*;
 import java.util.ArrayList;
 
@@ -42,13 +43,13 @@ public class ChecklistController {
     private ChecklistController() {
     }
 
-    public static void saveDocumentInFile(Document document, String dataSource){
+    public static void saveDocumentInFile(Document document, String dataSource) {
         String taskListId;
         File checklistFile;
-        if(dataSource.equals(PREDEFINED_DATA_SOURCE)){
+        if (dataSource.equals(PREDEFINED_DATA_SOURCE)) {
             taskListId = "predefinedTaskList";
             checklistFile = LocalStorageDataProvider.getLocalChecklistPredefinedData();
-        }else{
+        } else {
             taskListId = "userDataTaskList";
             checklistFile = LocalStorageDataProvider.getChecklistUserData();
         }
@@ -99,6 +100,7 @@ public class ChecklistController {
         saveChecklistInFile(updatedLocalChecklist, LocalStorageDataProvider.getLocalChecklistPredefinedData());
     }
 
+
     private static void saveChecklistInFile(Checklist checklist, File file) {
         Gson gson = new Gson();
         JsonObject checklistJson = new JsonObject();
@@ -121,7 +123,7 @@ public class ChecklistController {
         File localPredefinedChecklistFile = LocalStorageDataProvider.getLocalChecklistPredefinedData();
         File predefinedRepoChecklistFile = LocalStorageDataProvider.getChecklistData();
 
-        //TODO create in Checklsit controller
+        //TODO create in Clhecklsit controller
         //https://stackoverflow.com/a/29965924
         gson = new Gson();
         JsonReader reader = null;
@@ -147,7 +149,6 @@ public class ChecklistController {
         FileHandleController.saveRepoFileInLocalFile(predefinedChecklistRepoFile, checklistStartPage);
         FileHandleController.saveRepoFileInLocalFile(userChecklistRepoFile, userDataChecklistHTMLFile);
     }
-
 
 
     public void createTaskList(String checklistSource, Document checklistDocument, WebView finalWebView1) {
@@ -211,7 +212,7 @@ public class ChecklistController {
                 newTask.setId(checklistData.tasks.get(i).id);
             }
             if (!checklistSource.equals(PREDEFINED_DATA_SOURCE)) {
-                newTask.appendChild(createEditableDescriptionElement(checklistDocument,finalWebView1, checklistData.tasks.get(i).taskDescription,"editableLI","contenteditable", "true"  ));
+                newTask.appendChild(createEditableDescriptionElement(checklistDocument, finalWebView1, checklistData.tasks.get(i).taskDescription, "editableLI", "contenteditable", "true"));
                 newTask.appendChild(createCheckBoxElement(checklistDocument, finalWebView1, checklistSource, checkBoxIcon));
                 newTask.appendChild(createCloseElement(checklistDocument, finalWebView1));
             } else {
@@ -234,10 +235,10 @@ public class ChecklistController {
         }
         HTMLLIElement newTask = (HTMLLIElement) doc.createElement("li");
         newTask.setClassName(UNCHECKED_CLASS);
-        newTask.appendChild(createEditableDescriptionElement(doc,webView, taskDescription,"editableLI","contenteditable", "true"  ));
+        newTask.appendChild(createEditableDescriptionElement(doc, webView, taskDescription, "editableLI", "contenteditable", "true"));
         userDataTaskList.appendChild(newTask);
         doc.getElementById("newTaskDescription").setTextContent("");
-        newTask.appendChild(createCheckBoxElement(doc, webView, "userData","fa fa-square"));
+        newTask.appendChild(createCheckBoxElement(doc, webView, "userData", "fa fa-square"));
         newTask.appendChild(createCloseElement(doc, webView));
         newTaskInputField.setValue("");
         saveDocumentInFile(webView.getEngine().getDocument(), USER_DATA_SOURCE);
@@ -265,19 +266,19 @@ public class ChecklistController {
     }
 
     private HTMLDivElement createDescriptionElement(Document doc, String description) {
-        HTMLDivElement descriptionElement = createBaseDescription( doc, description);
+        HTMLDivElement descriptionElement = createBaseDescription(doc, description);
         return descriptionElement;
     }
 
-    private HTMLDivElement createEditableDescriptionElement(Document doc, WebView webView, String description, String className, String attributeStyle , String attributeValue) {
-        HTMLDivElement descriptionElement = createBaseDescription( doc,   description);
+    private HTMLDivElement createEditableDescriptionElement(Document doc, WebView webView, String description, String className, String attributeStyle, String attributeValue) {
+        HTMLDivElement descriptionElement = createBaseDescription(doc, description);
         descriptionElement.setClassName(className);
         descriptionElement.setAttribute(attributeStyle, attributeValue);
         ((EventTarget) descriptionElement).addEventListener("focusout", getEditableTaskListener(webView), false);
         return descriptionElement;
     }
 
-    private HTMLDivElement createBaseDescription(Document doc, String description){
+    private HTMLDivElement createBaseDescription(Document doc, String description) {
         HTMLDivElement descriptionElement = (HTMLDivElement) doc.createElement("div");
         descriptionElement.setTextContent(description);
         return descriptionElement;

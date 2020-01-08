@@ -44,7 +44,7 @@ public class PluginWebViewFXPanel extends JFXPanel {
                 };
 
                 Document doc = finalWebView1.getEngine().getDocument();
-                if (doc.getDocumentURI().substring(doc.getDocumentURI().indexOf("OOP-18WS-CoreDefense-Starter")).equals(LocalStorageDataProvider.getLocalUserDataChecklistFile().toURI().toString().substring(LocalStorageDataProvider.getLocalUserDataChecklistFile().toURI().toString().indexOf("OOP-18WS-CoreDefense-Starter")))) {
+                if (doc.getDocumentURI().substring(doc.getDocumentURI().indexOf("OOP_Plugin")).equals(LocalStorageDataProvider.getLocalUserDataChecklistFile().toURI().toString().substring(LocalStorageDataProvider.getLocalUserDataChecklistFile().toURI().toString().indexOf("OOP_Plugin")))) {
                     ChecklistController.getInstance().createTaskList("userData", doc, finalWebView1);
                     Element addTaskButton = doc.getElementById("addTaskButton");
                     HTMLInputElement initButton = (HTMLInputElement) doc.getElementById("newTaskDescription");

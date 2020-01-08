@@ -83,6 +83,7 @@ public class HandoutWebViewLinkListener {
     }
 
     private void handleLinkToCode(String toBeopen, Project project) {
+        System.out.println("Linl to Code: " + toBeopen);
         int finalMethodLineNumber = 1;
         VirtualFile newFile = null;
         String className = "";
