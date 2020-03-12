@@ -1,5 +1,9 @@
 # OOP-Helper-Handout-Plugin
 
+Dies ist ein Plugin für den Kurs "Einführung in die objektorientierte Programmierung mit Java" der Universität Regesnburg. 
+Das Ziel ist die Optimierung der Darstellung von Arbeitsanweisungen und Lernmaterialien beim Bearbeiten von Studienleistungen.
+
+Das Template für die Darstellung der Kursmaterialien und zusätzlichen Funktionen ist [hier](https://github.com/esolneman/OOP-Helper-Handout-Template) zu beiehen.
 
 
 ## Installationsanleitung und erste Schritte
