@@ -1,24 +1,19 @@
 package provider.helper;
 
-import com.intellij.openapi.application.ModalityState;
-import com.intellij.openapi.progress.ProcessCanceledException;
-import com.intellij.openapi.progress.ProgressIndicator;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.lib.ProgressMonitor;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.lib.TextProgressMonitor;
 import org.eclipse.jgit.revwalk.RevCommit;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import provider.RepoLocalStorageDataProvider;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
-
-import static environment.FileConstants.*;
+import static environment.FileConstants.LOCAL_STORAGE_FILE;
+import static environment.FileConstants.REPO_LOCAL_STORAGE_FILE;
 
 //is singleton
 public class DownloadTask {
@@ -35,7 +30,7 @@ public class DownloadTask {
 
     private DownloadTask() { }
 
-    //TODO ADD SOURCE
+    //https://www.vogella.com/tutorials/JGit/article.html
     public void run(String repoUrl, File contentRepoFile, String branchPath) throws IOException {
         clone = null;
         {
@@ -71,7 +66,6 @@ public class DownloadTask {
             String resolvedRepository = "remotes/origin/" + branchName;
             //TODO ADD SOURCE
             logs = git.log()
-                    //TODO GET BRANCH FROM TASK DATA
                     //.add(repository.resolve("remotes/origin/test"))
                     .add(repository.resolve(resolvedRepository))
                     .call();
@@ -94,6 +88,7 @@ public class DownloadTask {
 
     public void updateRepository(String repoUrl) throws IOException, GitAPIException {
         Git git;
+        //https://download.eclipse.org/jgit/site/5.6.0.201912101111-r/apidocs/org/eclipse/jgit/api/Git.html#open-java.io.File-
         git = Git.open(new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE));
         git.pull().call();
     }

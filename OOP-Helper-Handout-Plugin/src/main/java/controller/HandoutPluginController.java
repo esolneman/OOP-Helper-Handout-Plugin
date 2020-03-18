@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import static environment.LoggingMessageConstants.IDE_CLOSED;
 import static environment.LoggingMessageConstants.IDE_VISIBILITY;
 
-//TODO HIDE ANT TOOL WINDOW
 public class HandoutPluginController implements HandoutPluginControllerInterface, OnGitEventListener {
     private HandoutContentDataProviderInterface handoutDataProvider;
     private UpdateHandoutDataController updateHandoutDataController;
@@ -64,11 +63,6 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
     public void updateHandoutContent() {
         handoutDataProvider.updateHandoutData();
     }
-
-    //TODO MANAGE UPDATE VIEWS....
-    //TODO update Webview and other content of toolWindows
-    //TODO enable / disable Actions
-
 
     public void onCloningRepositoryEvent(String notificationMessage, NotificationType messageType)   {
         initHtmlFiles();

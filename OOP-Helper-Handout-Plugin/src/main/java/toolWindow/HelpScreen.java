@@ -57,12 +57,12 @@ public class HelpScreen extends SimpleToolWindowPanel {
             webView = webViewController.createHelpWebView(startPageDirectory);
             criteriaContent.showHandoutWebView(startPageDirectory, webView);
             final WebView currentWebView = webView;
+            //only needed to log events
             webView.getEngine().getLoadWorker().stateProperty().addListener((ov, oldState, newState) -> {
                 if (newState == Worker.State.SUCCEEDED) {
                     if(webView.getEngine().getDocument() != null) {
                         HelpWebViewLinkListener webViewLinkListener = new HelpWebViewLinkListener(currentWebView, startPageDirectory);
                         webViewLinkListener.createListener();
-
                         //log key and mouse events, depends on current page in help-tab
                         LogDataType logDataType;
                         if(webView.getEngine().getLocation().contains("shortcuts")){

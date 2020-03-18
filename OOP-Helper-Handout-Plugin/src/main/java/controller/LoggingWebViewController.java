@@ -11,6 +11,7 @@ public class LoggingWebViewController {
     private final WebView webView;
     private LogDataType logDataType;
 
+    //TODO SOurce
     //https://stackoverflow.com/questions/49509395/synchronize-scrollbars-of-two-javafx-webviews
     public LoggingWebViewController(WebView webView, LogDataType logDataType){
         this.webView = webView;
@@ -33,10 +34,12 @@ public class LoggingWebViewController {
 
     public void addLoggingMouseEvents() {
         webView.addEventHandler(MouseEvent.MOUSE_ENTERED, mouseEvent -> {
+            System.out.println("Mouse Entered");
             LoggingController.getInstance().saveDataInLogger(logDataType, MOUSE_EVENT, MOUSE_ENTERED);
         });
 
         webView.addEventHandler(MouseEvent.MOUSE_EXITED, mouseEvent -> {
+            System.out.println("Mouse MOUSE_EXITED");
             LoggingController.getInstance().saveDataInLogger(logDataType, MOUSE_EVENT, MOUSE_EXITED);
         });
 

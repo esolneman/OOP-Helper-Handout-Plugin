@@ -78,10 +78,11 @@ public class NotesScreen extends SimpleToolWindowPanel {
     }
 
     // Had to be newly created, because when editing the html it is parsed to XHTML
-    // and because of that, the button is not recogniced anymore
+    // and because of that, the button is not recognised anymore
     public void reloadWebView() {
         Platform.runLater(() -> {
             webView = webViewController.createWebView(notesHtmlString);
+            //needed to log events
             webView.getEngine().getLoadWorker().stateProperty().addListener((ov, oldState, newState) -> {
                 if (newState == Worker.State.SUCCEEDED) {
                     loggingWebViewController = new LoggingWebViewController(webView, LogDataType.NOTES);

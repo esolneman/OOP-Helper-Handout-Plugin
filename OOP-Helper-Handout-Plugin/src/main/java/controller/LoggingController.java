@@ -50,8 +50,8 @@ public class LoggingController {
         });
     }
 
+    //save data in log file
     public void saveDataInLogger(LogDataType type, String label, String payload) {
-        // Daten im Log speichern
         log.log(user.getSessionID(), type, label, payload);
     }
 }
