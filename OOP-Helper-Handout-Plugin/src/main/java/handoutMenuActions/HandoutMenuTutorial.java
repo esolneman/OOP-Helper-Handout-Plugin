@@ -11,6 +11,7 @@ import toolWindow.HelpScreen;
 
 import static environment.Messages.TOOL_WINDOW_NAME;
 
+//menu action for displaying the tutorial
 public class HandoutMenuTutorial extends AnAction {
 
     private static String MENU_TEXT = "Tutorial";

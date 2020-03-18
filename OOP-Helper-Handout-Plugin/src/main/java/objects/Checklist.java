@@ -2,6 +2,10 @@ package objects;
 
 import java.util.ArrayList;
 
+//concept of class hierarchy from Bloch, J. (2018). Effective Java: Best Practices für die Java-Plattform (3. Auflage Aufl.;
+//D. Louis, Übers.). Heidelberg: dpunkt.verlag.
+
+//object classes for predefined and own task lists
 public class Checklist {
 
     public ArrayList<Task> tasks;
@@ -24,7 +28,6 @@ public class Checklist {
             taskDescription = currentRepoTaskDescription;
         }
 
-        //TODO Quelle: Efefective Java Page 13-14 Kapitel 2.2 - Thema 2
         public static class TasksBuilder {
 
             private String taskDescription;
