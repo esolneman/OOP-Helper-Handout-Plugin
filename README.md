@@ -64,3 +64,21 @@ Wenn der Vorgang abgeschlossen ist, erscheint auf der rechten Seite ein neues To
 *1. Im Menüeintrag des Plugins unter „Tutorial“* 
 
 *2. Im ToolWindow des Plugins den Tab „Hilfe“ auswählen und dort die Tutorialseite auswählen*
+
+
+## Benutzte Libraries und weitere Quellen
+### Directly Integrated Libraries
+"[PluginHelper](https://github.com/OOP-Regensburg/PluginHelper)" by Alexander Bazo , used under [MIT](https://github.com/OOP-Regensburg/PluginHelper/blob/master/LICENSE) / Desaturated from original
+
+### Integrated Libraries via Gradle
+
+"[htmltopdf-java](https://github.com/wooio/htmltopdf-java)" by Ben Barkay , is licensed under [MIT](https://github.com/wooio/htmltopdf-java/blob/master/LICENSE) 
+
+"[LibFX](https://github.com/CodeFX-org/LibFX)" by Nicolai Parlog, is licensed under [GPL3.0](https://github.com/CodeFX-org/LibFX/blob/master/GPL3.0) 
+
+"[gson](https://github.com/google/gson)" by Google Inc, is licensed under [Apache License 2.0](https://github.com/google/gson/blob/master/LICENSE) 
+
+"[jgit](https://github.com/eclipse/jgit)" by Eclipse Foundation, Inc. and its licensors, is licensed under [Eclipse Distribution License v1.0](https://www.eclipse.org/org/documents/edl-v10.php) 
+
+### Weitere Quellen
+"[JavaFX: Stage / Dialog beenden mit Abfrage](https://blog.axxg.de/javafx-stage-dialog-beenden-mit-abfrage/)" by Alexander Gräsel, used under [CC BY 3.0 DE](https://creativecommons.org/licenses/by/3.0/de/) / Desaturated from original
