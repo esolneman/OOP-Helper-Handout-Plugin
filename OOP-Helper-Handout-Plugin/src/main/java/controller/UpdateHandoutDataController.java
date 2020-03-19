@@ -1,11 +1,10 @@
 package controller;
 
-import eventHandling.OnGitEventListener;
 import eventHandling.OnLocalDataUpdatedListener;
 
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 
+//controller class for updating handout data
 public class UpdateHandoutDataController  {
     private static UpdateHandoutDataController single_instance = null;
     private OnLocalDataUpdatedListener onLocalDataUpdatedListener;
@@ -26,7 +25,6 @@ public class UpdateHandoutDataController  {
 
 
     public void updateLocalStorageData(){
-        System.out.println("UpdateHandoutDataController: updateLocalStorageData");
         try {
             ChecklistController.getInstance().comparePredefinedChecklistVersions();
         } catch (FileNotFoundException e) {
@@ -37,9 +35,7 @@ public class UpdateHandoutDataController  {
     }
 
     private void callLocalUpdatedListener() {
-        System.out.println("listener call callLocalUpdatedListener");
         if (onLocalDataUpdatedListener != null) {
-            System.out.println("listener call callLocalUpdatedListener not null");
             onLocalDataUpdatedListener.OnLocalDataUpdatedEvent();
         }
     }

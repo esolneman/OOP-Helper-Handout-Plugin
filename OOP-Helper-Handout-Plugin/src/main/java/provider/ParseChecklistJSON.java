@@ -10,34 +10,20 @@ import java.util.ArrayList;
 
 public class ParseChecklistJSON {
 
-    //TODO Combine Methods
+    private static final String CHECKLIST_JSON = "checklist";
+    private static final String TASK_DESCRIPTION_JSON = "taskDescription";
+    private static final String ID_JSON = "id";
+    private static final String CHECKED_JSON = "checked";
+    private static final String IMAGE_CLASS_NAME = "fa fa-check-square";
+
     //https://stackoverflow.com/a/34510715
-    public static Checklist checklistJSONHandler(JsonObject checklistJson) {
-        JsonArray checklist = ((JsonArray) checklistJson.get("checklist"));
+    public static Checklist jsonToChecklistParser(JsonObject checklistJson) {
+        JsonArray checklist = ((JsonArray) checklistJson.get(CHECKLIST_JSON));
         ArrayList<Checklist.Task> tasks = new ArrayList<>();
         for (JsonElement task : checklist) {
-            String taskName = task.getAsJsonObject().get("taskDescription").getAsString();
-            Boolean checked = task.getAsJsonObject().get("checked").getAsBoolean();
-            //TODO Quelle: Efefective Java Page 13-14 Kapitel 2.2 - Thema 2
-            Checklist.Task newTask = new Checklist.Task.TasksBuilder(taskName, checked).build();
-            tasks.add(newTask);
-        }
-        Checklist realChecklist = new Checklist();
-        realChecklist.setTasks(tasks);
-        return realChecklist;
-    }
-
-    public static Checklist predefinedJsonToChecklistParser(JsonObject checklistJson) {
-        JsonArray checklist = ((JsonArray) checklistJson.get("checklist"));
-        ArrayList<Checklist.Task> tasks = new ArrayList<>();
-        for (JsonElement task : checklist) {
-            String taskName = task.getAsJsonObject().get("taskDescription").getAsString();
- /*           byte[] ptext = taskName.getBytes();
-            taskName = new String(ptext, UTF_8);*/
-
-            Boolean checked = task.getAsJsonObject().get("checked").getAsBoolean();
-            String id = task.getAsJsonObject().get("id").getAsString();
-            //TODO Quelle: Efefective Java Page 13-14 Kapitel 2.2 - Thema 2
+            String taskName = task.getAsJsonObject().get(TASK_DESCRIPTION_JSON).getAsString();
+            Boolean checked = task.getAsJsonObject().get(CHECKED_JSON).getAsBoolean();
+            String id = task.getAsJsonObject().get(ID_JSON).getAsString();
             Checklist.Task newTask = new Checklist.Task.TasksBuilder(taskName, checked)
                     .id(id).build();
             tasks.add(newTask);
@@ -52,10 +38,9 @@ public class ParseChecklistJSON {
         Boolean checked;
         for (int i = 0; i < taskList.getChildNodes().getLength(); i++) {
             HTMLLIElement currentTask = (HTMLLIElement) taskList.getChildNodes().item(i);
-            System.out.println("Child 1: " + (HTMLElement) currentTask.getChildNodes().item(1).getFirstChild());
             HTMLElement checkboxImage = (HTMLElement) currentTask.getChildNodes().item(1).getFirstChild();
             String description = currentTask.getFirstChild().getTextContent();
-            if (checkboxImage.getClassName().equals("fa fa-check-square")){
+            if (checkboxImage.getClassName().equals(IMAGE_CLASS_NAME)){
                  checked = true;
             } else{
                  checked = false;
@@ -83,14 +68,12 @@ public class ParseChecklistJSON {
         checklist.setTasks(tasksArrayList);
         for (int i = 0; i < checklist.tasks.size(); i++) {
             JsonObject task = new JsonObject();
-            task.add("taskDescription", gson.toJsonTree(checklist.tasks.get(i).taskDescription));
-            task.add("checked", gson.toJsonTree(checklist.tasks.get(i).checked));
+            task.add(TASK_DESCRIPTION_JSON, gson.toJsonTree(checklist.tasks.get(i).taskDescription));
+            task.add(CHECKED_JSON, gson.toJsonTree(checklist.tasks.get(i).checked));
             if(checklist.tasks.get(i).id != null){
-                //task.addProperty("id", updatedChecklist.tasks.get(i).id);
-                task.add("id", gson.toJsonTree(checklist.tasks.get(i).id));
+                task.add(ID_JSON, gson.toJsonTree(checklist.tasks.get(i).id));
             }
             tasks.add(task);
-
         }
         return tasks;
     }

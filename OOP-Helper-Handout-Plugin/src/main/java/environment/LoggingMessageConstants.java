@@ -41,6 +41,8 @@ public class LoggingMessageConstants {
     public static String MOUSE_DRAGGED_EVENT = "MOUSE_DRAGGED_Event";
     public static String SCROLL_EVENT = "Scroll_Event";
     public static String KEY_EVENT = "KEY_RELEASED";
+    public static String COPY_EVENT = "Copy";
+
 
     public static String MOUSE_ENTERED = "Mouse_Entered";
     public static String MOUSE_EXITED = "Mouse_Exited";

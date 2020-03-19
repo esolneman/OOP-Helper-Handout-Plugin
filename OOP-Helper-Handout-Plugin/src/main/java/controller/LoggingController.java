@@ -8,6 +8,7 @@ import de.ur.mi.pluginhelper.logger.SyncProgressListener;
 
 import static environment.LoggingMessageConstants.*;
 
+// controller class for logging user interactions
 public class LoggingController {
     private static LoggingController single_instance = null;
     private de.ur.mi.pluginhelper.User.User user;
@@ -25,12 +26,11 @@ public class LoggingController {
 
     public void startLogging() {
         user = getCurrentUser();
-        // Session Log für das Experiment mit dem Titel "Test" erstellen oder öffnen
+        // create or open Session Log
         log = LogManager.openLog(user.getID(), EXPERIMENT_NAME);
         saveDataInLogger(LogDataType.IDE, IDE_VISIBILITY, IDE_OPENED);
     }
 
-    // Nutzer erstellen oder laden
     public User getCurrentUser() {
         user = de.ur.mi.pluginhelper.User.User.getLocalUser();
         return user;
@@ -39,14 +39,10 @@ public class LoggingController {
     public void syncLoggingData() {
         LogManager.syncLog(log, user, UPLOAD_SERVER_URL, new SyncProgressListener() {
             @Override
-            public void onFinished() {
-                System.out.println("Upload finished");
-            }
+            public void onFinished() { }
 
             @Override
-            public void onFailed() {
-                System.out.println("Upload failed");
-            }
+            public void onFailed() { }
         });
     }
 

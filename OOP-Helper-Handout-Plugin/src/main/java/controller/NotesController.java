@@ -9,12 +9,13 @@ import java.io.*;
 import static java.nio.charset.StandardCharsets.ISO_8859_1;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-//TODO LET CONTROLLER CONTROLL
+//controller class for notes
 public class NotesController {
 
     private static NotesController single_instance = null;
     private File notesLocalFile;
     private WebView webView;
+    private String NOTES_ELEMENT_ID = "notesList";
 
     public static NotesController getInstance() {
         if (single_instance == null) {
@@ -27,7 +28,6 @@ public class NotesController {
         notesLocalFile = LocalStorageDataProvider.getNotesFile();
     }
 
-    //TODO CALL CREATE FILE CLASS
     public void createNotesFile() {
         FileHandleController.createNewFile(notesLocalFile);
         File notesRepoFile = LocalStorageDataProvider.getInitNotesHtmlFile();
@@ -39,7 +39,6 @@ public class NotesController {
     }
 
     public void saveNewEntryInFile(String htmlText) {
-        //TODO Subtitle and Title as param
         // https://stackoverflow.com/a/20243062
         try {
             org.jsoup.nodes.Document doc = Jsoup.parse(htmlText, "UTF-8");
@@ -50,11 +49,10 @@ public class NotesController {
         }
     }
 
-    //TODO add to File Controller
     private void saveNoteInHtmlFile(String htmlBody, File initFile) throws IOException {
         //https://stackoverflow.com/a/30258688
         org.jsoup.nodes.Document doc = Jsoup.parse(initFile, "UTF-8");
-        doc.getElementById("notesList").html(htmlBody);
+        doc.getElementById(NOTES_ELEMENT_ID).html(htmlBody);
 
         //https://stackoverflow.com/a/1001568
         Writer out = new BufferedWriter(new OutputStreamWriter(
@@ -64,11 +62,6 @@ public class NotesController {
         } finally {
             out.close();
         }
-    }
-
-    public Document getCurrentNotesDocument() {
-        Document doc = webView.getEngine().getDocument();
-        return doc;
     }
 
     public WebView getCurrentWebview() {
