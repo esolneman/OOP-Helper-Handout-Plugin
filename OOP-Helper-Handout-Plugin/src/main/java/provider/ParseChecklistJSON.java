@@ -33,6 +33,20 @@ public class ParseChecklistJSON {
         return realChecklist;
     }
 
+    public static Checklist checklistJSONHandler(JsonObject checklistJson) {
+        JsonArray checklist = ((JsonArray) checklistJson.get(CHECKLIST_JSON));
+        ArrayList<Checklist.Task> tasks = new ArrayList<>();
+        for (JsonElement task : checklist) {
+            String taskName = task.getAsJsonObject().get(TASK_DESCRIPTION_JSON).getAsString();
+            Boolean checked = task.getAsJsonObject().get(CHECKED_JSON).getAsBoolean();
+            Checklist.Task newTask = new Checklist.Task.TasksBuilder(taskName, checked).build();
+            tasks.add(newTask);
+        }
+        Checklist realChecklist = new Checklist();
+        realChecklist.setTasks(tasks);
+        return realChecklist;
+    }
+
     public static JsonArray getJsonFromLiElement(HTMLUListElement taskList){
         ArrayList<Checklist.Task> tasksArrayList = new ArrayList<>();
         Boolean checked;

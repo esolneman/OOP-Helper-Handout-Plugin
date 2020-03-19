@@ -71,10 +71,8 @@ public class ChecklistController {
         localChecklistData = gson.fromJson(reader, JsonObject.class);
         reader = new JsonReader(new FileReader(LocalStorageDataProvider.getChecklistData()));
         repoChecklistData = gson.fromJson(reader, JsonObject.class);
-        Checklist checklistLocal = ParseChecklistJSON.predefinedJsonToChecklistParser(localChecklistData);
-        Checklist checklistRepo = ParseChecklistJSON.predefinedJsonToChecklistParser(repoChecklistData);
-
-        //TODO THINK AND IMPROVE
+        Checklist checklistLocal = ParseChecklistJSON.jsonToChecklistParser(localChecklistData);
+        Checklist checklistRepo = ParseChecklistJSON.jsonToChecklistParser(repoChecklistData);
         for (Checklist.Task repoTask : checklistRepo.tasks) {
             String currentRepoTaskID = repoTask.id;
             String currentRepoTaskDescription = repoTask.taskDescription;
@@ -82,7 +80,6 @@ public class ChecklistController {
             if (checklistLocal.getTaskWithId(currentRepoTaskID) != null) {
                 checklistLocal.getTaskWithId(currentRepoTaskID).setDescription(currentRepoTaskDescription);
                 //if task not exists add new task at the end of the list
-                //TODO Think about commetn
             } else {
                 Checklist.Task newTask = new Checklist.Task.TasksBuilder(currentRepoTaskDescription, false)
                         .id(currentRepoTaskID).build();
@@ -123,7 +120,6 @@ public class ChecklistController {
         File localPredefinedChecklistFile = LocalStorageDataProvider.getLocalChecklistPredefinedData();
         File predefinedRepoChecklistFile = LocalStorageDataProvider.getChecklistData();
 
-        //TODO create in Clhecklsit controller
         //https://stackoverflow.com/a/29965924
         gson = new Gson();
         JsonReader reader = null;
@@ -162,7 +158,6 @@ public class ChecklistController {
             case "predefined":
                 taskListId = "predefinedTaskList";
                 checklistDataFile = LocalStorageDataProvider.getLocalChecklistPredefinedData();
-                //TODO Duplicated Code
                 //https://stackoverflow.com/a/34486879
                 try {
                     br = new BufferedReader(new FileReader(checklistDataFile));
@@ -174,7 +169,7 @@ public class ChecklistController {
                     e.printStackTrace();
                 }
 
-                checklistData = ParseChecklistJSON.predefinedJsonToChecklistParser(checklistJson);
+                checklistData = ParseChecklistJSON.jsonToChecklistParser(checklistJson);
                 break;
             case "userData":
                 taskListId = "userDataTaskList";
@@ -223,7 +218,6 @@ public class ChecklistController {
         }
     }
 
-    //TODO ADD SOURCE W3 PAGE
     public void addTask(WebView webView) {
         Document doc = webView.getEngine().getDocument();
         HTMLUListElement userDataTaskList = (HTMLUListElement) doc.getElementById("userDataTaskList");
@@ -257,7 +251,6 @@ public class ChecklistController {
     private HTMLElement createCheckBoxElement(Document doc, WebView webView, String checklistSource, String checkBoxIcon) {
         HTMLElement checkbox = (HTMLElement) doc.createElement(SPAN_ELEMENT_HTML);
         HTMLElement checkboxImage = (HTMLElement) doc.createElement(IMAGE_ELEMENT_HTML);
-        //TODO make constant for class name
         checkbox.appendChild(checkboxImage);
         checkbox.setClassName("checkbox");
         ((EventTarget) checkbox).addEventListener("click", getToggleCheckTaskListener(checklistSource, webView), false);
