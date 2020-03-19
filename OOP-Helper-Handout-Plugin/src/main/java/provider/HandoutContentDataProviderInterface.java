@@ -11,7 +11,4 @@ public interface HandoutContentDataProviderInterface {
 
     void addListener(OnGitEventListener listener);
 
-    //public void cloneRepository();
-    //public void updateRepossitory();
-    //void getLocalRepository();
 }

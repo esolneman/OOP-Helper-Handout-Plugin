@@ -6,7 +6,7 @@ import java.io.File;
 
 import static environment.FileConstants.*;
 
-public class RepoLocalStorageDataProvider implements RepoLocalStorageDataProviderInterface {
+public class RepoLocalStorageDataProvider  {
 
     private static String projectDirectory;
     private static Project handoutProject;
@@ -37,11 +37,6 @@ public class RepoLocalStorageDataProvider implements RepoLocalStorageDataProvide
     public static String getHandoutHtmlString(){
         String handoutFile = getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE  + HANDOUT_FILE_NAME;
         return handoutFile;
-    }
-
-    public static String getRepoLocalFile(){
-        //File file = new File();
-        return getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE;
     }
 
     public static File getCommonAssessmentCriteriaFileDirectory() {

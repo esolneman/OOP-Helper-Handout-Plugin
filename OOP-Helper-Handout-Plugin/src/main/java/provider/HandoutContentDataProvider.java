@@ -3,11 +3,9 @@ package provider;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.MessageType;
-import controller.FileHandleController;
 import controller.QuestionnaireController;
 import de.ur.mi.pluginhelper.tasks.TaskConfiguration;
 import eventHandling.OnGitEventListener;
-import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import provider.helper.ProgressExecutor;
 import provider.helper.DownloadTask;
@@ -20,6 +18,7 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 
 import static environment.FileConstants.*;
+import static environment.Messages.*;
 
 // is Singleton
 public class HandoutContentDataProvider implements HandoutContentDataProviderInterface {
@@ -46,10 +45,8 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
 
 
     private HandoutContentDataProvider() {
-        //TODO DELETE UNUSED FILES
         this.project = RepoLocalStorageDataProvider.getProject();
         projectDirectory = project.getBasePath();
-        //TODO MOve To Constants
         contentRepoPath = RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE;
         contentRepoFile = new File(contentRepoPath);
         repoLocalData = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + REPO_LOCAL_STORAGE_FILE);
@@ -78,13 +75,12 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
             updateBranch();
         } else if (repoContentDataExists) {
             QuestionnaireController.getInstance().compareDates();
-            callListenerNotUpdating("Keine Internetverbindung vorhanden. Handout Daten können momentan nicht aktualisiert werden." , MessageType.ERROR);
+            callListenerNotUpdating(ERROR_MESSAGE_UPDATING_NO_INTERNET, MessageType.ERROR);
         } else {
-            callListenerNotUpdating("Keine Internetverbindung vorhanden. Handout Daten können momentan nicht heruntergeladen werden.", MessageType.ERROR);
+            callListenerNotUpdating(ERROR_MESSAGE_DOWNLOADING_NO_INTERNET, MessageType.ERROR);
         }
     }
 
-    //TODO refactor false file --> check data
     private boolean checkRepoContentDataExists() {
         //https://stackoverflow.com/a/15571626
         if (!contentRepoFile.exists()) {
@@ -95,7 +91,6 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
     }
 
     //https://www.it-swarm.net/de/java/wie-pruefe-ich-ob-eine-internetverbindung-java-vorhanden-ist/967034905/
-    //TODO Ping Github Repo -> is Repo Available
     public Boolean checkInternetConnection() {
         try {
             final URL url = new URL("http://www.google.com");
@@ -115,17 +110,15 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
     }
 
     private void cloneRepository() {
-        System.out.println("start cloning branch");
         //https://www.vogella.com/tutorials/JGit/article.html#example-for-using-jgit
         Runnable cloneTask = () -> {
             try {
-                task.run(repoUrl, contentRepoFile, branchPath);
+                task.cloneRepository(repoUrl, contentRepoFile, branchPath);
             } catch (IOException e) {
-                //TODO Notification
                 e.printStackTrace();
-                cloneCanceledListener("Fehler beim Herunterladen. Bitte versuche es erneut.");
+                cloneCanceledListener(ERROR_MESSAGE_DOWNLOADING);
             } finally {
-                callListener("Handout Daten wurden runtergeladen.", NotificationType.INFORMATION);
+                callListener(DOWNLOADING_DATA, NotificationType.INFORMATION);
             }
         };
         progressExecutor.runSynchronousProcess(cloneTask);
@@ -136,19 +129,18 @@ public class HandoutContentDataProvider implements HandoutContentDataProviderInt
         progressExecutor = new ProgressExecutor();
         ArrayList<String> commitMessages = task.getLatestCommits(branchName);
         if (commitMessages.size() >= 1) {
-            //TODO ASK USER IF DOWNLOAD IS OK
             Runnable updateTask = () -> {
                 try {
-                    task.updateRepository(repoUrl);
+                    task.updateRepository();
                 } catch (IOException | GitAPIException e) {
-                    cloneCanceledListener("Fehler beim Herunterladen. Bitte versuche es erneut.");
+                    cloneCanceledListener(ERROR_MESSAGE_DOWNLOADING);
                     e.printStackTrace();
                 }
             };
             progressExecutor.runSynchronousProcess(updateTask);
             callListener(commitMessages);
         }else{
-            callListenerNotUpdating("Handoutdaten sind bereits auf dem aktuellsten Stand" , MessageType.INFO);
+            callListenerNotUpdating( DATA_IS_ACTUAL, MessageType.INFO);
         }
     }
 
