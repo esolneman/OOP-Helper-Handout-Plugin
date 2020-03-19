@@ -44,6 +44,14 @@ public class LoggingMessageConstants {
     public static String COPY_EVENT = "Copy";
 
 
-    public static String MOUSE_ENTERED = "Mouse_Entered";
-    public static String MOUSE_EXITED = "Mouse_Exited";
+    public static String DOWNLOAD_REPO = "Download Repo";
+    public static String UPDATED_REPO = "Updated Repo";
+    public static String NOT_UPDATED_REPO = "Not Updated Repo";
+    public static String CLONED_REPO = "Cloned Repo";
+    public static String DOWNLOAD_CANCELED = "Canceled";
+
+    public static String HANDOUT_STATUS = "Status des Handouts";
+    public static String DOWNLOAD_HANDOUT_DATA = "Handout Daten wurden runtergeladen.";
+
+
 }
