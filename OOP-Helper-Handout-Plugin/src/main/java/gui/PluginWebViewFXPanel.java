@@ -14,18 +14,27 @@ import org.w3c.dom.html.HTMLInputElement;
 import provider.LocalStorageDataProvider;
 
 public class PluginWebViewFXPanel extends JFXPanel {
+
+    private static String ADD_TASK_ELEMENT_ID = "addTaskButton";
+    private static String NEW_TASK_ELEMENT_ID = "newTaskDescription";
+
+    private static String CLICK_STRING = "click";
+    private static String KEYDOWN_STRING = "keydown";
+    private static String PREDEFINED_STRING = "predefined";
+    private static String USER_DATA_STRING = "userData";
+
+    private static int ENTER_KEY_CODE = 13;
+
+    private  static String FOLDER_NAME = "OOP_Plugin";
+
     public void showHandoutWebView(String urlString, WebView webView) {
-        //Platform.setImplicitExit(false);
-        //Platform.runLater(() -> {
         webView.getEngine().load(urlString);
         webView.getEngine().setJavaScriptEnabled(true);
         setScene(new Scene(webView));
-        //});
     }
 
 
     public void showChecklist(String urlString, WebView webView) {
-        System.out.println("in: showChecklist");
         webView.getEngine().setJavaScriptEnabled(true);
         final WebView finalWebView1 = webView;
         //https://stackoverflow.com/a/10684168
@@ -34,24 +43,21 @@ public class PluginWebViewFXPanel extends JFXPanel {
                 EventListener addTaskButtonListener = ev -> {
                     ChecklistController.getInstance().addTask(finalWebView1);
                 };
-
                 EventListener addTaskButtonFocusListener = ev -> {
                     KeyboardEventImpl keyboardEvent = (KeyboardEventImpl) ev;
-                    //TODO CONSTANT
-                    if (keyboardEvent.getKeyCode() == 13){
+                    if (keyboardEvent.getKeyCode() == ENTER_KEY_CODE){
                         ChecklistController.getInstance().addTask(finalWebView1);
                     }
                 };
-
                 Document doc = finalWebView1.getEngine().getDocument();
-                if (doc.getDocumentURI().substring(doc.getDocumentURI().indexOf("OOP_Plugin")).equals(LocalStorageDataProvider.getLocalUserDataChecklistFile().toURI().toString().substring(LocalStorageDataProvider.getLocalUserDataChecklistFile().toURI().toString().indexOf("OOP_Plugin")))) {
-                    ChecklistController.getInstance().createTaskList("userData", doc, finalWebView1);
-                    Element addTaskButton = doc.getElementById("addTaskButton");
-                    HTMLInputElement initButton = (HTMLInputElement) doc.getElementById("newTaskDescription");
-                    ((EventTarget) addTaskButton).addEventListener("click", addTaskButtonListener, false);
-                    ((EventTarget) initButton).addEventListener("keydown", addTaskButtonFocusListener, false);
+                if (doc.getDocumentURI().substring(doc.getDocumentURI().indexOf(FOLDER_NAME)).equals(LocalStorageDataProvider.getLocalUserDataChecklistFile().toURI().toString().substring(LocalStorageDataProvider.getLocalUserDataChecklistFile().toURI().toString().indexOf("OOP_Plugin")))) {
+                    ChecklistController.getInstance().createTaskList(USER_DATA_STRING, doc, finalWebView1);
+                    Element addTaskButton = doc.getElementById(ADD_TASK_ELEMENT_ID);
+                    HTMLInputElement initButton = (HTMLInputElement) doc.getElementById(NEW_TASK_ELEMENT_ID);
+                    ((EventTarget) addTaskButton).addEventListener(CLICK_STRING, addTaskButtonListener, false);
+                    ((EventTarget) initButton).addEventListener(KEYDOWN_STRING, addTaskButtonFocusListener, false);
                 } else {
-                    ChecklistController.getInstance().createTaskList("predefined", doc, finalWebView1);
+                    ChecklistController.getInstance().createTaskList(PREDEFINED_STRING, doc, finalWebView1);
                 }
             }
         });
