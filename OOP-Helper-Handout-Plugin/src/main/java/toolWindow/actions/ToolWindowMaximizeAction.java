@@ -6,6 +6,7 @@ import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.openapi.wm.ToolWindowType;
 import org.jetbrains.annotations.NotNull;
 
+//maximize toolwindow menu function
 public class ToolWindowMaximizeAction extends AnAction {
     @Override
     public void actionPerformed(@NotNull AnActionEvent anActionEvent) {

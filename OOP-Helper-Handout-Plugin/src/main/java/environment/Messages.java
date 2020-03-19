@@ -19,4 +19,18 @@ public class Messages {
 
     public static final String QUESTIONNAIRE_TITLE = "Teilnahme am Zwischenfragebogen";
 
+    public static final String CONTENT_CHANGED_TITLE = "Eine Aktuelle Version des Handouts wurde heruntergeladen";
+
+    public static final String FILE_CHOOSER_TITLE = "Download des Handouts";
+    public static final String DOWNLOAD_ERROR_MESSAGE = "Error while downloading the handout. Please try again.";
+    public static final String DOWNLOAD_SUCCESS_MESSAGE = "Downloading was successfully";
+
+    public static final String ERROR_MESSAGE_UPDATING_NO_INTERNET = "Keine Internetverbindung vorhanden. Handout Daten können momentan nicht aktualisiert werden.";
+    public static final String ERROR_MESSAGE_DOWNLOADING_NO_INTERNET = "Keine Internetverbindung vorhanden. Handout Daten können momentan nicht heruntergeladen werden.";
+
+    public static final String ERROR_MESSAGE_DOWNLOADING = "Fehler beim Herunterladen. Bitte versuche es erneut.";
+
+    public static final String DOWNLOADING_DATA = "Handout Daten wurden runtergeladen.";
+    public static final String DATA_IS_ACTUAL ="Handoutdaten sind bereits auf dem aktuellsten Stand";
+
 }

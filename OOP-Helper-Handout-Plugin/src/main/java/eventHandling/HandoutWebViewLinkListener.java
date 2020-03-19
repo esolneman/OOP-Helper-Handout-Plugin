@@ -37,7 +37,16 @@ import static environment.LoggingMessageConstants.HANDOUT_LINK_TO_EXTERNAL_PAGE;
 public class HandoutWebViewLinkListener {
 
     private WebView webView;
-    String urlString;
+    private String urlString;
+    private static String HTTP_PREFIX = "http://";
+    private static String HTTPS_PREFIX = "https://";
+    private static String MAIL_PREFIX = "mailto";
+    private static String LINK_TO_CODE_ID = "LinkToCode";
+    private int finalMethodLineNumber = 1;
+    private VirtualFile newFile = null;
+    private String className = "";
+    private String lineToSelect = "";
+    private String pathToClass = "";
 
     public HandoutWebViewLinkListener(WebView webView, String urlString) {
         this.webView = webView;
@@ -47,30 +56,26 @@ public class HandoutWebViewLinkListener {
     public void createListener() {
         //https://github.com/CodeFX-org/LibFX/wiki/WebViewHyperlinkListener
         WebViewHyperlinkListener eventPrintingListener = event -> {
-            //TODO: Refactor variable name
             String hyperlink = event.getURL().toString();
             Project project = RepoLocalStorageDataProvider.getProject();
-            if (hyperlink.contains("LinkToCode")) {
+            if (hyperlink.contains(LINK_TO_CODE_ID)) {
                 LoggingController.getInstance().saveDataInLogger(LogDataType.HANDOUT, HANDOUT_LINK_TO_CODE, hyperlink);
                 handleLinkToCode(hyperlink, project);
             } else {
                 LoggingController.getInstance().saveDataInLogger(LogDataType.HANDOUT, HANDOUT_LINK_TO_EXTERNAL_PAGE, hyperlink);
-
                 handleLinkToExternalWebpage(hyperlink);
             }
             return false;
         };
-        //TODO METHOD FOR THIS IN WEBVIEW CONTROOLER
-        WebViews.addHyperlinkListener(
-                webView, eventPrintingListener,
-                HyperlinkEvent.EventType.ACTIVATED);
+        WebViews.addHyperlinkListener(webView, eventPrintingListener, HyperlinkEvent.EventType.ACTIVATED);
     }
 
-    private void handleLinkToExternalWebpage(String toBeopen) {
+    //open link in external browser and reload webview
+    private void handleLinkToExternalWebpage(String hyperLink) {
         try {
             Desktop desktop = Desktop.getDesktop();
-            URI address = new URI(toBeopen);
-            if (toBeopen.contains("http://") || toBeopen.contains("https://") || toBeopen.contains("mailto")) {
+            URI address = new URI(hyperLink);
+            if (hyperLink.contains(HTTP_PREFIX) || hyperLink.contains(HTTPS_PREFIX) || hyperLink.contains(MAIL_PREFIX)) {
                 Platform.setImplicitExit(false);
                 Platform.runLater(() -> {
                     webView.getEngine().reload();
@@ -83,14 +88,6 @@ public class HandoutWebViewLinkListener {
     }
 
     private void handleLinkToCode(String toBeopen, Project project) {
-        System.out.println("Linl to Code: " + toBeopen);
-        int finalMethodLineNumber = 1;
-        VirtualFile newFile = null;
-        String className = "";
-        //TODO: other name for var:
-        String lineToSelect = "";
-        String pathToClass = "";
-
         //https://stackoverflow.com/a/13592324
         List<org.apache.http.NameValuePair> params = null;
         try {
@@ -99,7 +96,6 @@ public class HandoutWebViewLinkListener {
             e.printStackTrace();
         }
         for (NameValuePair param : params) {
-            System.out.println(param.getName() + " : " + param.getValue());
             switch(param.getName()) {
                 case "class":
                     className = param.getValue();
@@ -111,14 +107,17 @@ public class HandoutWebViewLinkListener {
                     lineToSelect = param.getValue();
                     break;
                 default:
-                    // TODO: I have a Problem if this happens
             }
         }
+        getLineNumber();
+        openClass(project);
+
+    }
+
+    //get line number from method, the link points to
+    private void getLineNumber(){
         newFile = LocalFileSystem.getInstance().findFileByPath(RepoLocalStorageDataProvider.getUserProjectDirectory() + pathToClass + className);
         pathToClass = RepoLocalStorageDataProvider.getUserProjectDirectory() + pathToClass + className;
-
-        //TODO: ADD Ballon for unable to find class
-
         File file = new File(pathToClass);
         //https://stackoverflow.com/a/5600442
         try {
@@ -133,9 +132,12 @@ public class HandoutWebViewLinkListener {
                 }
             }
         } catch(FileNotFoundException e) {
-            //TODO HAndle Expetion
-            //handle this
+            e.printStackTrace();
         }
+    }
+
+    //open class and scrolls to line from the method, the link points to
+    private void openClass(Project project){
         VirtualFile finalNewFile = newFile;
         int finalMethodLineNumber1 = finalMethodLineNumber;
         ApplicationManager.getApplication().invokeLater(() -> {

@@ -15,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+//controller class for handle displaying the link to the questionnaire all three days
 public class QuestionnaireController {
     private static QuestionnaireController single_instance = null;
     private File projectCreationDateFile;
@@ -33,7 +34,6 @@ public class QuestionnaireController {
     }
 
     public void saveProjectCreationDate() {
-        System.out.println("QUestionnaire File");
         FileHandleController.createNewFile(projectCreationDateFile);
         //Getting current date
         Calendar cal = Calendar.getInstance();
@@ -75,8 +75,6 @@ public class QuestionnaireController {
                 });
                 saveDateInFile(dateFormat.format(currentDate));
             }
-            //TODO Not After Abgabetermin!!!
-
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
@@ -84,11 +82,6 @@ public class QuestionnaireController {
     }
 
     private void saveDateInFile(String date) {
-        //https://stackoverflow.com/a/1053475
-        try (PrintWriter out = new PrintWriter(projectCreationDateFile)) {
-            out.println(date);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        FileHandleController.saveTextInFile(date, projectCreationDateFile);
     }
 }

@@ -2,7 +2,6 @@ package toolWindow;
 
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
-import controller.LinkToHandoutController;
 import controller.LoggingWebViewController;
 import de.ur.mi.pluginhelper.logger.LogDataType;
 import gui.PluginWebViewFXPanel;
@@ -10,13 +9,13 @@ import javafx.application.Platform;
 import javafx.concurrent.Worker;
 import javafx.scene.web.WebView;
 import provider.LocalStorageDataProvider;
-import provider.RepoLocalStorageDataProvider;
-import webView.WebViewController;
+import controller.WebViewController;
 
 import javax.swing.*;
 import java.io.File;
 import java.net.MalformedURLException;
 
+//UI for displaying the assessment criteria
 public class SpecificAssessmentCriteriaScreen extends SimpleToolWindowPanel{
     private PluginWebViewFXPanel assessmentContent;
     private ToolWindow handoutToolWindow;
@@ -51,9 +50,11 @@ public class SpecificAssessmentCriteriaScreen extends SimpleToolWindowPanel{
         assessmentContent = new PluginWebViewFXPanel();
         Platform.setImplicitExit(false);
         Platform.runLater(() -> {
-            webView = webViewController.createWebView(urlString);;
+            //load html of assessment criteria in webview
+            webView = webViewController.createWebView(urlString);
             webView.getEngine().getLoadWorker().stateProperty().addListener((ov, oldState, newState) -> {
                 if (newState == Worker.State.SUCCEEDED) {
+                    //add controller to log key and mouse events on this screen
                     loggingWebViewController = new LoggingWebViewController(webView, LogDataType.ASSESSMENT_CRITERIA);
                     loggingWebViewController.addLoggingKeyEvents();
                     loggingWebViewController.addLoggingMouseEvents();

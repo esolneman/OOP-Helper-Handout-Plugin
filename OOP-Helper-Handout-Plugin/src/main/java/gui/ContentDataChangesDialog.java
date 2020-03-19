@@ -1,16 +1,14 @@
 package gui;
 
-import controller.LoggingController;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 
-import static environment.Messages.*;
-import static environment.Messages.QUESTIONNAIRE_DESCRIPTION_END;
+import static environment.Messages.CONTENT_CHANGED_TITLE;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
+//Notification for changes in content data
 public class ContentDataChangesDialog extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
@@ -30,15 +28,15 @@ public class ContentDataChangesDialog extends JDialog {
 
     private void initCommitMessages() {
         for (int i = 0; i < commitMessages.size(); i++) {
-            byte[] ptext = commitMessages.get(i).getBytes();
-            commitMessages.set(i, new String(ptext, UTF_8));
+            byte[] commitMessagesBytes = commitMessages.get(i).getBytes();
+            commitMessages.set(i, new String(commitMessagesBytes, UTF_8));
         }
         numCommits = commitMessages.size();
         list1.setListData(commitMessages.toArray());
     }
 
     private void initDescriptionText() {
-        this.setTitle("Eine Aktuelle Version des Handouts wurde heruntergeladen");
+        this.setTitle(CONTENT_CHANGED_TITLE);
     }
 
     private void initButton(){

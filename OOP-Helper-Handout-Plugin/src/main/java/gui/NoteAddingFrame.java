@@ -3,8 +3,6 @@ package gui;
 import controller.LoggingController;
 import controller.NotesController;
 import de.ur.mi.pluginhelper.logger.LogDataType;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -18,14 +16,10 @@ import javafx.scene.web.HTMLEditor;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
-import javafx.stage.WindowEvent;
-import org.w3c.dom.Document;
 import toolWindow.NotesScreen;
 
 import static environment.LoggingMessageConstants.*;
-import static java.nio.charset.StandardCharsets.ISO_8859_1;
-import static java.nio.charset.StandardCharsets.UTF_8;
+
 
 public class NoteAddingFrame {
     private HTMLEditor htmlEditor;
@@ -36,6 +30,11 @@ public class NoteAddingFrame {
     private LoggingController loggingController;
     private static String OK_BUTTON_LABEL = "Speichern";
     private static String EDIT_FRAME_TITLE = "Editiere die Notizen";
+    private static String SCRIPT_ADD_NOTES = "document.getElementById('notesList').innerHTML";
+    private static String STYLE_CLASS_NO_BORDER = "noborder-scroll-pane";
+    private static final String STYLE_COLOR_WHITE = "-fx-background-color: white";
+    private static final String CANCEL_LABEL = "Willst du die Bearbeitung wirklich abbrechen? Deine \u00c4nderungen werden nicht gespeichert";
+
 
     public static NoteAddingFrame getInstance() {
         if (single_instance == null) {
@@ -51,45 +50,38 @@ public class NoteAddingFrame {
         setCancelRequest();
     }
 
-    //https://blog.axxg.de/javafx-stage-dialog-beenden-mit-abfrage/
-    //https://stackoverflow.com/questions/23160573/javafx-stage-setoncloserequest-without-function
+    //"JavaFX: Stage / Dialog beenden mit Abfrage" by Alexander Gräsel,
+    // used under CC BY 3.0 DE / Desaturated from original
     private void setCancelRequest() {
         addNoteFrame.setOnCloseRequest(event -> {
+            //prevent primary stage from closing: https://stackoverflow.com/a/23160810
             event.consume();
+
             //Stage init
             final Stage dialog = new Stage();
             dialog.initModality(Modality.APPLICATION_MODAL);
-            String requestLabel = "Willst du die Bearbeitung wirklich abbrechen? Deine \u00c4nderungen werden nicht gespeichert";
-            // Frage - Label
-            Label label = new Label(requestLabel);
-            // Antwort-Button JA
-            Button okBtn = new Button("Ja");
-            okBtn.setOnAction(event12 -> {
+            Label label = new Label(CANCEL_LABEL);
+            Button submitButton = new Button("Ja");
+            submitButton.setOnAction(actionEvent -> {
                 setTextContent();
                 addNoteFrame.close();
                 dialog.close();
             });
 
-            // Antwort-Button NEIN
-            Button cancelBtn = new Button("Nein");
-            cancelBtn.setOnAction(event1 -> dialog.close());
-            // Layout fuer Button
+            Button cancelButton = new Button("Nein");
+            cancelButton.setOnAction(actionEvent -> dialog.close());
             HBox hbox = new HBox();
             hbox.setSpacing(10);
             hbox.setAlignment(Pos.CENTER);
-            hbox.getChildren().add(okBtn);
-            hbox.getChildren().add(cancelBtn);
+            hbox.getChildren().add(submitButton);
+            hbox.getChildren().add(cancelButton);
 
-
-            // Layout fuer Label und hBox
             VBox vbox = new VBox();
             vbox.setAlignment(Pos.CENTER);
             vbox.setSpacing(10);
             vbox.getChildren().add(label);
             vbox.getChildren().add(hbox);
 
-
-            // Stage befuellen
             Scene scene = new Scene(vbox);
             dialog.setScene(scene);
             dialog.show();
@@ -107,13 +99,12 @@ public class NoteAddingFrame {
         setTextContent();
         //display html part, that contains the notes
         ScrollPane scrollPane = new ScrollPane();
-        scrollPane.getStyleClass().add("noborder-scroll-pane");
-        scrollPane.setStyle("-fx-background-color: white");
+        scrollPane.getStyleClass().add(STYLE_CLASS_NO_BORDER);
+        scrollPane.setStyle(STYLE_COLOR_WHITE);
         scrollPane.setContent(htmlEditor);
         scrollPane.setFitToWidth(true);
         VBox root = new VBox();
         root.setAlignment(Pos.CENTER);
-        //TODO Constant
         Button addEntryButton = new Button(OK_BUTTON_LABEL);
         root.setAlignment(Pos.CENTER);
         addEntryButton.setOnAction(event -> {
@@ -133,8 +124,7 @@ public class NoteAddingFrame {
 
     private void setTextContent() {
         WebView webView = notesController.getCurrentWebview();
-        htmlEditor.setHtmlText((String) webView.getEngine().executeScript("document.getElementById('notesList').innerHTML"));
-
+        htmlEditor.setHtmlText((String) webView.getEngine().executeScript(SCRIPT_ADD_NOTES));
     }
 
     //called from html

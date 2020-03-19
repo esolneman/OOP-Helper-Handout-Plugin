@@ -12,7 +12,7 @@ import javafx.concurrent.Worker;
 import javafx.scene.web.WebView;
 import netscape.javascript.JSObject;
 import provider.LocalStorageDataProvider;
-import webView.WebViewController;
+import controller.WebViewController;
 
 import javax.swing.*;
 import java.io.File;
@@ -28,6 +28,11 @@ public class NotesScreen extends SimpleToolWindowPanel {
     private static WebView webView;
     private NoteAddingFrame noteAddingFrame;
     private LoggingWebViewController loggingWebViewController;
+    private static String NOTE_ADDING_STRING ="noteAddingFrame";
+    private static String WINDOW_STRING = "window";
+
+
+
 
     public NotesScreen(ToolWindow toolWindow) {
         super(true, true);
@@ -53,6 +58,7 @@ public class NotesScreen extends SimpleToolWindowPanel {
         notesContent = new PluginWebViewFXPanel();
         Platform.setImplicitExit(false);
         Platform.runLater(() -> {
+            //load html of assessment criteria in webview
             webView = webViewController.createWebView(notesHtmlString);
             notesContent.showHandoutWebView(notesHtmlString, webView);
             webView.getEngine().getLoadWorker().stateProperty().addListener((ov, oldState, newState) -> {
@@ -69,8 +75,8 @@ public class NotesScreen extends SimpleToolWindowPanel {
     private void initEditNotesButtonListener() {
         noteAddingFrame = NoteAddingFrame.getInstance();
         noteAddingFrame.setNotesScreen(this);
-        JSObject window = (JSObject) webView.getEngine().executeScript("window");
-        window.setMember("noteAddingFrame", NoteAddingFrame.getInstance());
+        JSObject window = (JSObject) webView.getEngine().executeScript(WINDOW_STRING);
+        window.setMember(NOTE_ADDING_STRING, NoteAddingFrame.getInstance());
     }
 
     public JPanel getContent() {
@@ -78,10 +84,11 @@ public class NotesScreen extends SimpleToolWindowPanel {
     }
 
     // Had to be newly created, because when editing the html it is parsed to XHTML
-    // and because of that, the button is not recogniced anymore
+    // and because of that, the button is not recognised anymore
     public void reloadWebView() {
         Platform.runLater(() -> {
             webView = webViewController.createWebView(notesHtmlString);
+            //add controller to log key and mouse events on this screen
             webView.getEngine().getLoadWorker().stateProperty().addListener((ov, oldState, newState) -> {
                 if (newState == Worker.State.SUCCEEDED) {
                     loggingWebViewController = new LoggingWebViewController(webView, LogDataType.NOTES);

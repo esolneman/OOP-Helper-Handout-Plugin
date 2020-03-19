@@ -18,10 +18,8 @@ import provider.RepoLocalStorageDataProvider;
 import java.io.File;
 import java.util.ArrayList;
 
-import static environment.LoggingMessageConstants.IDE_CLOSED;
-import static environment.LoggingMessageConstants.IDE_VISIBILITY;
+import static environment.LoggingMessageConstants.*;
 
-//TODO HIDE ANT TOOL WINDOW
 public class HandoutPluginController implements HandoutPluginControllerInterface, OnGitEventListener {
     private HandoutContentDataProviderInterface handoutDataProvider;
     private UpdateHandoutDataController updateHandoutDataController;
@@ -31,13 +29,13 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
     public HandoutPluginController(Project project) {
         this.project = project;
         createProjectListener();
-        //TODO NOT TO REPOLOCALSTORAGE OFOFOFOFOF
         RepoLocalStorageDataProvider.setUserProjectDirectory(this.project);
         handoutDataProvider = HandoutContentDataProvider.getInstance();
         handoutDataProvider.addListener(this);
         updateHandoutDataController = UpdateHandoutDataController.getInstance();
     }
 
+    //log open and close of the project to calculate session length
     private void createProjectListener() {
         ProjectManagerListener projectClosedListener = new ProjectManagerListener() {
             @Override
@@ -45,7 +43,6 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
                 loggingController.saveDataInLogger(LogDataType.IDE, IDE_VISIBILITY, IDE_CLOSED);
                 loggingController.syncLoggingData();
             }
-
             @Override
             public void projectOpened(@NotNull Project project) {
                 initLogger();
@@ -65,17 +62,14 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
         handoutDataProvider.updateHandoutData();
     }
 
-    //TODO MANAGE UPDATE VIEWS....
-    //TODO update Webview and other content of toolWindows
-    //TODO enable / disable Actions
-
-
+    //control content after repository was cloned
     public void onCloningRepositoryEvent(String notificationMessage, NotificationType messageType)   {
         initHtmlFiles();
         updateContentData();
         QuestionnaireController.getInstance().saveProjectCreationDate();
-        BalloonPopupController.showBalloonNotification( Balloon.Position.above, notificationMessage, "Status des Handouts", MessageType.INFO);
-        loggingController.saveDataInLogger(LogDataType.HANDOUT, "Download Repo", "Cloned Repo");
+        BalloonPopupController.showBalloonNotification( Balloon.Position.above, notificationMessage, HANDOUT_STATUS, MessageType.INFO);
+        //log cloning of repository
+        loggingController.saveDataInLogger(LogDataType.HANDOUT, DOWNLOAD_REPO, CLONED_REPO);
     }
 
     private void initHtmlFiles() {
@@ -90,27 +84,26 @@ public class HandoutPluginController implements HandoutPluginControllerInterface
 
 
     @Override
-    //TODO add strings to message constants
     public void onUpdatingRepositoryEvent(ArrayList<String> commitMessages) {
         updateContentData();
         ApplicationManager.getApplication().invokeLater(() -> {
             ContentDataChangesDialog.main(commitMessages);
         });
-        BalloonPopupController.showBalloonNotification( Balloon.Position.above, "Handout Daten wurden runtergeladen.", "Status des Handouts", MessageType.INFO);
-        loggingController.saveDataInLogger(LogDataType.HANDOUT, "Download Repo", "Updated Repo");
+        BalloonPopupController.showBalloonNotification( Balloon.Position.above, DOWNLOAD_HANDOUT_DATA, HANDOUT_STATUS, MessageType.INFO);
+        loggingController.saveDataInLogger(LogDataType.HANDOUT, DOWNLOAD_REPO, UPDATED_REPO);
 
     }
 
     @Override
     public void onNotUpdatingRepositoryEvent(String notificationMessage, MessageType messageType) {
-        BalloonPopupController.showBalloonNotification( Balloon.Position.above, notificationMessage, "Status des Handouts", messageType);
-        loggingController.saveDataInLogger(LogDataType.HANDOUT, "Download Repo", "Not Updated Repo");
+        BalloonPopupController.showBalloonNotification( Balloon.Position.above, notificationMessage, HANDOUT_STATUS, messageType);
+        loggingController.saveDataInLogger(LogDataType.HANDOUT, DOWNLOAD_REPO, NOT_UPDATED_REPO);
     }
 
     @Override
     public void onCloneCanceledRepositoryEvent(String notificationMessage, MessageType messageType, File file) {
-        BalloonPopupController.showBalloonNotification( Balloon.Position.above, notificationMessage, "Status des Handouts", messageType);
+        BalloonPopupController.showBalloonNotification( Balloon.Position.above, notificationMessage, HANDOUT_STATUS, messageType);
         FileHandleController.deleteFile(file);
-        loggingController.saveDataInLogger(LogDataType.HANDOUT, "Download Repo", "Canceled");
+        loggingController.saveDataInLogger(LogDataType.HANDOUT, DOWNLOAD_REPO, DOWNLOAD_CANCELED);
     }
 }

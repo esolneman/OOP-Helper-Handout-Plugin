@@ -39,9 +39,21 @@ public class LoggingMessageConstants {
 
     public static String MOUSE_EVENT = "MOUSE_Event";
     public static String MOUSE_DRAGGED_EVENT = "MOUSE_DRAGGED_Event";
-    public static String SCROLL_EVENT = "Scroll_Event";
-    public static String KEY_EVENT = "KEY_RELEASED";
-
     public static String MOUSE_ENTERED = "Mouse_Entered";
     public static String MOUSE_EXITED = "Mouse_Exited";
+    public static String SCROLL_EVENT = "Scroll_Event";
+    public static String KEY_EVENT = "KEY_RELEASED";
+    public static String COPY_EVENT = "Copy";
+
+
+    public static String DOWNLOAD_REPO = "Download Repo";
+    public static String UPDATED_REPO = "Updated Repo";
+    public static String NOT_UPDATED_REPO = "Not Updated Repo";
+    public static String CLONED_REPO = "Cloned Repo";
+    public static String DOWNLOAD_CANCELED = "Canceled";
+
+    public static String HANDOUT_STATUS = "Status des Handouts";
+    public static String DOWNLOAD_HANDOUT_DATA = "Handout Daten wurden runtergeladen.";
+
+
 }

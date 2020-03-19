@@ -26,7 +26,6 @@ import java.awt.event.FocusEvent;
 
 import static environment.LoggingMessageConstants.*;
 
-
 public class HandoutToolWindowFactory implements ToolWindowFactory, OnLocalDataUpdatedListener {
 
     private OnLocalDataUpdatedListener listener;
@@ -49,8 +48,18 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, OnLocalDataU
     private LoggingController loggingController;
     private UpdateHandoutDataController updateHandoutDataController;
 
+    private static String UPDATE_ACTION_NAME = "Myplugin.Textboxes.Update";
+    private static String MINIMIZE_ACTION_NAME = "Handout.Minimize";
+    private static String MAXIMIZE_ACTION_NAME = "Handout.Maximize";
+
+    private static String HANDOUT_CONTENT_NAME = "Handout";
+    private static String TASK_CONTENT_NAME = "Aufgaben";
+    private static String NOTES_CONTENT_NAME = "Notizen";
+    private static String ASSESSMENT_CRITERIA_CONTENT_NAME = "Bewertungskriterien";
+    private static String HELP_CONTENT_NAME = "Hilfe";
+
     // Create the tool window content.
-    // is called when user clicks on tool window button
+    // is called when toolWindow opens
     public void createToolWindowContent(Project project, ToolWindow toolWindow) {
         this.toolWindow = toolWindow;
         contentFactory = ContentFactory.SERVICE.getInstance();
@@ -62,36 +71,19 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, OnLocalDataU
         updateHandoutDataController.addListener(this);
     }
 
+
     private void createToolWindowListener() {
-        toolWindow.getContentManager().addContentManagerListener(new ContentManagerListener() {
-            @Override
-            public void contentAdded(@NotNull ContentManagerEvent event) {
-            }
+        logTabChanges();
+        logToolWindowVisibility();
+        logToolWindowFocus();
+    }
 
-            @Override
-            public void contentRemoved(@NotNull ContentManagerEvent event) {
-            }
-
-            @Override
-            public void contentRemoveQuery(@NotNull ContentManagerEvent event) {
-            }
-
-            @Override
-            public void selectionChanged(@NotNull ContentManagerEvent event) {
-                if (event.getContent().isSelected()) {
-                    loggingController.saveDataInLogger(LogDataType.TOOL_WINDOW, TAB_FOCUS_LOST, event.getContent().getDisplayName());
-                } else {
-                    loggingController.saveDataInLogger(LogDataType.TOOL_WINDOW, TAB_FOCUS_GAINED, event.getContent().getDisplayName());
-                }
-            }
-        });
-
+    private void logToolWindowFocus() {
         new FocusWatcher() {
             @Override
             protected void focusLostImpl(final FocusEvent e) {
                 loggingController.saveDataInLogger(LogDataType.TOOL_WINDOW, TOOL_WINDOW_FOCUS,  UNFOCUSED);
             }
-
             @Override
             //https://intellij-support.jetbrains.com/hc/en-us/community/posts/360000018010/comments/360000025810
             protected void focusedComponentChanged(Component focusedComponent, @Nullable AWTEvent cause) {
@@ -101,24 +93,46 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, OnLocalDataU
                 }
             }
         }.install(toolWindow.getComponent());
+    }
 
-        //TODO MAYBE REFACTOR
-        //logged open and close of tool window
+    private void logToolWindowVisibility() {
+        //logs visibility of tool window
         toolWindow.getComponent().addAncestorListener(new AncestorListener() {
             @Override
             public void ancestorAdded(AncestorEvent ancestorEvent) {
-                System.out.println("ancestorAdded toolWindow: " + toolWindow.isVisible());
                 loggingController.saveDataInLogger(LogDataType.TOOL_WINDOW,TOOL_WINDOW_VISIBILITY, String.valueOf(toolWindow.isVisible()));
             }
 
             @Override
             public void ancestorRemoved(AncestorEvent ancestorEvent) {
-                System.out.println("ancestorRemoved toolWindow: " + toolWindow.isVisible());
                 loggingController.saveDataInLogger(LogDataType.TOOL_WINDOW, TOOL_WINDOW_VISIBILITY, String.valueOf(toolWindow.isVisible()));
             }
 
             @Override
             public void ancestorMoved(AncestorEvent ancestorEvent) {
+            }
+        });
+    }
+
+    // logs tab changes in toolWindow
+    private void logTabChanges() {
+        toolWindow.getContentManager().addContentManagerListener(new ContentManagerListener() {
+            @Override
+            public void contentAdded(@NotNull ContentManagerEvent event) { }
+
+            @Override
+            public void contentRemoved(@NotNull ContentManagerEvent event) { }
+
+            @Override
+            public void contentRemoveQuery(@NotNull ContentManagerEvent event) { }
+
+            @Override
+            public void selectionChanged(@NotNull ContentManagerEvent event) {
+                if (event.getContent().isSelected()) {
+                    loggingController.saveDataInLogger(LogDataType.TOOL_WINDOW, TAB_FOCUS_LOST, event.getContent().getDisplayName());
+                } else {
+                    loggingController.saveDataInLogger(LogDataType.TOOL_WINDOW, TAB_FOCUS_GAINED, event.getContent().getDisplayName());
+                }
             }
         });
     }
@@ -133,39 +147,36 @@ public class HandoutToolWindowFactory implements ToolWindowFactory, OnLocalDataU
     }
 
     private void addScreenContent() {
-        handoutContent = contentFactory.createContent(handoutContentScreen.getContent(), "Handout", false);
+        handoutContent = contentFactory.createContent(handoutContentScreen.getContent(), HANDOUT_CONTENT_NAME, false);
         handoutContent.setPreferredFocusableComponent(handoutContentScreen.getContent());
-        checklistContent = contentFactory.createContent(checklistScreen.getContent(), "Aufgaben", false);
-        notesContent = contentFactory.createContent(notesScreen.getContent(), "Notizen", false);
-        specificCriteriaContent = contentFactory.createContent(specificAssessmentCriteriaScreen.getContent(), "Bewertungskriterien", false);
-        commonAssessmentCriteriaContent = contentFactory.createContent(helpScreen.getContent(), "Hilfe", false);
+        checklistContent = contentFactory.createContent(checklistScreen.getContent(), TASK_CONTENT_NAME, false);
+        notesContent = contentFactory.createContent(notesScreen.getContent(), NOTES_CONTENT_NAME, false);
+        specificCriteriaContent = contentFactory.createContent(specificAssessmentCriteriaScreen.getContent(), ASSESSMENT_CRITERIA_CONTENT_NAME, false);
+        commonAssessmentCriteriaContent = contentFactory.createContent(helpScreen.getContent(), HELP_CONTENT_NAME, false);
 
         toolWindow.getContentManager().addContent(handoutContent);
         toolWindow.getContentManager().addContent(checklistContent);
         toolWindow.getContentManager().addContent(specificCriteriaContent);
         toolWindow.getContentManager().addContent(commonAssessmentCriteriaContent);
         toolWindow.getContentManager().addContent(notesContent);
-        //TODO: Decide which Tab is open when start ide
         toolWindow.getContentManager().setSelectedContent(handoutContent);
         callListener();
     }
 
-    //https://www.programcreek.com/java-api-examples/?api=com.intellij.openapi.wm.ex.ToolWindowEx
     private void createToolbar() {
-        AnAction updateAction = ActionManager.getInstance().getAction("Myplugin.Textboxes.Update");
-        AnAction minimizeAction = (ActionManager.getInstance().getAction("Handout.Minimize"));
-        AnAction maximizeAction = (ActionManager.getInstance().getAction("Handout.Maximize"));
+        AnAction updateAction = ActionManager.getInstance().getAction(UPDATE_ACTION_NAME);
+        AnAction minimizeAction = (ActionManager.getInstance().getAction(MINIMIZE_ACTION_NAME));
+        AnAction maximizeAction = (ActionManager.getInstance().getAction(MAXIMIZE_ACTION_NAME));
         ((ToolWindowEx) toolWindow).setTitleActions(new AnAction[]{updateAction, minimizeAction, maximizeAction});
     }
 
+    //updates the webViews if new content data was downloaded
     public void updateWebView() {
-        //TODO Interface --> alle?
         handoutContentScreen.updateContent();
         specificAssessmentCriteriaScreen.updateContent();
         helpScreen.updateContent();
         checklistScreen.updateContent();
     }
-
 
     private void callListener() {
         if (listener != null) {

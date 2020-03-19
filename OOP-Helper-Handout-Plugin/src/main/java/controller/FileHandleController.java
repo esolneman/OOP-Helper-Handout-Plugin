@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 
 import java.io.*;
 
+// handles deletion, saving and creation of files
 public class FileHandleController {
 
 
@@ -18,8 +19,8 @@ public class FileHandleController {
         }
     }
 
-    //TODO SOUREC
     public static void saveRepoFileInLocalFile (File repoFile, File localFile) {
+        //https://stackoverflow.com/questions/19597688/unbuffered-and-buffered-streams
         BufferedReader inputStream = null;
         BufferedWriter outputStream = null;
         try {
@@ -36,7 +37,6 @@ public class FileHandleController {
                 outputStream.write(count);
             }
             outputStream.flush();
-
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -58,6 +58,17 @@ public class FileHandleController {
             e.printStackTrace();
         }
     }
+
+    public static void saveTextInFile(String text, File file) {
+        //https://stackoverflow.com/a/1053475
+        try (PrintWriter out = new PrintWriter(file)) {
+            out.println(text);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
     public static void deleteFile(File file) {
         file.delete();

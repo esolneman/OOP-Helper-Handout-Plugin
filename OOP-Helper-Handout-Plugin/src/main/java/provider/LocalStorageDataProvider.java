@@ -2,7 +2,7 @@ package provider;
 
 import java.io.File;
 
-public class LocalStorageDataProvider implements LocalStorageDataProviderInterface {
+public class LocalStorageDataProvider {
 
     public static File getHandoutFileDirectory() {
         return UserLocalStorageDataProvider.getHandoutHtmlFile();
@@ -20,7 +20,6 @@ public class LocalStorageDataProvider implements LocalStorageDataProviderInterfa
         return RepoLocalStorageDataProvider.getCommonAssessmentCriteriaFileDirectory();
     }
 
-    //TODO Parser from Repo and USER call
     public static File getChecklistData() {
         return RepoLocalStorageDataProvider.getChecklistFile();
     }

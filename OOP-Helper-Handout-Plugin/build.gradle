@@ -1,7 +1,7 @@
 plugins {
     id 'java'
     id 'org.jetbrains.intellij' version '0.4.10'
-    //https://intellij-support.jetbrains.com/hc/en-us/community/posts/360004401620-Error-in-buildPlugin-execution-time
+    //https://inQtellij-support.jetbrains.com/hc/en-us/community/posts/360004401620-Error-in-buildPlugin-execution-time
     // https://youtrack.jetbrains.com/issue/KT-32401
    //id 'org.jetbrains.intellij' version '0.4.1'
 }

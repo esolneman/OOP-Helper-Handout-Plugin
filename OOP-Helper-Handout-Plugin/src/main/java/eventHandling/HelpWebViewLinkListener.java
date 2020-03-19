@@ -11,11 +11,13 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-//TODO Constants
 public class HelpWebViewLinkListener {
 
     private WebView webView;
     String urlString;
+    private static String HTTP_PREFIX = "http://";
+    private static String HTTPS_PREFIX = "https://";
+    private static String MAIL_PREFIX = "mailto";
 
     public HelpWebViewLinkListener(WebView webView, String urlString) {
         this.webView = webView;
@@ -23,25 +25,24 @@ public class HelpWebViewLinkListener {
     }
 
     public void createListener() {
-        //https://github.com/CodeFX-org/LibFX/wiki/WebViewHyperlinkListener
         WebViewHyperlinkListener eventPrintingListener = event -> {
             String hyperlink = event.getURL().toString();
             if(hyperlink != null){
-                if (hyperlink.contains("http://") || hyperlink.contains("https://") || hyperlink.contains("mailto")) {
+                if (hyperlink.contains(HTTP_PREFIX) || hyperlink.contains(HTTPS_PREFIX) || hyperlink.contains(MAIL_PREFIX)) {
                     handleLinkToExternalWebpage(hyperlink);
                 }
             }
             return false;
         };
-        //TODO METHOD FOR THIS IN WEBVIEW CONTROOLER
         WebViews.addHyperlinkListener(webView, eventPrintingListener, HyperlinkEvent.EventType.ACTIVATED);
     }
 
 
-    private void handleLinkToExternalWebpage(String toBeopen) {
+    //open link in external browser and reload webview
+    private void handleLinkToExternalWebpage(String link) {
         try {
             Desktop desktop = Desktop.getDesktop();
-            URI address = new URI(toBeopen);
+            URI address = new URI(link);
                 Platform.setImplicitExit(false);
                 Platform.runLater(() -> {
                     webView.getEngine().load(urlString);

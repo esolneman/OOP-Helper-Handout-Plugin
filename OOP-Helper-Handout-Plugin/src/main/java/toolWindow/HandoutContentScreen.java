@@ -2,8 +2,7 @@ package toolWindow;
 
 import com.intellij.openapi.ui.SimpleToolWindowPanel;
 import com.intellij.openapi.wm.ToolWindow;
-import controller.DownloadPDFHelper;
-import controller.HandoutController;
+import controller.DownloadPDFController;
 import controller.LinkToHandoutController;
 import controller.LoggingWebViewController;
 import de.ur.mi.pluginhelper.logger.LogDataType;
@@ -14,12 +13,13 @@ import javafx.scene.web.WebView;
 import netscape.javascript.JSObject;
 import provider.LocalStorageDataProvider;
 import provider.RepoLocalStorageDataProvider;
-import webView.WebViewController;
+import controller.WebViewController;
 
 import javax.swing.*;
 import java.io.File;
 import java.net.MalformedURLException;
 
+//UI for displaying the handout of the programming assignment
 public class HandoutContentScreen extends SimpleToolWindowPanel implements PluginToolWindowTabsInterface {
     private PluginWebViewFXPanel handoutContent;
     private ToolWindow handoutToolWindow;
@@ -28,8 +28,12 @@ public class HandoutContentScreen extends SimpleToolWindowPanel implements Plugi
     private static WebView webView;
     private WebViewController webViewController;
     private LoggingWebViewController loggingWebViewController;
-
     private SimpleToolWindowPanel toolWindowPanel;
+
+    private static final String DOWNLOAD_HTML_STRING ="downloadHtml";
+    private static final String WINDOW_STRING ="window";
+
+
     public HandoutContentScreen(ToolWindow toolWindow){
         super(true, true);
         webViewController = new WebViewController();
@@ -54,28 +58,28 @@ public class HandoutContentScreen extends SimpleToolWindowPanel implements Plugi
         handoutContent = new PluginWebViewFXPanel();
         Platform.setImplicitExit(false);
         Platform.runLater(() -> {
+            //load html of the handout in webview
             webView = webViewController.createHandoutWebView(urlString);
             //https://stackoverflow.com/a/10684168
-           webView.getEngine().getLoadWorker().stateProperty().addListener((ov, oldState, newState) -> {
+            webView.getEngine().getLoadWorker().stateProperty().addListener((ov, oldState, newState) -> {
                 if (newState == Worker.State.SUCCEEDED) {
                     LinkToHandoutController linkToHandoutController = new LinkToHandoutController(RepoLocalStorageDataProvider.getProject(), this);
                     initDownloadButtonListener();
+                    //add controller to log key and mouse events on this screen
                     loggingWebViewController = new LoggingWebViewController(webView, LogDataType.HANDOUT);
                     loggingWebViewController.addLoggingKeyEvents();
                     loggingWebViewController.addLoggingMouseEvents();
                 }
             });
-            //initDownloadButtonListener();
             handoutContent.showHandoutWebView(urlString, webView);
-
         });
     }
 
     //https://stackoverflow.com/a/34547416
     //create listener for "download handout" button in webView
     private void initDownloadButtonListener() {
-        JSObject window = (JSObject) webView.getEngine().executeScript("window");
-        window.setMember("downloadHtml", DownloadPDFHelper.getInstance());
+        JSObject window = (JSObject) webView.getEngine().executeScript(WINDOW_STRING);
+        window.setMember(DOWNLOAD_HTML_STRING, DownloadPDFController.getInstance());
     }
 
     public JComponent getToolbar(){
@@ -87,7 +91,7 @@ public class HandoutContentScreen extends SimpleToolWindowPanel implements Plugi
     }
 
     public void goToLocation(String heading) {
-        webViewController.goToLocation(heading, handoutToolWindow, this);
+        webViewController.goToLinkInHandout(heading, handoutToolWindow, this);
     }
 
     public void updateContent() {

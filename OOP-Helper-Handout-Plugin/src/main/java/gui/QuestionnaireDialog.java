@@ -1,23 +1,26 @@
 package gui;
 
-import com.intellij.execution.process.ProcessHandler;
 import controller.LoggingController;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
 import static environment.Messages.*;
 
+//Notification for displaying information and link to questionnaire
 public class QuestionnaireDialog extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
-    private JPanel dialogDescriptionPanel;
     private JEditorPane linkText;
+    private static String CONTENT_TYPE = "text/html";
+    //needed to bind to form file
+    private JPanel dialogDescriptionPanel;
 
     public QuestionnaireDialog() {
         setModal(true);
@@ -57,7 +60,7 @@ public class QuestionnaireDialog extends JDialog {
 
     private void initDescriptionText() {
         this.setTitle(QUESTIONNAIRE_TITLE);
-        linkText.setContentType("text/html");
+        linkText.setContentType(CONTENT_TYPE);
         //https://stackoverflow.com/questions/8348063/clickable-links-in-joptionpane
         linkText.setText(QUESTIONNAIRE_DESCRIPTION_START + QUESTIONNAIRE_URL_BASE + LoggingController.getInstance().getCurrentUser().getID() + QUESTIONNAIRE_DESCRIPTION_END);
         linkText.setEditable(false);

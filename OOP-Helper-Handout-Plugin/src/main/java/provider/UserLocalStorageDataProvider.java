@@ -4,8 +4,7 @@ import java.io.File;
 
 import static environment.FileConstants.*;
 
-public class UserLocalStorageDataProvider implements UserLocalStorageDataProviderInterface {
-    //TODO PROJECT
+public class UserLocalStorageDataProvider  {
     public static File getChecklistFile() {
         File checklistFile = new File(RepoLocalStorageDataProvider.getUserProjectDirectory() + LOCAL_STORAGE_FILE + USER_LOCAL_STORAGE_FILE + CHECKLIST_FILE_NAME);
         return checklistFile;
