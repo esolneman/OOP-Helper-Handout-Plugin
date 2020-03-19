@@ -91,7 +91,7 @@ public class HandoutContentScreen extends SimpleToolWindowPanel implements Plugi
     }
 
     public void goToLocation(String heading) {
-        webViewController.goToLocation(heading, handoutToolWindow, this);
+        webViewController.goToLinkInHandout(heading, handoutToolWindow, this);
     }
 
     public void updateContent() {
